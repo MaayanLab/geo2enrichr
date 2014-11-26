@@ -5,7 +5,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	app.main = {};
 
 	// Set this to `false` before deploying.
-	app.debug = true;
+	app.debug = false;
 
 	app.global = {};
 

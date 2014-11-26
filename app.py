@@ -61,4 +61,8 @@ def enrichr():
 
 
 if __name__ == '__main__':
-	app.run(port=int(sys.argv[1]), host='0.0.0.0')
+	if len(sys.argv) > 1:
+		port = int(sys.argv[1])
+	else:
+		port = 5000
+	app.run(port=port, host='0.0.0.0')
