@@ -8,7 +8,7 @@ import poster
 import time
 import urllib2
 
-from probe2gene import PROBE2GENE
+#from probe2gene import PROBE2GENE
 from files import GeneFiles
 
 
@@ -86,10 +86,9 @@ def __passes_unique_score_threshold(use_chdir, score, unique_score):
 		return abs(score) < abs(unique_score)
 
 
-
 # We wish to identify which soft files we want
 # Now obtain and parse each accession-associated SOFT file one-by-one
-'''def __open_probe_dict(probe_dict):
+def __open_probe_dict(probe_dict):
 	# Step 1: Get Conversion Dictionary
 	with open(probe_dict) as f:
 		probe_2_symbol_dict = {}
@@ -104,4 +103,4 @@ def __passes_unique_score_threshold(use_chdir, score, unique_score):
 		return probe_2_symbol_dict
 
 
-probe_2_symbol_dict = __open_probe_dict("Probe_2_Symbol_Unique.txt")'''
+probe_2_symbol_dict = __open_probe_dict("Probe_2_Symbol_Unique.txt")

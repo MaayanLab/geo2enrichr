@@ -12,3 +12,6 @@ geo.sublime-workspace
 
 # Python
 *.pyc
+
+# Hopefully temporary
+probe2gene.py
