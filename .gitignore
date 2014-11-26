@@ -8,3 +8,6 @@ screenshots/
 # Sublime Text
 geo.sublime-project
 geo.sublime-workspace
+
+# Python
+*.pyc
