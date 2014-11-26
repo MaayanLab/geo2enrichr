@@ -4,19 +4,20 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 	app.main = {};
 
+	// Set this to `false` before deploying.
+	app.debug = true;
+
 	app.global = {};
 
 	$(document).ready(function() {
 		if (app.main.__set_mode()) {
 			app.notifier.log('GEO2Enrichr');
-			app.notifier.log('===========');
 			app.mode.init();
 		}
 	});
 
 	app.main.__set_mode = function() {
 		var relevant_path;
-
 		if (window.location.pathname !== '/') {
 			relevant_path = window.location.pathname.split('/')[1];
 			if (relevant_path === 'sites') {

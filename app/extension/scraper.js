@@ -6,58 +6,64 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 	var __scraped_data = {};
 
-	app.scraper.get_data = function() {
-		return __scraped_data;
+	app.scraper.get_data = function($modal) {
+		var scraped_data;
+		if ($modal) {
+			app.scraper.__scrape_options_and_annotations($modal);
+		}
+		if (app.scraper.is_valid_data(__scraped_data)) {
+			scraped_data = $.extend({}, __scraped_data);
+			app.ui.fill_confirm_tbl(scraped_data);	
+			return scraped_data;
+		}
 	};
 
 	app.scraper.set_data = function(key, val) {
+		// Store any data we might overwrite.
+		var temp = __scraped_data[key];
 		__scraped_data[key] = val;
-		
-		app.ui.fill_confirm_tbl(
-			app.scraper.__validate_data(
-				$.extend({}, __scraped_data)
-			)
-		);
+		if (app.scraper.is_valid_data(__scraped_data)) {
+			app.ui.fill_confirm_tbl($.extend({}, __scraped_data));	
+		} else {
+			__scraped_data[key] = temp;
+		}
 	};
 
 	app.scraper.scrape_data = function($modal) {
 		var samples = app.scraper.get_samples();
 
-		__scraped_data.control			= samples.control;
-		__scraped_data.experimental		= samples.experimental;
-		__scraped_data.accession_num	= app.scraper.get_accession_num();
-		__scraped_data.species			= app.scraper.get_species();
-		__scraped_data.platform			= app.scraper.get_platform();
-		__scraped_data.options			= app.scraper.__get_options($modal);
+		// `__scrape_options()` and `__scrape_annotations()` are called on `get_data()`,
+		// i.e. when the user clicks submit.
+		__scraped_data.control       = samples.control;
+		__scraped_data.experimental  = samples.experimental;
+		__scraped_data.accession_num = app.scraper.get_accession_num();
+		__scraped_data.organism      = app.scraper.get_organism();
+		__scraped_data.platform      = app.scraper.get_platform();
 
-		return app.scraper.__validate_data( $.extend({}, __scraped_data) );
+		if (app.scraper.is_valid_data(__scraped_data)) {
+			return $.extend({}, __scraped_data);
+		}
 	};
 
-	app.scraper.__validate_data = function(scraped_data) {
-		if (!scraped_data.control || scraped_data.control.length < 2) {
-			scraped_data.control = '<span class="g2e-highlight">Select >2 control samples</span>';
-		} else {
-			scraped_data.control = '<span class="g2e-strong">' + scraped_data.control.join(', ') + '</span>';
+	app.scraper.__scrape_options_and_annotations = function($modal) {
+		var method = $modal.find('input[type=radio][name=method]:checked').val(),
+			inclusion = $modal.find('input[type=radio][name=inclusion]:checked').val(),
+			cell = $modal.find('#g2e-confirm-cell').text(),
+			perturbation = $modal.find('#g2e-confirm-pert').text();
+
+		if (method) {
+			__scraped_data.method = method;
+		}
+		if (inclusion) {
+			__scraped_data.inclusion = inclusion;	
 		}
 
-		if (!scraped_data.experimental || scraped_data.experimental.length < 2) {
-			scraped_data.experimental = '<span class="g2e-highlight">Select >2 experimental samples</span>';
-		} else {
-			scraped_data.experimental = '<span class="g2e-strong">' + scraped_data.experimental.join(', ') + '</span>';
+		if (cell) {
+			__scraped_data.cell = cell;
 		}
-
-		scraped_data.accession_num = '<span class="g2e-strong">' + scraped_data.accession_num + '</span>';
-		scraped_data.species 	   = '<span class="g2e-strong">' + scraped_data.species 	  + '</span>';
-		scraped_data.platform 	   = '<span class="g2e-strong">' + scraped_data.platform 	  + '</span>';
-
-		return scraped_data;
-	};
-
-	app.scraper.__get_options = function($modal) {
-		return {
-			method: $modal.find('input[type=radio][name=method]:checked').val(),
-			inclusion: $modal.find('input[type=radio][name=inclusion]:checked').val()
-		};
+		if (perturbation) {
+			__scraped_data.perturbation = perturbation;	
+		}
 	};
 
 	app.scraper.text_from_html = function($el) {
@@ -70,8 +76,23 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		}).text().trim();
 	};
 
-	app.scraper.clean_text = function(el) {
+	app.scraper.normalize_text = function(el) {
 		return el.replace(/\s/g, '').toLowerCase();
+	};
+
+	app.scraper.is_valid_data = function(data) {
+		// This is annoying while testing.
+		if (!app.debug) {
+			if (!data.control || data.control.length < 2) {
+				app.notifier.warn('Please select 2 or more control samples');
+				return false;
+			}
+			if (!data.experimental || data.experimental.length < 2) {
+				app.notifier.warn('Please select 2 or more experimental samples');
+				return false;
+			}
+		}
+		return true;
 	};
 
 })(GEO2Enrichr, jQuery);

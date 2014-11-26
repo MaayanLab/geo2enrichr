@@ -5,8 +5,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	app.notifier = {};
 
 	app.notifier.log = function(msg) {
-		// Set this to false before deploying.
-		if (true) {
+		if (app.debug) {
 			console.log(msg);
 		}
 	};

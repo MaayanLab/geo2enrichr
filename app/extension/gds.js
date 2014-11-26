@@ -47,7 +47,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 			return app.global.accession || app.gds.__get_acc_from_page();
 		},
 
-		get_species: function() {
+		get_organism: function() {
 			return app.scraper.__get_by_name('organism');
 		},
 
@@ -85,14 +85,15 @@ var GEO2Enrichr = GEO2Enrichr || {};
 			// 3. Split on the semicolon (notice there are two) and return just the code.
 			var idx = app.scraper.__get_row_idx_from_name(name);
 			var text = $($gds_details.find('tr')[idx]).text();
-			return app.scraper.clean_text(text).split(':')[1];
+			// Regular expression removes any preceding whitespace
+			return text.split(':')[1].replace(/\s*/, '');
 		},
 
 		__get_row_idx_from_name: function(attr_name) {
 			var result;
 			$gds_details.find('tr').each(function(i, tr) {
 				var title_el = $(tr).find('th')[0],
-					title_text = app.scraper.clean_text($(title_el).text()),
+					title_text = app.scraper.normalize_text($(title_el).text()),
 					title_name = title_text.split(':')[0];
 
 				if (title_name === attr_name) {

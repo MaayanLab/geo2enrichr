@@ -4,9 +4,9 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 	app.comm = {};
 
-	var SERVER = 'http://localhost:5000/';
-
-	var $dl_iframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
+	var SERVER = 'http://localhost:5000/',
+		$dl_iframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
+		file_for_download;
 
 	// This pre-fetches some data from GEO to verify the information on the page!
 	app.comm.fetch_meta_data_from_geo = function(acc_num) {
@@ -40,16 +40,22 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	// Querying GEO's esearch endpoint with an accession number returns some JSON with an ID.
 	// Then we query GEO's esummary endpoint with the ID.
 	// Finally, we set the returned data in `app.globals` so that we can use it later.
-	app.comm.fetch_files_from_geo = function($modal) {
+	app.comm.fetch_diffexp_enrich = function($modal) {
+		debugger;
+		
 		var user_input = app.scraper.get_data($modal);
+		app.ui.show_progress_bar();
+		app.ui.highlight_next_step();
 
 		function dlgeo() {
 			var endpoint = 'dlgeo?',
 				qs = $.param({
 					accession: user_input.accession_num,
-					species: user_input.species,
+					organism: user_input.organism,
 					platform: user_input.platform,
-					method: user_input.options.method
+					method: user_input.method,
+					cell: user_input.cell,
+					perturbation: user_input.perturbation
 				});
 
 			return $.ajax({
@@ -66,8 +72,9 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		function diffexp(data_from_dlgeo) {
 			var endpoint = 'diffexp?',
 				qs = $.param({
+					// This is the SOFT file, not the gene file.
 					filename: data_from_dlgeo.filename,
-					method: user_input.options.method,
+					method: user_input.method,
 					control: user_input.control.join('-'),
 					experimental: user_input.experimental.join('-')
 				});
@@ -79,64 +86,43 @@ var GEO2Enrichr = GEO2Enrichr || {};
 					app.notifier.log('GEO files were differentially expressed');
 					app.notifier.log(data);
 
-					// Pass inclusion data to `download_diff_exp_files()`.
-					data.inclusion = user_input.options.inclusion;
+					// Pass inclusion data to `download_diff_exp_files()` and `submit_data_to_enrich()`.
+					data.inclusion = user_input.inclusion;
 					app.ui.highlight_next_step();
 				}
 			});
 		}
 
-		// Return a promise so that client functions can continue chaining.
-		return dlgeo().then(diffexp);
-	};
-
-	app.comm.download_diff_exp_files = function() {
-
-		app.ui.show_progress_bar();
-
-		app.comm.fetch_files_from_geo().then(function(data_from_diffexp) {
-			var base_url = SERVER + data_from_diffexp.directory,
-				inclusion = data_from_diffexp.inclusion;
-
-			app.ui.highlight_next_step();
-			app.notifier.log('Downloading files locally');
-			app.notifier.log(data_from_diffexp);
-
-			if (inclusion === 'up' || inclusion === 'down') {
-				app.comm.dl_url(base_url + data_from_diffexp[inclusion]);
-			} else {
-				app.comm.dl_url(base_url + data_from_diffexp.up);
-				// Chrome doesn't have time to download the first file without a delay.
-				setTimeout(function() {
-					app.comm.dl_url(base_url + data_from_diffexp.down);
-				}, 1000);
-			}
-		});
-	};
-
-	app.comm.submit_data_to_enrich = function($modal) {
-
-		app.ui.show_progress_bar();
-
-		app.comm.fetch_files_from_geo().then(function(data_from_diffexp) {
+		function enrichr(data_from_diffexp) {
 			var endpoint = 'enrichr?',
-				qs = 'files=';
+				filename = data_from_diffexp[data_from_diffexp.inclusion],
+				qs = 'filename=' + filename;
 
-			qs += data_from_diffexp.up   ? data_from_diffexp.up   : '';
-			qs += '-';
-			qs += data_from_diffexp.down ? data_from_diffexp.down : '';
+			file_for_download = data_from_diffexp.directory + filename;
 
 			$.ajax({
 				url: SERVER + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
-					app.notifier.log('Enrichr links were returned');
+					app.notifier.log('Enrichr link was returned');
 					app.notifier.log(data);
 					app.ui.highlight_next_step();
-					app.ui.handle_enrichr_links(data.links);
+					app.ui.show_results(data.link);
 				}
 			});
-		});
+		}
+
+		dlgeo().then(diffexp).then(enrichr);
+	};
+
+	app.comm.download_diff_exp_files = function() {
+		app.notifier.log('Downloading files locally');
+		app.notifier.log(file_for_download);
+		app.comm.dl_url(SERVER + file_for_download);
+	};
+
+	app.comm.reset_downloaded_file = function() {
+		file_for_download = undefined;
 	};
 
 })(GEO2Enrichr, jQuery);

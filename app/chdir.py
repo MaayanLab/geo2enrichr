@@ -23,7 +23,7 @@ import numbers
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 
-def chdir(A, B, genes, r=1, PCAMaxDimensions=500):
+def chdir(A, B, genes, r=1, PCAMaxDimensions=50):
 #  calculate a characteristic direction for a gene expression dataset 
 #  A: control numeric gene expressoion data
 #  B: experiment numeric gene expression data

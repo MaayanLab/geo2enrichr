@@ -77,7 +77,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 			return app.global.accession;
 		},
 
-		get_species: function() {
+		get_organism: function() {
 			return app.global.taxon || app.scraper.__get_by_name('organism');
 		},
 
@@ -124,7 +124,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 				var text = $(tr).find('td')
 								.first()
 								.text();
-				text = app.scraper.clean_text(text).replace(/[^a-zA-Z]/g, '');
+				text = app.scraper.normalize_text(text).replace(/[^a-zA-Z]/g, '');
 
 				if (text === attr_name) {
 					result = i;
