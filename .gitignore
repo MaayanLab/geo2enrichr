@@ -1,0 +1,10 @@
+# OSX
+*.DS_Store
+
+# directories
+UnmodifiedGeoScripts/
+screenshots/
+
+# Sublime Text
+geo.sublime-project
+geo.sublime-workspace
