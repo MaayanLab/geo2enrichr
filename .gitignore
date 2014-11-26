@@ -4,6 +4,7 @@
 # directories
 UnmodifiedGeoScripts/
 screenshots/
+platform scripts/
 
 # Sublime Text
 geo.sublime-project
