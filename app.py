@@ -4,12 +4,14 @@
 
 
 import mimetypes
+import sys
 
 import flask
 
 import geodownloader
 import geoanalyzer
 import enrichrlink
+
 from requestparams import RequestParams
 
 
@@ -59,4 +61,4 @@ def enrichr():
 
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0')
+	app.run(port=sys.argv[0], host='0.0.0.0')
