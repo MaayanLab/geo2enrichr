@@ -11,6 +11,7 @@ import flask
 import geodownloader
 import geoanalyzer
 import enrichrlink
+from crossdomain import crossdomain
 
 from requestparams import RequestParams
 
@@ -24,11 +25,13 @@ mimetypes.add_type('application/x-please-download-me', '.txt')
 
 
 @app.route('/')
+@crossdomain(origin='*')
 def index():
 	return 'It works!'
 
 
 @app.route('/dlgeo')
+@crossdomain(origin='*')
 def dlgeo():
 	"""Takes an an accession number and optional annotations and downloads the
 	file from GEO.
@@ -42,6 +45,7 @@ def dlgeo():
 
 
 @app.route('/diffexp')
+@crossdomain(origin='*')
 def diffexp():
 	"""Analyzes an existing SOFT file on the server."""
 
@@ -51,6 +55,7 @@ def diffexp():
 
 
 @app.route('/enrichr')
+@crossdomain(origin='*')
 def enrichr():
 	"""Parses any files on the server and returns a valid Enrichr link
 	"""
