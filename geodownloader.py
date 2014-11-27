@@ -84,7 +84,8 @@ def __get_file_by_url(url, attempts=5):
 
 
 def __unzip(compressed_string):
-	#Unzips the file without allowing it to touch the disk
+	"""Unzips the file without allowing it to touch the disk.
+	"""
 
 	f = StringIO.StringIO(compressed_string)
 	decompressed = gzip.GzipFile(fileobj=f)

@@ -46,8 +46,8 @@ def diffexp():
 	"""Analyzes an existing SOFT file on the server."""
 
 	rp = RequestParams(flask.request.args)
-	response = geoanalyzer.analyze_geo_file(rp.filename, rp.options, rp.control, rp.experimental)	
-	return flask.jsonify(response)
+	geo_file_obj = geoanalyzer.analyze_geo_file(rp.filename, rp.options, rp.control, rp.experimental)	
+	return flask.jsonify(geo_file_obj)
 
 
 @app.route('/enrichr')
@@ -56,8 +56,8 @@ def enrichr():
 	"""
 
 	rp = RequestParams(flask.request.args)
-	response = enrichrlink.get_link(rp.filename)
-	return flask.jsonify(response)
+	enrichr_link = enrichrlink.get_link(rp.filename)
+	return flask.jsonify(enrichr_link)
 
 
 if __name__ == '__main__':
@@ -65,4 +65,8 @@ if __name__ == '__main__':
 		port = int(sys.argv[1])
 	else:
 		port = 5000
-	app.run(port=port, host='0.0.0.0')
+	if len(sys.argv) > 2:
+		host = sys.argv[2]
+	else:
+		host = '0.0.0.0'
+	app.run(port=port, host=host)

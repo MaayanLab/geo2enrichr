@@ -5,10 +5,8 @@
 
 import cookielib
 import poster
-import time
 import urllib2
 
-#from probe2gene import PROBE2GENE
 from files import GeneFiles
 
 
@@ -86,9 +84,29 @@ def __passes_unique_score_threshold(use_chdir, score, unique_score):
 		return abs(score) < abs(unique_score)
 
 
+def __open_probe_dict(platform_probesetid_genesym_file):
+	"""Platform data collected and script written by Andrew Rouillard.
+	"""
+	platformdictionary = {}
+	with open(platform_probesetid_genesym_file) as f:
+		for line in f:
+			entries = line.rstrip().split('\t')
+			platform = entries[0]
+			probesetid = entries[1]
+			genesym = entries[2]
+			if platform in platformdictionary:
+				platformdictionary[platform][probesetid] = genesym
+			else:
+				platformdictionary[platform] = {probesetid:genesym}
+	return platformdictionary
+
+
+PROBE2GENE = __open_probe_dict('platform_probesetid_genesym_20141112_complete_converted.txt')
+
+
 # We wish to identify which soft files we want
 # Now obtain and parse each accession-associated SOFT file one-by-one
-def __open_probe_dict(probe_dict):
+'''def __open_probe_dict(probe_dict):
 	# Step 1: Get Conversion Dictionary
 	with open(probe_dict) as f:
 		probe_2_symbol_dict = {}
@@ -103,4 +121,13 @@ def __open_probe_dict(probe_dict):
 		return probe_2_symbol_dict
 
 
-probe_2_symbol_dict = __open_probe_dict("Probe_2_Symbol_Unique.txt")
+probe_2_symbol_dict = __open_probe_dict("Probe_2_Symbol_Unique.txt")'''
+
+
+
+
+
+
+
+
+

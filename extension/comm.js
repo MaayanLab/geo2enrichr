@@ -4,8 +4,8 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 	app.comm = {};
 
-	//var SERVER = 'http://localhost:5000/',
-	var 'https://fierce-taiga-8242.herokuapp.com/',
+	var SERVER = 'http://localhost:5000/',
+	//var 'https://fierce-taiga-8242.herokuapp.com/',
 		$dl_iframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
 		file_for_download;
 
@@ -42,8 +42,6 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	// Then we query GEO's esummary endpoint with the ID.
 	// Finally, we set the returned data in `app.globals` so that we can use it later.
 	app.comm.fetch_diffexp_enrich = function($modal) {
-		debugger;
-		
 		var user_input = app.scraper.get_data($modal);
 		app.ui.show_progress_bar();
 		app.ui.highlight_next_step();
@@ -84,6 +82,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 				url: SERVER + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					debugger;
 					app.notifier.log('GEO files were differentially expressed');
 					app.notifier.log(data);
 
@@ -95,6 +94,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		}
 
 		function enrichr(data_from_diffexp) {
+			debugger;
 			var endpoint = 'enrichr?',
 				filename = data_from_diffexp[data_from_diffexp.inclusion],
 				qs = 'filename=' + filename;
