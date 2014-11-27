@@ -4,8 +4,8 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 	app.comm = {};
 
-	var SERVER = 'http://localhost:5000/',
-	//var 'https://fierce-taiga-8242.herokuapp.com/',
+	//var SERVER = 'http://localhost:5000/',
+	var 'https://fierce-taiga-8242.herokuapp.com/',
 		$dl_iframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
 		file_for_download;
 
