@@ -7,6 +7,10 @@ screenshots/
 platform scripts/
 PlatformInfoForGreg/
 
+# Collected data
+static/geofiles/*
+static/genefiles/*
+
 # Sublime Text
 geo.sublime-project
 geo.sublime-workspace
