@@ -12,7 +12,8 @@ data/
 accessionlist_example.txt
 
 # Collected data
-static/geofiles/*
+static/geofiles/anova/*
+static/geofiles/chdir/*
 static/genefiles/*
 
 # Sublime Text
