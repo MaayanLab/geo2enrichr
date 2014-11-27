@@ -6,6 +6,10 @@ UnmodifiedGeoScripts/
 screenshots/
 platform scripts/
 PlatformInfoForGreg/
+data/
+
+# Misc
+accessionlist_example.txt
 
 # Collected data
 static/geofiles/*
