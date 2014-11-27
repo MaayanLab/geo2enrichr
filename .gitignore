@@ -1,6 +1,9 @@
 # OSX
 *.DS_Store
 
+# Chrome Extension zip file
+*.zip
+
 # directories
 UnmodifiedGeoScripts/
 screenshots/
