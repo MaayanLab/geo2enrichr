@@ -38,7 +38,9 @@ def dlgeo():
 	"""
 
 	# TODO: Check if the file already exists on the file system.
-	
+	if not flask.request.args:
+		return 'dlgeo'
+
 	rp = RequestParams(flask.request.args)
 	downloaded_file = geodownloader.download_geo_file(rp.accession, rp.options, rp.metadata)
 	return flask.jsonify(downloaded_file)
