@@ -39,7 +39,7 @@ def analyze_geo_file(filename, user_options, control, experimental):
 def __analyze_soft(filename, user_options, control_names, experimental_names):
 	use_chdir = user_options['method'] == 'chdir'
 
-	full_path = GEOFile.get_directory(user_options['method'], filename)
+	full_path = GEOFile.get_full_path(filename)
 	HEADER_INDEX = 0
 	pvalues, gene_order, control, experimental = geoparser.parse_soft_file(full_path, control_names, experimental_names, '!dataset_table_begin', '!dataset_table_end', HEADER_INDEX)
 
@@ -116,7 +116,7 @@ def __analyze_soft(filename, user_options, control_names, experimental_names):
 def __analyze_series_matrix(filename, user_options, control_names, experimental_names):
 	use_chdir = user_options['method'] == 'chdir'
 
-	full_path = filemanager.get_geo_file_directory(user_options['method']) + filename
+	full_path = GEOFile.get_full_path(filename)
 	HEADER_INDEX = 1
 	pvalues, gene_order, control, experimental = geoparser.parse_soft_file(full_path, control_names, experimental_names, '!series_matrix_table_begin', '!series_matrix_table_end', HEADER_INDEX)
 

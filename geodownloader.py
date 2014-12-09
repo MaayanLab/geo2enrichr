@@ -36,7 +36,7 @@ def __get_soft_file(accession, user_options, metadata):
 	except IOError:
 		return "Error: Cannot get file from GEO. Please try again later."
 
-	geofile = GEOFile(accession, user_options['method'], metadata, 'soft')
+	geofile = GEOFile(accession, metadata, 'soft')
 	with open(geofile.full_path, 'w') as f:
 		f.write(string)
 
@@ -55,7 +55,7 @@ def __get_series_matrix_file(dataset_identifier, user_options, metadata):
 	except IOError:
 		return "Error: Cannot get file from GEO. Please try again later."
 
-	geofile = GEOFile(accession, user_options['method'], metadata, 'txt')
+	geofile = GEOFile(accession, metadata, 'txt')
 	with open(geofile.full_path, 'w') as f:
 		f.write(string)
 
