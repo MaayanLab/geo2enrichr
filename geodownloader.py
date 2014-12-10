@@ -1,11 +1,11 @@
-# -----------------------------------------------------------------------------
-# <credits, etc.>
-#
-# Library for getting and processing GDS SOFT Files from GEO. GDS Files have a
-# particular structure for the construction of their gzipped files. This script
-# will take a GDS as input and return the samples (GSMs) and their experimental
-# conditions with it
-# -----------------------------------------------------------------------------
+"""This module is responsible for downloading GEO SOFT files. SOFT file URLs
+depend on whether the file type is GDS or GSE. This module abstracts that
+conditional away.
+
+__authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
+__credits__ = "Andrew Rouillard, Matthew Jones, Avi Ma'ayan"
+__contact__ = "avi.maayan@mssm.edu"
+"""
 
 
 import gzip
@@ -17,62 +17,46 @@ import filemanager
 from files import GEOFile
 
 
-def download_geo_file(accession, options, metadata={}):
+def download(accession, metadata):
+	"""Downloads GEO file based on accession number. Returns a GEOFile
+	instance with optional metadata as annotations.
+
+	While `metadata` is optional, optional arguments are handled at the
+	endpoints, meaning that `RequestParams` will set `metadata` to an empty
+	dict if no metadata is provided.
+	"""
+
 	if 'GDS' in accession:
-		return __get_soft_file(accession, options, metadata)
+		url = __construct_GDS_url(accession)
 	else:
-		return __get_series_matrix_file(accession, options, metadata)
-
-
-# `metadata` is a user-supplied argument for adding descriptors to the filename.
-def __get_soft_file(accession, user_options, metadata):
-	url = __construct_GDS_url(accession)
+		url = __construct_GSE_url(accession)
+	print 'URL constructed: ' + url
 	bin_string = __get_file_by_url(url)
-
 	if bin_string is None:
-		return "Error: File does not exist."
+		# TODO: Throw an error
+		return 'Error: File does not exist.'
 	try:
 		string = __unzip(bin_string)
 	except IOError:
-		return "Error: Cannot get file from GEO. Please try again later."
+		return 'Error: Cannot get file from GEO. Please try again later.'
 
 	geofile = GEOFile(accession, metadata, 'soft')
 	with open(geofile.full_path, 'w') as f:
 		f.write(string)
-
-	return geofile.__dict__
-
-
-def __get_series_matrix_file(dataset_identifier, user_options, metadata):
-	platform = metadata['platform']
-	url = __construct_GSE_url(dataset_identifier, platform)
-	bin_string = __get_file_by_url(url)
-
-	if bin_string is None:
-		return "Error: File does not exist."
-	try:
-		string = __unzip(bin_string)
-	except IOError:
-		return "Error: Cannot get file from GEO. Please try again later."
-
-	geofile = GEOFile(accession, metadata, 'txt')
-	with open(geofile.full_path, 'w') as f:
-		f.write(string)
-
-	return geofile.__dict__
+	return geofile
 
 
 def __get_file_by_url(url, attempts=5):
-	"""Attempts to get the file from URL. Tries five times before giving up.
+	"""Attempts to get the file from URL. Tries 5 times before giving up.
 	"""
 
 	while attempts > 0:
 		try:
 			response = urllib2.urlopen(url)
 		except urllib2.URLError:
-			print url 
-			sys.exit("Error: URL does not exist.")
-		
+			print 'Failed to download'
+			# TODO: Throw an error
+			return None
 		if response.getcode() < 201:
 			break
 		else:
@@ -93,45 +77,39 @@ def __unzip(compressed_string):
 	return decompressed.read()
 
 
-def __construct_GDS_url(dataset_identifier):
+def __construct_GDS_url(accession):
 	"""Example URL:
 		ftp://ftp.ncbi.nlm.nih.gov/geo/datasets/GDS4nnn/GDS4999/soft/GDS4999.soft.gz
 	"""
 
-	number_digits = len(dataset_identifier) - 3;    ## "GDS" is of length 3
-
+	number_digits = len(accession) - 3  # "GDS" is of length 3.
 	if number_digits > 3:
-		folder = dataset_identifier[:4] + "nnn"
+		folder = accession[:4] + "nnn"
 	else:
-		folder = dataset_identifier[:3] + "n" * number_digits
-
+		folder = accession[:3] + "n" * number_digits
 	url = '/'.join(["ftp://ftp.ncbi.nlm.nih.gov/geo/datasets", 
-									   folder,
-									   dataset_identifier,
-									   "soft",
-									   dataset_identifier + ".soft.gz"])
-	print 'URL constructed: ' + url
+		folder,
+		accession,
+		"soft",
+		accession + ".soft.gz"])
 	return url
 
 
-def __construct_GSE_url(dataset_identifier, platform):
+def __construct_GSE_url(accession):
 	"""Example URL:
 		ftp://ftp.ncbi.nlm.nih.gov/geo/platforms/GSE4nnn/GSE4999/matrix/GSE4999.txt.gz
 	"""
 
-	number_digits = len(dataset_identifier) - 3;    ## "GSE" is of length 3
-
+	number_digits = len(accession) - 3  # "GSE" is of length 3.
 	if number_digits < 4:
-		folder = dataset_identifier[:3] + "nnn" #GSEnnn
+		folder = accession[:3] + 'nnn'  # e.g. GSEnnn.
 	elif 3 < number_digits < 5:
-		folder = dataset_identifier[:4] + "nnn" #GSE1nnn
+		folder = accession[:4] + 'nnn'  # e.g. GSE1nnn.
 	else:
-		folder = dataset_identifier[:5] + "nnn" #GSE39nnn
-
-	url = '/'.join(["ftp://ftp.ncbi.nlm.nih.gov/geo/series", 
-										folder,
-										dataset_identifier,
-										"matrix",
-										dataset_identifier + "_series_matrix.txt.gz"])
-	print 'URL constructed: ' + url
+		folder = accession[:5] + 'nnn'  # e.g. GSE39nnn.
+	url = '/'.join(['ftp://ftp.ncbi.nlm.nih.gov/geo/series', 
+		folder,
+		accession,
+		'matrix',
+		accession + '_series_matrix.txt.gz'])
 	return url

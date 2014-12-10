@@ -1,6 +1,9 @@
-# -----------------------------------------------------------------------------
-# <credits, etc.>
-# -----------------------------------------------------------------------------
+"""This module API endpoints for GEO2Enrichr.
+
+__authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
+__credits__ = "Andrew Rouillard, Matthew Jones, Avi Ma'ayan"
+__contact__ = "avi.maayan@mssm.edu"
+"""
 
 
 import mimetypes
@@ -40,12 +43,9 @@ def dlgeo():
 	"""
 
 	# TODO: Check if the file already exists on the file system.
-	if not flask.request.args:
-		return 'dlgeo'
-
 	rp = RequestParams(flask.request.args)
-	downloaded_file = geodownloader.download_geo_file(rp.accession, rp.options, rp.metadata)
-	return flask.jsonify(downloaded_file)
+	downloaded_file = geodownloader.download(rp.accession, rp.metadata)
+	return flask.jsonify(downloaded_file.__dict__)
 
 
 @app.route('/g2e/diffexp')
@@ -54,14 +54,14 @@ def diffexp():
 	"""Analyzes an existing SOFT file on the server."""
 
 	rp = RequestParams(flask.request.args)
-	geo_file_obj = geoanalyzer.analyze_geo_file(rp.filename, rp.options, rp.control, rp.experimental)	
-	return flask.jsonify(geo_file_obj)
+	geo_file_obj = softanalyzer.analyze(rp.filename, rp.options, rp.control, rp.experimental)	
+	return flask.jsonify(geo_file_obj.__dict__)
 
 
 @app.route('/g2e/enrichr')
 @crossdomain(origin='*')
 def enrichr():
-	"""Parses any files on the server and returns a valid Enrichr link
+	"""Parses any files on the server and returns a valid Enrichr link.
 	"""
 
 	rp = RequestParams(flask.request.args)
