@@ -25,6 +25,7 @@ geo.sublime-workspace
 
 # Python
 *.pyc
+venv/
 
 # Hopefully temporary
 probe2gene.py
