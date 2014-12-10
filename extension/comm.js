@@ -4,8 +4,8 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 	app.comm = {};
 
-	//var SERVER = 'http://localhost:5000/',
-	var SERVER = 'https://fierce-taiga-8242.herokuapp.com/',
+	var ENDPOINT = 'g2e/',
+		SERVER = 'http://localhost:8083/' + ENDPOINT,
 		$dl_iframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
 		file_for_download;
 
@@ -15,8 +15,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 			DB = 'db=gds'
 			SETTINGS = '&retmax=1&retmode=json',
 			EUTILS_SEARCH = EUTILS_BASE + 'esearch.fcgi?' + DB + SETTINGS,
-			EUTILS_SUMMARY = EUTILS_BASE + 'esummary.fcgi?' + DB + SETTINGS,
-
+			EUTILS_SUMMARY = EUTILS_BASE + 'esummary.fcgi?' + DB + SETTINGS;
 		$.ajax({
 			url: EUTILS_SEARCH + '&term=' + acc_num + '[ACCN]',
 			type: 'GET',

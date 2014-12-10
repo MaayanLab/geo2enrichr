@@ -24,13 +24,15 @@ app.debug = True
 mimetypes.add_type('application/x-please-download-me', '.txt')
 
 
-@app.route('/')
+@app.route('/g2e')
 @crossdomain(origin='*')
 def index():
-	return 'It works!'
+	return flask.jsonify({
+		'status': 'OK'
+	})
 
 
-@app.route('/dlgeo')
+@app.route('/g2e/dlgeo')
 @crossdomain(origin='*')
 def dlgeo():
 	"""Takes an an accession number and optional annotations and downloads the
@@ -46,7 +48,7 @@ def dlgeo():
 	return flask.jsonify(downloaded_file)
 
 
-@app.route('/diffexp')
+@app.route('/g2e/diffexp')
 @crossdomain(origin='*')
 def diffexp():
 	"""Analyzes an existing SOFT file on the server."""
@@ -56,7 +58,7 @@ def diffexp():
 	return flask.jsonify(geo_file_obj)
 
 
-@app.route('/enrichr')
+@app.route('/g2e/enrichr')
 @crossdomain(origin='*')
 def enrichr():
 	"""Parses any files on the server and returns a valid Enrichr link
@@ -71,7 +73,8 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1:
 		port = int(sys.argv[1])
 	else:
-		port = 5000
+		# Defined by AMP
+		port = 8083
 	if len(sys.argv) > 2:
 		host = sys.argv[2]
 	else:

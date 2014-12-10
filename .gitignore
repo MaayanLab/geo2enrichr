@@ -5,11 +5,8 @@
 *.zip
 
 # directories
-UnmodifiedGeoScripts/
-screenshots/
-platform scripts/
-PlatformInfoForGreg/
-data/
+resources/platform scripts/
+resources/PlatformInfoForGreg/
 
 # Misc
 accessionlist_example.txt
