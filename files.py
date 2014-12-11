@@ -1,8 +1,13 @@
-# -----------------------------------------------------------------------------
-# <credits, etc.>
-#
-# Flask automatically servers anything in the `static/` directory
-# -----------------------------------------------------------------------------
+"""This module contains two classes for abstracting files on the server.
+Importantly, these classes know where they live on the server and can be
+jsonified as a response. They also annotate and timestamp themselves.
+
+Note that Flask automatically servers anything in the `static/` directory
+
+__authors__ = "Gregory Gundersen"
+__credits__ = "Axel Feldmann, Kevin Hu, Andrew Rouillard, Matthew Jones, Avi Ma'ayan"
+__contact__ = "avi.maayan@mssm.edu"
+"""
 
 
 from time import time
@@ -13,16 +18,13 @@ class GEOFile:
 	GEO_FILES_DIR = 'static/geofiles/'
 
 
-	def __init__(self, accession, metadata={}, extension='soft'):
+	def __init__(self, accession, metadata, extension='soft'):
 		self.accession = accession
 		self.annotations = filter(None, metadata)
-		timestamp = ''#str(time())[:-3]
-
-		if self.annotations:
-			self.filename = self.accession + '_' + '-'.join(self.annotations) + '_' + timestamp + '.' + extension
-		else:
-			self.filename = self.accession + '_' + timestamp + '.' + extension
-
+		timestamp = ''#str(time())[:-9]
+		extension = extension if extension[-1] is '.' else '.' + extension
+		anno = '-'.join(self.annotations)
+		self.filename = '_'.join(filter(None, [self.accession, anno, timestamp])) + extension
 		self.full_path = GEOFile.GEO_FILES_DIR + self.filename
 
 

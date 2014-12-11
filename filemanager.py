@@ -1,6 +1,8 @@
-# -----------------------------------------------------------------------------
-# <credits, etc.>
-# -----------------------------------------------------------------------------
+"""This module builds an output file on the server.
+
+__authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
+__contact__ = "gregory.gundersen@mssm.edu"
+"""
 
 
 import cookielib
@@ -10,24 +12,8 @@ import urllib2
 from files import GeneFiles
 
 
-def build_output_file(scores, use_chdir, base_filename):
-	print "Now printing up and down gene lists..."
-	print len(scores)
-
-	unique_scores = dict()
-	for symbol, score in scores:
-		if symbol not in unique_scores or __passes_unique_score_threshold(use_chdir, score, unique_scores[symbol]):
-			unique_scores[symbol] = score
-
-	items = unique_scores.items()
-	items.sort(key=lambda x: abs(x[1]), reverse=(True if use_chdir else False))
-
-	#Convert Probe IDs to Gene Symbols
-	if 'GSE' in base_filename:	
-		print "Now converting probe IDs..."
-		y = __convert_probe_IDs(items)
-		items = y[0]
-		print y[1]
+def build_output_file(items, use_chdir, base_filename):
+	
 
 	genefiles      = GeneFiles(base_filename)
 	full_path_up   = genefiles.directory + genefiles.up
@@ -77,12 +63,6 @@ def __convert_probe_IDs(list_to_convert):
 	return (converted_items, read_out)
 
 
-def __passes_unique_score_threshold(use_chdir, score, unique_score):
-	if use_chdir:
-		return abs(score) > abs(unique_score)
-	else:
-		return abs(score) < abs(unique_score)
-
 
 def __open_probe_dict(platform_probesetid_genesym_file):
 	"""Platform data collected and script written by Andrew Rouillard.
@@ -101,33 +81,4 @@ def __open_probe_dict(platform_probesetid_genesym_file):
 	return platformdictionary
 
 
-PROBE2GENE = __open_probe_dict('platform_probesetid_genesym_20141112_complete_converted.txt')
-
-
-# We wish to identify which soft files we want
-# Now obtain and parse each accession-associated SOFT file one-by-one
-'''def __open_probe_dict(probe_dict):
-	# Step 1: Get Conversion Dictionary
-	with open(probe_dict) as f:
-		probe_2_symbol_dict = {}
-		for i, line in enumerate(f):
-			split_line = line.rstrip().split('\t')
-			probe = split_line[0]
-			try:
-				symbol = split_line[1]
-				probe_2_symbol_dict[probe] = symbol
-			except:
-				continue
-		return probe_2_symbol_dict
-
-
-probe_2_symbol_dict = __open_probe_dict("Probe_2_Symbol_Unique.txt")'''
-
-
-
-
-
-
-
-
-
+PROBE2GENE = __open_probe_dict('static/probe2gene.txt')

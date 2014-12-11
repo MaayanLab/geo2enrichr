@@ -12,12 +12,17 @@ import sys
 import flask
 
 import geodownloader
-import geoanalyzer
+import diffexp
+import softparser
 import enrichrlink
 from crossdomain import crossdomain
-
 from requestparams import RequestParams
 
+import pdb
+import json
+
+
+ENTRY_POINT = '/g2e'
 
 app = flask.Flask(__name__)
 app.debug = True
@@ -27,40 +32,52 @@ app.debug = True
 mimetypes.add_type('application/x-please-download-me', '.txt')
 
 
-@app.route('/g2e')
+@app.route(ENTRY_POINT)
 @crossdomain(origin='*')
-def index():
+def index_endpoint():
 	return flask.jsonify({
 		'status': 'OK'
 	})
 
 
-@app.route('/g2e/dlgeo')
+@app.route(ENTRY_POINT + '/dlgeo')
 @crossdomain(origin='*')
-def dlgeo():
+def dlgeo_endpoint():
 	"""Takes an an accession number and optional annotations and downloads the
 	file from GEO.
 	"""
 
 	# TODO: Check if the file already exists on the file system.
 	rp = RequestParams(flask.request.args)
-	downloaded_file = geodownloader.download(rp.accession, rp.metadata)
-	return flask.jsonify(downloaded_file.__dict__)
+	try:
+		downloaded_file = geodownloader.download(rp.accession, rp.metadata)
+		return flask.jsonify(downloaded_file.__dict__)
+	except IOError, e:
+		return flask.jsonify({
+			'error': str(e)
+		})
 
 
-@app.route('/g2e/diffexp')
+@app.route(ENTRY_POINT + '/diffexp')
 @crossdomain(origin='*')
-def diffexp():
+def diffexp_endpoint():
 	"""Analyzes an existing SOFT file on the server."""
 
 	rp = RequestParams(flask.request.args)
-	geo_file_obj = softanalyzer.analyze(rp.filename, rp.options, rp.control, rp.experimental)	
-	return flask.jsonify(geo_file_obj.__dict__)
+	try:
+		control, experimental, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.control_names, rp.experimental_names)
+		return json.dumps(control_values)
+	except LookupError, e:
+		return flask.jsonify({
+			'error': str(e)
+		})
+	#geo_file_obj = diffexp.analyze(rp.filename, rp.options, rp.control_names, rp.experimental_names)	
+	#return 'success!'
 
 
-@app.route('/g2e/enrichr')
+@app.route(ENTRY_POINT + '/enrichr')
 @crossdomain(origin='*')
-def enrichr():
+def enrichr_endpoint():
 	"""Parses any files on the server and returns a valid Enrichr link.
 	"""
 

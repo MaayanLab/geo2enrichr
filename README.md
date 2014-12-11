@@ -23,9 +23,9 @@ TODO:
 - T-test results go into subfolder "ANOVA".
 
 A sample query sequence is:
-1. http://localhost:5000/dlgeo?accession=GDS670&species=Homo+sapiens&platform=GPL80&method=chdir
-2. http://localhost:5000/diffexp?filename=Homo+sapiens_GPL80_GDS670.soft&method=chdir&control=GSM18403-GSM18404-GSM18405&experimental=GSM18406-GSM18407-GSM18408
-3. http://localhost:5000/static/genefiles/1415747594_geofiles_down_genes.txt
+1. http://localhost:8083/g2e/dlgeo?accession=GDS670
+2. http://localhost:8083/g2e/diffexp?filename=GDS670.soft&platform=GPL80&control=GSM18403-GSM18404-GSM18405&experimental=GSM18406-GSM18407-GSM18408
+3. http://localhost:8083/g2e/static/genefiles/1415747594_geofiles_down_genes.txt
 
 
 Example platform to probe ID mapping:

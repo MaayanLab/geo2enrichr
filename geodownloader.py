@@ -33,15 +33,11 @@ def download(accession, metadata):
 	print 'URL constructed: ' + url
 	bin_string = __get_file_by_url(url)
 	if bin_string is None:
-		# TODO: Throw an error
-		return 'Error: File does not exist.'
-	try:
-		string = __unzip(bin_string)
-	except IOError:
-		return 'Error: Cannot get file from GEO. Please try again later.'
+		raise IOError('Binary string is empty.')
+	string = __unzip(bin_string)
 
 	geofile = GEOFile(accession, metadata, 'soft')
-	with open(geofile.full_path, 'w') as f:
+	with open(geofile.full_path, 'w+') as f:
 		f.write(string)
 	return geofile
 
@@ -54,16 +50,13 @@ def __get_file_by_url(url, attempts=5):
 		try:
 			response = urllib2.urlopen(url)
 		except urllib2.URLError:
-			print 'Failed to download'
-			# TODO: Throw an error
-			return None
+			raise IOError('urllib2 failed to open URL.')
 		if response.getcode() < 201:
 			break
 		else:
 			attempts -= 1
 	else:
-		return None
-
+		raise IOError('urllib2 failed 5x to download the file.')
 	return response.read()
 
 
@@ -82,7 +75,7 @@ def __construct_GDS_url(accession):
 		ftp://ftp.ncbi.nlm.nih.gov/geo/datasets/GDS4nnn/GDS4999/soft/GDS4999.soft.gz
 	"""
 
-	number_digits = len(accession) - 3  # "GDS" is of length 3.
+	number_digits = len(accession) - 3  # 'GDS' is of length 3.
 	if number_digits > 3:
 		folder = accession[:4] + "nnn"
 	else:
@@ -100,7 +93,7 @@ def __construct_GSE_url(accession):
 		ftp://ftp.ncbi.nlm.nih.gov/geo/platforms/GSE4nnn/GSE4999/matrix/GSE4999.txt.gz
 	"""
 
-	number_digits = len(accession) - 3  # "GSE" is of length 3.
+	number_digits = len(accession) - 3  # 'GSE' is of length 3.
 	if number_digits < 4:
 		folder = accession[:3] + 'nnn'  # e.g. GSEnnn.
 	elif 3 < number_digits < 5:
