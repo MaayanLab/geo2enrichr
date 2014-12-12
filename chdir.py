@@ -40,7 +40,7 @@ def chdir(A, B, genes, r=1, PCAMaxDimensions=50):
 
 	if len(A)!= len(B):
 		raise RuntimeError('control expression data must have equal number of genes as experiment expression data!')
-	
+
 #check if there are non-number elements in A or B
 	if not all([isinstance(element, numbers.Number) for row in A for element in row]):
 		raise RuntimeError('There should be only numbers in control expression data. Non-number element(s) found in A.')

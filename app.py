@@ -1,4 +1,4 @@
-"""This module API endpoints for GEO2Enrichr.
+"""This module has the API endpoints for GEO2Enrichr.
 
 __authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
@@ -12,7 +12,7 @@ import sys
 import flask
 
 import geodownloader
-import diffexp
+import diffexper
 import softparser
 import enrichrlink
 from crossdomain import crossdomain
@@ -50,13 +50,13 @@ def dlgeo_endpoint():
 
 	# TODO: Check if the file already exists on the file system.
 	rp = RequestParams(flask.request.args)
-	#try:
-	downloaded_file = geodownloader.download(rp.accession, rp.metadata)
-	return flask.jsonify(downloaded_file.__dict__)
-	#except IOError as e:
-	#	return flask.jsonify({
-	#		ERROR_KEY: str(e)
-	#	})
+	try:
+		downloaded_file = geodownloader.download(rp.accession, rp.metadata)
+		return flask.jsonify(downloaded_file.__dict__)
+	except IOError as e:
+		return flask.jsonify({
+			ERROR_KEY: str(e)
+		})
 
 
 @app.route(ENTRY_POINT + '/diffexp')
@@ -66,24 +66,16 @@ def diffexp_endpoint():
 
 	rp = RequestParams(flask.request.args)
 	try:
-		control_values,\
-		experimental_values,\
-		genes,\
-		conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.control_names, rp.experimental_names)
-	except (LookupError, IOError) as e:
+		A, B, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.A_cols, rp.B_cols)
+		scores = diffexper.analyze(A, B, genes, rp.config)
+		# TODO: Output these values into a file.
+		return flask.jsonify({
+			'scores': scores
+		})
+	except (LookupError, IOError, MemoryError, ValueError) as e:
 		return flask.jsonify({
 			ERROR_KEY: str(e)
 		})
-
-	try:
-		return flask.jsonify({
-			'scores': diffexp.analyze(control_values, experimental_values, genes, rp.config)
-		})
-	except MemoryError as e:
-		return flask.jsonify({
-			ERROR_KEY: str(e)
-		})
-	#return 'success!'
 
 
 @app.route(ENTRY_POINT + '/enrichr')

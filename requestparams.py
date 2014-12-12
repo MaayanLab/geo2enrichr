@@ -18,8 +18,8 @@ class RequestParams:
 		self.accession = args.get('accession') if 'accession' in args else None
 		self.filename  = args.get('filename')  if 'filename'  in args else None
 
-		self.control_names      = [x.encode('ascii') for x in args.get('control').split('-')]      if 'control'      in args else None
-		self.experimental_names = [x.encode('ascii') for x in args.get('experimental').split('-')] if 'experimental' in args else None
+		self.A_cols = [x.encode('ascii') for x in args.get('control').split('-')]      if 'control'      in args else None
+		self.B_cols = [x.encode('ascii') for x in args.get('experimental').split('-')] if 'experimental' in args else None
 
 		# Set the user's default options in case the client-side code does not.
 		self.config = {

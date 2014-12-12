@@ -10,13 +10,13 @@ import os
 
 from scipy import stats
 
-from files import SOFTFile
+from files import SOFTFile, ParsedFile
 from runningstat import RunningStat
 
 import pdb
 
 
-def parse(filename, platform, control_names, experimental_names):
+def parse(filename, platform, A_cols, B_cols):
 	"""Parses SOFT files, discarding bad data, averaging duplicates, and
 	converting probe IDs to gene sybmols.
 	"""
@@ -40,14 +40,14 @@ def parse(filename, platform, control_names, experimental_names):
 	if platform not in PROBE2GENE:
 		raise LookupError('Platform ' + platform + ' is not supported.')
 
-	full_path = SOFTFile(filename).path()
+	soft_file = SOFTFile(filename).path()
 	is_gds = 'GDS' in filename
 	if is_gds:
-		control_names      = [x.upper() for x in control_names]
-		experimental_names = [x.upper() for x in experimental_names]
+		A_cols = [x.upper() for x in A_cols]
+		B_cols = [x.upper() for x in B_cols]
 	else:
-		control_names      = ['"{}"'.format(x.upper()) for x in control_names]
-		experimental_names = ['"{}"'.format(x.upper()) for x in experimental_names]
+		A_cols = ['"{}"'.format(x.upper()) for x in A_cols]
+		B_cols = ['"{}"'.format(x.upper()) for x in B_cols]
 
 	# COL_OFFSET changes because GDS files are "curated", meaning that they
 	# have their gene symbols included. GSE files do not and are 1 column
@@ -61,34 +61,30 @@ def parse(filename, platform, control_names, experimental_names):
 		EOF = '!series_matrix_table_end'
 		COL_OFFSET = 0
 
-	# Use `genes_dict` for fast hashing to track a running mean of duplicate
-	# probe IDs. Use `genes` for the final output.
+	# For `dict` fast hashing to track a running mean of duplicate probe IDs.
 	genes_dict = {}
-	genes = []
-	control = []
-	experimental = []
 
 	# For statistics about data quality.
 	null_probes = []
 	unconverted_probes = []
 
 	try:
-		with open(full_path) as soft_file:
+		with open(soft_file) as soft_in:
 			# Skip comments.
-			discard = next(soft_file)
+			discard = next(soft_in)
 			while discard.rstrip() != BOF:
-				discard = next(soft_file)
+				discard = next(soft_in)
 			
 			# Read header and set column offset.
-			header = next(soft_file).rstrip('\r\n').split('\t')
+			header = next(soft_in).rstrip('\r\n').split('\t')
 			header = header[COL_OFFSET+1:]
 			line_length = len(header)
 
 			# Find the columns indices.
-			control_indices      = [header.index(gsm) for gsm in control_names]
-			experimental_indices = [header.index(gsm) for gsm in experimental_names]
+			A_incides = [header.index(gsm) for gsm in A_cols]
+			B_incides = [header.index(gsm) for gsm in B_cols]
 
-			for line in soft_file:
+			for line in soft_in:
 				split_line = line.rstrip('\r\n').split('\t')
 				if split_line[0] == EOF or split_line[1] == '--Control':
 					continue
@@ -114,33 +110,36 @@ def parse(filename, platform, control_names, experimental_names):
 	except IOError:
 		raise IOError('Could not read SOFT file from local server.')
 
-	#os.remove(full_path)
+	# Iterate over sybmols and values, mapping symbols to gene names if
+	# necessary and putting values into A and B arrays.
+	A = []
+	B = []
+	genes = []
+
 	for symbol in genes_dict:
 		# Get the final mean value of each row from each RunningStat instance.
 		adj_values = genes_dict[symbol].mean()
-		control_values = [adj_values[i] for i in control_indices]
-		experimental_values = [adj_values[i] for i in experimental_indices]
+		A_row = [adj_values[i] for i in A_incides]
+		B_row = [adj_values[i] for i in B_incides]
 
 		# GSD files already contain a column with gene symbols and do not need
 		# to be converted.
 		if is_gds:
+			A.append(A_row)
+			B.append(B_row)
 			genes.append(symbol)
-			control.append(control_values)
-			experimental.append(experimental_values)
-		# TODO: We know if a platform is supported before even parsing the
-		# file. Add a guard at the top of this function.
 		else:
 			symbol = __probe2gene(platform, symbol)
 			if symbol is None:
 				unconverted_probes.append(symbol)
 				continue
 			else:
+				A.append(A_row)
+				B.append(B_row)
 				genes.append(symbol)
-				control.append(control_values)
-				experimental.append(experimental_values)
 
 	conversion_pct = 100.0 - float(len(unconverted_probes)) / float(len(genes_dict.keys()))
-	return (control, experimental, genes, conversion_pct)
+	return (A, B, genes, conversion_pct)
 
 
 def __probe2gene(platform, probe):

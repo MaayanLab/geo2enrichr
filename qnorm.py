@@ -6,5 +6,6 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-def qnorm():
-	pass
+def quantile_normalize(A, B):
+	# TODO: Implement!
+	return (A, B)
