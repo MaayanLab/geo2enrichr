@@ -1,6 +1,12 @@
+"""This module calculates the characteristic direction. For more information,
+see http://maayanlab.net/CD/. This code has been modified slightly from the
+published version to better work as a module within the application.
+"""
+
+
 import numpy as np
 import warnings
-import numbers
+
 
 # This code caclulates the characteristic direction with regulization.
 
@@ -23,7 +29,7 @@ import numbers
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 
-def chdir(A, B, genes, r=1, PCAMaxDimensions=50):
+def chdir(A, B, genes, cutoff, r=1, PCAMaxDimensions=50):
 #  calculate a characteristic direction for a gene expression dataset 
 #  A: control numeric gene expressoion data
 #  B: experiment numeric gene expression data
@@ -34,18 +40,8 @@ def chdir(A, B, genes, r=1, PCAMaxDimensions=50):
 #     potential noise in the dataset.
 #  PCAMaxDimensions: Adjust this parameter to set the maximum number of dimensions 
 #     to reduce to. Lower means faster run time, higher means better accuracy.
+# cutoff: a rough significance cut.
 
- 
-# Note: make sure control(A) and experiment(B) have equal number of genes
-
-	if len(A)!= len(B):
-		raise RuntimeError('control expression data must have equal number of genes as experiment expression data!')
-
-#check if there are non-number elements in A or B
-	if not all([isinstance(element, numbers.Number) for row in A for element in row]):
-		raise RuntimeError('There should be only numbers in control expression data. Non-number element(s) found in A.')
-	if not all([isinstance(element, numbers.Number) for row in B for element in row]):
-		raise RuntimeError('There should be only numbers in experiment expression data. Non-number element(s) found in B.')
 
 # place control gene expression data and experiment gene expression data into
 # one matrix X.
@@ -63,7 +59,7 @@ def chdir(A, B, genes, r=1, PCAMaxDimensions=50):
 
 # use the nipals PCA algorithm to calculate scores, loadings, and explained_var. 
 # explained_var are the variances captured by each component 
-	scores, loadings, explained_var = nipals(X,maxComponentsNum,1e5,1e-4)
+	scores, loadings, explained_var = __nipals(X,maxComponentsNum,1e5,1e-4)
 
 # We only want components that capture 95% of the total variance or a little above.
 	cumVariance = np.cumsum(explained_var)
@@ -94,15 +90,14 @@ def chdir(A, B, genes, r=1, PCAMaxDimensions=50):
 	b /= np.linalg.norm(b)
 
 # sort b and genes by the absolute values of b's components in descending order.
-	res = sorted(zip(genes, b),  key=lambda x: abs(x[1]), reverse=True)
-	
+	res = sorted(zip(genes, b), key=lambda x: abs(x[1]), reverse=True)
+	if cutoff:
+# Tuples are already sorted in descending order. Take the first cutoff-th items.
+		return res[:cutoff]
 	return res
 
-def printi(arr):
-	#Pretty print an array
- 	print np.array_str(np.array(arr))
 
-def nipals(X,a,it=100,tol=1e-4):
+def __nipals(X,a,it=100,tol=1e-4):
 	# Nipals algorithm for Principal Component Analysis
 	# This function is written largely based on nipals function from R chemometrics package.
 	

@@ -8,12 +8,10 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-import gzip
-import urllib2
-import StringIO
-import sys
+from gzip import GzipFile
+from urllib2 import urlopen, URLError
+from StringIO import StringIO
 
-import filemanager
 from files import SOFTFile
 
 
@@ -48,8 +46,8 @@ def __get_file_by_url(url, attempts=5):
 
 	while attempts > 0:
 		try:
-			response = urllib2.urlopen(url)
-		except urllib2.URLError:
+			response = urlopen(url)
+		except URLError:
 			raise IOError('urllib2 failed to open URL.')
 		if response.getcode() < 201:
 			break
@@ -64,8 +62,8 @@ def __unzip(compressed_string):
 	"""Unzips the file without allowing it to touch the disk.
 	"""
 
-	f = StringIO.StringIO(compressed_string)
-	decompressed = gzip.GzipFile(fileobj=f)
+	f = StringIO(compressed_string)
+	decompressed = GzipFile(fileobj=f)
 	print 'Unzipping file'
 	return decompressed.read()
 

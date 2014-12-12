@@ -1,4 +1,4 @@
-"""This module contains two classes for abstracting files on the server.
+"""This module contains classes for abstracting files on the server.
 Importantly, these classes know where they live on the server and can be
 jsonified as a response. They also annotate and timestamp themselves.
 
@@ -47,12 +47,5 @@ class SOFTFile(File):
 class GeneFile(File):
 
 	def __init__(self, filename, suffix):
-		super(GeneFile, self).__init__(filename, 'genes/', suffix+'.genes.txt')
-
-
-
-
-class ParsedFile(File):
-
-	def __init__(self, filename):
-		super(ParsedFile, self).__init__(filename, 'parsed/', '.txt')
+		suffix = '_' + suffix + '.genes.txt'
+		super(GeneFile, self).__init__(filename, 'genes/', suffix)

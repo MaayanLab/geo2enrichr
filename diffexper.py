@@ -10,10 +10,12 @@ __contact__ = "avi.maayan@mssm.edu"
 
 import numpy
 from scipy import stats
+from numbers import Number
 
-import chdir
-import filemanager
+from chdir import chdir
 from qnorm import quantile_normalize
+
+import pdb
 
 
 def analyze(A, B, genes, config):
@@ -23,8 +25,12 @@ def analyze(A, B, genes, config):
 	"""
 
 	if len(A) != len(B) != len(genes):
-		ValueError('Control and experimental expression data and gene symbols\
-			must have an equal number of data points')
+		raise ValueError('Control and experimental expression data and gene \
+			symbols must have an equal number of data points')
+
+	if not __all_numbers(A, B):
+		raise ValueError('There should be only numbers in control expression \
+			data. Non-number element(s) found in ')
 
 	# Quantile normalize the data. Read more here:
 	# http://en.wikipedia.org/wiki/Quantile_normalization
@@ -33,9 +39,10 @@ def analyze(A, B, genes, config):
 	# Identify differential expression, defaulting to the characteristic
 	# direction.
 	if config['method'] == 'ttest':
-		return __ttest(A, B, genes)
+		gene_pvalues = __ttest(A, B, genes, config['cutoff'])
 	else:
-		return chdir.chdir(A, B, genes)
+		gene_pvalues = chdir(A, B, genes, config['cutoff'])
+	return gene_pvalues
 
 
 def __ttest(A, B, genes):
@@ -50,3 +57,33 @@ def __ttest(A, B, genes):
 		pvalues.append((genes[i], signed_pvalue))
 
 	return pvalues
+
+
+def __all_numbers(A, B):
+	"""Check if there are non-number elements in A or B. We know they are the
+	same length at this point.
+	"""
+
+	for row in range(len(A)):
+		for col in range(len(A[0])):
+			if not isinstance(A[row][col], Number):
+				return False
+			if not isinstance(B[row][col], Number):
+				return False
+	return True
+
+
+'''
+def __threshold(gene_pvalues, threshold):
+	result = []
+	for gene, pvalue in gene_pvalues:
+		if len(result) > threshold:
+			break
+		result.append((gene, pvalue))
+	pdb.set_trace()
+	for  gene, pvalue in reversed(gene_pvalues):
+		if len(result) > threshold*2:
+			break
+		result.append((gene, pvalue))
+	return result
+'''

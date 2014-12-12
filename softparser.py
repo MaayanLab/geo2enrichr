@@ -10,10 +10,8 @@ import os
 
 from scipy import stats
 
-from files import SOFTFile, ParsedFile
+from files import SOFTFile
 from runningstat import RunningStat
-
-import pdb
 
 
 def parse(filename, platform, A_cols, B_cols):
