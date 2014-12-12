@@ -32,7 +32,6 @@ def chdir(A, B, genes, r=1, PCAMaxDimensions=50):
 #     in the expression dataset.
 #  r: regulaized term. A parameter that smooths the covariance matrix and reduces
 #     potential noise in the dataset.
-#
 #  PCAMaxDimensions: Adjust this parameter to set the maximum number of dimensions 
 #     to reduce to. Lower means faster run time, higher means better accuracy.
 
@@ -58,15 +57,15 @@ def chdir(A, B, genes, r=1, PCAMaxDimensions=50):
 
 #  the number of output components desired from PCA. We only want to calculate
 #  the chdir in a subspace that capture most variance in order to save computation 
-#  workload. The number is set 20 because considering the number of genes usually 
-#  present in an expression matrix 20 components would  capture most of the variance.
+#  workload. The number is set 50 because considering the number of genes usually 
+#  present in an expression matrix 50 components would  capture most of the variance.
 	maxComponentsNum = min(PCAMaxDimensions, rowCount - 1)
 
 # use the nipals PCA algorithm to calculate scores, loadings, and explained_var. 
 # explained_var are the variances captured by each component 
 	scores, loadings, explained_var = nipals(X,maxComponentsNum,1e5,1e-4)
 
-# We only want components that cpature 95% of the total variance or a little above.
+# We only want components that capture 95% of the total variance or a little above.
 	cumVariance = np.cumsum(explained_var)
 	keepIdx = min(sum(cumVariance<0.95)+1, len(cumVariance))
 
@@ -84,12 +83,12 @@ def chdir(A, B, genes, r=1, PCAMaxDimensions=50):
 	Dd = np.dot(scores.T,scores)/rowCount
 	sigma = np.mean(np.diag(Dd))
 	Dd = Dd*np.eye(*np.shape(Dd))
-	shrunkMats = np.linalg.inv( r*Dd + sigma*(1-r)*np.eye(*np.shape(Dd)))
+	shrunkMats = np.linalg.inv(r*Dd + sigma*(1-r)*np.eye(*np.shape(Dd)))
 
 # The LDA formula.
 # np.dot(np.dot(loadings,shrunkMats),loadings.T) transforms the covariance 
 # matrix from the subspace to full space.
-	b = np.dot(np.dot(np.dot(loadings,shrunkMats),loadings.T),meanvec)
+	b = np.dot(loadings,np.dot(shrunkMats,np.dot(loadings.T,meanvec)))
 
 # normlize b to unit vector
 	b /= np.linalg.norm(b)
@@ -143,4 +142,3 @@ def nipals(X,a,it=100,tol=1e-4):
 		nr = 0
 
 	return T, P, pcvar
-  

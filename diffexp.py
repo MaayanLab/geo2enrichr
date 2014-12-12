@@ -3,7 +3,7 @@ appropriate method depending on user options and defaults to the
 characteristic direction.
 
 __authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
-__credits__ = "Andrew Rouillard, Matthew Jones, Avi Ma'ayan"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
 
@@ -13,42 +13,47 @@ from scipy import stats
 
 import chdir
 import filemanager
-from runningstat import RunningStat
-import softparser
+
+import pdb
 
 
-def analyze(filename, user_options, control_names, experimental_names):
+def analyze(control_values, experimental_values, genes, config):
+
+	# 1. Quantile normalize the data.
+	# 2. Identify differentially expressed genes through a variety of methods.
+	# 3. Optionally cutoff or correct the data, eliminating the least significant genes.
+
+	use_chdir = config['method'] == 'chdir'
+	#if not use_chdir:
+	if False:
+		return __ttest(control_values, experimental_values, genes)
+	else:
+		return __chdir(control_values, experimental_values, genes)
+
+
+def __chdir(control, experimental, genes):
 	try:
-		use_chdir = user_options['method'] == 'chdir'
-		
-		#if not use_chdir:
-		if False:
-			scores = __ttest(control, experimental, gene_order)
-		else:
-			scores = __chdir(control, experimental, gene_order)
-	except IOError:
-		response = {
-			'error': 'IOError',
-			'message': 'Error reading GEO file from server'
-		}
-
-	return response
-
-
-def __chdir(control, experimental, gene_order, use_chdir):
-	scores = chdir.chdir(control, experimental, gene_order)
-	scores = [x for x in scores if x[1] < down_threshold or x[1] > up_threshold]
-	#return filemanager.build_output_file(chdir_scores, use_chdir, filename)
+		scores = chdir.chdir(control, experimental, genes)
+	except MemoryError:
+		raise MemoryError('Ran out of memory performing characteristic direction.')
+	#scores = [x for x in scores if x[1] < down_threshold or x[1] > up_threshold]
 	return scores
 
 
-def __ttest(control, experimental, gene_order, use_chdir):
+def __ttest(control, experimental, genes, use_chdir):
 	# sort pvalues# perform ttest
 	
 	#ttest_results = stats.ttest_ind(experimental_values, control_values)
 	#signed_pvalue = ttest_results[1] if ttest_results[0] > 0 else ttest_results[1]*-1
 	#pvalues.append((symbol, signed_pvalue))
 	
+
+
+
+
+
+
+
 	print "Now sorting pvalues..."
 	pvalues.sort(key=lambda x: abs(x[1])) #gets rid of the sign, while sorting tuples by the pvalue
 	print len(pvalues)
@@ -115,40 +120,3 @@ def __ttest(control, experimental, gene_order, use_chdir):
 		else:
 			return corrected_pvalues
 			#return filemanager.build_output_file(corrected_pvalues, use_chdir, filename)
-
-
-'''
-	print "Now printing up and down gene lists..."
-	print len(scores)
-
-	unique_scores = dict()
-	for symbol, score in scores:
-		if symbol not in unique_scores or __passes_unique_score_threshold(use_chdir, score, unique_scores[symbol]):
-			unique_scores[symbol] = score
-
-	items = unique_scores.items()
-	items.sort(key=lambda x: abs(x[1]), reverse=(True if use_chdir else False))
-
-	#Convert Probe IDs to Gene Symbols
-	if 'GSE' in base_filename:	
-		print "Now converting probe IDs..."
-		y = __convert_probe_IDs(items)
-		items = y[0]
-		print y[1]
-
-
-import pandas as pd
-
-# load the data matrix
-data = pd.DataFrame('yourfile.txt')
-
-# do something to insert the probe-gene lookup table as row index
-pmap = pd.Series('lookuptable.txt')
-
-# insert pmap to column1
-gdata = data.grouped('column1').mean()
-
-
-
-		
-'''

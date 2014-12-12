@@ -1,7 +1,7 @@
 """This module API endpoints for GEO2Enrichr.
 
 __authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
-__credits__ = "Andrew Rouillard, Matthew Jones, Avi Ma'ayan"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
 
@@ -23,6 +23,7 @@ import json
 
 
 ENTRY_POINT = '/g2e'
+ERROR_KEY = 'error'
 
 app = flask.Flask(__name__)
 app.debug = True
@@ -49,13 +50,13 @@ def dlgeo_endpoint():
 
 	# TODO: Check if the file already exists on the file system.
 	rp = RequestParams(flask.request.args)
-	try:
-		downloaded_file = geodownloader.download(rp.accession, rp.metadata)
-		return flask.jsonify(downloaded_file.__dict__)
-	except IOError, e:
-		return flask.jsonify({
-			'error': str(e)
-		})
+	#try:
+	downloaded_file = geodownloader.download(rp.accession, rp.metadata)
+	return flask.jsonify(downloaded_file.__dict__)
+	#except IOError as e:
+	#	return flask.jsonify({
+	#		ERROR_KEY: str(e)
+	#	})
 
 
 @app.route(ENTRY_POINT + '/diffexp')
@@ -65,13 +66,23 @@ def diffexp_endpoint():
 
 	rp = RequestParams(flask.request.args)
 	try:
-		control, experimental, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.control_names, rp.experimental_names)
-		return json.dumps(control_values)
-	except LookupError, e:
+		control_values,\
+		experimental_values,\
+		genes,\
+		conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.control_names, rp.experimental_names)
+	except (LookupError, IOError) as e:
 		return flask.jsonify({
-			'error': str(e)
+			ERROR_KEY: str(e)
 		})
-	#geo_file_obj = diffexp.analyze(rp.filename, rp.options, rp.control_names, rp.experimental_names)	
+
+	try:
+		return flask.jsonify({
+			'scores': diffexp.analyze(control_values, experimental_values, genes, rp.config)
+		})
+	except MemoryError as e:
+		return flask.jsonify({
+			ERROR_KEY: str(e)
+		})
 	#return 'success!'
 
 

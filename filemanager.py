@@ -1,6 +1,7 @@
 """This module builds an output file on the server.
 
 __authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "gregory.gundersen@mssm.edu"
 """
 
@@ -9,16 +10,14 @@ import cookielib
 import poster
 import urllib2
 
-from files import GeneFiles
+from files import GeneFile
 
 
-def build_output_file(items, use_chdir, base_filename):
-	
+def build_output_file(items, use_chdir, filename):
 
-	genefiles      = GeneFiles(base_filename)
-	full_path_up   = genefiles.directory + genefiles.up
-	full_path_down = genefiles.directory + genefiles.down
-	full_path_comb = genefiles.directory + genefiles.combined
+	full_path_up   = GeneFile(filename, 'up').full_path()
+	full_path_down = GeneFile(filename, 'down').full_path()
+	full_path_comb = GeneFile(filename, 'combined').full_path()
 
 	with open(full_path_up, 'w') as up_out, open(full_path_down, 'w') as down_out, open(full_path_comb, 'w') as comb_out:
 		for symbol, score in items:
@@ -33,7 +32,11 @@ def build_output_file(items, use_chdir, base_filename):
 			comb_out.write('%s\t%f\n' % (symbol, abs_score))
 
 	print "All done!"
-	return genefiles.__dict__
+	return {
+		up: full_path_up,
+		down: full_path_down,
+		comb: full_path_comb
+	}
 
 
 def __convert_probe_IDs(list_to_convert):	

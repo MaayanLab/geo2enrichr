@@ -14,11 +14,11 @@ import StringIO
 import sys
 
 import filemanager
-from files import GEOFile
+from files import SOFTFile
 
 
 def download(accession, metadata):
-	"""Downloads GEO file based on accession number. Returns a GEOFile
+	"""Downloads GEO file based on accession number. Returns a SOFTFile
 	instance with optional metadata as annotations.
 
 	While `metadata` is optional, optional arguments are handled at the
@@ -36,10 +36,10 @@ def download(accession, metadata):
 		raise IOError('Binary string is empty.')
 	string = __unzip(bin_string)
 
-	geofile = GEOFile(accession, metadata, 'soft')
-	with open(geofile.full_path, 'w+') as f:
+	soft_file = SOFTFile(accession, metadata)
+	with open(soft_file.path(), 'w+') as f:
 		f.write(string)
-	return geofile
+	return soft_file
 
 
 def __get_file_by_url(url, attempts=5):

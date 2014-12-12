@@ -23,8 +23,8 @@ TODO:
 - T-test results go into subfolder "ANOVA".
 
 A sample query sequence is:
-1. http://localhost:8083/g2e/dlgeo?accession=GDS670
-2. http://localhost:8083/g2e/diffexp?filename=GDS670.soft&platform=GPL80&control=GSM18403-GSM18404-GSM18405&experimental=GSM18406-GSM18407-GSM18408
+1. http://localhost:8083/g2e/dlgeo?accession=GSE10599
+2. http://localhost:8083/g2e/diffexp?filename=GSE10599.soft&platform=GPL6193&control=GSM267176-GSM267177-GSM267178&experimental=GSM267179-GSM267180-GSM267181
 3. http://localhost:8083/g2e/static/genefiles/1415747594_geofiles_down_genes.txt
 
 

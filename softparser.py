@@ -1,7 +1,7 @@
 """This module contains functions for parsing SOFT files.
 
 __authors__ = "Gregory Gundersen, Andrew Rouillard, Axel Feldmann, Kevin Hu"
-__credits__ = "Avi Ma'ayan"
+__credits__ = "Yan Kou, Avi Ma'ayan"
 __contact__ = "gregory.gundersen@mssm.edu"
 """
 
@@ -10,7 +10,7 @@ import os
 
 from scipy import stats
 
-from files import GEOFile
+from files import SOFTFile
 from runningstat import RunningStat
 
 import pdb
@@ -25,6 +25,13 @@ def parse(filename, platform, control_names, experimental_names):
 	# mission critical that this function works as expected, parsing,
 	# cleaning, and averaging the data correctly.
 
+	# Yan Kou recommended using pandas: http://pandas.pydata.org/.
+	# Her pseudocode was:
+	#
+	#     import pandas as pd
+	#     data = pd.DataFrame('yourfile.txt')
+	#     gdata = data.groupby('column1').mean()
+
 	# Premature optimization is the root of all evil, but it is worth noting
 	# that this function's running time is ~2N+C, where N is the number of
 	# lines in the table and C is the number of comment lines. It would be
@@ -33,7 +40,7 @@ def parse(filename, platform, control_names, experimental_names):
 	if platform not in PROBE2GENE:
 		raise LookupError('Platform ' + platform + ' is not supported.')
 
-	full_path = GEOFile.get_full_path(filename)
+	full_path = SOFTFile(filename).path()
 	is_gds = 'GDS' in filename
 	if is_gds:
 		control_names      = [x.upper() for x in control_names]
@@ -65,44 +72,47 @@ def parse(filename, platform, control_names, experimental_names):
 	null_probes = []
 	unconverted_probes = []
 
-	with open(full_path) as soft_file:
-		# Skip comments.
-		discard = next(soft_file)
-		while discard.rstrip() != BOF:
+	try:
+		with open(full_path) as soft_file:
+			# Skip comments.
 			discard = next(soft_file)
+			while discard.rstrip() != BOF:
+				discard = next(soft_file)
+			
+			# Read header and set column offset.
+			header = next(soft_file).rstrip('\r\n').split('\t')
+			header = header[COL_OFFSET+1:]
+			line_length = len(header)
+
+			# Find the columns indices.
+			control_indices      = [header.index(gsm) for gsm in control_names]
+			experimental_indices = [header.index(gsm) for gsm in experimental_names]
+
+			for line in soft_file:
+				split_line = line.rstrip('\r\n').split('\t')
+				if split_line[0] == EOF or split_line[1] == '--Control':
+					continue
+
+				symbol = split_line[COL_OFFSET]
+				values = split_line[COL_OFFSET+1:]
 		
-		# Read header and set column offset.
-		header = next(soft_file).rstrip('\r\n').split('\t')
-		header = header[COL_OFFSET+1:]
-		line_length = len(header)
+				# Perform a conservative cleanup by ignoring any rows that have
+				# null values or an atypical number of columns.
+				if 'null' in values:
+					null_probes.append((symbol, values))
+					continue
+				if len(values) is not line_length:
+					continue
 
-		# Find the columns indices.
-		control_indices      = [header.index(gsm) for gsm in control_names]
-		experimental_indices = [header.index(gsm) for gsm in experimental_names]
-
-		for line in soft_file:
-			split_line = line.rstrip('\r\n').split('\t')
-			if split_line[0] == EOF or split_line[1] == '--Control':
-				continue
-
-			symbol = split_line[COL_OFFSET]
-			values = split_line[COL_OFFSET+1:]
-	
-			# Perform a conservative cleanup by ignoring any rows that have
-			# null values or an atypical number of columns.		
-			if 'null' in values:
-				null_probes.append((symbol, values))
-				continue
-			if len(values) is not line_length:
-				continue
-
-			values = [float(val) for val in values]
-			if symbol in genes_dict:
-				genes_dict[symbol].push(values)
-			else:
-				rs = RunningStat()
-				rs.push(values)
-				genes_dict[symbol] = rs
+				values = [float(val) for val in values]
+				if symbol in genes_dict:
+					genes_dict[symbol].push(values)
+				else:
+					rs = RunningStat()
+					rs.push(values)
+					genes_dict[symbol] = rs
+	except IOError:
+		raise IOError('Could not read SOFT file from local server.')
 
 	#os.remove(full_path)
 	for symbol in genes_dict:

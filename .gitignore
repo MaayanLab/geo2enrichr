@@ -12,9 +12,9 @@ resources/PlatformInfoForGreg/
 accessionlist_example.txt
 
 # Collected data
-static/geofiles/anova/*
-static/geofiles/chdir/*
-static/genefiles/*
+static/soft/*
+static/genes/*
+static/parsed/*
 
 # Sublime Text
 geo.sublime-project

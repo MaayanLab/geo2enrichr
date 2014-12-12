@@ -22,7 +22,7 @@ class RequestParams:
 		self.experimental_names = [x.encode('ascii') for x in args.get('experimental').split('-')] if 'experimental' in args else None
 
 		# Set the user's default options in case the client-side code does not.
-		self.options = {
+		self.config = {
 			'method'    : args.get('method').encode('ascii') if args.get('method') else 'chdir',
 			'inclusion' : args.get('inclusion').encode('ascii') if args.get('inclusion') else 'up'
 		}

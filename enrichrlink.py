@@ -7,7 +7,7 @@ import cookielib
 import urllib2
 import poster
 
-from files import GeneFiles
+from files import GeneFile
 
 
 def get_link(filename):
@@ -51,7 +51,7 @@ def __build_gene_str_from_tsv(tsv_file):
 	Enrichr.
 	"""
 
-	full_path = GeneFiles.get_full_path(tsv_file)
+	full_path = GeneFile.get_full_path(tsv_file)
 	result = ''
 	with open(full_path) as f:
 		for i, line in enumerate(f):
