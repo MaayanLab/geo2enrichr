@@ -13,7 +13,7 @@ from scipy import stats
 from numbers import Number
 
 from chdir import chdir
-from qnorm import quantile_normalize
+from qnorm import qnorm
 
 import pdb
 
@@ -34,7 +34,7 @@ def analyze(A, B, genes, config):
 
 	# Quantile normalize the data. Read more here:
 	# http://en.wikipedia.org/wiki/Quantile_normalization
-	A, B = quantile_normalize(A, B)
+	A, B = qnorm(A, B)
 
 	# Identify differential expression, defaulting to the characteristic
 	# direction.
