@@ -7,6 +7,8 @@ __contact__ = "avi.maayan@mssm.edu"
 
 import numpy as np
 
+import pdb
+
 
 def qnorm(A, B):
 	"""Performs quantile normalization on two arrays of arrays.
@@ -15,9 +17,10 @@ def qnorm(A, B):
 	distributions identical in statistical properties. Below is a
 	visualization:
 
-	Original	Ranked		Averaged	Re-ordered
-	2,20		2,8			5,5			5,13
-	6,8		 	6,20		13,13		13,5
+	         Original    Ranked    Averaged    Re-ordered
+	         A   B
+	gene1    2 4 8 6     2 4 3 3   3 3 3 3     3 3 6 6
+	gene2    6 4 3 3     6 4 8 6   6 6 6 6     6 6 3 3
 
 	Read more here: http://en.wikipedia.org/wiki/Quantile_normalization
 	"""
@@ -26,9 +29,10 @@ def qnorm(A, B):
 
 	# Store height so we can un-concatenate arrays later.
 	h = len(A)
+	w = len(A[0])
 
 	# 1. Create matrix, i.e. concatenate the rows vertically.
-	O = np.vstack((np.array(A), np.array(B)))	
+	O = np.hstack((np.array(A), np.array(B)))
 
 	# 2. Sorted by rank.
 	M = np.sort(O, axis=0)
@@ -45,20 +49,24 @@ def qnorm(A, B):
 	I = np.argsort(np.argsort(O, axis=0), axis=0)
 
 	# 4b. Move values back to their original locations.
-	for i, row in enumerate(M):
-		for j, val in enumerate(row):
-			row, col = np.where(I==i)
-			O[row, col] = M[i][j]
+	M = M.T
+	I = I.T
+	O = O.T
+	for i in range(len(M)):
+		O[i] = M[i][I[i]]
+	O = O.T
 
-	A, B = np.vsplit(O, h)
+	A, B = np.hsplit(O, 2)
 	return (A.tolist(), B.tolist())
 
 
 if __name__ == '__main__':
-	A = [[2,4,4],
-		[ 5,4,14]]
+	A = [[2.0, 4.0, 4.0],
+		[ 5.0, 4.0, 14.0],
+		[1, 2, 3]]
 
-	B = [[4,6,8],
-		[ 3,5,8]]
+	B = [[4.0, 6.0, 8.0],
+		[ 3.0 ,5.0, 8.0],
+		[ 12.0, -3.0, 0.0]]
 
 	A, B = qnorm(A, B)

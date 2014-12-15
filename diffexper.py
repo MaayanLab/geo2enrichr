@@ -19,9 +19,10 @@ import pdb
 
 
 def analyze(A, B, genes, config):
-	"""Performs three steps in order: quantile normalize the data, identifies
-	differentially expressed genes, and optionally cuts-off or corrects for
-	the least significant data points.
+	"""Performs three steps in order:
+	1. Quantile normalize the data.
+	2. Dentifies differentially expressed genes.
+	3. Optionally cuts-off or corrects for the least significant data points.
 	"""
 
 	if len(A) != len(B) != len(genes):
@@ -33,14 +34,18 @@ def analyze(A, B, genes, config):
 			data. Non-number element(s) found in ')
 
 	# Quantile normalize the data.
+	print 'Quantile normalizing the data.'
 	A, B = qnorm(A, B)
+	print 'Data quantile normalized.'
 
 	# Identify differential expression, defaulting to the characteristic
 	# direction.
 	if config['method'] == 'ttest':
 		gene_pvalues = __ttest(A, B, genes, config['cutoff'])
 	else:
+		print 'Calculating the characteristic direction.'
 		gene_pvalues = chdir(A, B, genes, config['cutoff'])
+		print 'Characteristic direction calculated.'
 	return gene_pvalues
 
 

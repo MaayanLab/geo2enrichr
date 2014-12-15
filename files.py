@@ -5,7 +5,7 @@ jsonified as a response. They also annotate and timestamp themselves.
 Note that Flask automatically servers anything in the `static/` directory
 
 __authors__ = "Gregory Gundersen"
-__credits__ = "Axel Feldmann, Kevin Hu, Andrew Rouillard, Matthew Jones, Avi Ma'ayan"
+__credits__ = "Avi Ma'ayan"
 __contact__ = "avi.maayan@mssm.edu"
 """
 
@@ -46,6 +46,22 @@ class SOFTFile(File):
 
 class GeneFile(File):
 
-	def __init__(self, filename, suffix):
-		suffix = '_' + suffix + '.genes.txt'
-		super(GeneFile, self).__init__(filename, 'genes/', suffix)
+	def __init__(self, filename):
+		if '.genes.txt' in filename:
+			filename = filename.replace('.genes.txt', '')
+		filename = filename + '.genes'
+		super(GeneFile, self).__init__(filename, 'genes/', '.txt')
+
+	def stringify_contents(self):
+		"""Parse contents and return a string formatted for a POST request to
+		Enrichr.
+		"""
+
+		result = ''
+		with open(self.path()) as f:
+			for i, line in enumerate(f):
+				split_line = line.rstrip().split('\t')
+				gene = split_line[0]
+				membership = split_line[1]
+				result += gene + ',' + membership + '\n'
+		return result

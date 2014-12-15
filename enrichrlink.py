@@ -11,11 +11,9 @@ from files import GeneFile
 
 
 def get_link(filename):
-	gene_str = __build_gene_str_from_tsv(filename)
+	gene_str = GeneFile(filename).stringify_contents()
 	link = __post_and_build_link(gene_str)
-	return {
-		'link': link
-	}
+	return link
 
 
 def __post_and_build_link(genes_str, cluster_info=''):
@@ -44,20 +42,3 @@ def __post_and_build_link(genes_str, cluster_info=''):
 	share_url_head = BASE_URL + 'enrich?dataset='
 	enrichr_link = share_url_head + link_ID
 	return enrichr_link
-
-
-def __build_gene_str_from_tsv(tsv_file):
-	"""Parse TSV file and return a string formatted for a POST request to
-	Enrichr.
-	"""
-
-	full_path = GeneFile.get_full_path(tsv_file)
-	result = ''
-	with open(full_path) as f:
-		for i, line in enumerate(f):
-			split_line = line.rstrip().split('\t')
-			gene = split_line[0]
-			membership = split_line[1]
-			result += gene + ',' + membership + '\n'
-
-	return result

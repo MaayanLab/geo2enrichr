@@ -72,6 +72,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 				qs = $.param({
 					// This is the SOFT file, not the gene file.
 					filename: data_from_dlgeo.filename,
+					platform: user_input.platform,
 					method: user_input.method,
 					control: user_input.control.join('-'),
 					experimental: user_input.experimental.join('-')
@@ -81,7 +82,6 @@ var GEO2Enrichr = GEO2Enrichr || {};
 				url: SERVER + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
-					debugger;
 					app.notifier.log('GEO files were differentially expressed');
 					app.notifier.log(data);
 
@@ -93,13 +93,11 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		}
 
 		function enrichr(data_from_diffexp) {
-			debugger;
 			var endpoint = 'enrichr?',
 				filename = data_from_diffexp[data_from_diffexp.inclusion],
 				qs = 'filename=' + filename;
 
-			file_for_download = data_from_diffexp.directory + filename;
-
+			file_for_download = filename;
 			$.ajax({
 				url: SERVER + endpoint + qs,
 				type: 'GET',

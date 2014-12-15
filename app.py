@@ -17,14 +17,14 @@ import diffexper
 import enrichrlink
 from files import GeneFile
 import geodownloader
+from log import pprint
 from requestparams import RequestParams
 import softparser
 
-import pdb
-
 
 ENTRY_POINT = '/g2e'
-ERROR_KEY = 'error'
+ERROR = 'error'
+STATUS = 'status'
 
 app = flask.Flask(__name__)
 app.debug = True
@@ -38,7 +38,8 @@ mimetypes.add_type('application/x-please-download-me', '.txt')
 @crossdomain(origin='*')
 def index_endpoint():
 	return flask.jsonify({
-		'status': 'OK'
+		'status': 'ok',
+		'message': ''
 	})
 
 
@@ -56,7 +57,8 @@ def dlgeo_endpoint():
 		return flask.jsonify(downloaded_file.__dict__)
 	except IOError as e:
 		return flask.jsonify({
-			ERROR_KEY: str(e)
+			'status': ERROR_KEY,
+			'message': str(e)
 		})
 
 
@@ -74,36 +76,31 @@ def diffexp_endpoint():
 	try:
 		# Parse SOFT file, discarind bad data, averaging duplicates, and
 		# bucketing expression data into A, B lists.
+		pprint('Parsing SOFT file.')
 		parse_time = time()
 		A, B, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.A_cols, rp.B_cols)
 		parse_time = time() - parse_time
+		pprint('SOFT file parsed.')
 
 		# Identify differentially expressed genes.
+		pprint('Identifying differentially expressed genes.')
 		diff_exp_time = time()
 		gene_pvalues = diffexper.analyze(A, B, genes, rp.config)
 		diff_exp_time = time() - diff_exp_time
-	except (LookupError, IOError, MemoryError, ValueError) as e:
+		pprint('Differentially expressed genes identified.')
+	except (LookupError, IOError, MemoryError, ValueError, StopIteration) as e:
 		return flask.jsonify({
 			ERROR_KEY: str(e)
 		})
 
-	return flask.jsonify({
-		'timing' : {
-			'parse_time': str(parse_time)[:4],
-			'diff_exp_time': str(diff_exp_time)[:4]
-		},
-		'scores': gene_pvalues
-	})
-
-	'''
 	# Output genes and pvalues to three files on the server and return a
 	# reference to them for the client. Also return metrics on data quality
 	# and methods used, if necessary.
-	filename = rp.filename.replace('.soft', '')
-	path_up   = GeneFile(filename, 'up').path()
-	path_down = GeneFile(filename, 'down').path()
-	path_comb = GeneFile(filename, 'combined').path()
-	with open(path_up, 'w') as up_out, open(path_down, 'w') as down_out, open(path_comb, 'w') as comb_out:
+	filename  = rp.filename.replace('.soft', '')
+	up_file   = GeneFile(filename + '_up')
+	down_file = GeneFile(filename + '_down')
+	comb_file = GeneFile(filename + '_combined')
+	with open(up_file.path(), 'w') as up_out, open(down_file.path(), 'w') as down_out, open(comb_file.path(), 'w') as comb_out:
 		# TODO: Output basic metadata at top of file?
 		for gene, pvalue in gene_pvalues:
 			abs_score = abs(pvalue)
@@ -116,12 +113,16 @@ def diffexp_endpoint():
 			# combined file without signs.
 			comb_out.write('%s\t%f\n' % (gene, abs_score))
 	return flask.jsonify({
-		'up': path_up,
-		'down': path_down,
-		'comb': path_comb,
-		'conversion_pct': conversion_pct
+		'status': 'ok',
+		'up': up_file.filename,
+		'down': down_file.filename,
+		'comb': comb_file.filename,
+		'conversion_pct': conversion_pct,
+		'timing': {
+			'parse_time': str(parse_time)[:4],
+			'diff_exp_time': str(diff_exp_time)[:4]
+		},
 	})
-	'''
 
 
 @app.route(ENTRY_POINT + '/enrichr')
@@ -132,7 +133,10 @@ def enrichr_endpoint():
 
 	rp = RequestParams(flask.request.args)
 	enrichr_link = enrichrlink.get_link(rp.filename)
-	return flask.jsonify(enrichr_link)
+	return flask.jsonify({
+		'status': 'ok',
+		'link': enrichr_link
+	})
 
 
 if __name__ == '__main__':

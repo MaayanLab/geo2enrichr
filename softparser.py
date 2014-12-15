@@ -36,7 +36,10 @@ def parse(filename, platform, A_cols, B_cols):
 	# ideal if we did not loop over the table lines twice.
 
 	if platform not in PROBE2GENE:
-		raise LookupError('Platform ' + platform + ' is not supported.')
+		if platform:
+			raise LookupError('Platform ' + platform + ' is not supported.')
+		else:
+			raise ValueError('Platform not provided.')
 
 	soft_file = SOFTFile(filename).path()
 	is_gds = 'GDS' in filename
@@ -67,7 +70,7 @@ def parse(filename, platform, A_cols, B_cols):
 	unconverted_probes = []
 
 	try:
-		with open(soft_file) as soft_in:
+		with open(soft_file, 'r') as soft_in:
 			# Skip comments.
 			discard = next(soft_in)
 			while discard.rstrip() != BOF:
