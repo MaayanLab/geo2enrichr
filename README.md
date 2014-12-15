@@ -5,7 +5,7 @@ GDS example:
 http://www.ncbi.nlm.nih.gov/sites/GDSbrowser
 
 GSE example:
-http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE1122
+
 
 To get JSON
 retmode=json
