@@ -32,8 +32,7 @@ def analyze(A, B, genes, config):
 		raise ValueError('There should be only numbers in control expression \
 			data. Non-number element(s) found in ')
 
-	# Quantile normalize the data. Read more here:
-	# http://en.wikipedia.org/wiki/Quantile_normalization
+	# Quantile normalize the data.
 	A, B = qnorm(A, B)
 
 	# Identify differential expression, defaulting to the characteristic
