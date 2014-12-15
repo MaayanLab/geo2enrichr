@@ -9,6 +9,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from gzip import GzipFile
+import zlib
 from urllib2 import urlopen, URLError
 from StringIO import StringIO
 
@@ -22,21 +23,29 @@ def download(accession, metadata):
 	While `metadata` is optional, optional arguments are handled at the
 	endpoints, meaning that `RequestParams` will set `metadata` to an empty
 	dict if no metadata is provided.
+
+	For reading and unzipping binary chunks, see:
+		http://stackoverflow.com/a/27053335/1830334
+		http://stackoverflow.com/a/2424549/1830334
 	"""
+
+	CHUNK_SIZE = 1024
+	decompressor = zlib.decompressobj(16+zlib.MAX_WBITS)
 
 	if 'GDS' in accession:
 		url = __construct_GDS_url(accession)
 	else:
 		url = __construct_GSE_url(accession)
-	print 'URL constructed: ' + url
-	bin_string = __get_file_by_url(url)
-	if bin_string is None:
-		raise IOError('Binary string is empty.')
-	string = __unzip(bin_string)
-
+	response = __get_file_by_url(url)
+	
 	soft_file = SOFTFile(accession, metadata)
 	with open(soft_file.path(), 'w+') as f:
-		f.write(string)
+		while True:
+			bin_chunk = response.read(CHUNK_SIZE)
+			if not bin_chunk:
+				break
+			string = decompressor.decompress(bin_chunk)
+			f.write(string)
 	return soft_file
 
 
@@ -55,7 +64,7 @@ def __get_file_by_url(url, attempts=5):
 			attempts -= 1
 	else:
 		raise IOError('urllib2 failed 5x to download the file.')
-	return response.read()
+	return response
 
 
 def __unzip(compressed_string):
