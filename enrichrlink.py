@@ -1,6 +1,10 @@
-# -----------------------------------------------------------------------------
-# <credits, etc.>
-# -----------------------------------------------------------------------------
+"""This module handles all valid query string arguments to all API endpoints;
+it sets all necessary default values, so functions further down the callstack
+do not need to.
+
+__authors__ = "Gregory Gundersen, Edward Y Chen"
+__contact__ = "avi.maayan@mssm.edu"
+"""
 
 
 import cookielib

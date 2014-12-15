@@ -85,7 +85,7 @@ def diffexp_endpoint():
 		# Identify differentially expressed genes.
 		pprint('Identifying differentially expressed genes.')
 		diff_exp_time = time()
-		gene_pvalues = diffexper.analyze(A, B, genes, rp.config)
+		gene_pvalues = diffexper.analyze(A, B, genes, rp.config, rp.filename)
 		diff_exp_time = time() - diff_exp_time
 		pprint('Differentially expressed genes identified.')
 	except (LookupError, IOError, MemoryError, ValueError, StopIteration) as e:
@@ -96,11 +96,15 @@ def diffexp_endpoint():
 	# Output genes and pvalues to three files on the server and return a
 	# reference to them for the client. Also return metrics on data quality
 	# and methods used, if necessary.
-	filename  = rp.filename.replace('.soft', '')
-	up_file   = GeneFile(filename + '_up')
-	down_file = GeneFile(filename + '_down')
-	comb_file = GeneFile(filename + '_combined')
-	with open(up_file.path(), 'w') as up_out, open(down_file.path(), 'w') as down_out, open(comb_file.path(), 'w') as comb_out:
+	#
+	# The combined file is just for Enrichr, which doesn't accept negative
+	# numbers for its levels of membership. A client wouldn't want a combined
+	# file without signs.
+	filename      = rp.filename.replace('.soft', '')
+	up_file       = GeneFile(filename + '_up')
+	down_file     = GeneFile(filename + '_down')
+	combined_file = GeneFile(filename + '_combined')
+	with open(up_file.path(), 'w') as up_out, open(down_file.path(), 'w') as down_out, open(combined_file.path(), 'w') as comb_out:
 		# TODO: Output basic metadata at top of file?
 		for gene, pvalue in gene_pvalues:
 			abs_score = abs(pvalue)
@@ -108,15 +112,12 @@ def diffexp_endpoint():
 				up_out.write('%s\t%f\n' % (gene, pvalue))
 			else:
 				down_out.write('%s\t%f\n' % (gene, abs_score))
-			# This file is just for Enrichr, which doesn't accept negative
-			# numbers for its levels of membership. A client wouldn't want a
-			# combined file without signs.
 			comb_out.write('%s\t%f\n' % (gene, abs_score))
 	return flask.jsonify({
 		'status': 'ok',
 		'up': up_file.filename,
 		'down': down_file.filename,
-		'comb': comb_file.filename,
+		'combined': combined_file.filename,
 		'conversion_pct': conversion_pct,
 		'timing': {
 			'parse_time': str(parse_time)[:4],
@@ -132,10 +133,10 @@ def enrichr_endpoint():
 	"""
 
 	rp = RequestParams(flask.request.args)
-	enrichr_link = enrichrlink.get_link(rp.filename)
+	#enrichr_link = enrichrlink.get_link(rp.filename)
 	return flask.jsonify({
-		'status': 'ok',
-		'link': enrichr_link
+		'status': 'ok'#,
+		#'link': enrichr_link
 	})
 
 

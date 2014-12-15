@@ -15,6 +15,7 @@ accessionlist_example.txt
 static/soft/*
 static/genes/*
 static/parsed/*
+test/*
 
 # Sublime Text
 geo.sublime-project

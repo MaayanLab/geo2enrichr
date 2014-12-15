@@ -5,9 +5,12 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	app.comm = {};
 
 	var ENDPOINT = 'g2e/',
-		SERVER = 'http://localhost:8083/' + ENDPOINT,
+		BASE_SERVER = 'http://localhost:8083/',
+		SERVER = BASE_SERVER + ENDPOINT,
 		$dl_iframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
 		file_for_download;
+
+	var files_for_dl;
 
 	// This pre-fetches some data from GEO to verify the information on the page!
 	app.comm.fetch_meta_data_from_geo = function(acc_num) {
@@ -97,6 +100,11 @@ var GEO2Enrichr = GEO2Enrichr || {};
 				filename = data_from_diffexp[data_from_diffexp.inclusion],
 				qs = 'filename=' + filename;
 
+			files_for_dl = [
+				data_from_diffexp['up'],
+				data_from_diffexp['down']
+			]
+			
 			file_for_download = filename;
 			$.ajax({
 				url: SERVER + endpoint + qs,
@@ -113,11 +121,16 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		dlgeo().then(diffexp).then(enrichr);
 	};
 
+
 	app.comm.download_diff_exp_files = function() {
 		app.notifier.log('Downloading files locally');
 		app.notifier.log(file_for_download);
-		app.comm.dl_url(SERVER + file_for_download);
+		app.comm.dl_url(BASE_SERVER + 'static/genes/' + files_for_dl[0]);
+		setTimeout(function() {
+			app.comm.dl_url(BASE_SERVER + 'static/genes/' + files_for_dl[1]);
+		}, 1000);
 	};
+
 
 	app.comm.reset_downloaded_file = function() {
 		file_for_download = undefined;
