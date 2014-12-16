@@ -11,7 +11,7 @@ import os
 from scipy import stats
 
 from files import SOFTFile
-from runningstat import RunningStat
+from runningmean import RunningMean
 
 
 def parse(filename, platform, A_cols, B_cols):
@@ -52,22 +52,23 @@ def parse(filename, platform, A_cols, B_cols):
 
 	# COL_OFFSET changes because GDS files are "curated", meaning that they
 	# have their gene symbols included. GSE files do not and are 1 column
-	# thinner.
+	# thinner. That said, we do not trust the DGS mapping and do the probe-to-
+	# gene mapping ourselves.
 	if is_gds:
 		BOF = '!dataset_table_begin'
 		EOF = '!dataset_table_end'
-		COL_OFFSET = 1
+		COL_OFFSET = 2
 	else:
 		BOF = '!series_matrix_table_begin'
 		EOF = '!series_matrix_table_end'
-		COL_OFFSET = 0
+		COL_OFFSET = 1
 
 	# For `dict` fast hashing to track a running mean of duplicate probe IDs.
-	genes_dict = {}
+	genes = {}
 
 	# For statistics about data quality.
-	null_probes = []
 	unconverted_probes = []
+	probe_count = 0
 
 	try:
 		with open(soft_file, 'r') as soft_in:
@@ -75,10 +76,10 @@ def parse(filename, platform, A_cols, B_cols):
 			discard = next(soft_in)
 			while discard.rstrip() != BOF:
 				discard = next(soft_in)
-			
+
 			# Read header and set column offset.
 			header = next(soft_in).rstrip('\r\n').split('\t')
-			header = header[COL_OFFSET+1:]
+			header = header[COL_OFFSET:]
 			line_length = len(header)
 
 			# Find the columns indices.
@@ -90,24 +91,37 @@ def parse(filename, platform, A_cols, B_cols):
 				if split_line[0] == EOF or split_line[1] == '--Control':
 					continue
 
-				symbol = split_line[COL_OFFSET]
-				values = split_line[COL_OFFSET+1:]
-		
+				probe  = split_line[0]
+				values = split_line[COL_OFFSET:]
+				probe_count = probe_count + 1
+
 				# Perform a conservative cleanup by ignoring any rows that have
 				# null values or an atypical number of columns.
-				if 'null' in values:
-					null_probes.append((symbol, values))
-					continue
 				if len(values) is not line_length:
+					continue		
+				if 'null' in values:
+					continue
+				# Three forward slashes, \\\, denotes multiple genes.
+				if '\\\\\\' in probe:
+					continue
+				
+				values = [float(val) for val in values]
+
+				# GSD files already contain a column with gene symbols but we
+				# do not trust that mapping.
+				gene = __probe2gene(platform, probe)
+				if gene is None:
+					unconverted_probes.append(gene)
 					continue
 
-				values = [float(val) for val in values]
-				if symbol in genes_dict:
-					genes_dict[symbol].push(values)
+				if gene in genes:
+					genes[gene].push(values)
 				else:
-					rs = RunningStat()
-					rs.push(values)
-					genes_dict[symbol] = rs
+					rm = RunningMean()
+					rm.push(values)
+					genes[gene] = rm
+
+		conversion_pct = 100.0 - float(len(unconverted_probes)) / float(probe_count)
 	except IOError:
 		raise IOError('Could not read SOFT file from local server.')
 
@@ -115,31 +129,16 @@ def parse(filename, platform, A_cols, B_cols):
 	# necessary and putting values into A and B arrays.
 	A = []
 	B = []
-	genes = []
-
-	for symbol in genes_dict:
-		# Get the final mean value of each row from each RunningStat instance.
-		adj_values = genes_dict[symbol].mean()
+	for gene in genes:
+		# Get the final mean value of each row from each RunningMean instance.
+		adj_values = genes[gene].mean()
+		# Blow out the `RunningMean` instance.
+		genes[gene] = adj_values
 		A_row = [adj_values[i] for i in A_incides]
 		B_row = [adj_values[i] for i in B_incides]
+		A.append(A_row)
+		B.append(B_row)
 
-		# GSD files already contain a column with gene symbols and do not need
-		# to be converted.
-		if is_gds:
-			A.append(A_row)
-			B.append(B_row)
-			genes.append(symbol)
-		else:
-			symbol = __probe2gene(platform, symbol)
-			if symbol is None:
-				unconverted_probes.append(symbol)
-				continue
-			else:
-				A.append(A_row)
-				B.append(B_row)
-				genes.append(symbol)
-
-	conversion_pct = 100.0 - float(len(unconverted_probes)) / float(len(genes_dict.keys()))
 	return (A, B, genes, conversion_pct)
 
 

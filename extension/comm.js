@@ -100,11 +100,12 @@ var GEO2Enrichr = GEO2Enrichr || {};
 				filename = data_from_diffexp[data_from_diffexp.inclusion],
 				qs = 'filename=' + filename;
 
-			files_for_dl = [
-				data_from_diffexp['up'],
-				data_from_diffexp['down']
-			]
-			
+			if (true) {
+				files_for_dl = [];
+				files_for_dl[0] = data_from_diffexp['up'];
+				files_for_dl[1] = data_from_diffexp['down'];
+			}
+
 			file_for_download = filename;
 			$.ajax({
 				url: SERVER + endpoint + qs,

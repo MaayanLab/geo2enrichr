@@ -22,16 +22,15 @@ from requestparams import RequestParams
 import softparser
 
 
-ENTRY_POINT = '/g2e'
-ERROR = 'error'
-STATUS = 'status'
-
 app = flask.Flask(__name__)
 app.debug = True
 
 # This forces the browser to download txt files rather than rendering them.
 # http://stackoverflow.com/a/3749395/1830334
 mimetypes.add_type('application/x-please-download-me', '.txt')
+
+
+ENTRY_POINT = '/g2e'
 
 
 @app.route(ENTRY_POINT)
@@ -57,7 +56,7 @@ def dlgeo_endpoint():
 		return flask.jsonify(downloaded_file.__dict__)
 	except IOError as e:
 		return flask.jsonify({
-			'status': ERROR_KEY,
+			'status': 'error',
 			'message': str(e)
 		})
 
@@ -90,7 +89,7 @@ def diffexp_endpoint():
 		pprint('Differentially expressed genes identified.')
 	except (LookupError, IOError, MemoryError, ValueError, StopIteration) as e:
 		return flask.jsonify({
-			ERROR_KEY: str(e)
+			'error': str(e)
 		})
 
 	# Output genes and pvalues to three files on the server and return a
@@ -113,17 +112,28 @@ def diffexp_endpoint():
 			else:
 				down_out.write('%s\t%f\n' % (gene, abs_score))
 			comb_out.write('%s\t%f\n' % (gene, abs_score))
-	return flask.jsonify({
+
+	# Build response dict.
+	response = {
 		'status': 'ok',
-		'up': up_file.filename,
-		'down': down_file.filename,
-		'combined': combined_file.filename,
 		'conversion_pct': conversion_pct,
 		'timing': {
 			'parse_time': str(parse_time)[:4],
 			'diff_exp_time': str(diff_exp_time)[:4]
-		},
-	})
+		}
+	}
+	import pdb
+	#pdb.set_trace()
+	#if rp.config['inclusion'] == 'both':
+	if True:
+		response['up'] = up_file.filename
+		response['down'] = down_file.filename
+	elif rp.config['inclusion'] == 'down':
+		response['down'] = down_file.filename
+	else:
+		response['up'] = up_file.filename
+
+	return flask.jsonify(response)
 
 
 @app.route(ENTRY_POINT + '/enrichr')
@@ -133,10 +143,19 @@ def enrichr_endpoint():
 	"""
 
 	rp = RequestParams(flask.request.args)
-	#enrichr_link = enrichrlink.get_link(rp.filename)
+	# Sometimes this takes a while or Enrichr is down. We do not want to
+	# prevent users from being able to download their files.
+	try:
+		link = enrichrlink.get_link(rp.filename)
+	#except HTTPError as e:
+	except Exception as e:
+		return flask.jsonify({
+			'status': 'error',
+			'message': str(e)
+		})
 	return flask.jsonify({
-		'status': 'ok'#,
-		#'link': enrichr_link
+		'status': 'ok',
+		'link': link
 	})
 
 

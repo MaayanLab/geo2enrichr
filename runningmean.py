@@ -1,10 +1,10 @@
-"""This module contains a single class, `RunningStat`, which is useful for
+"""This module contains a single class, `RunningMean`, which is useful for
 tracking statistics about data on a single pass.
 
 See http://www.johndcook.com/blog/standard_deviation/
 
 __authors__ = "Gregory Gundersen"
-__credits__ = "Andrew Rouillard"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
 
@@ -12,7 +12,7 @@ __contact__ = "avi.maayan@mssm.edu"
 import numpy as np
 
 
-class RunningStat:
+class RunningMean:
 
 
 	def __init__(self):
@@ -35,7 +35,7 @@ class RunningStat:
 
 	def mean(self):
 		if self.old_mean is not None:
-			return self.old_mean
+			return self.old_mean.tolist()
 		return 0
 
 
@@ -44,10 +44,10 @@ if __name__ == '__main__':
 	b = np.array([2.0,2.0,2.0])
 	c = np.array([3.0,6.0,3.0])
 
-	rs = RunningStat()
-	rs.push(a)
-	print rs.mean()
-	rs.push(b)
-	print rs.mean()
-	rs.push(c)
-	print rs.mean()
+	rm = RunningMean()
+	rm.push(a)
+	print rm.mean()
+	rm.push(b)
+	print rm.mean()
+	rm.push(c)
+	print rm.mean()

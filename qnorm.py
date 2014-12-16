@@ -5,9 +5,8 @@ __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
 
-import numpy as np
 
-import pdb
+import numpy as np
 
 
 def qnorm(A, B):
@@ -26,10 +25,6 @@ def qnorm(A, B):
 	"""
 
 	# axis=0 means that an operation runs against columns rather than rows.
-
-	# Store height so we can un-concatenate arrays later.
-	h = len(A)
-	w = len(A[0])
 
 	# 1. Create matrix, i.e. concatenate the rows vertically.
 	O = np.hstack((np.array(A), np.array(B)))

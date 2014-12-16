@@ -8,7 +8,6 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-import numpy
 from scipy import stats
 from numbers import Number
 
@@ -34,6 +33,7 @@ def analyze(A, B, genes, config, filename=''):
 
 	# Identify differential expression, defaulting to the characteristic
 	# direction.
+	config['cutoff'] = None
 	if config['method'] == 'ttest':
 		gene_pvalues = __ttest(A, B, genes, config['cutoff'])
 	else:
