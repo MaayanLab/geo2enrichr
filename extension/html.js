@@ -33,7 +33,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 						'<div class="g2e-form g2e-last">' +
 							'<h4>Gene list inclusion</h4>' +
 							'<div class="g2e-block">' +
-								'<input id="g2e-up" type="radio" name="inclusion" value="up">' +
+								'<input id="g2e-up" type="radio" name="inclusion" value="up" checked="checked">' +
 								'<label for="g2e-up" class="g2e-lbl">Up genes</label>' +
 							'</div>' +
 							'<div class="g2e-block">' +
@@ -41,8 +41,8 @@ var GEO2Enrichr = GEO2Enrichr || {};
 								'<label for="g2e-down" class="g2e-lbl">Down genes</label>' +
 							'</div>' +
 							'<div class="g2e-block">' +
-								'<input id="g2e-combined" type="radio" name="inclusion" value="combined" checked="checked">' +
-								'<label for="g2e-combined" class="g2e-lbl">Combined</label>' +
+								'<input id="g2e-both" type="radio" name="inclusion" value="both">' +
+								'<label for="g2e-both" class="g2e-lbl">Both</label>' +
 							'</div>' +
 						'</div>' +
 					'</td>' +

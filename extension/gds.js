@@ -36,7 +36,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		var html = app.html.get('btn');
 		$hook.children().last().after(html);
 		$('#g2e-link').click(function() {
-			app.ui.on_click($hook);
+			app.ui.on_open_app($hook);
 		});
 	};
 

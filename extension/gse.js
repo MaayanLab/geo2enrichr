@@ -54,7 +54,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	app.gse.embed = function() {
 		$hook.append(app.html.get('btn'));
 		$('#g2e-link').click(function() {
-			app.ui.on_click($hook);
+			app.ui.on_open_app($hook);
 		});
 
 		$samples_table.find('tr').each(function(i, tr) {

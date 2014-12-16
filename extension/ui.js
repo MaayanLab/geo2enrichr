@@ -43,7 +43,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 		steps, $overlay, $modal, $progress, $results;
 
-	app.ui.on_click = function() {
+	app.ui.on_open_app = function() {
 		var scraped_data;
 		if (first_click) {
 			app.ui.__setup();		

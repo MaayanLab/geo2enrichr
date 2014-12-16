@@ -21,6 +21,9 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	app.scraper.set_data = function(key, val) {
 		// Store any data we might overwrite.
 		var temp = __scraped_data[key];
+		if (key == 'cell' || key == 'platform') {
+			val = val.replace(/_|-|\./g, '')
+		}
 		__scraped_data[key] = val;
 		if (app.scraper.is_valid_data(__scraped_data)) {
 			app.ui.fill_confirm_tbl($.extend({}, __scraped_data));	
@@ -59,10 +62,10 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		}
 
 		if (cell) {
-			__scraped_data.cell = cell;
+			__scraped_data.cell = cell.replace(/_|\.|-/, '');
 		}
 		if (perturbation) {
-			__scraped_data.perturbation = perturbation;	
+			__scraped_data.perturbation = perturbation.replace(/_|\.|-/, '');	
 		}
 	};
 
