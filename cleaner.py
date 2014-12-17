@@ -32,6 +32,10 @@ def normalize(A, B, genes):
 
 	A, B, genes = avg_dups(A, B, genes)
 
+	with open('gse24493.txt', 'w+') as out:
+		for i in range(len(A)):
+			out.write(str(genes[i]) + '\t' + str(A[i]) + '\t' + str(B[i]) + '\n')
+
 	return (A, B, genes)
 
 
@@ -46,7 +50,6 @@ def _is_log2(A, B):
 	AB = np.concatenate((A, B), axis=1)
 	AB_max = np.amax(AB)
 	AB_min = np.amin(AB)
-
 	if AB_max - AB_min < 100:
 		return True
 	return False
@@ -98,26 +101,6 @@ def qnorm(A, B):
 	return (A, B)
 
 
-def avg_dups(A, B, genes):
-	"""Finds duplicate genes and averages their expression data.
-	"""
-
-	pprint('Averaging any duplicates.')
-
-	AB = np.concatenate((A, B), axis=1)
-	genes = np.array(genes)
-
-	unq_genes = np.unique(genes)
-	out_AB = np.zeros((unq_genes.shape[0], AB.shape[1]))
-
-	for i, gene in enumerate(unq_genes):
-		dups = AB[genes==gene]
-		out_AB[i] = np.mean(dups, axis=0)
-
-	A, B = np.hsplit(out_AB, 2)
-	return (A, B, unq_genes)
-
-
 def _is_norm(A, B):
 	"""Returns True if the data appears normalized, False otherwise.
 	"""
@@ -129,15 +112,37 @@ def _is_norm(A, B):
 	medians_mean = np.mean(medians)
 	stds = np.std(AB, axis=0)
 	stds_mean = np.mean(stds)
+	medians_std = np.std(medians, axis=0)
+	stds_std = np.std(stds, axis=0)
 
-	for tpl, median in np.ndenumerate(medians):
-		if abs((median - medians_mean) / stds_mean) > 4:
+	# TODO: You could take the max and min values rather than iterating over
+	# all of them. Andrew has checked and verified this code, though, so do
+	# not optimize without tests in place.
+	for i, median in np.ndenumerate(medians):
+		if abs((median - medians_mean) / medians_std) > 4:
 			return False
-	for tpl, std in np.ndenumerate(stds):
-		if abs((std - medians_mean) / stds_mean) > 4:
-			return False			
-
+	for i, std in np.ndenumerate(stds):
+		if abs((std - stds_mean) / stds_std) > 4:
+			return False
 	return True
+
+
+def avg_dups(A, B, genes):
+	"""Finds duplicate genes and averages their expression data.
+	"""
+
+	pprint('Averaging any duplicates.')
+
+	AB = np.concatenate((A, B), axis=1)
+	genes = np.array(genes)
+	unq_genes = np.unique(genes)
+	out_AB = np.zeros((unq_genes.shape[0], AB.shape[1]))
+	for i, gene in enumerate(unq_genes):
+		dups = AB[genes==gene]
+		out_AB[i] = np.mean(dups, axis=0)
+
+	A, B = np.hsplit(out_AB, 2)
+	return (A, B, unq_genes)
 
 
 def _validate(A, B):

@@ -24,7 +24,8 @@ def analyze(A, B, genes, config, filename=''):
 	#	gene_pvalues = ttest(A, B, genes, config['cutoff'])
 	#else:
 	pprint('Calculating the characteristic direction.')
-	gene_pvalues = chdir.chdir(A, B, genes.tolist(), config['cutoff'])
+	# A, B, genes, cutoff=None, r=1, PCAMaxDimensions=50
+	gene_pvalues = chdir.chdir(A, B, genes.tolist())
 
 	return gene_pvalues
 

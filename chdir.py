@@ -1,12 +1,8 @@
-"""This module calculates the characteristic direction. For more information,
-see http://maayanlab.net/CD/. This code has been modified slightly from the
-published version to better work as a module within the application.
-"""
-
-
 import numpy as np
 import warnings
+import numbers
 
+import pdb
 
 # This code caclulates the characteristic direction with regulization.
 
@@ -29,7 +25,7 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 
-def chdir(A, B, genes, cutoff, r=1, PCAMaxDimensions=50):
+def chdir(A, B, genes, cutoff=None, r=0.5, PCAMaxDimensions=50):
 #  calculate a characteristic direction for a gene expression dataset 
 #  A: control numeric gene expressoion data
 #  B: experiment numeric gene expression data
@@ -38,14 +34,28 @@ def chdir(A, B, genes, cutoff, r=1, PCAMaxDimensions=50):
 #     in the expression dataset.
 #  r: regulaized term. A parameter that smooths the covariance matrix and reduces
 #     potential noise in the dataset.
+#
 #  PCAMaxDimensions: Adjust this parameter to set the maximum number of dimensions 
 #     to reduce to. Lower means faster run time, higher means better accuracy.
-# cutoff: a rough significance cut.
 
+ 
+# Note: make sure control(A) and experiment(B) have equal number of genes
+
+	import pdb
+	pdb.set_trace()
+
+	if len(A)!= len(B):
+		raise RuntimeError('control expression data must have equal number of genes as experiment expression data!')
+	
+#check if there are non-number elements in A or B
+	if not all([isinstance(element, numbers.Number) for row in A for element in row]):
+		raise RuntimeError('There should be only numbers in control expression data. Non-number element(s) found in A.')
+	if not all([isinstance(element, numbers.Number) for row in B for element in row]):
+		raise RuntimeError('There should be only numbers in experiment expression data. Non-number element(s) found in B.')
 
 # place control gene expression data and experiment gene expression data into
 # one matrix X.
-	X = np.concatenate((A,B), axis=1).T
+	X = np.concatenate((A,B), axis = 1).T
 
 # get the number of samples (colCount), namely, the total number of replicates in   
 # control and experiment. Also get the number of genes (rowCount)
@@ -53,15 +63,15 @@ def chdir(A, B, genes, cutoff, r=1, PCAMaxDimensions=50):
 
 #  the number of output components desired from PCA. We only want to calculate
 #  the chdir in a subspace that capture most variance in order to save computation 
-#  workload. The number is set 50 because considering the number of genes usually 
-#  present in an expression matrix 50 components would  capture most of the variance.
-	maxComponentsNum = rowCount - 1#rowCount - min(PCAMaxDimensions, rowCount - 1)
+#  workload. The number is set 20 because considering the number of genes usually 
+#  present in an expression matrix 20 components would  capture most of the variance.
+	maxComponentsNum = min(PCAMaxDimensions, rowCount - 1)
 
 # use the nipals PCA algorithm to calculate scores, loadings, and explained_var. 
 # explained_var are the variances captured by each component 
-	scores, loadings, explained_var = __nipals(X,maxComponentsNum,1e5,1e-4)
+	scores, loadings, explained_var = nipals(X,maxComponentsNum,1e5,1e-4)
 
-# We only want components that capture 95% of the total variance or a little above.
+# We only want components that cpature 95% of the total variance or a little above.
 	cumVariance = np.cumsum(explained_var)
 	keepIdx = min(sum(cumVariance<0.95)+1, len(cumVariance))
 
@@ -79,25 +89,27 @@ def chdir(A, B, genes, cutoff, r=1, PCAMaxDimensions=50):
 	Dd = np.dot(scores.T,scores)/rowCount
 	sigma = np.mean(np.diag(Dd))
 	Dd = Dd*np.eye(*np.shape(Dd))
-	shrunkMats = np.linalg.inv(r*Dd + sigma*(1-r)*np.eye(*np.shape(Dd)))
+	shrunkMats = np.linalg.inv( r*Dd + sigma*(1-r)*np.eye(*np.shape(Dd)))
 
 # The LDA formula.
 # np.dot(np.dot(loadings,shrunkMats),loadings.T) transforms the covariance 
 # matrix from the subspace to full space.
+	#pdb.set_trace()
 	b = np.dot(loadings,np.dot(shrunkMats,np.dot(loadings.T,meanvec)))
 
 # normlize b to unit vector
 	b /= np.linalg.norm(b)
 
 # sort b and genes by the absolute values of b's components in descending order.
-	res = sorted(zip(genes, b), key=lambda x: abs(x[1]), reverse=True)
-	if cutoff:
-# Tuples are already sorted in descending order. Take the first cutoff-th items.
-		return res[:cutoff]
+	res = sorted(zip(genes, b),  key=lambda x: abs(x[1]), reverse=True)
+	
 	return res
 
+def printi(arr):
+	#Pretty print an array
+ 	print np.array_str(np.array(arr))
 
-def __nipals(X,a,it=100,tol=1e-4):
+def nipals(X,a,it=100,tol=1e-4):
 	# Nipals algorithm for Principal Component Analysis
 	# This function is written largely based on nipals function from R chemometrics package.
 	
