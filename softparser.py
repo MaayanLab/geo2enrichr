@@ -6,12 +6,10 @@ __contact__ = "gregory.gundersen@mssm.edu"
 """
 
 
-import os
-
-from scipy import stats
+import numpy as np
 
 from files import SOFTFile
-from runningmean import RunningMean
+from log import pprint
 
 
 def parse(filename, platform, A_cols, B_cols):
@@ -19,21 +17,7 @@ def parse(filename, platform, A_cols, B_cols):
 	converting probe IDs to gene sybmols.
 	"""
 
-	# NOTE: This is the most complicated function in the program. It is
-	# mission critical that this function works as expected, parsing,
-	# cleaning, and averaging the data correctly.
-
-	# Yan Kou recommended using pandas: http://pandas.pydata.org/.
-	# Her pseudocode was:
-	#
-	#     import pandas as pd
-	#     data = pd.DataFrame('yourfile.txt')
-	#     gdata = data.groupby('column1').mean()
-
-	# Premature optimization is the root of all evil, but it is worth noting
-	# that this function's running time is ~2N+C, where N is the number of
-	# lines in the table and C is the number of comment lines. It would be
-	# ideal if we did not loop over the table lines twice.
+	pprint('Parsing SOFT file.')
 
 	if platform not in PROBE2GENE:
 		if platform:
@@ -42,29 +26,28 @@ def parse(filename, platform, A_cols, B_cols):
 			raise ValueError('Platform not provided.')
 
 	soft_file = SOFTFile(filename).path()
-	is_gds = 'GDS' in filename
-	if is_gds:
-		A_cols = [x.upper() for x in A_cols]
-		B_cols = [x.upper() for x in B_cols]
-	else:
-		A_cols = ['"{}"'.format(x.upper()) for x in A_cols]
-		B_cols = ['"{}"'.format(x.upper()) for x in B_cols]
 
 	# COL_OFFSET changes because GDS files are "curated", meaning that they
 	# have their gene symbols included. GSE files do not and are 1 column
 	# thinner. That said, we do not trust the DGS mapping and do the probe-to-
 	# gene mapping ourselves.
-	if is_gds:
+	if 'GDS' in filename:
+		A_cols = [x.upper() for x in A_cols]
+		B_cols = [x.upper() for x in B_cols]
 		BOF = '!dataset_table_begin'
 		EOF = '!dataset_table_end'
 		COL_OFFSET = 2
 	else:
+		A_cols = ['"{}"'.format(x.upper()) for x in A_cols]
+		B_cols = ['"{}"'.format(x.upper()) for x in B_cols]
 		BOF = '!series_matrix_table_begin'
 		EOF = '!series_matrix_table_end'
 		COL_OFFSET = 1
 
 	# For `dict` fast hashing to track a running mean of duplicate probe IDs.
-	genes = {}
+	A = []
+	B = []
+	genes = []
 
 	# For statistics about data quality.
 	unconverted_probes = []
@@ -104,45 +87,38 @@ def parse(filename, platform, A_cols, B_cols):
 				# Three forward slashes, \\\, denotes multiple genes.
 				if '\\\\\\' in probe:
 					continue
-				
-				values = [float(val) for val in values]
 
 				# GSD files already contain a column with gene symbols but we
 				# do not trust that mapping.
-				gene = __probe2gene(platform, probe)
+				gene = _probe2gene(platform, probe)
 				if gene is None:
 					unconverted_probes.append(gene)
 					continue
 
-				if gene in genes:
-					genes[gene].push(values)
-				else:
-					rm = RunningMean()
-					rm.push(values)
-					genes[gene] = rm
+				# Don't do any of these steps until we know the data is
+				# worthwhile.
+				A_row = [float(values[i]) for i in A_incides]
+				B_row = [float(values[i]) for i in B_incides]
+				A.append(A_row)
+				B.append(B_row)
+				genes.append(gene)
 
 		conversion_pct = 100.0 - float(len(unconverted_probes)) / float(probe_count)
 	except IOError:
 		raise IOError('Could not read SOFT file from local server.')
 
-	# Iterate over sybmols and values, mapping symbols to gene names if
-	# necessary and putting values into A and B arrays.
-	A = []
-	B = []
-	for gene in genes:
-		# Get the final mean value of each row from each RunningMean instance.
-		adj_values = genes[gene].mean()
-		# Blow out the `RunningMean` instance.
-		genes[gene] = adj_values
-		A_row = [adj_values[i] for i in A_incides]
-		B_row = [adj_values[i] for i in B_incides]
-		A.append(A_row)
-		B.append(B_row)
+	with open('static/parsed/' + filename.replace('.soft', '.txt'), 'w+') as foobar:
+		for i in range(len(genes)):
+			foobar.write(genes[i] + '\t\t' + '\t'.join(str(x) for x in A[i]) + '\t\t' + '\t'.join(str(x) for x in B[i]) + '\n')
 
+	# Convert to numpy arrays, which are more compact and faster.
+	A = np.array(A)
+	B = np.array(B)
+	genes = np.array(genes)
 	return (A, B, genes, conversion_pct)
 
 
-def __probe2gene(platform, probe):
+def _probe2gene(platform, probe):
 	"""Converts probe IDs to gene symbols. Does not check if the platform is
 	supported.
 	"""
@@ -152,12 +128,14 @@ def __probe2gene(platform, probe):
 	try:
 		if probe in PROBE2GENE[platform]:
 			return PROBE2GENE[platform][probe]
+	# This should never occur, given that we check if the platform is in the
+	# dictionary. But just in case.
 	except AttributeError:
 		return None
 	return None
 
 
-def __open_probe_dict(platform_probesetid_genesym_file):
+def _open_probe_dict(platform_probesetid_genesym_file):
 	"""Platform data collected and script written by Andrew Rouillard.
 	"""
 
@@ -177,4 +155,4 @@ def __open_probe_dict(platform_probesetid_genesym_file):
 
 # This loads a ~300MB Python dictionary into memory. Is there a better way to
 # do this?
-PROBE2GENE = __open_probe_dict('static/probe2gene.txt')
+PROBE2GENE = _open_probe_dict('static/probe2gene.txt')

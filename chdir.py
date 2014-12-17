@@ -45,7 +45,7 @@ def chdir(A, B, genes, cutoff, r=1, PCAMaxDimensions=50):
 
 # place control gene expression data and experiment gene expression data into
 # one matrix X.
-	X = np.concatenate((A,B), axis = 1).T
+	X = np.concatenate((A,B), axis=1).T
 
 # get the number of samples (colCount), namely, the total number of replicates in   
 # control and experiment. Also get the number of genes (rowCount)
@@ -55,7 +55,7 @@ def chdir(A, B, genes, cutoff, r=1, PCAMaxDimensions=50):
 #  the chdir in a subspace that capture most variance in order to save computation 
 #  workload. The number is set 50 because considering the number of genes usually 
 #  present in an expression matrix 50 components would  capture most of the variance.
-	maxComponentsNum = rowCount - 1#min(PCAMaxDimensions, rowCount - 1)
+	maxComponentsNum = rowCount - 1#rowCount - min(PCAMaxDimensions, rowCount - 1)
 
 # use the nipals PCA algorithm to calculate scores, loadings, and explained_var. 
 # explained_var are the variances captured by each component 

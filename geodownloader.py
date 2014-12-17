@@ -33,10 +33,10 @@ def download(accession, metadata):
 	decompressor = zlib.decompressobj(16+zlib.MAX_WBITS)
 
 	if 'GDS' in accession:
-		url = __construct_GDS_url(accession)
+		url = _construct_GDS_url(accession)
 	else:
-		url = __construct_GSE_url(accession)
-	response = __get_file_by_url(url)
+		url = _construct_GSE_url(accession)
+	response = _get_file_by_url(url)
 	
 	soft_file = SOFTFile(accession, metadata)
 	with open(soft_file.path(), 'w+') as f:
@@ -49,7 +49,7 @@ def download(accession, metadata):
 	return soft_file
 
 
-def __get_file_by_url(url, attempts=5):
+def _get_file_by_url(url, attempts=5):
 	"""Attempts to get the file from URL. Tries 5 times before giving up.
 	"""
 
@@ -67,7 +67,7 @@ def __get_file_by_url(url, attempts=5):
 	return response
 
 
-def __unzip(compressed_string):
+def _unzip(compressed_string):
 	"""Unzips the file without allowing it to touch the disk.
 	"""
 
@@ -77,7 +77,7 @@ def __unzip(compressed_string):
 	return decompressed.read()
 
 
-def __construct_GDS_url(accession):
+def _construct_GDS_url(accession):
 	"""Example URL:
 		ftp://ftp.ncbi.nlm.nih.gov/geo/datasets/GDS4nnn/GDS4999/soft/GDS4999.soft.gz
 	"""
@@ -95,7 +95,7 @@ def __construct_GDS_url(accession):
 	return url
 
 
-def __construct_GSE_url(accession):
+def _construct_GSE_url(accession):
 	"""Example URL:
 		ftp://ftp.ncbi.nlm.nih.gov/geo/platforms/GSE4nnn/GSE4999/matrix/GSE4999.txt.gz
 	"""

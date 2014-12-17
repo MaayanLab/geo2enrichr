@@ -8,16 +8,16 @@ __contact__ = "avi.maayan@mssm.edu"
 
 import mimetypes
 import sys
-from time import time
+import urllib2
 
 import flask
 
+import cleaner
 from crossdomain import crossdomain
 import diffexper
 import enrichrlink
 from files import GeneFile
 import geodownloader
-from log import pprint
 from requestparams import RequestParams
 import softparser
 
@@ -69,29 +69,33 @@ def diffexp_endpoint():
 	new .txt files.
 	"""
 
-	# Set to -1 to avoid a reference error in case of exception.
-	parse_time = diff_exp_time = -1
 	rp = RequestParams(flask.request.args)
 	try:
-		# Parse SOFT file, discarind bad data, averaging duplicates, and
-		# bucketing expression data into A, B lists.
-		pprint('Parsing SOFT file.')
-		parse_time = time()
-		A, B, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.A_cols, rp.B_cols)
-		parse_time = time() - parse_time
-		pprint('SOFT file parsed.')
+		# ! WARNING !
+		#
+		# The contents of this try/except are the most complicated part of the
+		# program. It is mission critical that these function works as
+		# expected: parsing, cleaning, differentially expressing, and
+		# averaging the data correctly.
 
-		# Identify differentially expressed genes.
-		pprint('Identifying differentially expressed genes.')
-		diff_exp_time = time()
+		# Step 1: Parse soft file.
+		# Also discard bad data and convert probe IDs to gene symbols.
+		A, B, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.A_cols, rp.B_cols)
+
+		# Step 2: Clean data.
+		# Also, if necessary, take log_2 of data and quantile normalize it.
+		A, B, genes = cleaner.normalize(A, B, genes)
+
+		# Step 3: Identify differential expression.
 		gene_pvalues = diffexper.analyze(A, B, genes, rp.config, rp.filename)
-		diff_exp_time = time() - diff_exp_time
-		pprint('Differentially expressed genes identified.')
 	except (LookupError, IOError, MemoryError, ValueError, StopIteration) as e:
 		return flask.jsonify({
 			'error': str(e)
 		})
 
+	# TODO: This should be a separate function that returns a tuple of
+	# filenames.
+	#
 	# Output genes and pvalues to three files on the server and return a
 	# reference to them for the client. Also return metrics on data quality
 	# and methods used, if necessary.
@@ -116,14 +120,8 @@ def diffexp_endpoint():
 	# Build response dict.
 	response = {
 		'status': 'ok',
-		'conversion_pct': conversion_pct,
-		'timing': {
-			'parse_time': str(parse_time)[:4],
-			'diff_exp_time': str(diff_exp_time)[:4]
-		}
+		'conversion_pct': conversion_pct
 	}
-	import pdb
-	#pdb.set_trace()
 	#if rp.config['inclusion'] == 'both':
 	if True:
 		response['up'] = up_file.filename
@@ -146,17 +144,16 @@ def enrichr_endpoint():
 	# Sometimes this takes a while or Enrichr is down. We do not want to
 	# prevent users from being able to download their files.
 	try:
-		link = enrichrlink.get_link(rp.filename)
-	#except HTTPError as e:
-	except Exception as e:
+		#link = enrichrlink.get_link(rp.filename)
+		return flask.jsonify({
+			'status': 'ok',
+			'link': 'TODO'
+		})
+	except urllib2.HTTPError as e:
 		return flask.jsonify({
 			'status': 'error',
 			'message': str(e)
 		})
-	return flask.jsonify({
-		'status': 'ok',
-		'link': link
-	})
 
 
 if __name__ == '__main__':

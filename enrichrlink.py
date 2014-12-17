@@ -16,11 +16,11 @@ from files import GeneFile
 
 def get_link(filename):
 	gene_str = GeneFile(filename).stringify_contents()
-	link = __post_and_build_link(gene_str)
+	link = _post_and_build_link(gene_str)
 	return link
 
 
-def __post_and_build_link(genes_str, cluster_info=''):
+def _post_and_build_link(genes_str, cluster_info=''):
 	""" POST a gene list to Enrichr server and get a stable link to the
 	enriched data.
 	"""

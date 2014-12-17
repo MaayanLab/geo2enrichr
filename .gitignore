@@ -7,6 +7,7 @@
 # directories
 resources/platform scripts/
 resources/PlatformInfoForGreg/
+resources/test_data/
 
 # Misc
 accessionlist_example.txt
@@ -15,7 +16,6 @@ accessionlist_example.txt
 static/soft/*
 static/genes/*
 static/parsed/*
-test/*
 
 # Sublime Text
 geo.sublime-project

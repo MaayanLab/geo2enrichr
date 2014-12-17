@@ -9,41 +9,27 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from scipy import stats
-from numbers import Number
 
-from chdir import chdir
-from qnorm import qnorm
+import chdir
 from log import pprint
 
 
 def analyze(A, B, genes, config, filename=''):
-	"""Performs three steps in order:
-	1. Quantile normalize the data.
-	2. Dentifies differentially expressed genes.
-	3. Optionally cuts-off or corrects for the least significant data points.
+	"""Identifies differentially expressed genes, delegating to the correct
+	helper function based on client or default configuration.
 	"""
 
-	# Verifery the arrays are equal and all numbers.
-	__validate(A, B)
+	# Default to the characteristic direction with a cutoff of 500.
+	#if config['method'] == 'ttest':
+	#	gene_pvalues = ttest(A, B, genes, config['cutoff'])
+	#else:
+	pprint('Calculating the characteristic direction.')
+	gene_pvalues = chdir.chdir(A, B, genes.tolist(), config['cutoff'])
 
-	# Quantile normalize the data.
-	pprint('Quantile normalizing the data.')
-	A, B = qnorm(A, B)
-	pprint('Data quantile normalized.')
-
-	# Identify differential expression, defaulting to the characteristic
-	# direction.
-	config['cutoff'] = None
-	if config['method'] == 'ttest':
-		gene_pvalues = __ttest(A, B, genes, config['cutoff'])
-	else:
-		pprint('Calculating the characteristic direction.')
-		gene_pvalues = chdir(A, B, genes, config['cutoff'])
-		pprint('Characteristic direction calculated.')
 	return gene_pvalues
 
 
-def __ttest(A, B, genes):
+def ttest(A, B, genes):
 	"""Performs a standard T-test.
 	"""
 
@@ -56,26 +42,3 @@ def __ttest(A, B, genes):
 
 	# TODO: This should also handle a cutoff.
 	return pvalues
-
-
-def __validate(A, B):
-	if len(A) != len(B) != len(genes):
-		raise ValueError('Control and experimental expression data and gene \
-			symbols must have an equal number of data points.')
-	if not __all_numbers(A, B):
-		raise ValueError('There should be only numbers in control expression \
-			data. Non-number element(s) found.')
-
-
-def __all_numbers(A, B):
-	"""Check if there are non-number elements in A or B. We know they are the
-	same length at this point.
-	"""
-
-	for row in range(len(A)):
-		for col in range(len(A[0])):
-			if not isinstance(A[row][col], Number):
-				return False
-			if not isinstance(B[row][col], Number):
-				return False
-	return True
