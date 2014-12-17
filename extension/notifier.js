@@ -5,7 +5,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	app.notifier = {};
 
 	app.notifier.log = function(msg) {
-		if (app.debug) {
+		if (app.DEBUG) {
 			console.log(msg);
 		}
 	};

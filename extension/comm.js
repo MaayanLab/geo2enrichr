@@ -4,13 +4,10 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 	app.comm = {};
 
-	var ENDPOINT = 'g2e/',
-		BASE_SERVER = 'http://localhost:8083/',
-		SERVER = BASE_SERVER + ENDPOINT,
+	var ENTRY_POINT = 'g2e/',
 		$dl_iframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
-		file_for_download;
-
-	var files_for_dl;
+		file_for_download,
+		files_for_dl = [];
 
 	// This pre-fetches some data from GEO to verify the information on the page!
 	app.comm.fetch_meta_data_from_geo = function(acc_num) {
@@ -45,8 +42,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	// Finally, we set the returned data in `app.globals` so that we can use it later.
 	app.comm.fetch_diffexp_enrich = function($modal) {
 		var user_input = app.scraper.get_data($modal);
-		app.ui.show_progress_bar();
-		app.ui.highlight_next_step();
+		app.ui.init_progress_bar();
 
 		function dlgeo() {
 			var endpoint = 'dlgeo?',
@@ -60,7 +56,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 				});
 
 			return $.ajax({
-				url: SERVER + endpoint + qs,
+				url: app.SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
 					app.notifier.log('GEO files were downloaded');
@@ -70,45 +66,38 @@ var GEO2Enrichr = GEO2Enrichr || {};
 			});
 		}
 
-		function diffexp(data_from_dlgeo) {
+		function diffexp(dlgeo_data) {
 			var endpoint = 'diffexp?',
 				qs = $.param({
 					// This is the SOFT file, not the gene file.
-					filename: data_from_dlgeo.filename,
+					filename: dlgeo_data.filename,
 					platform: user_input.platform,
 					method: user_input.method,
+					inclusion: user_input.inclusion,
 					control: user_input.control.join('-'),
 					experimental: user_input.experimental.join('-')
 				});
 
 			return $.ajax({
-				url: SERVER + endpoint + qs,
+				url: app.SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
 					app.notifier.log('GEO files were differentially expressed');
 					app.notifier.log(data);
-
-					// Pass inclusion data to `download_diff_exp_files()` and `submit_data_to_enrich()`.
-					data.inclusion = user_input.inclusion;
 					app.ui.highlight_next_step();
 				}
 			});
 		}
 
-		function enrichr(data_from_diffexp) {
+		function enrichr(diffexp_data) {
 			var endpoint = 'enrichr?',
-				filename = data_from_diffexp[data_from_diffexp.inclusion],
-				qs = 'filename=' + filename;
+				qs;
 
-			if (true) {
-				files_for_dl = [];
-				files_for_dl[0] = data_from_diffexp['up'];
-				files_for_dl[1] = data_from_diffexp['down'];
-			}
+			file_for_download = diffexp_data.filename;
+			qs = 'filename=' + file_for_download;
 
-			file_for_download = filename;
 			$.ajax({
-				url: SERVER + endpoint + qs,
+				url: app.SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
 					app.notifier.log('Enrichr link was returned');
@@ -126,10 +115,10 @@ var GEO2Enrichr = GEO2Enrichr || {};
 	app.comm.download_diff_exp_files = function() {
 		app.notifier.log('Downloading files locally');
 		app.notifier.log(file_for_download);
-		app.comm.dl_url(BASE_SERVER + 'static/genes/' + files_for_dl[0]);
-		setTimeout(function() {
-			app.comm.dl_url(BASE_SERVER + 'static/genes/' + files_for_dl[1]);
-		}, 1000);
+		app.comm.dl_url(app.SERVER + 'static/genes/' + file_for_download);
+		//setTimeout(function() {
+		//	app.comm.dl_url(BASE_SERVER + 'static/genes/' + files_for_dl[1]);
+		//}, 1000);
 	};
 
 

@@ -15,7 +15,7 @@ from log import pprint
 
 
 def normalize(A, B, genes):
-	"""Normalizes the data, taking the log_2 of and quantile normalizing the
+	"""Normalizes the data, taking the log2 of and quantile normalizing the
 	data if necessary.
 	"""
 
@@ -23,7 +23,7 @@ def normalize(A, B, genes):
 	_validate(A, B)
 
 	if not _is_log2(A, B):
-		pprint('Taking the log_2 of data.')
+		pprint('Taking the log2 of data.')
 		A, B = log2(A, B)
 
 	if not _is_norm(A, B):
@@ -32,15 +32,16 @@ def normalize(A, B, genes):
 
 	A, B, genes = avg_dups(A, B, genes)
 
-	with open('gse24493.txt', 'w+') as out:
-		for i in range(len(A)):
-			out.write(str(genes[i]) + '\t' + str(A[i]) + '\t' + str(B[i]) + '\n')
+	# For sanity checking code.
+	#with open('gse24493.txt', 'w+') as out:
+	#	for i in range(len(A)):
+	#		out.write(str(genes[i]) + '\t' + str(A[i]) + '\t' + str(B[i]) + '\n')
 
 	return (A, B, genes)
 
 
 def log2(A, B):
-	"""Takes the log_2 of every value if required.
+	"""Takes the log2 of every value if required.
 	"""
 
 	return (np.log2(A), np.log2(B))

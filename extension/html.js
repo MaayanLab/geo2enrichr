@@ -41,8 +41,8 @@ var GEO2Enrichr = GEO2Enrichr || {};
 								'<label for="g2e-down" class="g2e-lbl">Down genes</label>' +
 							'</div>' +
 							'<div class="g2e-block">' +
-								'<input id="g2e-both" type="radio" name="inclusion" value="both">' +
-								'<label for="g2e-both" class="g2e-lbl">Both</label>' +
+								'<input id="g2e-combined" type="radio" name="inclusion" value="combined">' +
+								'<label for="g2e-combined" class="g2e-lbl">Combined</label>' +
 							'</div>' +
 						'</div>' +
 					'</td>' +

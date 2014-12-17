@@ -4,8 +4,9 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 	app.main = {};
 
-	// Set this to `false` before deploying.
-	app.debug = false;
+	// Set these configuration values before deploying.
+	app.DEBUG = true;
+	app.SERVER = 'http://localhost:8083/';
 
 	app.global = {};
 

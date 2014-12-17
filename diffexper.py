@@ -20,14 +20,16 @@ def analyze(A, B, genes, config, filename=''):
 	"""
 
 	# Default to the characteristic direction with a cutoff of 500.
-	#if config['method'] == 'ttest':
-	#	gene_pvalues = ttest(A, B, genes, config['cutoff'])
-	#else:
-	pprint('Calculating the characteristic direction.')
-	# A, B, genes, cutoff=None, r=1, PCAMaxDimensions=50
-	gene_pvalues = chdir.chdir(A, B, genes.tolist())
+	if config['method'] == 'ttest':
+		gene_pvalues = ttest(A, B, genes, config['cutoff'])
+	else:
+		pprint('Calculating the characteristic direction.')
+		genes, pvalues = chdir.chdir(A, B, genes.tolist())
 
-	return gene_pvalues
+	# sort pvalues and genes by the absolute values pvalues in descending order.
+	grouped = zip([abs(item) for item in pvalues], genes, pvalues)
+	grouped = sorted(grouped, key=lambda x: x[0], reverse=True)
+	return [(item[1], item[2]) for item in grouped]
 
 
 def ttest(A, B, genes):

@@ -85,7 +85,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 	app.scraper.is_valid_data = function(data) {
 		// This is annoying while testing.
-		if (!app.debug) {
+		if (!app.DEBUG) {
 			if (!data.control || data.control.length < 2) {
 				app.notifier.warn('Please select 2 or more control samples');
 				return false;

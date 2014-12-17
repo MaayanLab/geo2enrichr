@@ -2,7 +2,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 (function(app, $) {
 
-	app.ui = {};
+	var UI = app.ui = {};
 
 	var first_click = true,
 
@@ -43,7 +43,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 
 		steps, $overlay, $modal, $progress, $results;
 
-	app.ui.on_open_app = function() {
+	UI.on_open_app = function() {
 		var scraped_data;
 		if (first_click) {
 			app.ui.__setup();		
@@ -59,7 +59,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		}
 	};
 
-	app.ui.__setup = function() {
+	UI.__setup = function() {
 		app.ui.__set_global_selectors();
 
 		// Allow editing of the values, in case we scraped incorrectly.
@@ -85,17 +85,19 @@ var GEO2Enrichr = GEO2Enrichr || {};
 			  .click(app.comm.download_diff_exp_files);
 	};
 
-	app.ui.show_progress_bar = function() {
+	UI.init_progress_bar = function() {
+		app.ui.__reset_progress_bar();
 		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 		$progress.show();
+		app.ui.highlight_next_step();
 	};
 
-	app.ui.highlight_next_step = function() {
+	UI.highlight_next_step = function() {
 		$progress.find(steps.shift()).addClass('g2e-ready');
 	};
 
 	// `app.scraper` also calls this when new data is set.
-	app.ui.fill_confirm_tbl = function(scraped_data) {
+	UI.fill_confirm_tbl = function(scraped_data) {
 		var elem, config, html;
 		for (elem in elem_config) {
 			config = elem_config[elem];
@@ -108,7 +110,7 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		}
 	};
 
-	app.ui.show_results = function(link) {
+	UI.show_results = function(link) {
 		$results.show()
 				.find('button')
 				.first()
@@ -117,24 +119,24 @@ var GEO2Enrichr = GEO2Enrichr || {};
 				});
 	};
 
-	app.ui.__hide_results = function() {
+	UI.__reset_results = function() {
 		$results.hide()
 				.find('button')
 				.first()
 				.unbind();
 	};
 
-	app.ui.__show_modal_box = function() {
+	UI.__show_modal_box = function() {
 		$overlay.show();
 		$modal.show();
 	};
 
-	app.ui.__hide_modal_box = function() {
+	UI.__hide_modal_box = function() {
 		$overlay.hide();
 		$modal.hide();
 	};
 
-	app.ui.__set_global_selectors = function() {
+	UI.__set_global_selectors = function() {
 		var html = app.html.get('modal');
 		$overlay = $(html).hide().appendTo('body');
 		$modal = $('#g2e-container #g2e-modal').draggable();
@@ -142,18 +144,22 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		$results = $results || $('#g2e-results');		
 	}
 
-	app.ui.__reset_ui = function() {
+	UI.__reset_ui = function() {
 		app.ui.__hide_modal_box();
-		$progress.hide()
-				 .find('.g2e-progress')
-				 .removeClass('g2e-ready');
-		app.ui.__hide_results();
+		app.ui.__reset_progress_bar();
 		app.comm.reset_downloaded_file();
 		// TODO: A global switch that kills the requests?
 		//app.global.make_requests = false;
 	};
 
-	app.ui.__on_edit = function(id) {
+	UI.__reset_progress_bar = function() {
+		$progress.hide()
+				 .find('.g2e-progress')
+				 .removeClass('g2e-ready');
+		app.ui.__reset_results();
+	}
+
+	UI.__on_edit = function(id) {
 		var config = elem_config[id],
 			user_input = app.notifier.prompt(config.prompt, $('#' + id).text());
 		if (user_input !== null) {

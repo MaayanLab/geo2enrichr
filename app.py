@@ -16,8 +16,8 @@ import cleaner
 from crossdomain import crossdomain
 import diffexper
 import enrichrlink
-from files import GeneFile
 import geodownloader
+import filewriter
 from requestparams import RequestParams
 import softparser
 
@@ -83,55 +83,23 @@ def diffexp_endpoint():
 		A, B, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.A_cols, rp.B_cols)
 
 		# Step 2: Clean data.
-		# Also, if necessary, take log_2 of data and quantile normalize it.
+		# Also, if necessary, take log2 of data and quantile normalize it.
 		A, B, genes = cleaner.normalize(A, B, genes)
 
 		# Step 3: Identify differential expression.
-		gene_pvalues = diffexper.analyze(A, B, genes, rp.config, rp.filename)
+		gene_pvalue_pairs = diffexper.analyze(A, B, genes, rp.config, rp.filename)
 	except (LookupError, IOError, MemoryError, ValueError, StopIteration) as e:
 		return flask.jsonify({
 			'error': str(e)
 		})
 
-	# TODO: This should be a separate function that returns a tuple of
-	# filenames.
-	#
-	# Output genes and pvalues to three files on the server and return a
-	# reference to them for the client. Also return metrics on data quality
-	# and methods used, if necessary.
-	#
-	# The combined file is just for Enrichr, which doesn't accept negative
-	# numbers for its levels of membership. A client wouldn't want a combined
-	# file without signs.
-	filename      = rp.filename.replace('.soft', '')
-	up_file       = GeneFile(filename + '_up')
-	down_file     = GeneFile(filename + '_down')
-	combined_file = GeneFile(filename + '_combined')
-	with open(up_file.path(), 'w') as up_out, open(down_file.path(), 'w') as down_out, open(combined_file.path(), 'w') as comb_out:
-		# TODO: Output basic metadata at top of file?
-		for gene, pvalue in gene_pvalues:
-			abs_score = abs(pvalue)
-			if pvalue > 0:
-				up_out.write('%s\t%f\n' % (gene, pvalue))
-			else:
-				down_out.write('%s\t%f\n' % (gene, abs_score))
-			comb_out.write('%s\t%f\n' % (gene, abs_score))
+	output_file = filewriter.output_gene_pvalue_pairs(rp.filename, gene_pvalue_pairs, rp.config['inclusion'])
 
-	# Build response dict.
-	response = {
+	return flask.jsonify({
 		'status': 'ok',
-		'conversion_pct': conversion_pct
-	}
-	#if rp.config['inclusion'] == 'both':
-	if True:
-		response['up'] = up_file.filename
-		response['down'] = down_file.filename
-	elif rp.config['inclusion'] == 'down':
-		response['down'] = down_file.filename
-	else:
-		response['up'] = up_file.filename
-
-	return flask.jsonify(response)
+		'conversion_pct': str(conversion_pct),
+		'filename': str(output_file)
+	})
 
 
 @app.route(ENTRY_POINT + '/enrichr')
