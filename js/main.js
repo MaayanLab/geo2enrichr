@@ -16,8 +16,8 @@ var main = function() {
 
 	var init = function() {
 		// Set these configuration values before deploying.
-		var DEBUG = true,
-			SERVER = 'http://localhost:8083/',
+		var DEBUG = false,
+			SERVER = 'http://amp.pharm.mssm.edu/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),

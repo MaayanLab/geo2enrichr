@@ -86,14 +86,14 @@ var BaseScraper = function(notifier) {
 		},
 
 		isValidData: function(data) {
-			/*if (!data.control || data.control.length < 2) {
+			if (!data.control || data.control.length < 2) {
 				notifier.warn('Please select 2 or more control samples');
 				return false;
 			}
 			if (!data.experimental || data.experimental.length < 2) {
 				notifier.warn('Please select 2 or more experimental samples');
 				return false;
-			}*/
+			}
 			return true;
 		}
 	};	
