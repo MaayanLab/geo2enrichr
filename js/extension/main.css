@@ -2,7 +2,7 @@
  * ------------- */
 #g2e-container {
 	background-color: rgba(0, 0, 0, 0.15); /* http://stackoverflow.com/a/806189/1830334 */
-	font-family: Verdana, Arial, Sans-serif;
+	font-family: Arial, Sans-serif;
 	height: 100%;
 	left: 0;
 	position: fixed;
@@ -24,25 +24,27 @@
 }
 #g2e-container p,
 #g2e-container span,
-#g2e-container tr {
-	font-family: Verdana, Arial, Sans-serif;
-	font-size: 12px;
+#g2e-container td,
+#g2e-container tr,
+#g2e-container input,
+#g2e-container label {
+	font-family: Arial, Sans-serif;
+	font-size: 13px;
 }
 #g2e-container .g2e-last {
 	padding-top: 20px;
 }
 #g2e-container a {
-	color: blue;
-	font-family: Verdana, Arial, Sans-serif;
+	color: #009DFF;
+	font-family: Arial, Sans-serif;
 	padding-right: 10px;
 }
 #g2e-container a:hover,
 #g2e-container a:active,
 #g2e-container a:visited {
-	color: blue;
+	color: #009DFF;
 }
 #g2e-container h4 {
-	font-family: 'Droid Sans';
 	font-size: 14px;
 }
 #g2e-container .g2e-strong {
@@ -86,10 +88,17 @@
 #g2e-container .g2e-column.g2e-right {
 	width: 500px;
 }
-/*#g2e-container #g2e-actions,
-#g2e-container #g2e-progress-bar {
-	height: 25px;
-}*/
+#g2e-container #g2e-actions button {
+	color: #fff;
+	background: #009DFF;
+	border: none;
+	font-size: 14px;
+	font-weight: bold;
+}
+#g2e-container #g2e-actions button:hover {
+	cursor: pointer;
+	background: #0078C2;
+}
 
 /* Modal title
  * ----------- */
@@ -147,12 +156,17 @@
 
 /* Modal footer buttons
  * -------------------- */
-#g2e-footer > div {
+#g2e-container #g2e-footer > div {
 	padding: 20px 0 10px 0;
 }
 #g2e-container #g2e-footer {
+	border-top: 1px solid #ccc;
 	clear: both;
 	padding-top: 10px;
+	min-height: 45px;
+}
+#g2e-container #g2e-footer td {
+	border-right: none;
 }
 #g2e-container #g2e-footer #g2e-download-btn {
 	margin-top: 10px;
@@ -185,7 +199,6 @@
 	border-right: 1px solid #bdbdbd;
 }
 #g2e-container #g2e-progress-bar h4 {
-	font-family: 'Droid Sans';
 	font-size: 14px;
 	padding: 15px 0 0 0;
 	margin: 0;
@@ -197,21 +210,17 @@
 	display: none;
 	padding-top: 10px;
 }
-#g2e-container #g2e-results h4 {
-	display: inline;
-}
 #g2e-container #g2e-results button {
-	background: #2A5DB0;
-	border: 1px solid #214C91;
+	background: #009DFF;
+	border: none;
 	color: white;
 	display: inline;
 	font-weight: bold;
 	margin-left: 5px;
 	padding: 5px;
-	border-radius: 2px;
 }
 #g2e-container #g2e-results button:hover {
-	background: #214C91;
+	background: #0078C2;
 	cursor: pointer;
 }
 
@@ -220,24 +229,24 @@
 #g2e-container #g2e-confirm .g2e-bottom {
 	padding-top: 20px;
 }
-#g2e-container #g2e-confirm-tbl {
+#g2e-container .g2e-confirm-tbl {
 	padding-top: 10px;
 	table-layout: fixed;
 	width: 100%
 }
-#g2e-container #g2e-confirm-tbl td {
+#g2e-container .g2e-confirm-tbl td {
 	padding: 0;
 	vertical-align: top;
 	word-wrap: break-word;
 }
-#g2e-container #g2e-confirm-tbl td.g2e-subtitle {
+#g2e-container .g2e-confirm-tbl td.g2e-subtitle {
 	width: 120px;
 }
-#g2e-container #g2e-confirm-tbl td.g2e-edit {
+#g2e-container .g2e-confirm-tbl td.g2e-edit {
 	text-align: right;
 	width: 40px;
 }
-#g2e-container #g2e-confirm-tbl td.g2e-edit:hover {
+#g2e-container .g2e-confirm-tbl td.g2e-edit:hover {
 	cursor: pointer;
 	text-decoration: underline;
 }
@@ -278,4 +287,14 @@
 	font-size: 10px;
 	z-index: 1001;
 	width: 100px;
+}
+.ui-tooltip,
+.ui-widget,
+.ui-corner-all,
+.ui-widget-content {
+	font-size: 10px !important;
+	border-radius: none !important;
+}
+.ui-state-focus {
+	background: #eee !important;
 }

@@ -89,8 +89,6 @@ var Comm = function(events, notifier, scraper, SERVER) {
 			var endpoint = 'enrichr?',
 				qs;
 
-			debugger;
-
 			fileForDownload = diffexpData.filename;
 			qs = 'filename=' + fileForDownload;
 
@@ -98,6 +96,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					debugger;
 					notifier.log('Enrichr link was returned');
 					notifier.log(data);
 					events.fire('progressBar');
@@ -208,8 +207,8 @@ var Html = function() {
 						'</div>' +
 					'</td>' +
 					'<td id="g2e-confirm" class="g2e-column g2e-right">' +
-						'<div class="g2e-lowlight">GEO2Enrichr must screen scrape to collect some of the data.<br>Please confirm it is correct.</div>' +
-						'<table id="g2e-confirm-tbl">' +
+						'<div class="g2e-lowlight">Please confirm your data is correct.</div>' +
+						'<table class="g2e-confirm-tbl">' +
 							'<tr>' +
 								'<td class="g2e-subtitle">Accession num.&#42;:</td>' +
 								'<td id="g2e-confirm-tbl-acc" class="g2e-strong"></td>' +
@@ -241,15 +240,15 @@ var Html = function() {
 							'<label for="genemap">Gene: </label>' +
 							'<input id="genemap">' +
 						'</div>' +
-						'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.<br>They are useful as meta data and for file naming.</div>' +
-						'<table id="g2e-confirm-tbl">' +
+						'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
+						'<table class="g2e-confirm-tbl">' +
 							'<tr>' +
-								'<td class="g2e-subtitle">Cell type or tissue:</td>' +
+								'<td class="g2e-subtitle" title="This is useful for meta data and file naming">Cell type or tissue:</td>' +
 								'<td id="g2e-confirm-cell" class="g2e-strong"></td>' +
 								'<td class="g2e-edit">Edit</td>' +
 							'</tr>' +
 							'<tr>' +
-								'<td class="g2e-subtitle">Perturbation:</td>' +
+								'<td class="g2e-subtitle" title="This is useful for meta data and file naming">Perturbation:</td>' +
 								'<td id="g2e-confirm-pert" class="g2e-strong"></td>' +
 								'<td class="g2e-edit">Edit</td>' +
 							'</tr>' +
@@ -257,10 +256,9 @@ var Html = function() {
 					'</td>' +
 				'</tr></table>' +
 				'<div id="g2e-footer">' +
-					'<div class="g2e-lowlight">What would you like to do with your differentially expressed genes?</div>' +
 					'<table><tr>' +
 						'<td id="g2e-actions" class="g2e-column g2e-left">' +
-							'<button id="g2e-submit-btn" class="g2e-btn">Submit to Enrichr</button>' +
+							'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Submit to Enrichr</button>' +
 						'</td>' +
 						'<td id="g2e-output" class="g2e-column g2e-right">' +
 							'<div id="g2e-progress-bar">' +
@@ -270,7 +268,7 @@ var Html = function() {
 								'<div id="g2e-step4" class="g2e-progress">Done!</div>' +
 							'</div>' +
 							'<div id="g2e-results">' +
-								'<h4>Your data is ready:</h4>' +
+								'<strong>Your data is ready:</strong>' +
 								'<button href="">Open in Enrichr</button>' +
 								'<button id="g2e-download-btn" class="g2e-btn">Download gene list(s)</button>' +
 							'</div>' +
@@ -440,14 +438,14 @@ var BaseScraper = function(notifier) {
 		},
 
 		isValidData: function(data) {
-			if (!data.control || data.control.length < 2) {
+			/*if (!data.control || data.control.length < 2) {
 				notifier.warn('Please select 2 or more control samples');
 				return false;
 			}
 			if (!data.experimental || data.experimental.length < 2) {
 				notifier.warn('Please select 2 or more experimental samples');
 				return false;
-			}
+			}*/
 			return true;
 		}
 	};	
@@ -732,7 +730,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 				var results = $.ui.autocomplete.filter(genemap, request.term);
 				response(results.slice(0, 10));
 			},
-			minLength: 3,
+			minLength: 2,
 			delay: 500,
 			autoFocus: true
 		});
@@ -771,6 +769,12 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			      events.on('progressBar', highlightNextStep);
 			      comm.downloadDiffexpEnrich($modal);
 			  })
+			  .tooltip()
+			  .end()
+
+			  .find('.g2e-confirm-tbl')
+			  .eq(1)
+			  .tooltip()
 			  .end();
 	};
 
@@ -859,7 +863,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	};
 
 	events.on('dataDownloaded', function(data) {
-		showResults(data);
+		showResults(data.link);
 		$modal.find('#g2e-download-btn')
 			  .click(function() {
 			      downloadUrl(data.fileForDownload);

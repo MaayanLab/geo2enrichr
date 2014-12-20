@@ -49,7 +49,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 				var results = $.ui.autocomplete.filter(genemap, request.term);
 				response(results.slice(0, 10));
 			},
-			minLength: 3,
+			minLength: 2,
 			delay: 500,
 			autoFocus: true
 		});
@@ -88,6 +88,12 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			      events.on('progressBar', highlightNextStep);
 			      comm.downloadDiffexpEnrich($modal);
 			  })
+			  .tooltip()
+			  .end()
+
+			  .find('.g2e-confirm-tbl')
+			  .eq(1)
+			  .tooltip()
 			  .end();
 	};
 
@@ -176,7 +182,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	};
 
 	events.on('dataDownloaded', function(data) {
-		showResults(data);
+		showResults(data.link);
 		$modal.find('#g2e-download-btn')
 			  .click(function() {
 			      downloadUrl(data.fileForDownload);

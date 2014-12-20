@@ -86,8 +86,6 @@ var Comm = function(events, notifier, scraper, SERVER) {
 			var endpoint = 'enrichr?',
 				qs;
 
-			debugger;
-
 			fileForDownload = diffexpData.filename;
 			qs = 'filename=' + fileForDownload;
 
@@ -95,6 +93,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					debugger;
 					notifier.log('Enrichr link was returned');
 					notifier.log(data);
 					events.fire('progressBar');
