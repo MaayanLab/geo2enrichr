@@ -4,6 +4,9 @@
 # Chrome Extension zip file
 *.zip
 
+# JS build files and dependencies
+js/grunt/node_modules/*
+
 # directories
 resources/platform scripts/
 resources/PlatformInfoForGreg/

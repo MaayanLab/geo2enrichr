@@ -19,7 +19,7 @@
 				"http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi*"
 			],
 			"css": ["main.css", "droid-sans.css"],
-			"js": ["jquery-1.11.1.min.js", "jquery-ui.min.js", "comm.js", "gds.js", "gse.js", "html.js", "main.js", "notifier.js", "scraper.js", "ui.js"]
+			"js": ["jquery-1.11.1.min.js", "jquery-ui.min.js", "g2e.js"]
 		}
 	],
 	"manifest_version": 2,

@@ -1,8 +1,5 @@
-var GEO2Enrichr = GEO2Enrichr || {};
 
-(function(app, $) {
-
-	app.html = {};
+var Html = function() {
 
 	var modal = '' +
 		'<div id="g2e-container">' +
@@ -115,8 +112,8 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		'</div>';
 
 	var templates = {
+		'modal': modal,
 		'gds': {
-			'modal': modal,
 			'btn': '' +
 				'<tr>' +
 					// "azline" comes from the GEO website.
@@ -128,7 +125,6 @@ var GEO2Enrichr = GEO2Enrichr || {};
 				'</tr>'
 		},
 		'gse': {
-			'modal': modal,
 			'btn': '' +
 				'<tr>' +
 					'<td id="g2e-embedded-button">' +
@@ -153,8 +149,12 @@ var GEO2Enrichr = GEO2Enrichr || {};
 		}
 	};
 
-	app.html.get = function(el) {
-		return templates[app.mode.key][el] || templates[el];
+	return {
+		get: function(el, key) {
+			if (key) {
+				return templates[key][el];
+			}
+			return templates[el];
+		}
 	};
-		
-})(GEO2Enrichr, jQuery);
+};

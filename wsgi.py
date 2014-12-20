@@ -1,1 +1,1 @@
-from app import app as application
+from g2e.app import app as application
