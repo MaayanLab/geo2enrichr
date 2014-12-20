@@ -10,9 +10,12 @@
 	width: 100%;
 	z-index: 1000; 
 }
-#g2e-container #g2e-modal {
+#g2e-container #g2e-modal,
+.ui-dialog {
 	background-color: rgba(255, 255,255, 1); /* http://stackoverflow.com/a/806189/1830334 */
 	border: 1px solid #808080;
+}
+#g2e-container #g2e-modal {
 	left: 50%;
 	margin-left: -390px;
 	padding: 10px;
@@ -265,4 +268,14 @@
  * -------------- */
 #g2e-table-title {
 	color: #d90000;
+}
+
+/* jQuery UI
+ * --------- */
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content {
+	background: #fff;
+	color: gray;
+	font-size: 10px;
+	z-index: 1001;
+	width: 100px;
 }

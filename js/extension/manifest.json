@@ -7,18 +7,19 @@
 	},
 	"permissions": [
 		"downloads",
-		"http://localhost/*"
+		"http://localhost/*",
+		"http://amp.pharm.mssm.edu/Enrichr/*"
 	],
 	"content_scripts": [
 		{
-			"matches": [
+			"matches": [ 
 				// GDS files by accession number via GEO DataSets.
 				"http://www.ncbi.nlm.nih.gov/sites/*",
 
 				// GSE files by accession number via GEO's CGI.
 				"http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi*"
 			],
-			"css": ["main.css", "droid-sans.css"],
+			"css": ["main.css", "jquery-ui.min.css", "droid-sans.css"],
 			"js": ["jquery-1.11.1.min.js", "jquery-ui.min.js", "g2e.js"]
 		}
 	],

@@ -107,10 +107,6 @@ def parse(filename, platform, A_cols, B_cols):
 	except IOError:
 		raise IOError('Could not read SOFT file from local server.')
 
-	with open('static/parsed/' + filename.replace('.soft', '.txt'), 'w+') as foobar:
-		for i in range(len(genes)):
-			foobar.write(genes[i] + '\t\t' + '\t'.join(str(x) for x in A[i]) + '\t\t' + '\t'.join(str(x) for x in B[i]) + '\n')
-
 	# Convert to numpy arrays, which are more compact and faster.
 	A = np.array(A)
 	B = np.array(B)

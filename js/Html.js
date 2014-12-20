@@ -47,7 +47,7 @@ var Html = function() {
 						'<div class="g2e-lowlight">GEO2Enrichr must screen scrape to collect some of the data.<br>Please confirm it is correct.</div>' +
 						'<table id="g2e-confirm-tbl">' +
 							'<tr>' +
-								'<td class="g2e-subtitle">Accession #:</td>' +
+								'<td class="g2e-subtitle">Accession num.&#42;:</td>' +
 								'<td id="g2e-confirm-tbl-acc" class="g2e-strong"></td>' +
 								'<td class="g2e-edit">Edit</td>' +
 							'</tr>' +
@@ -62,7 +62,7 @@ var Html = function() {
 								'<td class="g2e-edit">Edit</td>' +
 							'</tr>' +
 							'<tr>' +
-								'<td class="g2e-subtitle">Control:</td>' +
+								'<td class="g2e-subtitle">Control:&#42;</td>' +
 								'<td id="g2e-confirm-tbl-ctrl" class="g2e-strong"></td>' +
 								'<td></td>' +
 							'</tr>' +
@@ -72,6 +72,11 @@ var Html = function() {
 								'<td></td>' +
 							'</tr>' +
 						'</table>' +
+						'<div class="g2e-lowlight g2e-bottom">Please provide the manipulated gene.&#42;</div>' +
+						'<div class="ui-widget">' +
+							'<label for="genemap">Gene: </label>' +
+							'<input id="genemap">' +
+						'</div>' +
 						'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.<br>They are useful as meta data and for file naming.</div>' +
 						'<table id="g2e-confirm-tbl">' +
 							'<tr>' +

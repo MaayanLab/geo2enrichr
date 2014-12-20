@@ -24,7 +24,8 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					type: 'GET',
 					success: function(summaryData) {
 						events.fire('metadataFetched', summaryData.result[id]);
-					}
+					},
+					error: errorHandler
 				});
 			}
 		});
@@ -52,7 +53,8 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log('GEO files were downloaded');
 					notifier.log(data);
 					events.fire('progressBar');
-				}
+				},
+				error: errorHandler
 			});
 		}
 
@@ -75,13 +77,16 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log('GEO files were differentially expressed');
 					notifier.log(data);
 					events.fire('progressBar');
-				}
+				},
+				error: errorHandler
 			});
 		}
 
 		function enrichr(diffexpData) {
 			var endpoint = 'enrichr?',
 				qs;
+
+			debugger;
 
 			fileForDownload = diffexpData.filename;
 			qs = 'filename=' + fileForDownload;
@@ -95,15 +100,32 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					events.fire('progressBar');
 					data.fileForDownload = SERVER + 'static/genes/' + fileForDownload;
 					events.fire('dataDownloaded', data);
-				}
+				},
+				error: errorHandler
 			});
 		}
 
 		dlgeo().then(diffexp).then(enrichr);
 	};
 
+	var fetchGenemap = function() {
+		$.ajax({
+			url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
+			type: 'GET',
+			dataType: 'JSON',
+			success: function(data) {
+				events.fire('genemapDownloaded', data);
+			}
+		});
+	};
+
+	var errorHandler = function(data) {
+		events.fire('requestFailed', data.responseText);
+	};
+
 	return {
 		downloadDiffexpEnrich: downloadDiffexpEnrich,
-		fetchMetadata: fetchMetadata
+		fetchMetadata: fetchMetadata,
+		fetchGenemap: fetchGenemap
 	};
 };

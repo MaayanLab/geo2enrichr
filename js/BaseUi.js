@@ -1,8 +1,7 @@
 
 var BaseUi = function(comm, events, html, notifier, scraper) {
 
-	var firstClick = true,
-		$downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
+	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
 		elemConfig = {
 			'g2e-confirm-tbl-acc': {
 				key: 'accession',
@@ -39,13 +38,25 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		},
 		steps, $overlay, $modal, $progress, $results;
 
+	events.on('requestFailed', function(errorMsg) {
+		notifier.warn(errorMsg);
+		resetProgressBar();
+	});
+
+	events.on('genemapDownloaded', function(genemap) {
+		$('#genemap').autocomplete({
+			source: function(request, response) {
+				var results = $.ui.autocomplete.filter(genemap, request.term);
+				response(results.slice(0, 10));
+			},
+			minLength: 3,
+			delay: 500,
+			autoFocus: true
+		});
+	});
+
 	var openApp = function() {
 		var scrapedData;
-		if (firstClick) {
-			setup();		
-			// Prevent re-adding the modal box to the DOM.
-			firstClick = false;
-		}
 
 		// Show the user the data we have scraped for confirmation.
 		scrapedData = scraper.scrapeData($modal);
@@ -171,6 +182,8 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			      downloadUrl(data.fileForDownload);
 			  });
 	});
+
+	setup();
 
 	return {
 		openApp: openApp,

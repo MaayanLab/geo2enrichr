@@ -27,7 +27,8 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					type: 'GET',
 					success: function(summaryData) {
 						events.fire('metadataFetched', summaryData.result[id]);
-					}
+					},
+					error: errorHandler
 				});
 			}
 		});
@@ -55,7 +56,8 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log('GEO files were downloaded');
 					notifier.log(data);
 					events.fire('progressBar');
-				}
+				},
+				error: errorHandler
 			});
 		}
 
@@ -78,13 +80,16 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log('GEO files were differentially expressed');
 					notifier.log(data);
 					events.fire('progressBar');
-				}
+				},
+				error: errorHandler
 			});
 		}
 
 		function enrichr(diffexpData) {
 			var endpoint = 'enrichr?',
 				qs;
+
+			debugger;
 
 			fileForDownload = diffexpData.filename;
 			qs = 'filename=' + fileForDownload;
@@ -98,16 +103,33 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					events.fire('progressBar');
 					data.fileForDownload = SERVER + 'static/genes/' + fileForDownload;
 					events.fire('dataDownloaded', data);
-				}
+				},
+				error: errorHandler
 			});
 		}
 
 		dlgeo().then(diffexp).then(enrichr);
 	};
 
+	var fetchGenemap = function() {
+		$.ajax({
+			url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
+			type: 'GET',
+			dataType: 'JSON',
+			success: function(data) {
+				events.fire('genemapDownloaded', data);
+			}
+		});
+	};
+
+	var errorHandler = function(data) {
+		events.fire('requestFailed', data.responseText);
+	};
+
 	return {
 		downloadDiffexpEnrich: downloadDiffexpEnrich,
-		fetchMetadata: fetchMetadata
+		fetchMetadata: fetchMetadata,
+		fetchGenemap: fetchGenemap
 	};
 };
 
@@ -189,7 +211,7 @@ var Html = function() {
 						'<div class="g2e-lowlight">GEO2Enrichr must screen scrape to collect some of the data.<br>Please confirm it is correct.</div>' +
 						'<table id="g2e-confirm-tbl">' +
 							'<tr>' +
-								'<td class="g2e-subtitle">Accession #:</td>' +
+								'<td class="g2e-subtitle">Accession num.&#42;:</td>' +
 								'<td id="g2e-confirm-tbl-acc" class="g2e-strong"></td>' +
 								'<td class="g2e-edit">Edit</td>' +
 							'</tr>' +
@@ -204,7 +226,7 @@ var Html = function() {
 								'<td class="g2e-edit">Edit</td>' +
 							'</tr>' +
 							'<tr>' +
-								'<td class="g2e-subtitle">Control:</td>' +
+								'<td class="g2e-subtitle">Control:&#42;</td>' +
 								'<td id="g2e-confirm-tbl-ctrl" class="g2e-strong"></td>' +
 								'<td></td>' +
 							'</tr>' +
@@ -214,6 +236,11 @@ var Html = function() {
 								'<td></td>' +
 							'</tr>' +
 						'</table>' +
+						'<div class="g2e-lowlight g2e-bottom">Please provide the manipulated gene.&#42;</div>' +
+						'<div class="ui-widget">' +
+							'<label for="genemap">Gene: </label>' +
+							'<input id="genemap">' +
+						'</div>' +
 						'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.<br>They are useful as meta data and for file naming.</div>' +
 						'<table id="g2e-confirm-tbl">' +
 							'<tr>' +
@@ -657,8 +684,7 @@ var GseScraper = function(events, html) {
 
 var BaseUi = function(comm, events, html, notifier, scraper) {
 
-	var firstClick = true,
-		$downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
+	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
 		elemConfig = {
 			'g2e-confirm-tbl-acc': {
 				key: 'accession',
@@ -695,13 +721,25 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		},
 		steps, $overlay, $modal, $progress, $results;
 
+	events.on('requestFailed', function(errorMsg) {
+		notifier.warn(errorMsg);
+		resetProgressBar();
+	});
+
+	events.on('genemapDownloaded', function(genemap) {
+		$('#genemap').autocomplete({
+			source: function(request, response) {
+				var results = $.ui.autocomplete.filter(genemap, request.term);
+				response(results.slice(0, 10));
+			},
+			minLength: 3,
+			delay: 500,
+			autoFocus: true
+		});
+	});
+
 	var openApp = function() {
 		var scrapedData;
-		if (firstClick) {
-			setup();		
-			// Prevent re-adding the modal box to the DOM.
-			firstClick = false;
-		}
 
 		// Show the user the data we have scraped for confirmation.
 		scrapedData = scraper.scrapeData($modal);
@@ -828,6 +866,8 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			  });
 	});
 
+	setup();
+
 	return {
 		openApp: openApp,
 		initProgressBar: initProgressBar,
@@ -930,6 +970,10 @@ var main = function() {
 		if (scraper.getAccessionFromUrl) {
 			comm.fetchMetadata( scraper.getAccessionFromUrl() );
 		}
+
+		// Fetch and store the gene map for later.
+		comm.fetchGenemap();
+
 		scraper.init();
 		ui.init();
 		notifier.log('g2e loaded.');

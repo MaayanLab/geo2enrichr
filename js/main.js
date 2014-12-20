@@ -41,6 +41,10 @@ var main = function() {
 		if (scraper.getAccessionFromUrl) {
 			comm.fetchMetadata( scraper.getAccessionFromUrl() );
 		}
+
+		// Fetch and store the gene map for later.
+		comm.fetchGenemap();
+
 		scraper.init();
 		ui.init();
 		notifier.log('g2e loaded.');
