@@ -96,7 +96,6 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
-					debugger;
 					notifier.log('Enrichr link was returned');
 					notifier.log(data);
 					events.fire('progressBar');
@@ -438,14 +437,14 @@ var BaseScraper = function(notifier) {
 		},
 
 		isValidData: function(data) {
-			/*if (!data.control || data.control.length < 2) {
+			if (!data.control || data.control.length < 2) {
 				notifier.warn('Please select 2 or more control samples');
 				return false;
 			}
 			if (!data.experimental || data.experimental.length < 2) {
 				notifier.warn('Please select 2 or more experimental samples');
 				return false;
-			}*/
+			}
 			return true;
 		}
 	};	
@@ -949,8 +948,8 @@ var main = function() {
 
 	var init = function() {
 		// Set these configuration values before deploying.
-		var DEBUG = true,
-			SERVER = 'http://localhost:8083/',
+		var DEBUG = false,
+			SERVER = 'http://amp.pharm.mssm.edu/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),

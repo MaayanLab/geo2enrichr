@@ -93,7 +93,6 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
-					debugger;
 					notifier.log('Enrichr link was returned');
 					notifier.log(data);
 					events.fire('progressBar');
