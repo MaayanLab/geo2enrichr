@@ -1,12 +1,14 @@
 
 var Html = function() {
 
+	var LOGO50X50 = 'chrome-extension://jmocdkgcpalhikedehcdnofimpgkljcj/images/g2e-logo-50x50.png';
+
 	var modal = '' +
 		'<div id="g2e-container">' +
 			'<div id="g2e-modal">' +
 				'<div id="g2e-title">' +
 					'<a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">' +
-						'<img src="chrome-extension://jmocdkgcpalhikedehcdnofimpgkljcj/images/g2e-logo-50x50.png">' +
+						'<img src="' + LOGO50X50 + '">' +
 						'<span>GEO2</span><span class="g2e-highlight">Enrichr</span>' +
 					'</a>' +
 					'<button id="g2e-close-btn" class="g2e-btn">&#10006</button>' +
@@ -94,20 +96,35 @@ var Html = function() {
 					'</tr>' +
 				'</table>' +
 				'<div id="g2e-footer">' +
-					'<div id="g2e-actions">' +
-						'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Submit to Enrichr</button>' +
+					'<div>' +
+						'<div id="g2e-actions">' +
+							'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Get gene lists</button>' +
+						'</div>' +
+						'<div id="g2e-progress-bar">' +
+							'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
+							'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
+							'<div id="g2e-step3" class="g2e-progress">Done!</div>' +
+						'</div>' +
 					'</div>' +
-					'<div id="g2e-progress-bar">' +
-						'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
-						'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
-						'<div id="g2e-step3" class="g2e-progress">Done!</div>' +
-					'</div>' +
-					'<div id="g2e-results">' +
-						'<strong>Submit genes in Enrichr:</strong>' +
-						'<button href="" id="g2e-enrichr-up">Up genes</button>' +
-						'<button href="" id="g2e-enrichr-down">Down genes</button>' +
-						'<button href="" id="g2e-enrichr-combined">All genes</button>' +
-						'<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
+					'<table id="g2e-results">' +
+						'<tr>' +
+							'<td>' +
+								'<strong>Enriched genes:</strong>' +
+							'</td>' +
+							'<td>' +
+								'<button id="g2e-enrichr-up">Up</button>' +
+								'<button id="g2e-enrichr-down">Down</button>' +
+								'<button id="g2e-enrichr-combined">All</button>' +
+							'</td>' +
+						'</tr>' +
+						'<tr>' +
+							'<td>' +
+								'<strong>Downloads:</strong>' +
+							'</td>' +
+							'<td>' +
+								'<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
+							'</td>' +
+						'</tr>' +
 					'</div>' +
 				'</div>' +
 			'</div>' +
@@ -122,7 +139,7 @@ var Html = function() {
 					'<td class="azline" id="g2e-embedded-button">' +
 						'<b>Step 4: </b>' +
 						'<span id="g2e-link">Pipe into Enrichr</span>' +
-						'<img src="http://amp.pharm.mssm.edu/Enrichr/images/enrichr-icon.png">' +
+						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
 				'</tr>'
 		},
@@ -131,7 +148,7 @@ var Html = function() {
 				'<tr>' +
 					'<td id="g2e-embedded-button">' +
 						'<span id="g2e-link">Pipe into Enrichr</span>' +
-						'<img src="http://amp.pharm.mssm.edu/Enrichr/images/enrichr-icon.png">' +
+						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
 				'</tr>',
 			'thead': '' +

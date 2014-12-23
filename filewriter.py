@@ -17,9 +17,9 @@ def output_gene_pvalue_pairs(input_file, gene_pvalue_pairs):
 	input_file  = input_file.replace('.soft', '')
 	up_file = GeneFile(input_file + '_' + 'up')
 	down_file = GeneFile(input_file + '_' + 'down')
-	enrichr_file = GeneFile(input_file + '_' + 'enrichr')
+	combined_file = GeneFile(input_file + '_' + 'combined')
 
-	with open(up_file.path(), 'w+') as up_out, open(down_file.path(), 'w+') as down_out,  open(enrichr_file.path(), 'w+') as enrichr_out:
+	with open(up_file.path(), 'w+') as up_out, open(down_file.path(), 'w+') as down_out,  open(combined_file.path(), 'w+') as combined_out:
 		for gene, pvalue in gene_pvalue_pairs:
 			if pvalue > 0:
 				up_out.write('%s\t%f\n' % (gene, pvalue))
@@ -27,10 +27,10 @@ def output_gene_pvalue_pairs(input_file, gene_pvalue_pairs):
 				down_out.write('%s\t%f\n' % (gene, pvalue))
 			# We have already sorted the pvalues by absolute value. Just take
 			# it again to remove the sign.
-			enrichr_out.write('%s\t%f\n' % (gene, abs(pvalue)))
+			combined_out.write('%s\t%f\n' % (gene, abs(pvalue)))
 
 	return {
 		'up': up_file.filename,
 		'down': down_file.filename,
-		'enrichr': enrichr_file.filename
+		'combined': combined_file.filename
 	}

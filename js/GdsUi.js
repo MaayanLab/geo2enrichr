@@ -6,6 +6,11 @@ var GdsUi = function(html, events) {
 		embed: function($hook) {
 			var self = this;
 			$hook.children().last().after(html.get('btn', 'gds'));
+
+			events.fire('uiReady', {
+				details: $('#gds_details')
+			});
+
 			$('#g2e-link').click(function() {
 				self.openApp();
 			});

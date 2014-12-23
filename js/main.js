@@ -24,7 +24,6 @@ var main = function() {
 			notifier = Notifier(DEBUG),
 			html = Html(),
 			baseScraper = BaseScraper(DEBUG, events, notifier),
-			
 			scraper,
 			ui,
 			comm;
@@ -48,8 +47,6 @@ var main = function() {
 
 		// Fetch and store the gene map for later.
 		comm.fetchGenemap();
-
-		scraper.init();
 		ui.init();
 		notifier.log('g2e loaded.');
 	};

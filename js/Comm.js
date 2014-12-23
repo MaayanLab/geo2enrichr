@@ -74,10 +74,23 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					var DIR = SERVER + 'static/genes/';
 					notifier.log('GEO files were differentially expressed');
 					notifier.log(data);
-					events.fire('progressBar');
-					events.fire('dataDiffExped', data);
+					events.fire('progressBar');					
+					events.fire('dataDiffExped', {
+						download: {
+							// Provide a full reference to the file on the server.
+							up: DIR + data.up,
+							down: DIR + data.down
+						},
+						enrichr: {
+							// Provide just the filename to the Enrichr endpoint.
+							up: data.up,
+							down: data.down,
+							combined: data.combined
+						}
+					});
 				},
 				error: errorHandler
 			});
@@ -86,12 +99,10 @@ var Comm = function(events, notifier, scraper, SERVER) {
 		dlgeo().then(diffexp);
 	};
 
-	var enrichr = function(diffexpData) {
+	var enrichr = function(filename) {
 		var endpoint = 'enrichr?',
 			qs = $.param({
-				'up': diffexpData.up,
-				'down': diffexpData.down,
-				'enrichr': diffexpData.enrichr
+				filename: filename
 			});
 
 		$.ajax({
@@ -100,9 +111,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 			success: function(data) {
 				notifier.log('Enrichr link was returned');
 				notifier.log(data);
-				events.fire('progressBar');
-				data.fileForDownload = SERVER + 'static/genes/' + fileForDownload;
-				events.fire('dataDownloaded', data);
+				events.fire('genesEnriched', data.link);
 			},
 			error: errorHandler
 		});
@@ -126,6 +135,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	return {
 		downloadDiffExp: downloadDiffExp,
 		fetchMetadata: fetchMetadata,
-		fetchGenemap: fetchGenemap
+		fetchGenemap: fetchGenemap,
+		enrichr: enrichr
 	};
 };

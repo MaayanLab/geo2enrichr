@@ -171,6 +171,7 @@
 #g2e-container #g2e-progress-bar {
 	display: none;
 	float: left;
+	padding-bottom: 10px;
 }
 #g2e-container #g2e-progress-bar .g2e-progress {
 	background: #D3D3D3;

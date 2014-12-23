@@ -53,6 +53,10 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		showEnrichrLinks(data);
 	});
 
+	events.on('genesEnriched', function(link) {
+		window.open(link, '_blank');
+	});
+
 	var openApp = function() {
 		var scrapedData;
 
@@ -123,12 +127,30 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	};
 
 	var showEnrichrLinks = function(links) {
-		$results.show();/*
-				.find('button')
-				.first()
+		$results.show()
+				.find('#g2e-download-btn')
 				.click(function() {
-					window.open(link, '_blank');
-				});*/
+					downloadUrl(links.download.up);
+					setTimeout(function() {
+						downloadUrl(links.download.down);
+					}, 1000);
+				})
+				.end()
+
+				.find('#g2e-enrichr-up')
+				.click(function() {
+					comm.enrichr(links.enrichr.up);
+				})
+				.end()
+				.find('#g2e-enrichr-down')
+				.click(function() {
+					comm.enrichr(links.enrichr.down);
+				})
+				.end()
+				.find('#g2e-enrichr-combined')
+				.click(function() {
+					comm.enrichr(links.enrichr.combined);
+				});
 	};
 
 	var resetResults = function() {
@@ -193,14 +215,6 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	var downloadUrl = function(url) {
 		$downloadIframe.attr('src', url);
 	};
-
-	events.on('dataDownloaded', function(data) {
-		showResults(data.link);
-		$modal.find('#g2e-download-btn')
-			  .click(function() {
-			      downloadUrl(data.fileForDownload);
-			  });
-	});
 
 	setup();
 

@@ -77,10 +77,23 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					var DIR = SERVER + 'static/genes/';
 					notifier.log('GEO files were differentially expressed');
 					notifier.log(data);
-					events.fire('progressBar');
-					events.fire('dataDiffExped', data);
+					events.fire('progressBar');					
+					events.fire('dataDiffExped', {
+						download: {
+							// Provide a full reference to the file on the server.
+							up: DIR + data.up,
+							down: DIR + data.down
+						},
+						enrichr: {
+							// Provide just the filename to the Enrichr endpoint.
+							up: data.up,
+							down: data.down,
+							combined: data.combined
+						}
+					});
 				},
 				error: errorHandler
 			});
@@ -89,12 +102,10 @@ var Comm = function(events, notifier, scraper, SERVER) {
 		dlgeo().then(diffexp);
 	};
 
-	var enrichr = function(diffexpData) {
+	var enrichr = function(filename) {
 		var endpoint = 'enrichr?',
 			qs = $.param({
-				'up': diffexpData.up,
-				'down': diffexpData.down,
-				'enrichr': diffexpData.enrichr
+				filename: filename
 			});
 
 		$.ajax({
@@ -103,9 +114,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 			success: function(data) {
 				notifier.log('Enrichr link was returned');
 				notifier.log(data);
-				events.fire('progressBar');
-				data.fileForDownload = SERVER + 'static/genes/' + fileForDownload;
-				events.fire('dataDownloaded', data);
+				events.fire('genesEnriched', data.link);
 			},
 			error: errorHandler
 		});
@@ -129,7 +138,8 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	return {
 		downloadDiffExp: downloadDiffExp,
 		fetchMetadata: fetchMetadata,
-		fetchGenemap: fetchGenemap
+		fetchGenemap: fetchGenemap,
+		enrichr: enrichr
 	};
 };
 
@@ -165,12 +175,14 @@ var Events = function() {
 
 var Html = function() {
 
+	var LOGO50X50 = 'chrome-extension://jmocdkgcpalhikedehcdnofimpgkljcj/images/g2e-logo-50x50.png';
+
 	var modal = '' +
 		'<div id="g2e-container">' +
 			'<div id="g2e-modal">' +
 				'<div id="g2e-title">' +
 					'<a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">' +
-						'<img src="chrome-extension://jmocdkgcpalhikedehcdnofimpgkljcj/images/g2e-logo-50x50.png">' +
+						'<img src="' + LOGO50X50 + '">' +
 						'<span>GEO2</span><span class="g2e-highlight">Enrichr</span>' +
 					'</a>' +
 					'<button id="g2e-close-btn" class="g2e-btn">&#10006</button>' +
@@ -258,20 +270,35 @@ var Html = function() {
 					'</tr>' +
 				'</table>' +
 				'<div id="g2e-footer">' +
-					'<div id="g2e-actions">' +
-						'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Submit to Enrichr</button>' +
+					'<div>' +
+						'<div id="g2e-actions">' +
+							'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Get gene lists</button>' +
+						'</div>' +
+						'<div id="g2e-progress-bar">' +
+							'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
+							'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
+							'<div id="g2e-step3" class="g2e-progress">Done!</div>' +
+						'</div>' +
 					'</div>' +
-					'<div id="g2e-progress-bar">' +
-						'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
-						'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
-						'<div id="g2e-step3" class="g2e-progress">Done!</div>' +
-					'</div>' +
-					'<div id="g2e-results">' +
-						'<strong>Submit genes in Enrichr:</strong>' +
-						'<button href="" id="g2e-enrichr-up">Up genes</button>' +
-						'<button href="" id="g2e-enrichr-down">Down genes</button>' +
-						'<button href="" id="g2e-enrichr-combined">All genes</button>' +
-						'<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
+					'<table id="g2e-results">' +
+						'<tr>' +
+							'<td>' +
+								'<strong>Enriched genes:</strong>' +
+							'</td>' +
+							'<td>' +
+								'<button id="g2e-enrichr-up">Up</button>' +
+								'<button id="g2e-enrichr-down">Down</button>' +
+								'<button id="g2e-enrichr-combined">All</button>' +
+							'</td>' +
+						'</tr>' +
+						'<tr>' +
+							'<td>' +
+								'<strong>Downloads:</strong>' +
+							'</td>' +
+							'<td>' +
+								'<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
+							'</td>' +
+						'</tr>' +
 					'</div>' +
 				'</div>' +
 			'</div>' +
@@ -286,7 +313,7 @@ var Html = function() {
 					'<td class="azline" id="g2e-embedded-button">' +
 						'<b>Step 4: </b>' +
 						'<span id="g2e-link">Pipe into Enrichr</span>' +
-						'<img src="http://amp.pharm.mssm.edu/Enrichr/images/enrichr-icon.png">' +
+						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
 				'</tr>'
 		},
@@ -295,7 +322,7 @@ var Html = function() {
 				'<tr>' +
 					'<td id="g2e-embedded-button">' +
 						'<span id="g2e-link">Pipe into Enrichr</span>' +
-						'<img src="http://amp.pharm.mssm.edu/Enrichr/images/enrichr-icon.png">' +
+						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
 				'</tr>',
 			'thead': '' +
@@ -472,11 +499,11 @@ var GdsScraper = function(events) {
 		metadata = data;
 	});
 
+	events.on('uiReady', function(data) {
+		$details = data.details;
+	});
+
 	return {
-		
-		init: function() {
-			$details = $('#gds_details');
-		},
 
 		getAccession: function() {
 			return metadata.accession || this.getAccessionFromPage();
@@ -558,46 +585,11 @@ var GseScraper = function(events, html) {
 		metadata = data;
 	});
 
+	events.on('uiReady', function(data) {
+		$details = data.details;
+	});
+
 	return {
-
-		init: function() {
-			var $samplesTable;
-
-			// Find the details table.
-			$('table').each(function(i, el) {
-				var $el = $(el);
-				if ($el.attr('width') === '600' &&
-					$el.attr('cellpadding') === '2' &&
-					$el.attr('cellspacing') === '0')
-				{
-					$details = $el;
-					return false;
-				}
-			});
-
-			// Find the samples from the details table.
-			$details.find('tr').each(function(i, tr) {
-				if ($(tr).find('td')
-						 .first()
-						 .text()
-						 .toLowerCase()
-						 .indexOf('samples') === 0)
-				{
-					$samplesTable = $(tr);
-					return false;
-				}
-			});
-
-			$samplesTable.find('tr').each(function(i, tr) {
-				$(tr).append(html.get('chkbxs', 'gse'));
-			});
-
-			$samplesTable.find('table')
-						  .first()
-						  .find('tr')
-						  .first()
-						  .before(html.get('thead'));
-		},
 
 		getByName: function(name) {
 			var idx = this.getRowIdxByName(name);
@@ -740,6 +732,10 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		showEnrichrLinks(data);
 	});
 
+	events.on('genesEnriched', function(link) {
+		window.open(link, '_blank');
+	});
+
 	var openApp = function() {
 		var scrapedData;
 
@@ -810,12 +806,30 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	};
 
 	var showEnrichrLinks = function(links) {
-		$results.show();/*
-				.find('button')
-				.first()
+		$results.show()
+				.find('#g2e-download-btn')
 				.click(function() {
-					window.open(link, '_blank');
-				});*/
+					downloadUrl(links.download.up);
+					setTimeout(function() {
+						downloadUrl(links.download.down);
+					}, 1000);
+				})
+				.end()
+
+				.find('#g2e-enrichr-up')
+				.click(function() {
+					comm.enrichr(links.enrichr.up);
+				})
+				.end()
+				.find('#g2e-enrichr-down')
+				.click(function() {
+					comm.enrichr(links.enrichr.down);
+				})
+				.end()
+				.find('#g2e-enrichr-combined')
+				.click(function() {
+					comm.enrichr(links.enrichr.combined);
+				});
 	};
 
 	var resetResults = function() {
@@ -881,14 +895,6 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		$downloadIframe.attr('src', url);
 	};
 
-	events.on('dataDownloaded', function(data) {
-		showResults(data.link);
-		$modal.find('#g2e-download-btn')
-			  .click(function() {
-			      downloadUrl(data.fileForDownload);
-			  });
-	});
-
 	setup();
 
 	return {
@@ -906,6 +912,11 @@ var GdsUi = function(html, events) {
 		embed: function($hook) {
 			var self = this;
 			$hook.children().last().after(html.get('btn', 'gds'));
+
+			events.fire('uiReady', {
+				details: $('#gds_details')
+			});
+
 			$('#g2e-link').click(function() {
 				self.openApp();
 			});
@@ -929,11 +940,58 @@ var GdsUi = function(html, events) {
 
 var GseUi = function(html, events) {
 
+	var $gse_details;
+
 	return {
 
 		embed: function($hook) {
 			var self = this;
 			$hook.append(html.get('btn', 'gse'));
+
+			// Find the details table.
+			$('table').each(function(i, el) {
+				var $el = $(el);
+				if ($el.attr('width') === '600' &&
+					$el.attr('cellpadding') === '2' &&
+					$el.attr('cellspacing') === '0')
+				{
+					$gse_details = $el;
+					return false;
+				}
+			});
+
+			if ($gse_details) {
+				// Find the samples from the details table.
+				$gse_details.find('tr').each(function(i, tr) {
+					if ($(tr).find('td')
+							 .first()
+							 .text()
+							 .toLowerCase()
+							 .indexOf('samples') === 0)
+					{
+						$samples_table = $(tr);
+						return false;
+					}
+				});
+			}
+
+			if ($samples_table) {
+				$samples_table.find('tr').each(function(i, tr) {
+					$(tr).append(html.get('chkbxs', 'gse'));
+				});
+
+				$samples_table.find('table')
+							  .first()
+							  .find('tr')
+							  .first()
+							  .before(html.get('thead', 'gse'));
+			}
+
+			events.fire('uiReady', {
+				details: $gse_details,
+				table: $samples_table
+			});
+
 			$('#g2e-link').click(function() {
 				self.openApp();
 			});
@@ -975,7 +1033,6 @@ var main = function() {
 			notifier = Notifier(DEBUG),
 			html = Html(),
 			baseScraper = BaseScraper(DEBUG, events, notifier),
-			
 			scraper,
 			ui,
 			comm;
@@ -999,8 +1056,6 @@ var main = function() {
 
 		// Fetch and store the gene map for later.
 		comm.fetchGenemap();
-
-		scraper.init();
 		ui.init();
 		notifier.log('g2e loaded.');
 	};

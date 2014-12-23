@@ -9,46 +9,11 @@ var GseScraper = function(events, html) {
 		metadata = data;
 	});
 
+	events.on('uiReady', function(data) {
+		$details = data.details;
+	});
+
 	return {
-
-		init: function() {
-			var $samplesTable;
-
-			// Find the details table.
-			$('table').each(function(i, el) {
-				var $el = $(el);
-				if ($el.attr('width') === '600' &&
-					$el.attr('cellpadding') === '2' &&
-					$el.attr('cellspacing') === '0')
-				{
-					$details = $el;
-					return false;
-				}
-			});
-
-			// Find the samples from the details table.
-			$details.find('tr').each(function(i, tr) {
-				if ($(tr).find('td')
-						 .first()
-						 .text()
-						 .toLowerCase()
-						 .indexOf('samples') === 0)
-				{
-					$samplesTable = $(tr);
-					return false;
-				}
-			});
-
-			$samplesTable.find('tr').each(function(i, tr) {
-				$(tr).append(html.get('chkbxs', 'gse'));
-			});
-
-			$samplesTable.find('table')
-						  .first()
-						  .find('tr')
-						  .first()
-						  .before(html.get('thead'));
-		},
 
 		getByName: function(name) {
 			var idx = this.getRowIdxByName(name);

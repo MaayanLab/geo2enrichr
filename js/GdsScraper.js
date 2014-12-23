@@ -13,11 +13,11 @@ var GdsScraper = function(events) {
 		metadata = data;
 	});
 
+	events.on('uiReady', function(data) {
+		$details = data.details;
+	});
+
 	return {
-		
-		init: function() {
-			$details = $('#gds_details');
-		},
 
 		getAccession: function() {
 			return metadata.accession || this.getAccessionFromPage();
