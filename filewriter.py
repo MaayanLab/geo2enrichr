@@ -9,30 +9,28 @@ __contact__ = "avi.maayan@mssm.edu"
 from files import GeneFile
 
 
-def output_gene_pvalue_pairs(input_file, gene_pvalue_pairs, inclusion):
+def output_gene_pvalue_pairs(input_file, gene_pvalue_pairs):
 	"""Outputs genes and pvalues to file(s) on the server and returns their
 	names.
 	"""
 
 	input_file  = input_file.replace('.soft', '')
-	output_file = GeneFile(input_file + '_' + inclusion)
+	up_file = GeneFile(input_file + '_' + 'up')
+	down_file = GeneFile(input_file + '_' + 'down')
+	enrichr_file = GeneFile(input_file + '_' + 'enrichr')
 
-	if inclusion == 'combined':
-		with open(output_file.path(), 'w+') as out:
-			for gene, pvalue in gene_pvalue_pairs:
-				out.write('%s\t%f\n' % (gene, pvalue))
+	with open(up_file.path(), 'w+') as up_out, open(down_file.path(), 'w+') as down_out,  open(enrichr_file.path(), 'w+') as enrichr_out:
+		for gene, pvalue in gene_pvalue_pairs:
+			if pvalue > 0:
+				up_out.write('%s\t%f\n' % (gene, pvalue))
+			if pvalue < 0:
+				down_out.write('%s\t%f\n' % (gene, pvalue))
+			# We have already sorted the pvalues by absolute value. Just take
+			# it again to remove the sign.
+			enrichr_out.write('%s\t%f\n' % (gene, abs(pvalue)))
 
-	elif inclusion == 'down':
-		with open(output_file.path(), 'w+') as out:
-			for gene, pvalue in gene_pvalue_pairs:
-				if pvalue < 0:
-					out.write('%s\t%f\n' % (gene, pvalue))
-
-	# Default is up genes.
-	else:
-		with open(output_file.path(), 'w+') as out:
-			for gene, pvalue in gene_pvalue_pairs:
-				if pvalue > 0:
-					out.write('%s\t%f\n' % (gene, pvalue))
-
-	return output_file.filename
+	return {
+		'up': up_file.filename,
+		'down': down_file.filename,
+		'enrichr': enrichr_file.filename
+	}

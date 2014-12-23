@@ -1,42 +1,36 @@
 
 var BaseUi = function(comm, events, html, notifier, scraper) {
 
-	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
-		elemConfig = {
-			'g2e-confirm-tbl-acc': {
-				key: 'accession',
-				prompt: 'Please enter an accession number:'
-			},
-			'g2e-confirm-tbl-pltf': {
-				key: 'platform',
-				prompt: 'Please enter a platform:'
-			},
-			'g2e-confirm-tbl-org' : {
-				key: 'organism',
-				prompt: 'Please enter an organism:'
-			},
-			'g2e-confirm-tbl-ctrl': {
-				key: 'control',
-				format: function(data) {
-					return data.join(', ');
-				}
-			},
-			'g2e-confirm-tbl-expmt': {
-				key: 'experimental',
-				format: function(data) {
-					return data.join(', ');
-				}
-			},
-			'g2e-confirm-cell': {
-				key: 'cell',
-				prompt: 'Please enter a cell type or tissue:'
-			},
-			'g2e-confirm-pert': {
-				key: 'perturbation',
-				prompt: 'Please enter perturbation:'
+	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
+
+	var elemConfig = {
+		'g2e-confirm-tbl-acc': {
+			key: 'accession',
+			prompt: 'Please enter an accession number:'
+		},
+		'g2e-confirm-tbl-pltf': {
+			key: 'platform',
+			prompt: 'Please enter a platform:'
+		},
+		'g2e-confirm-tbl-org' : {
+			key: 'organism',
+			prompt: 'Please enter an organism:'
+		},
+		'g2e-confirm-tbl-ctrl': {
+			key: 'control',
+			format: function(data) {
+				return data.join(', ');
 			}
 		},
-		steps, $overlay, $modal, $progress, $results;
+		'g2e-confirm-tbl-expmt': {
+			key: 'experimental',
+			format: function(data) {
+				return data.join(', ');
+			}
+		}
+	};
+	
+	var steps, $overlay, $modal, $progress, $results;
 
 	events.on('requestFailed', function(errorMsg) {
 		notifier.warn(errorMsg);
@@ -55,6 +49,10 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		});
 	});
 
+	events.on('dataDiffExped', function(data) {
+		showEnrichrLinks(data);
+	});
+
 	var openApp = function() {
 		var scrapedData;
 
@@ -70,8 +68,8 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		setGlobalSelectors();
 
 		// Allow editing of the values, in case we scraped incorrectly.
-		$('.g2e-edit').click(function(evt) {
-			var id = $(evt.currentTarget).siblings().eq(1).attr('id');
+		$('.g2e-editable').click(function(evt) {
+			var id = $(evt.target).parent().attr('id');
 			onEdit(id);
 		});
 
@@ -86,20 +84,21 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			      notifier.log(scraper.getData($modal));
 			      initProgressBar();
 			      events.on('progressBar', highlightNextStep);
-			      comm.downloadDiffexpEnrich($modal);
+			      comm.downloadDiffExp($modal);
 			  })
-			  .tooltip()
+			  .tooltip({
+			      tooltipClass: 'g2e-tooltip'
+			  })
 			  .end()
 
 			  .find('.g2e-confirm-tbl')
 			  .eq(1)
-			  .tooltip()
 			  .end();
 	};
 
 	var initProgressBar = function() {
 		resetProgressBar();
-		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
+		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3'];
 		$progress.show();
 		highlightNextStep();
 	};
@@ -119,17 +118,17 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			} else {
 				html = scrapedData[config.key];
 			}
-			$('#' + elem).html(html);
+			$('#' + elem + ' td').eq(1).html(html);
 		}
 	};
 
-	var showResults = function(link) {
-		$results.show()
+	var showEnrichrLinks = function(links) {
+		$results.show();/*
 				.find('button')
 				.first()
 				.click(function() {
 					window.open(link, '_blank');
-				});
+				});*/
 	};
 
 	var resetResults = function() {
@@ -171,9 +170,23 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 	var onEdit = function(id) {
 		var config = elemConfig[id],
-			userInput = notifier.ask(config.prompt, $('#' + id).text());
+			userInput = notifier.ask(config.prompt, $('#' + id + ' td').eq(1).text());
 		if (userInput !== null) {
-			scraper.set_data(config.key, userInput);
+			scraper.setData(config.key, userInput);
+			fillConfirmationTable(scraper.getData());
+		}
+	};
+
+	var fillConfirmationTable = function(scrapedData) {
+		var elem, config, html;
+		for (elem in elemConfig) {
+			config = elemConfig[elem];
+			if (config.format) {
+				html = config.format(scrapedData[config.key]);
+			} else {
+				html = scrapedData[config.key];
+			}
+			$('#' + elem + ' td').eq(1).html(html);
 		}
 	};
 
@@ -194,7 +207,6 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	return {
 		openApp: openApp,
 		initProgressBar: initProgressBar,
-		highlightNextStep: highlightNextStep,
-		showResults: showResults
+		highlightNextStep: highlightNextStep
 	};
 };

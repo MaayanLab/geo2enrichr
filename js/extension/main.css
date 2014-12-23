@@ -1,7 +1,7 @@
 /* Modal general
  * ------------- */
 #g2e-container {
-	background-color: rgba(0, 0, 0, 0.15); /* http://stackoverflow.com/a/806189/1830334 */
+	background-color: rgba(255, 255, 255, .50); /* http://stackoverflow.com/a/806189/1830334 */
 	font-family: Arial, Sans-serif;
 	height: 100%;
 	left: 0;
@@ -10,14 +10,14 @@
 	width: 100%;
 	z-index: 1000; 
 }
-#g2e-container #g2e-modal,
-.ui-dialog {
+#g2e-container #g2e-modal {
 	background-color: rgba(255, 255,255, 1); /* http://stackoverflow.com/a/806189/1830334 */
 	border: 1px solid #808080;
+	box-shadow: 0 4px 16px rgba(0,0,0,.2);
 }
 #g2e-container #g2e-modal {
 	left: 50%;
-	margin-left: -390px;
+	margin-left: -450px;
 	padding: 10px;
 	position: fixed;
 	top: 70px;
@@ -37,7 +37,6 @@
 #g2e-container a {
 	color: #009DFF;
 	font-family: Arial, Sans-serif;
-	padding-right: 10px;
 }
 #g2e-container a:hover,
 #g2e-container a:active,
@@ -47,9 +46,6 @@
 #g2e-container h4 {
 	font-size: 14px;
 }
-#g2e-container .g2e-strong {
-	font-weight: 700;
-}
 #g2e-container .g2e-warning {
 	color: 700;
 }
@@ -58,7 +54,7 @@
 }
 #g2e-container .g2e-lowlight {
 	color: #555555;
-	font-size: 12px;
+	font-size: 13px;
 	font-style: italic;
 	padding-bottom: 5px;
 }
@@ -81,28 +77,17 @@
 	padding: 10px;
 }
 #g2e-container .g2e-column.g2e-left {
-	border-right: 1px solid #ccc;
-	width: 220px;
-	vertical-align: top;
+	width: 540px;
 }
 #g2e-container .g2e-column.g2e-right {
-	width: 500px;
-}
-#g2e-container #g2e-actions button {
-	color: #fff;
-	background: #009DFF;
-	border: none;
-	font-size: 14px;
-	font-weight: bold;
-}
-#g2e-container #g2e-actions button:hover {
-	cursor: pointer;
-	background: #0078C2;
+	vertical-align: top;
+	width: 300px;
 }
 
 /* Modal title
  * ----------- */
 #g2e-container #g2e-title {
+	font-weight: bold;
 	margin: 10px;
 }
 #g2e-container #g2e-title a,
@@ -117,52 +102,43 @@
 	width: 40px;
 }
 #g2e-container #g2e-title span {
-	font-size: 30px;
-	font-family: 'Droid Sans';
+	font-size: 40px;
+	font-family: 'Open Sans';
 	left: 10px;
 	position: relative;
-	top: -8px;
+	top: -4px;
 }
 #g2e-container #g2e-title #g2e-close-btn {
+	background: white;
+	border: none;
 	color: #808080;
 	cursor: pointer;
 	float: right;
+	font-size: 20px;
+	height: 25px;
 	padding: 0 2px;
+	width: 25px;
+}
+#g2e-container #g2e-title #g2e-close-btn:hover {
+	color: #696969;
 }
 
 /* Modal form
  * ---------- */
-#g2e-container .g2e-form h4 {
-	margin: 0 0 10px 0;
-	padding: 0;
+#g2e-container .g2e-right ol {
+	padding-left: 20px;
 }
-#g2e-container .g2e-form .g2e-lbl {
-	display: inline-block;
+#g2e-container .g2e-right #g2e-credits,
+#g2e-container .g2e-right #g2e-credits a {
+	font-style: italic;
 	font-size: 12px;
-	padding-left: 10px;
-	position: relative;
-	text-align: left;
-	top: -2px;
-}
-#g2e-container .g2e-form a {
-	padding-left: 3px;
-}
-#g2e-container .g2e-block {
-	height: 18px;
-}
-#g2e-container input {
-	margin: 0;
 }
 
 /* Modal footer buttons
  * -------------------- */
-#g2e-container #g2e-footer > div {
-	padding: 20px 0 10px 0;
-}
 #g2e-container #g2e-footer {
-	border-top: 1px solid #ccc;
 	clear: both;
-	padding-top: 10px;
+	padding: 10px 0 0 10px;
 	min-height: 45px;
 }
 #g2e-container #g2e-footer td {
@@ -174,11 +150,27 @@
 #g2e-container #g2e-footer #g2e-submit-btn {
 	margin-right: 20px;
 }
+#g2e-container #g2e-actions {
+	float: left;
+}
+#g2e-container #g2e-actions button {
+	color: #fff;
+	background: #009DFF;
+	border: none;
+	font-size: 14px;
+	font-weight: bold;
+	height: 25px;
+}
+#g2e-container #g2e-actions button:hover {
+	cursor: pointer;
+	background: #0078C2;
+}
 
 /* Modal footer progress bar
  * ------------------------- */
 #g2e-container #g2e-progress-bar {
 	display: none;
+	float: left;
 }
 #g2e-container #g2e-progress-bar .g2e-progress {
 	background: #D3D3D3;
@@ -207,6 +199,7 @@
 /* Modal footer results
  * -------------------- */
 #g2e-container #g2e-results {
+	clear: both;
 	display: none;
 	padding-top: 10px;
 }
@@ -234,21 +227,40 @@
 	table-layout: fixed;
 	width: 100%
 }
+#g2e-container .g2e-confirm-tbl tr {
+	border-bottom: 1px solid #ccc;
+	height: 25px;
+}
 #g2e-container .g2e-confirm-tbl td {
-	padding: 0;
-	vertical-align: top;
+	padding: 2px 0;
+	vertical-align: middle;
 	word-wrap: break-word;
 }
-#g2e-container .g2e-confirm-tbl td.g2e-subtitle {
-	width: 120px;
+#g2e-container .g2e-confirm-tbl td.g2e-tbl-title {
+	font-weight: bold;
+	width: 210px;
 }
-#g2e-container .g2e-confirm-tbl td.g2e-edit {
-	text-align: right;
-	width: 40px;
+#g2e-container .g2e-confirm-tbl td.g2e-tbl-value {
+	background: none;
+	padding-left: 10px;
+	width: 100%;
 }
-#g2e-container .g2e-confirm-tbl td.g2e-edit:hover {
+#g2e-container .g2e-confirm-tbl td.g2e-editable:hover {
 	cursor: pointer;
-	text-decoration: underline;
+	background: #eee;
+}
+#g2e-container .g2e-confirm-tbl input,
+#g2e-container .g2e-confirm-tbl select {
+	background: none;
+	border: none;
+	border-radius: 0;
+	width: 100%;
+}
+#g2e-container .g2e-confirm-tbl .g2e-tbl-last {
+	border: none;
+}
+#g2e-container .g2e-confirm-tbl #g2e-confirm-tbl-diffexp td {
+	padding: 0;
 }
 
 /* Embedded button
@@ -281,6 +293,13 @@
 
 /* jQuery UI
  * --------- */
+.g2e-tooltip {
+	color: black !important;
+	background: #FFFACD !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	border: 1px solid #ccc !important;
+}
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content {
 	background: #fff;
 	color: gray;

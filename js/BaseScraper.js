@@ -1,7 +1,13 @@
 
-var BaseScraper = function(notifier) {
+var BaseScraper = function(DEBUG, events, notifier) {
 
 	var scrapedData = {};
+
+	var genemap;
+
+	events.on('genemapDownloaded', function(data) {
+		genemap = data;
+	});
 
 	return {
 
@@ -12,8 +18,6 @@ var BaseScraper = function(notifier) {
 			}
 			if (this.isValidData(scrapedData)) {
 				result = $.extend({}, scrapedData);
-				// TODO!!!!
-				//ui.fill_confirm_tbl(result);
 				return result;
 			}
 		},
@@ -25,10 +29,8 @@ var BaseScraper = function(notifier) {
 				val = val.replace(/_|-|\./g, '');
 			}
 			scrapedData[key] = val;
-			if (this.isValidData(scrapedData)) {
-				// TODO: This should be handled by UI!
-				ui.fill_confirm_tbl($.extend({}, scrapedData));	
-			} else {
+			if (!this.isValidData(scrapedData)) {
+				// Reset if necessary.
 				scrapedData[key] = temp;
 			}
 		},
@@ -52,15 +54,12 @@ var BaseScraper = function(notifier) {
 
 		getOptions: function($modal) {
 			var method = $modal.find('input[type=radio][name=method]:checked').val(),
-				inclusion = $modal.find('input[type=radio][name=inclusion]:checked').val(),
-				cell = $modal.find('#g2e-confirm-cell').text(),
-				perturbation = $modal.find('#g2e-confirm-pert').text();
+				cell = $modal.find('#g2e-confirm-cell td').eq(1).text(),
+				perturbation = $modal.find('#g2e-confirm-pert td').eq(1).text(),
+				gene = $modal.find('#g2e-confirm-gene td').eq(1).text();
 
 			if (method) {
 				scrapedData.method = method;
-			}
-			if (inclusion) {
-				scrapedData.inclusion = inclusion;	
 			}
 
 			if (cell) {
@@ -86,15 +85,23 @@ var BaseScraper = function(notifier) {
 		},
 
 		isValidData: function(data) {
-			if (!data.control || data.control.length < 2) {
-				notifier.warn('Please select 2 or more control samples');
-				return false;
+			if (!DEBUG) {
+				if (!data.control || data.control.length < 2) {
+					notifier.warn('Please select 2 or more control samples');
+					return false;
+				}
+				if (!data.experimental || data.experimental.length < 2) {
+					notifier.warn('Please select 2 or more experimental samples');
+					return false;
+				}
+				if (genemap && !genemap[data.gene]) {
+					notifier.warn('Please input a valid gene.');
+					return false;
+				}
+				return true;
+			} else {
+				return true;
 			}
-			if (!data.experimental || data.experimental.length < 2) {
-				notifier.warn('Please select 2 or more experimental samples');
-				return false;
-			}
-			return true;
 		}
 	};	
 };

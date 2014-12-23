@@ -24,7 +24,6 @@ class RequestParams:
 		# Set the user's default options in case the client-side code does not.
 		self.config = {
 			'method'    : args.get('method').encode('ascii') if args.get('method') else 'chdir',
-			'inclusion' : args.get('inclusion').encode('ascii') if args.get('inclusion') else 'up',
 			# TODO: Make this configurable by on the client.
 			'cutoff' : 500
 		}

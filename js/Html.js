@@ -6,111 +6,109 @@ var Html = function() {
 			'<div id="g2e-modal">' +
 				'<div id="g2e-title">' +
 					'<a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">' +
-						'<img src="http://amp.pharm.mssm.edu/Enrichr/images/enrichr-icon.png">' +
+						'<img src="chrome-extension://jmocdkgcpalhikedehcdnofimpgkljcj/images/g2e-logo-50x50.png">' +
 						'<span>GEO2</span><span class="g2e-highlight">Enrichr</span>' +
 					'</a>' +
 					'<button id="g2e-close-btn" class="g2e-btn">&#10006</button>' +
 				'</div>' +
-				'<table id="g2e-main-tbl"><tr>' +
-					'<td id="g2e-forms" class="g2e-column g2e-left">' +
-						'<div class="g2e-form">' +
-							'<h4>Method to identify differential expression</h4>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-chdir" type="radio" name="method" value="chdir" checked="checked">' +
-								'<label for="g2e-chdir" class="g2e-lbl">' +
-									'<span>Characteristic direction</span>' +
-									'<a href="http://www.maayanlab.net/CD/" target="_blank">(more)</a>' +
-								'</label>' +
-							'</div>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-ttest" type="radio" name="method" value="ttest">' +
-								'<label for="g2e-ttest" class="g2e-lbl">T-test</label>' +
-							'</div>' +
-						'</div>' +
-						'<div class="g2e-form g2e-last">' +
-							'<h4>Gene list inclusion</h4>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-up" type="radio" name="inclusion" value="up" checked="checked">' +
-								'<label for="g2e-up" class="g2e-lbl">Up genes</label>' +
-							'</div>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-down" type="radio" name="inclusion" value="down">' +
-								'<label for="g2e-down" class="g2e-lbl">Down genes</label>' +
-							'</div>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-combined" type="radio" name="inclusion" value="combined">' +
-								'<label for="g2e-combined" class="g2e-lbl">Combined</label>' +
-							'</div>' +
-						'</div>' +
-					'</td>' +
-					'<td id="g2e-confirm" class="g2e-column g2e-right">' +
-						'<div class="g2e-lowlight">Please confirm your data is correct.</div>' +
-						'<table class="g2e-confirm-tbl">' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Accession num.&#42;:</td>' +
-								'<td id="g2e-confirm-tbl-acc" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Platform:</td>' +
-								'<td id="g2e-confirm-tbl-pltf" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Organism:</td>' +
-								'<td id="g2e-confirm-tbl-org" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Control:&#42;</td>' +
-								'<td id="g2e-confirm-tbl-ctrl" class="g2e-strong"></td>' +
-								'<td></td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Experimental:</td>' +
-								'<td id="g2e-confirm-tbl-expmt" class="g2e-strong"></td>' +
-								'<td></td>' +
-							'</tr>' +
-						'</table>' +
-						'<div class="g2e-lowlight g2e-bottom">Please provide the manipulated gene.&#42;</div>' +
-						'<div class="ui-widget">' +
-							'<label for="genemap">Gene: </label>' +
-							'<input id="genemap">' +
-						'</div>' +
-						'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
-						'<table class="g2e-confirm-tbl">' +
-							'<tr>' +
-								'<td class="g2e-subtitle" title="This is useful for meta data and file naming">Cell type or tissue:</td>' +
-								'<td id="g2e-confirm-cell" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle" title="This is useful for meta data and file naming">Perturbation:</td>' +
-								'<td id="g2e-confirm-pert" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-						'</table>' +
-					'</td>' +
-				'</tr></table>' +
+				'<table id="g2e-main-tbl">' +
+					'<tr>' +
+						'<td id="g2e-confirm" class="g2e-column g2e-left">' +
+							'<div class="g2e-lowlight">Please confirm that your data is correct. An asterisk denotes a required field.</div>' +
+							'<table class="g2e-confirm-tbl">' +
+								'<tr id="g2e-confirm-tbl-diffexp">' +
+									'<td class="g2e-tbl-title">' +
+										'<label>Differential expression method</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value">' +
+										'<select>' +
+											'<option>Characteristic direction</option>' +
+											'<option>T-test</option>' +
+										'</select>' +
+									'</td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-acc">' +
+									'<td class="g2e-tbl-title">Accession num.&#42;</td>' +
+									'<td class="g2e-tbl-value g2e-editable"></td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-pltf">' +
+									'<td class="g2e-tbl-title">Platform</td>' +
+									'<td class="g2e-tbl-value g2e-editable"></td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-org">' +
+									'<td class="g2e-tbl-title">Organism</td>' +
+									'<td class="g2e-tbl-value g2e-editable"></td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-ctrl">' +
+									'<td class="g2e-tbl-title">Control samples&#42;</td>' +
+									'<td class="g2e-tbl-value"></td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-expmt" class="g2e-tbl-last">' +
+									'<td class="g2e-tbl-title">Treatment or condition samples&#42;</td>' +
+									'<td class="g2e-tbl-value"></td>' +
+								'</tr>' +
+							'</table>' +
+							'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
+							'<table class="g2e-confirm-tbl">' +
+								'<tr id="g2e-confirm-cell">' +
+									'<td class="g2e-tbl-title">' +
+										'<label>Cell type or tissue</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value">' +
+										'<input placeholder="No data">' +
+									'</td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-pert">' +
+									'<td class="g2e-tbl-title">' +
+										'<label>Perturbation</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value">' +
+										'<input placeholder="No data">' +
+									'</td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-gene" class="ui-widget g2e-tbl-last">' +
+									'<td class="g2e-tbl-title">' +
+										'<label for="genemap">Manipulated gene (if relevant)</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value g2e-tbl-last">' +
+										'<input id="genemap" placeholder="No data">' +
+									'</td>' +
+								'</tr>' +
+							'</table>' +
+						'</td>' +
+						'<td class="g2e-column g2e-right">' +
+							'<p>GEO2Enrichr performs the following operations:</p>' +
+							'<ol id="g2e-process">' +
+								'<li>Downloads SOFT file from GEO.</li>' +
+								'<li >Discards data with missing values or one-to-many probe-to-gene mappings.</li>' +
+								'<li>log2 transforms the data if necessary.</li>' +
+								'<li>Quantile normalizes the data if necessary.</li>' +
+								'<li>Averages multiple probes to single genes.</li>' +
+								'<li>Identifies differentially expressed genes with the selected method.</li>' +
+								'<li>Returns the top and bottom differentially expressed genes.</li>' +
+								'<li>Pipes the gene lists to <a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> for further analysis.</li>' +
+							'</ol>' +
+							'<p>After the data is processed, you will be able to download your gene lists and open them directly in Enrichr.</p>' +
+							'<p id="g2e-credits">GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
+						'</td>' +
+					'</tr>' +
+				'</table>' +
 				'<div id="g2e-footer">' +
-					'<table><tr>' +
-						'<td id="g2e-actions" class="g2e-column g2e-left">' +
-							'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Submit to Enrichr</button>' +
-						'</td>' +
-						'<td id="g2e-output" class="g2e-column g2e-right">' +
-							'<div id="g2e-progress-bar">' +
-								'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
-								'<div id="g2e-step2" class="g2e-progress">Identifying differential expression</div>' +
-								'<div id="g2e-step3" class="g2e-progress">Submitting genes to Enrichr</div>' +
-								'<div id="g2e-step4" class="g2e-progress">Done!</div>' +
-							'</div>' +
-							'<div id="g2e-results">' +
-								'<strong>Your data is ready:</strong>' +
-								'<button href="">Open in Enrichr</button>' +
-								'<button id="g2e-download-btn" class="g2e-btn">Download gene list(s)</button>' +
-							'</div>' +
-						'</td>' +
-					'</tr></table>' +
+					'<div id="g2e-actions">' +
+						'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Submit to Enrichr</button>' +
+					'</div>' +
+					'<div id="g2e-progress-bar">' +
+						'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
+						'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
+						'<div id="g2e-step3" class="g2e-progress">Done!</div>' +
+					'</div>' +
+					'<div id="g2e-results">' +
+						'<strong>Submit genes in Enrichr:</strong>' +
+						'<button href="" id="g2e-enrichr-up">Up genes</button>' +
+						'<button href="" id="g2e-enrichr-down">Down genes</button>' +
+						'<button href="" id="g2e-enrichr-combined">All genes</button>' +
+						'<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
+					'</div>' +
 				'</div>' +
 			'</div>' +
 		'</div>';

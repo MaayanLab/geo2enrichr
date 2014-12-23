@@ -83,13 +83,12 @@ def diffexp_endpoint():
 	# Step 3: Identify differential expression.
 	gene_pvalue_pairs = diffexper.analyze(A, B, genes, rp.config, rp.filename)
 
-	output_file = filewriter.output_gene_pvalue_pairs(rp.filename, gene_pvalue_pairs, rp.config['inclusion'])
+	# Step 4: Generate output files and return to user.
+	output_files = filewriter.output_gene_pvalue_pairs(rp.filename, gene_pvalue_pairs)
+	output_files['status'] = 'ok'
+	output_files['conversion_pct'] = str(conversion_pct)
 
-	return flask.jsonify({
-		'status': 'ok',
-		'conversion_pct': str(conversion_pct),
-		'filename': str(output_file)
-	})
+	return flask.jsonify(output_files)
 
 
 @app.route(ENTRY_POINT + '/enrichr')

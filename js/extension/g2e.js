@@ -35,7 +35,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	};
 
 	// This is the workhorse function that chains together multiple AJX requests to the back-end.
-	var downloadDiffexpEnrich = function($modal) {
+	var downloadDiffExp = function($modal) {
 		var userInput = scraper.getData($modal);
 
 		function dlgeo() {
@@ -46,7 +46,8 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					platform: userInput.platform,
 					method: userInput.method,
 					cell: userInput.cell,
-					perturbation: userInput.perturbation
+					perturbation: userInput.perturbation,
+					gene: userInput.gene
 				});
 
 			return $.ajax({
@@ -68,7 +69,6 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					filename: dlgeoData.filename,
 					platform: userInput.platform,
 					method: userInput.method,
-					inclusion: userInput.inclusion,
 					control: userInput.control.join('-'),
 					experimental: userInput.experimental.join('-')
 				});
@@ -80,33 +80,35 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log('GEO files were differentially expressed');
 					notifier.log(data);
 					events.fire('progressBar');
+					events.fire('dataDiffExped', data);
 				},
 				error: errorHandler
 			});
 		}
 
-		function enrichr(diffexpData) {
-			var endpoint = 'enrichr?',
-				qs;
+		dlgeo().then(diffexp);
+	};
 
-			fileForDownload = diffexpData.filename;
-			qs = 'filename=' + fileForDownload;
-
-			$.ajax({
-				url: SERVER + ENTRY_POINT + endpoint + qs,
-				type: 'GET',
-				success: function(data) {
-					notifier.log('Enrichr link was returned');
-					notifier.log(data);
-					events.fire('progressBar');
-					data.fileForDownload = SERVER + 'static/genes/' + fileForDownload;
-					events.fire('dataDownloaded', data);
-				},
-				error: errorHandler
+	var enrichr = function(diffexpData) {
+		var endpoint = 'enrichr?',
+			qs = $.param({
+				'up': diffexpData.up,
+				'down': diffexpData.down,
+				'enrichr': diffexpData.enrichr
 			});
-		}
 
-		dlgeo().then(diffexp).then(enrichr);
+		$.ajax({
+			url: SERVER + ENTRY_POINT + endpoint + qs,
+			type: 'GET',
+			success: function(data) {
+				notifier.log('Enrichr link was returned');
+				notifier.log(data);
+				events.fire('progressBar');
+				data.fileForDownload = SERVER + 'static/genes/' + fileForDownload;
+				events.fire('dataDownloaded', data);
+			},
+			error: errorHandler
+		});
 	};
 
 	var fetchGenemap = function() {
@@ -125,7 +127,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	};
 
 	return {
-		downloadDiffexpEnrich: downloadDiffexpEnrich,
+		downloadDiffExp: downloadDiffExp,
 		fetchMetadata: fetchMetadata,
 		fetchGenemap: fetchGenemap
 	};
@@ -168,111 +170,109 @@ var Html = function() {
 			'<div id="g2e-modal">' +
 				'<div id="g2e-title">' +
 					'<a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">' +
-						'<img src="http://amp.pharm.mssm.edu/Enrichr/images/enrichr-icon.png">' +
+						'<img src="chrome-extension://jmocdkgcpalhikedehcdnofimpgkljcj/images/g2e-logo-50x50.png">' +
 						'<span>GEO2</span><span class="g2e-highlight">Enrichr</span>' +
 					'</a>' +
 					'<button id="g2e-close-btn" class="g2e-btn">&#10006</button>' +
 				'</div>' +
-				'<table id="g2e-main-tbl"><tr>' +
-					'<td id="g2e-forms" class="g2e-column g2e-left">' +
-						'<div class="g2e-form">' +
-							'<h4>Method to identify differential expression</h4>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-chdir" type="radio" name="method" value="chdir" checked="checked">' +
-								'<label for="g2e-chdir" class="g2e-lbl">' +
-									'<span>Characteristic direction</span>' +
-									'<a href="http://www.maayanlab.net/CD/" target="_blank">(more)</a>' +
-								'</label>' +
-							'</div>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-ttest" type="radio" name="method" value="ttest">' +
-								'<label for="g2e-ttest" class="g2e-lbl">T-test</label>' +
-							'</div>' +
-						'</div>' +
-						'<div class="g2e-form g2e-last">' +
-							'<h4>Gene list inclusion</h4>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-up" type="radio" name="inclusion" value="up" checked="checked">' +
-								'<label for="g2e-up" class="g2e-lbl">Up genes</label>' +
-							'</div>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-down" type="radio" name="inclusion" value="down">' +
-								'<label for="g2e-down" class="g2e-lbl">Down genes</label>' +
-							'</div>' +
-							'<div class="g2e-block">' +
-								'<input id="g2e-combined" type="radio" name="inclusion" value="combined">' +
-								'<label for="g2e-combined" class="g2e-lbl">Combined</label>' +
-							'</div>' +
-						'</div>' +
-					'</td>' +
-					'<td id="g2e-confirm" class="g2e-column g2e-right">' +
-						'<div class="g2e-lowlight">Please confirm your data is correct.</div>' +
-						'<table class="g2e-confirm-tbl">' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Accession num.&#42;:</td>' +
-								'<td id="g2e-confirm-tbl-acc" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Platform:</td>' +
-								'<td id="g2e-confirm-tbl-pltf" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Organism:</td>' +
-								'<td id="g2e-confirm-tbl-org" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Control:&#42;</td>' +
-								'<td id="g2e-confirm-tbl-ctrl" class="g2e-strong"></td>' +
-								'<td></td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle">Experimental:</td>' +
-								'<td id="g2e-confirm-tbl-expmt" class="g2e-strong"></td>' +
-								'<td></td>' +
-							'</tr>' +
-						'</table>' +
-						'<div class="g2e-lowlight g2e-bottom">Please provide the manipulated gene.&#42;</div>' +
-						'<div class="ui-widget">' +
-							'<label for="genemap">Gene: </label>' +
-							'<input id="genemap">' +
-						'</div>' +
-						'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
-						'<table class="g2e-confirm-tbl">' +
-							'<tr>' +
-								'<td class="g2e-subtitle" title="This is useful for meta data and file naming">Cell type or tissue:</td>' +
-								'<td id="g2e-confirm-cell" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-							'<tr>' +
-								'<td class="g2e-subtitle" title="This is useful for meta data and file naming">Perturbation:</td>' +
-								'<td id="g2e-confirm-pert" class="g2e-strong"></td>' +
-								'<td class="g2e-edit">Edit</td>' +
-							'</tr>' +
-						'</table>' +
-					'</td>' +
-				'</tr></table>' +
+				'<table id="g2e-main-tbl">' +
+					'<tr>' +
+						'<td id="g2e-confirm" class="g2e-column g2e-left">' +
+							'<div class="g2e-lowlight">Please confirm that your data is correct. An asterisk denotes a required field.</div>' +
+							'<table class="g2e-confirm-tbl">' +
+								'<tr id="g2e-confirm-tbl-diffexp">' +
+									'<td class="g2e-tbl-title">' +
+										'<label>Differential expression method</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value">' +
+										'<select>' +
+											'<option>Characteristic direction</option>' +
+											'<option>T-test</option>' +
+										'</select>' +
+									'</td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-acc">' +
+									'<td class="g2e-tbl-title">Accession num.&#42;</td>' +
+									'<td class="g2e-tbl-value g2e-editable"></td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-pltf">' +
+									'<td class="g2e-tbl-title">Platform</td>' +
+									'<td class="g2e-tbl-value g2e-editable"></td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-org">' +
+									'<td class="g2e-tbl-title">Organism</td>' +
+									'<td class="g2e-tbl-value g2e-editable"></td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-ctrl">' +
+									'<td class="g2e-tbl-title">Control samples&#42;</td>' +
+									'<td class="g2e-tbl-value"></td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-tbl-expmt" class="g2e-tbl-last">' +
+									'<td class="g2e-tbl-title">Treatment or condition samples&#42;</td>' +
+									'<td class="g2e-tbl-value"></td>' +
+								'</tr>' +
+							'</table>' +
+							'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
+							'<table class="g2e-confirm-tbl">' +
+								'<tr id="g2e-confirm-cell">' +
+									'<td class="g2e-tbl-title">' +
+										'<label>Cell type or tissue</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value">' +
+										'<input placeholder="No data">' +
+									'</td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-pert">' +
+									'<td class="g2e-tbl-title">' +
+										'<label>Perturbation</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value">' +
+										'<input placeholder="No data">' +
+									'</td>' +
+								'</tr>' +
+								'<tr id="g2e-confirm-gene" class="ui-widget g2e-tbl-last">' +
+									'<td class="g2e-tbl-title">' +
+										'<label for="genemap">Manipulated gene (if relevant)</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value g2e-tbl-last">' +
+										'<input id="genemap" placeholder="No data">' +
+									'</td>' +
+								'</tr>' +
+							'</table>' +
+						'</td>' +
+						'<td class="g2e-column g2e-right">' +
+							'<p>GEO2Enrichr performs the following operations:</p>' +
+							'<ol id="g2e-process">' +
+								'<li>Downloads SOFT file from GEO.</li>' +
+								'<li >Discards data with missing values or one-to-many probe-to-gene mappings.</li>' +
+								'<li>log2 transforms the data if necessary.</li>' +
+								'<li>Quantile normalizes the data if necessary.</li>' +
+								'<li>Averages multiple probes to single genes.</li>' +
+								'<li>Identifies differentially expressed genes with the selected method.</li>' +
+								'<li>Returns the top and bottom differentially expressed genes.</li>' +
+								'<li>Pipes the gene lists to <a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> for further analysis.</li>' +
+							'</ol>' +
+							'<p>After the data is processed, you will be able to download your gene lists and open them directly in Enrichr.</p>' +
+							'<p id="g2e-credits">GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
+						'</td>' +
+					'</tr>' +
+				'</table>' +
 				'<div id="g2e-footer">' +
-					'<table><tr>' +
-						'<td id="g2e-actions" class="g2e-column g2e-left">' +
-							'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Submit to Enrichr</button>' +
-						'</td>' +
-						'<td id="g2e-output" class="g2e-column g2e-right">' +
-							'<div id="g2e-progress-bar">' +
-								'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
-								'<div id="g2e-step2" class="g2e-progress">Identifying differential expression</div>' +
-								'<div id="g2e-step3" class="g2e-progress">Submitting genes to Enrichr</div>' +
-								'<div id="g2e-step4" class="g2e-progress">Done!</div>' +
-							'</div>' +
-							'<div id="g2e-results">' +
-								'<strong>Your data is ready:</strong>' +
-								'<button href="">Open in Enrichr</button>' +
-								'<button id="g2e-download-btn" class="g2e-btn">Download gene list(s)</button>' +
-							'</div>' +
-						'</td>' +
-					'</tr></table>' +
+					'<div id="g2e-actions">' +
+						'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Submit to Enrichr</button>' +
+					'</div>' +
+					'<div id="g2e-progress-bar">' +
+						'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
+						'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
+						'<div id="g2e-step3" class="g2e-progress">Done!</div>' +
+					'</div>' +
+					'<div id="g2e-results">' +
+						'<strong>Submit genes in Enrichr:</strong>' +
+						'<button href="" id="g2e-enrichr-up">Up genes</button>' +
+						'<button href="" id="g2e-enrichr-down">Down genes</button>' +
+						'<button href="" id="g2e-enrichr-combined">All genes</button>' +
+						'<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
+					'</div>' +
 				'</div>' +
 			'</div>' +
 		'</div>';
@@ -350,9 +350,15 @@ var Notifier = function(DEBUG) {
 };
 
 
-var BaseScraper = function(notifier) {
+var BaseScraper = function(DEBUG, events, notifier) {
 
 	var scrapedData = {};
+
+	var genemap;
+
+	events.on('genemapDownloaded', function(data) {
+		genemap = data;
+	});
 
 	return {
 
@@ -363,8 +369,6 @@ var BaseScraper = function(notifier) {
 			}
 			if (this.isValidData(scrapedData)) {
 				result = $.extend({}, scrapedData);
-				// TODO!!!!
-				//ui.fill_confirm_tbl(result);
 				return result;
 			}
 		},
@@ -376,10 +380,8 @@ var BaseScraper = function(notifier) {
 				val = val.replace(/_|-|\./g, '');
 			}
 			scrapedData[key] = val;
-			if (this.isValidData(scrapedData)) {
-				// TODO: This should be handled by UI!
-				ui.fill_confirm_tbl($.extend({}, scrapedData));	
-			} else {
+			if (!this.isValidData(scrapedData)) {
+				// Reset if necessary.
 				scrapedData[key] = temp;
 			}
 		},
@@ -403,15 +405,12 @@ var BaseScraper = function(notifier) {
 
 		getOptions: function($modal) {
 			var method = $modal.find('input[type=radio][name=method]:checked').val(),
-				inclusion = $modal.find('input[type=radio][name=inclusion]:checked').val(),
-				cell = $modal.find('#g2e-confirm-cell').text(),
-				perturbation = $modal.find('#g2e-confirm-pert').text();
+				cell = $modal.find('#g2e-confirm-cell td').eq(1).text(),
+				perturbation = $modal.find('#g2e-confirm-pert td').eq(1).text(),
+				gene = $modal.find('#g2e-confirm-gene td').eq(1).text();
 
 			if (method) {
 				scrapedData.method = method;
-			}
-			if (inclusion) {
-				scrapedData.inclusion = inclusion;	
 			}
 
 			if (cell) {
@@ -437,15 +436,23 @@ var BaseScraper = function(notifier) {
 		},
 
 		isValidData: function(data) {
-			if (!data.control || data.control.length < 2) {
-				notifier.warn('Please select 2 or more control samples');
-				return false;
+			if (!DEBUG) {
+				if (!data.control || data.control.length < 2) {
+					notifier.warn('Please select 2 or more control samples');
+					return false;
+				}
+				if (!data.experimental || data.experimental.length < 2) {
+					notifier.warn('Please select 2 or more experimental samples');
+					return false;
+				}
+				if (genemap && !genemap[data.gene]) {
+					notifier.warn('Please input a valid gene.');
+					return false;
+				}
+				return true;
+			} else {
+				return true;
 			}
-			if (!data.experimental || data.experimental.length < 2) {
-				notifier.warn('Please select 2 or more experimental samples');
-				return false;
-			}
-			return true;
 		}
 	};	
 };
@@ -681,42 +688,36 @@ var GseScraper = function(events, html) {
 
 var BaseUi = function(comm, events, html, notifier, scraper) {
 
-	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body'),
-		elemConfig = {
-			'g2e-confirm-tbl-acc': {
-				key: 'accession',
-				prompt: 'Please enter an accession number:'
-			},
-			'g2e-confirm-tbl-pltf': {
-				key: 'platform',
-				prompt: 'Please enter a platform:'
-			},
-			'g2e-confirm-tbl-org' : {
-				key: 'organism',
-				prompt: 'Please enter an organism:'
-			},
-			'g2e-confirm-tbl-ctrl': {
-				key: 'control',
-				format: function(data) {
-					return data.join(', ');
-				}
-			},
-			'g2e-confirm-tbl-expmt': {
-				key: 'experimental',
-				format: function(data) {
-					return data.join(', ');
-				}
-			},
-			'g2e-confirm-cell': {
-				key: 'cell',
-				prompt: 'Please enter a cell type or tissue:'
-			},
-			'g2e-confirm-pert': {
-				key: 'perturbation',
-				prompt: 'Please enter perturbation:'
+	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
+
+	var elemConfig = {
+		'g2e-confirm-tbl-acc': {
+			key: 'accession',
+			prompt: 'Please enter an accession number:'
+		},
+		'g2e-confirm-tbl-pltf': {
+			key: 'platform',
+			prompt: 'Please enter a platform:'
+		},
+		'g2e-confirm-tbl-org' : {
+			key: 'organism',
+			prompt: 'Please enter an organism:'
+		},
+		'g2e-confirm-tbl-ctrl': {
+			key: 'control',
+			format: function(data) {
+				return data.join(', ');
 			}
 		},
-		steps, $overlay, $modal, $progress, $results;
+		'g2e-confirm-tbl-expmt': {
+			key: 'experimental',
+			format: function(data) {
+				return data.join(', ');
+			}
+		}
+	};
+	
+	var steps, $overlay, $modal, $progress, $results;
 
 	events.on('requestFailed', function(errorMsg) {
 		notifier.warn(errorMsg);
@@ -735,6 +736,10 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		});
 	});
 
+	events.on('dataDiffExped', function(data) {
+		showEnrichrLinks(data);
+	});
+
 	var openApp = function() {
 		var scrapedData;
 
@@ -750,8 +755,8 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		setGlobalSelectors();
 
 		// Allow editing of the values, in case we scraped incorrectly.
-		$('.g2e-edit').click(function(evt) {
-			var id = $(evt.currentTarget).siblings().eq(1).attr('id');
+		$('.g2e-editable').click(function(evt) {
+			var id = $(evt.target).parent().attr('id');
 			onEdit(id);
 		});
 
@@ -766,20 +771,21 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			      notifier.log(scraper.getData($modal));
 			      initProgressBar();
 			      events.on('progressBar', highlightNextStep);
-			      comm.downloadDiffexpEnrich($modal);
+			      comm.downloadDiffExp($modal);
 			  })
-			  .tooltip()
+			  .tooltip({
+			      tooltipClass: 'g2e-tooltip'
+			  })
 			  .end()
 
 			  .find('.g2e-confirm-tbl')
 			  .eq(1)
-			  .tooltip()
 			  .end();
 	};
 
 	var initProgressBar = function() {
 		resetProgressBar();
-		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
+		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3'];
 		$progress.show();
 		highlightNextStep();
 	};
@@ -799,17 +805,17 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			} else {
 				html = scrapedData[config.key];
 			}
-			$('#' + elem).html(html);
+			$('#' + elem + ' td').eq(1).html(html);
 		}
 	};
 
-	var showResults = function(link) {
-		$results.show()
+	var showEnrichrLinks = function(links) {
+		$results.show();/*
 				.find('button')
 				.first()
 				.click(function() {
 					window.open(link, '_blank');
-				});
+				});*/
 	};
 
 	var resetResults = function() {
@@ -851,9 +857,23 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 	var onEdit = function(id) {
 		var config = elemConfig[id],
-			userInput = notifier.ask(config.prompt, $('#' + id).text());
+			userInput = notifier.ask(config.prompt, $('#' + id + ' td').eq(1).text());
 		if (userInput !== null) {
-			scraper.set_data(config.key, userInput);
+			scraper.setData(config.key, userInput);
+			fillConfirmationTable(scraper.getData());
+		}
+	};
+
+	var fillConfirmationTable = function(scrapedData) {
+		var elem, config, html;
+		for (elem in elemConfig) {
+			config = elemConfig[elem];
+			if (config.format) {
+				html = config.format(scrapedData[config.key]);
+			} else {
+				html = scrapedData[config.key];
+			}
+			$('#' + elem + ' td').eq(1).html(html);
 		}
 	};
 
@@ -874,8 +894,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	return {
 		openApp: openApp,
 		initProgressBar: initProgressBar,
-		highlightNextStep: highlightNextStep,
-		showResults: showResults
+		highlightNextStep: highlightNextStep
 	};
 };
 
@@ -948,23 +967,27 @@ var main = function() {
 
 	var init = function() {
 		// Set these configuration values before deploying.
-		var DEBUG = false,
-			SERVER = 'http://amp.pharm.mssm.edu/',
+		var DEBUG = true,
+			//SERVER = 'http://amp.pharm.mssm.edu/',
+			SERVER = 'http://localhost:8083/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),
 			html = Html(),
-
+			baseScraper = BaseScraper(DEBUG, events, notifier),
+			
 			scraper,
 			ui,
 			comm;
 
 		if (isGds()) {
-			scraper = $.extend(GdsScraper(events), BaseScraper(notifier));
+			modeScraper = GdsScraper(events);
+			scraper = $.extend(modeScraper, baseScraper);
 			comm = Comm(events, notifier, scraper, SERVER);
 			ui = $.extend(GdsUi(html, events), BaseUi(comm, events, html, notifier, scraper));
 		} else {
-			scraper = $.extend(GseScraper(events, html), BaseScraper(notifier));
+			modeScraper = GseScraper(events, html);
+			scraper = $.extend(modeScraper, baseScraper);
 			comm = Comm(events, notifier, scraper, SERVER);
 			ui = $.extend(GseUi(html, events), BaseUi(comm, events, html, notifier, scraper));
 		}

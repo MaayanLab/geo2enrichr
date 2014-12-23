@@ -19,17 +19,24 @@ def analyze(A, B, genes, config, filename=''):
 	helper function based on client or default configuration.
 	"""
 
-	# Default to the characteristic direction with a cutoff of 500.
+	# Default is 500, unless set by user and pass via the query string
+	# arguments.
+	HALF_CUTOFF = config['cutoff'] / 2
+
+	# Default to the characteristic direction.
 	if config['method'] == 'ttest':
-		gene_pvalues = ttest(A, B, genes, config['cutoff'])
+		gene_pvalues = ttest(A, B, genes)
 	else:
 		pprint('Calculating the characteristic direction.')
 		genes, pvalues = chdir.chdir(A, B, genes.tolist())
 
-	# sort pvalues and genes by the absolute values pvalues in descending order.
+	# Sort pvalues and genes by the absolute values pvalues in descending order.
 	grouped = zip([abs(item) for item in pvalues], genes, pvalues)
 	grouped = sorted(grouped, key=lambda x: x[0], reverse=True)
-	return [(item[1], item[2]) for item in grouped]
+
+	# Apply cutoff.
+	result = grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:]
+	return [(item[1], item[2]) for item in result]
 
 
 def ttest(A, B, genes):

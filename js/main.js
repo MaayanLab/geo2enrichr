@@ -16,23 +16,27 @@ var main = function() {
 
 	var init = function() {
 		// Set these configuration values before deploying.
-		var DEBUG = false,
-			SERVER = 'http://amp.pharm.mssm.edu/',
+		var DEBUG = true,
+			//SERVER = 'http://amp.pharm.mssm.edu/',
+			SERVER = 'http://localhost:8083/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),
 			html = Html(),
-
+			baseScraper = BaseScraper(DEBUG, events, notifier),
+			
 			scraper,
 			ui,
 			comm;
 
 		if (isGds()) {
-			scraper = $.extend(GdsScraper(events), BaseScraper(notifier));
+			modeScraper = GdsScraper(events);
+			scraper = $.extend(modeScraper, baseScraper);
 			comm = Comm(events, notifier, scraper, SERVER);
 			ui = $.extend(GdsUi(html, events), BaseUi(comm, events, html, notifier, scraper));
 		} else {
-			scraper = $.extend(GseScraper(events, html), BaseScraper(notifier));
+			modeScraper = GseScraper(events, html);
+			scraper = $.extend(modeScraper, baseScraper);
 			comm = Comm(events, notifier, scraper, SERVER);
 			ui = $.extend(GseUi(html, events), BaseUi(comm, events, html, notifier, scraper));
 		}
