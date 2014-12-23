@@ -74,47 +74,41 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
-					var DIR = SERVER + 'static/genes/';
+					var DIR = 'static/genes/';
 					notifier.log('GEO files were differentially expressed');
 					notifier.log(data);
-					events.fire('progressBar');					
+					events.fire('progressBar');
 					events.fire('dataDiffExped', {
-						download: {
-							// Provide a full reference to the file on the server.
-							up: DIR + data.up,
-							down: DIR + data.down
-						},
-						enrichr: {
-							// Provide just the filename to the Enrichr endpoint.
-							up: data.up,
-							down: data.down,
-							combined: data.combined
-						}
+						'up': SERVER + DIR + data.up,
+						'down': SERVER + DIR + data.down
 					});
 				},
 				error: errorHandler
 			});
 		}
 
-		dlgeo().then(diffexp);
-	};
+		function enrichr(diffExpData) {
+			var endpoint = 'enrichr?',
+				qs = $.param({
+					'up': diffExpData.up,
+					'down': diffExpData.down,
+					'combined': diffExpData.combined
+				});
 
-	var enrichr = function(filename) {
-		var endpoint = 'enrichr?',
-			qs = $.param({
-				filename: filename
+			return $.ajax({
+				url: SERVER + ENTRY_POINT + endpoint + qs,
+				type: 'GET',
+				success: function(data) {
+					notifier.log('Enrichr link was returned');
+					notifier.log(data);
+					events.fire('progressBar');
+					events.fire('genesEnriched', data);
+				},
+				error: errorHandler
 			});
+		}
 
-		$.ajax({
-			url: SERVER + ENTRY_POINT + endpoint + qs,
-			type: 'GET',
-			success: function(data) {
-				notifier.log('Enrichr link was returned');
-				notifier.log(data);
-				events.fire('genesEnriched', data.link);
-			},
-			error: errorHandler
-		});
+		dlgeo().then(diffexp).then(enrichr);
 	};
 
 	var fetchGenemap = function() {
@@ -135,7 +129,6 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	return {
 		downloadDiffExp: downloadDiffExp,
 		fetchMetadata: fetchMetadata,
-		fetchGenemap: fetchGenemap,
-		enrichr: enrichr
+		fetchGenemap: fetchGenemap
 	};
 };

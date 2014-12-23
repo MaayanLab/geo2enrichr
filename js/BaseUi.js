@@ -50,11 +50,11 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	});
 
 	events.on('dataDiffExped', function(data) {
-		showEnrichrLinks(data);
+		setDownloadLinks(data);
 	});
 
-	events.on('genesEnriched', function(link) {
-		window.open(link, '_blank');
+	events.on('genesEnriched', function(data) {
+		showAllResults(data);
 	});
 
 	var openApp = function() {
@@ -102,7 +102,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 	var initProgressBar = function() {
 		resetProgressBar();
-		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3'];
+		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 		$progress.show();
 		highlightNextStep();
 	};
@@ -126,30 +126,32 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		}
 	};
 
-	var showEnrichrLinks = function(links) {
-		$results.show()
-				.find('#g2e-download-btn')
+	var setDownloadLinks = function(links) {
+		$results.find('#g2e-download-btn')
 				.click(function() {
-					downloadUrl(links.download.up);
+					downloadUrl(links.up);
 					setTimeout(function() {
-						downloadUrl(links.download.down);
+						downloadUrl(links.down);
 					}, 1000);
 				})
-				.end()
+				.end();
+	};
 
+	var showAllResults = function(links) {
+		$results.show()	
 				.find('#g2e-enrichr-up')
 				.click(function() {
-					comm.enrichr(links.enrichr.up);
+					window.open(links.up, '_blank');
 				})
 				.end()
 				.find('#g2e-enrichr-down')
 				.click(function() {
-					comm.enrichr(links.enrichr.down);
+					window.open(links.down, '_blank');
 				})
 				.end()
 				.find('#g2e-enrichr-combined')
 				.click(function() {
-					comm.enrichr(links.enrichr.combined);
+					window.open(links.combined, '_blank');
 				});
 	};
 
@@ -175,7 +177,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		$overlay = $(htmlData).hide().appendTo('body');
 		$modal = $('#g2e-container #g2e-modal').draggable();
 		$progress = $progress || $('#g2e-progress-bar');
-		$results = $results || $('#g2e-results');		
+		$results = $results || $('.g2e-results');		
 	};
 
 	var resetUi = function() {

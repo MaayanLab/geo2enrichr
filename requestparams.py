@@ -17,6 +17,10 @@ class RequestParams:
 	def __init__(self, args):
 		self.accession = args.get('accession') if 'accession' in args else None
 		self.filename  = args.get('filename')  if 'filename'  in args else None
+		
+		self.up       = args.get('up')       if 'up'   in args else None
+		self.down     = args.get('down')     if 'down' in args else None
+		self.combined = args.get('combined') if 'up'   in args else None
 
 		self.A_cols = [x.encode('ascii') for x in args.get('control').split('-')]      if 'control'      in args else None
 		self.B_cols = [x.encode('ascii') for x in args.get('experimental').split('-')] if 'experimental' in args else None

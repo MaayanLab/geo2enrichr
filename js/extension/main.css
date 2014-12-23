@@ -58,6 +58,18 @@
 	font-style: italic;
 	padding-bottom: 5px;
 }
+#g2e-container button {
+	color: #fff;
+	background: #009DFF;
+	border: none;
+	font-size: 12px;
+	font-weight: bold;
+	height: 25px;
+}
+#g2e-container button:hover {
+	background: #0078C2;
+	cursor: pointer;
+}
 
 /* Modal "columns" (simulated via table)
  * ------------------------------------- */
@@ -134,44 +146,11 @@
 	font-size: 12px;
 }
 
-/* Modal footer buttons
- * -------------------- */
-#g2e-container #g2e-footer {
-	clear: both;
-	padding: 10px 0 0 10px;
-	min-height: 45px;
-}
-#g2e-container #g2e-footer td {
-	border-right: none;
-}
-#g2e-container #g2e-footer #g2e-download-btn {
-	margin-top: 10px;
-}
-#g2e-container #g2e-footer #g2e-submit-btn {
-	margin-right: 20px;
-}
-#g2e-container #g2e-actions {
-	float: left;
-}
-#g2e-container #g2e-actions button {
-	color: #fff;
-	background: #009DFF;
-	border: none;
-	font-size: 14px;
-	font-weight: bold;
-	height: 25px;
-}
-#g2e-container #g2e-actions button:hover {
-	cursor: pointer;
-	background: #0078C2;
-}
-
 /* Modal footer progress bar
  * ------------------------- */
 #g2e-container #g2e-progress-bar {
 	display: none;
 	float: left;
-	padding-bottom: 10px;
 }
 #g2e-container #g2e-progress-bar .g2e-progress {
 	background: #D3D3D3;
@@ -188,34 +167,9 @@
 }
 #g2e-container #g2e-progress-bar #g2e-step1,
 #g2e-container #g2e-progress-bar #g2e-step2,
-#g2e-container #g2e-progress-bar #g2e-step3 {
+#g2e-container #g2e-progress-bar #g2e-step3,
+#g2e-container #g2e-progress-bar #g2e-step4 {
 	border-right: 1px solid #bdbdbd;
-}
-#g2e-container #g2e-progress-bar h4 {
-	font-size: 14px;
-	padding: 15px 0 0 0;
-	margin: 0;
-}
-
-/* Modal footer results
- * -------------------- */
-#g2e-container #g2e-results {
-	clear: both;
-	display: none;
-	padding-top: 10px;
-}
-#g2e-container #g2e-results button {
-	background: #009DFF;
-	border: none;
-	color: white;
-	display: inline;
-	font-weight: bold;
-	margin-left: 5px;
-	padding: 5px;
-}
-#g2e-container #g2e-results button:hover {
-	background: #0078C2;
-	cursor: pointer;
 }
 
 /* Modal confirm
@@ -262,6 +216,34 @@
 }
 #g2e-container .g2e-confirm-tbl #g2e-confirm-tbl-diffexp td {
 	padding: 0;
+}
+
+/* Modal footer results
+ * -------------------- */
+#g2e-container #g2e-footer {
+	clear: both;
+	padding: 10px 0 0 10px;
+	min-height: 45px;
+}
+#g2e-container #g2e-footer > table td {
+	padding: 5px 10px 0 0;
+}
+#g2e-container .g2e-results {
+	clear: both;
+	display: none;
+}
+#g2e-container .g2e-results button {
+	display: inline;
+	margin-right: 5px;
+	min-width: 40px;
+	padding: 5px;
+}
+#g2e-container .g2e-results button:hover {
+	background: #0078C2;
+	cursor: pointer;
+}
+#g2e-container #g2e-footer table .g2e-tbl-title {
+	width: 110px;
 }
 
 /* Embedded button

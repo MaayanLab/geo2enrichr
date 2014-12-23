@@ -96,29 +96,30 @@ var Html = function() {
 					'</tr>' +
 				'</table>' +
 				'<div id="g2e-footer">' +
-					'<div>' +
-						'<div id="g2e-actions">' +
-							'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Get gene lists</button>' +
-						'</div>' +
-						'<div id="g2e-progress-bar">' +
-							'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
-							'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
-							'<div id="g2e-step3" class="g2e-progress">Done!</div>' +
-						'</div>' +
-					'</div>' +
-					'<table id="g2e-results">' +
+					'<table>' +
 						'<tr>' +
-							'<td>' +
+							'<td id="g2e-actions" class="g2e-tbl-title">' +
+								'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Get gene lists</button>' +
+							'</td>' +
+							'<td id="g2e-progress-bar">' +
+								'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
+								'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
+								'<div id="g2e-step3" class="g2e-progress">Enriching gene lists with Enrichr</div>' +
+								'<div id="g2e-step4" class="g2e-progress">Done!</div>' +
+							'</td>' +
+						'</tr>' +
+						'<tr class="g2e-results">' +
+							'<td class="g2e-tbl-title">' +
 								'<strong>Enriched genes:</strong>' +
 							'</td>' +
-							'<td>' +
+							'<td class="g2e-tbl-title">' +
 								'<button id="g2e-enrichr-up">Up</button>' +
 								'<button id="g2e-enrichr-down">Down</button>' +
 								'<button id="g2e-enrichr-combined">All</button>' +
 							'</td>' +
 						'</tr>' +
-						'<tr>' +
-							'<td>' +
+						'<tr class="g2e-results">' +
+							'<td class="g2e-tbl-title">' +
 								'<strong>Downloads:</strong>' +
 							'</td>' +
 							'<td>' +

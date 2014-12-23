@@ -77,47 +77,41 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
-					var DIR = SERVER + 'static/genes/';
+					var DIR = 'static/genes/';
 					notifier.log('GEO files were differentially expressed');
 					notifier.log(data);
-					events.fire('progressBar');					
+					events.fire('progressBar');
 					events.fire('dataDiffExped', {
-						download: {
-							// Provide a full reference to the file on the server.
-							up: DIR + data.up,
-							down: DIR + data.down
-						},
-						enrichr: {
-							// Provide just the filename to the Enrichr endpoint.
-							up: data.up,
-							down: data.down,
-							combined: data.combined
-						}
+						'up': SERVER + DIR + data.up,
+						'down': SERVER + DIR + data.down
 					});
 				},
 				error: errorHandler
 			});
 		}
 
-		dlgeo().then(diffexp);
-	};
+		function enrichr(diffExpData) {
+			var endpoint = 'enrichr?',
+				qs = $.param({
+					'up': diffExpData.up,
+					'down': diffExpData.down,
+					'combined': diffExpData.combined
+				});
 
-	var enrichr = function(filename) {
-		var endpoint = 'enrichr?',
-			qs = $.param({
-				filename: filename
+			return $.ajax({
+				url: SERVER + ENTRY_POINT + endpoint + qs,
+				type: 'GET',
+				success: function(data) {
+					notifier.log('Enrichr link was returned');
+					notifier.log(data);
+					events.fire('progressBar');
+					events.fire('genesEnriched', data);
+				},
+				error: errorHandler
 			});
+		}
 
-		$.ajax({
-			url: SERVER + ENTRY_POINT + endpoint + qs,
-			type: 'GET',
-			success: function(data) {
-				notifier.log('Enrichr link was returned');
-				notifier.log(data);
-				events.fire('genesEnriched', data.link);
-			},
-			error: errorHandler
-		});
+		dlgeo().then(diffexp).then(enrichr);
 	};
 
 	var fetchGenemap = function() {
@@ -138,8 +132,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	return {
 		downloadDiffExp: downloadDiffExp,
 		fetchMetadata: fetchMetadata,
-		fetchGenemap: fetchGenemap,
-		enrichr: enrichr
+		fetchGenemap: fetchGenemap
 	};
 };
 
@@ -270,29 +263,30 @@ var Html = function() {
 					'</tr>' +
 				'</table>' +
 				'<div id="g2e-footer">' +
-					'<div>' +
-						'<div id="g2e-actions">' +
-							'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Get gene lists</button>' +
-						'</div>' +
-						'<div id="g2e-progress-bar">' +
-							'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
-							'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
-							'<div id="g2e-step3" class="g2e-progress">Done!</div>' +
-						'</div>' +
-					'</div>' +
-					'<table id="g2e-results">' +
+					'<table>' +
 						'<tr>' +
-							'<td>' +
+							'<td id="g2e-actions" class="g2e-tbl-title">' +
+								'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Get gene lists</button>' +
+							'</td>' +
+							'<td id="g2e-progress-bar">' +
+								'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
+								'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
+								'<div id="g2e-step3" class="g2e-progress">Enriching gene lists with Enrichr</div>' +
+								'<div id="g2e-step4" class="g2e-progress">Done!</div>' +
+							'</td>' +
+						'</tr>' +
+						'<tr class="g2e-results">' +
+							'<td class="g2e-tbl-title">' +
 								'<strong>Enriched genes:</strong>' +
 							'</td>' +
-							'<td>' +
+							'<td class="g2e-tbl-title">' +
 								'<button id="g2e-enrichr-up">Up</button>' +
 								'<button id="g2e-enrichr-down">Down</button>' +
 								'<button id="g2e-enrichr-combined">All</button>' +
 							'</td>' +
 						'</tr>' +
-						'<tr>' +
-							'<td>' +
+						'<tr class="g2e-results">' +
+							'<td class="g2e-tbl-title">' +
 								'<strong>Downloads:</strong>' +
 							'</td>' +
 							'<td>' +
@@ -729,11 +723,11 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	});
 
 	events.on('dataDiffExped', function(data) {
-		showEnrichrLinks(data);
+		setDownloadLinks(data);
 	});
 
-	events.on('genesEnriched', function(link) {
-		window.open(link, '_blank');
+	events.on('genesEnriched', function(data) {
+		showAllResults(data);
 	});
 
 	var openApp = function() {
@@ -781,7 +775,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 	var initProgressBar = function() {
 		resetProgressBar();
-		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3'];
+		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 		$progress.show();
 		highlightNextStep();
 	};
@@ -805,30 +799,32 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		}
 	};
 
-	var showEnrichrLinks = function(links) {
-		$results.show()
-				.find('#g2e-download-btn')
+	var setDownloadLinks = function(links) {
+		$results.find('#g2e-download-btn')
 				.click(function() {
-					downloadUrl(links.download.up);
+					downloadUrl(links.up);
 					setTimeout(function() {
-						downloadUrl(links.download.down);
+						downloadUrl(links.down);
 					}, 1000);
 				})
-				.end()
+				.end();
+	};
 
+	var showAllResults = function(links) {
+		$results.show()	
 				.find('#g2e-enrichr-up')
 				.click(function() {
-					comm.enrichr(links.enrichr.up);
+					window.open(links.up, '_blank');
 				})
 				.end()
 				.find('#g2e-enrichr-down')
 				.click(function() {
-					comm.enrichr(links.enrichr.down);
+					window.open(links.down, '_blank');
 				})
 				.end()
 				.find('#g2e-enrichr-combined')
 				.click(function() {
-					comm.enrichr(links.enrichr.combined);
+					window.open(links.combined, '_blank');
 				});
 	};
 
@@ -854,7 +850,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		$overlay = $(htmlData).hide().appendTo('body');
 		$modal = $('#g2e-container #g2e-modal').draggable();
 		$progress = $progress || $('#g2e-progress-bar');
-		$results = $results || $('#g2e-results');		
+		$results = $results || $('.g2e-results');		
 	};
 
 	var resetUi = function() {

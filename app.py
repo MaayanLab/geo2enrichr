@@ -98,10 +98,11 @@ def enrichr_endpoint():
 	"""
 
 	rp = RequestParams(flask.request.args)
-	link = enrichrlink.get_link(rp.filename)
 	return flask.jsonify({
 		'status': 'ok',
-		'link': link
+		'up': enrichrlink.get_link(rp.up),
+		'down': enrichrlink.get_link(rp.down),
+		'combined': enrichrlink.get_link(rp.combined)
 	})
 
 
