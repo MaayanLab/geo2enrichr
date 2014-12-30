@@ -94,10 +94,10 @@ var BaseScraper = function(DEBUG, events, notifier) {
 					notifier.warn('Please select 2 or more experimental samples');
 					return false;
 				}
-				if (genemap && !genemap[data.gene]) {
+				/*if (genemap && !genemap[data.gene]) {
 					notifier.warn('Please input a valid gene.');
 					return false;
-				}
+				}*/
 				return true;
 			} else {
 				return true;

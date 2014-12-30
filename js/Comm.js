@@ -88,6 +88,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 		}
 
 		function enrichr(diffExpData) {
+			debugger;
 			var endpoint = 'enrichr?',
 				qs = $.param({
 					'up': diffExpData.up,

@@ -1,5 +1,3 @@
-
-
 var main = function() {
 
 	var isGds = function() {
@@ -15,14 +13,20 @@ var main = function() {
 	};
 
 	var init = function() {
-		// Set these configuration values before deploying.
-		var DEBUG = true,
-			//SERVER = 'http://amp.pharm.mssm.edu/',
-			SERVER = 'http://localhost:8083/',
+		var // Set these configuration values before deploying.
+
+			// Production
+            EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
+			DEBUG = false,
+			SERVER = 'http://amp.pharm.mssm.edu/',
+			// Development
+			//EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
+			//DEBUG = true,
+			//SERVER = 'http://localhost:8083/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),
-			html = Html(),
+			html = Html(EXTENSION_ID),
 			baseScraper = BaseScraper(DEBUG, events, notifier),
 			scraper,
 			ui,

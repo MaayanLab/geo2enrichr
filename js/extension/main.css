@@ -225,6 +225,9 @@
 	padding: 10px 0 0 10px;
 	min-height: 45px;
 }
+#g2e-container #g2e-footer > table {
+	width: 100%;
+}
 #g2e-container #g2e-footer > table td {
 	padding: 5px 10px 0 0;
 }
@@ -266,6 +269,12 @@
 #g2e-embedded-button img {
 	float: right;
 	width: 32px;
+}
+
+/* Process
+ * ------- */
+#g2e-container ol#g2e-process {
+	list-style: decimal;
 }
 
 /* Embedded table

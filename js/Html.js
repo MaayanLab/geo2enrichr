@@ -1,7 +1,7 @@
 
-var Html = function() {
+var Html = function(EXTENSION_ID) {
 
-	var LOGO50X50 = 'chrome-extension://jmocdkgcpalhikedehcdnofimpgkljcj/images/g2e-logo-50x50.png';
+	var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/images/g2e-logo-50x50.png';
 
 	var modal = '' +
 		'<div id="g2e-container">' +

@@ -91,6 +91,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 		}
 
 		function enrichr(diffExpData) {
+			debugger;
 			var endpoint = 'enrichr?',
 				qs = $.param({
 					'up': diffExpData.up,
@@ -166,9 +167,9 @@ var Events = function() {
 };
 
 
-var Html = function() {
+var Html = function(EXTENSION_ID) {
 
-	var LOGO50X50 = 'chrome-extension://jmocdkgcpalhikedehcdnofimpgkljcj/images/g2e-logo-50x50.png';
+	var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/images/g2e-logo-50x50.png';
 
 	var modal = '' +
 		'<div id="g2e-container">' +
@@ -466,10 +467,10 @@ var BaseScraper = function(DEBUG, events, notifier) {
 					notifier.warn('Please select 2 or more experimental samples');
 					return false;
 				}
-				if (genemap && !genemap[data.gene]) {
+				/*if (genemap && !genemap[data.gene]) {
 					notifier.warn('Please input a valid gene.');
 					return false;
-				}
+				}*/
 				return true;
 			} else {
 				return true;
@@ -1003,8 +1004,6 @@ var GseUi = function(html, events) {
 	};
 };
 
-
-
 var main = function() {
 
 	var isGds = function() {
@@ -1020,14 +1019,20 @@ var main = function() {
 	};
 
 	var init = function() {
-		// Set these configuration values before deploying.
-		var DEBUG = true,
-			//SERVER = 'http://amp.pharm.mssm.edu/',
-			SERVER = 'http://localhost:8083/',
+		var // Set these configuration values before deploying.
+
+			// Production
+            EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
+			DEBUG = false,
+			SERVER = 'http://amp.pharm.mssm.edu/',
+			// Development
+			//EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
+			//DEBUG = true,
+			//SERVER = 'http://localhost:8083/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),
-			html = Html(),
+			html = Html(EXTENSION_ID),
 			baseScraper = BaseScraper(DEBUG, events, notifier),
 			scraper,
 			ui,
