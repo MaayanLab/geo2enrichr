@@ -126,32 +126,32 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		}
 	};
 
-	var setDownloadLinks = function(links) {
+	var setDownloadLinks = function(downloadLinks) {
 		$results.find('#g2e-download-btn')
 				.click(function() {
-					downloadUrl(links.up);
+					downloadUrl(downloadLinks.up);
 					setTimeout(function() {
-						downloadUrl(links.down);
+						downloadUrl(downloadLinks.down);
 					}, 1000);
 				})
 				.end();
 	};
 
-	var showAllResults = function(links) {
+	var showAllResults = function(enrichrLinks) {
 		$results.show()	
 				.find('#g2e-enrichr-up')
 				.click(function() {
-					window.open(links.up, '_blank');
+					window.open(enrichrLinks.up, '_blank');
 				})
 				.end()
 				.find('#g2e-enrichr-down')
 				.click(function() {
-					window.open(links.down, '_blank');
+					window.open(enrichrLinks.down, '_blank');
 				})
 				.end()
 				.find('#g2e-enrichr-combined')
 				.click(function() {
-					window.open(links.combined, '_blank');
+					window.open(enrichrLinks.combined, '_blank');
 				});
 	};
 

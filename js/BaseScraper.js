@@ -56,17 +56,19 @@ var BaseScraper = function(DEBUG, events, notifier) {
 			var method = $modal.find('input[type=radio][name=method]:checked').val(),
 				cell = $modal.find('#g2e-confirm-cell td').eq(1).text(),
 				perturbation = $modal.find('#g2e-confirm-pert td').eq(1).text(),
-				gene = $modal.find('#g2e-confirm-gene td').eq(1).text();
+				gene = $modal.find('#g2e-confirm-gene #genemap').val();
 
 			if (method) {
 				scrapedData.method = method;
 			}
-
 			if (cell) {
 				scrapedData.cell = cell.replace(/_|\.|-/, '');
 			}
 			if (perturbation) {
 				scrapedData.perturbation = perturbation.replace(/_|\.|-/, '');	
+			}
+			if (gene) {
+				scrapedData.gene = gene;
 			}
 		},
 
@@ -94,10 +96,12 @@ var BaseScraper = function(DEBUG, events, notifier) {
 					notifier.warn('Please select 2 or more experimental samples');
 					return false;
 				}
-				/*if (genemap && !genemap[data.gene]) {
+				// It is important to verify that the user has *tried* to select a gene before warning them
+				// because this code executes every time the data is validated.
+				if (genemap && data.gene && !genemap[data.gene]) {
 					notifier.warn('Please input a valid gene.');
 					return false;
-				}*/
+				}
 				return true;
 			} else {
 				return true;
