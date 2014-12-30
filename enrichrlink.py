@@ -35,8 +35,6 @@ def _post_and_build_link(genes_str, description):
 		'description': description
 	}
 
-	import pdb
-	pdb.set_trace()
 	datagen, headers = poster.encode.multipart_encode(params)
 	request = urllib2.Request(BASE_URL + 'enrich', datagen, headers)
 	urllib2.urlopen(request)
