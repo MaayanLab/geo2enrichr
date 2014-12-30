@@ -79,8 +79,8 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log(data);
 					events.fire('progressBar');
 					events.fire('dataDiffExped', {
-						'up': SERVER + DIR + data.up,
-						'down': SERVER + DIR + data.down
+						'up': SERVER + ENTRY_POINT + DIR + data.up,
+						'down': SERVER + ENTRY_POINT + DIR + data.down
 					});
 				},
 				error: errorHandler
@@ -88,7 +88,6 @@ var Comm = function(events, notifier, scraper, SERVER) {
 		}
 
 		function enrichr(diffExpData) {
-			debugger;
 			var endpoint = 'enrichr?',
 				qs = $.param({
 					'up': diffExpData.up,
