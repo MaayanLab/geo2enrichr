@@ -88,6 +88,10 @@ def diffexp_endpoint():
 	output_files['status'] = 'ok'
 	output_files['conversion_pct'] = str(conversion_pct)
 
+	# ! TODO !
+	# Output filename should be put into database with identifier and returned
+	# ID should be returned to user.
+
 	return flask.jsonify(output_files)
 
 
@@ -100,9 +104,9 @@ def enrichr_endpoint():
 	rp = RequestParams(flask.request.args)
 	return flask.jsonify({
 		'status': 'ok',
-		'up': enrichrlink.get_link(rp.up),
-		'down': enrichrlink.get_link(rp.down),
-		'combined': enrichrlink.get_link(rp.combined)
+		'up': enrichrlink.get_link(rp.up, rp.up.split('.')[0]),
+		'down': enrichrlink.get_link(rp.down, rp.down.split('.')[0]),
+		'combined': enrichrlink.get_link(rp.combined, rp.combined.split('.')[0])
 	})
 
 
