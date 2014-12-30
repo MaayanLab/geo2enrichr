@@ -70,6 +70,14 @@
 	background: #0078C2;
 	cursor: pointer;
 }
+/* Handle inconsistencies across GDS and GSE sites */
+#g2e-container strong {
+	font-weight: bold;
+}
+#g2e-container p,
+#g2e-container ol {
+	margin-bottom: 13px;
+}
 
 /* Modal "columns" (simulated via table)
  * ------------------------------------- */
