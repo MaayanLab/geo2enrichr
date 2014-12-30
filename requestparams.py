@@ -8,7 +8,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from collections import namedtuple
-Metadata = namedtuple('Metadata', 'platform organism cell perturbation')
+Metadata = namedtuple('Metadata', 'platform organism cell perturbation gene')
 
 
 class RequestParams:
@@ -27,7 +27,7 @@ class RequestParams:
 
 		# Set the user's default options in case the client-side code does not.
 		self.config = {
-			'method'    : args.get('method').encode('ascii') if args.get('method') else 'chdir',
+			'method' : args.get('method').encode('ascii') if args.get('method') else 'chdir',
 			# TODO: Make this configurable by on the client.
 			'cutoff' : 500
 		}
@@ -38,4 +38,5 @@ class RequestParams:
 		organism       = args.get('organism').encode('ascii')     if 'organism'     in args else None
 		cell           = args.get('cell').encode('ascii')         if 'cell'         in args else None
 		perturbation   = args.get('perturbation').encode('ascii') if 'perturbation' in args else None
-		self.metadata  = Metadata(platform, organism, cell, perturbation)
+		gene           = args.get('gene').encode('ascii')         if 'gene'         in args else None
+		self.metadata  = Metadata(platform, organism, cell, perturbation, gene)
