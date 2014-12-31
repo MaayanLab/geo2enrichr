@@ -201,9 +201,9 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 	setup();
 
-	events.on('requestFailed', function(errorMsg) {
-		notifier.warn(errorMsg);
-		resetProgressBar();
+	events.on('requestFailed', function(errorData) {
+		notifier.warn(errorData.message);
+		resetUi();
 	});
 
 	events.on('genemapDownloaded', function(genemap) {

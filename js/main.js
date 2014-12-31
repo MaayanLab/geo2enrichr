@@ -16,13 +16,13 @@ var main = function() {
 		var // Set these configuration values before deploying.
 
 			// Production
-            EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
-			DEBUG = false,
-			SERVER = 'http://amp.pharm.mssm.edu/',
+            //EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
+			//DEBUG = false,
+			//SERVER = 'http://amp.pharm.mssm.edu/',
 			// Development
-			//EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
-			//DEBUG = true,
-			//SERVER = 'http://localhost:8083/',
+			EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
+			DEBUG = true,
+			SERVER = 'http://localhost:8083/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),
@@ -46,7 +46,7 @@ var main = function() {
 
 		// This executes in the background, collecting information about the page before the user even inputs.
 		if (scraper.getAccessionFromUrl) {
-			comm.fetchMetadata( scraper.getAccessionFromUrl() );
+			comm.fetchMetadata(scraper.getAccessionFromUrl());
 		}
 
 		// Fetch and store the gene map for later.

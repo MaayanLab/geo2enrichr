@@ -89,7 +89,10 @@ var BaseScraper = function(DEBUG, events, notifier) {
 				}
 				// It is important to verify that the user has *tried* to select a gene before warning them
 				// because this code executes every time the data is validated.
-				if (genemap && data.gene && !$.inArray(data.gene, genemap)) {
+				//
+				// * WARNING *
+				// $.inArray() returns -1 if the value is not found. Do not check for truthiness.
+				if (genemap && data.gene && $.inArray(data.gene, genemap) === -1) {
 					notifier.warn('Please input a valid gene.');
 					return false;
 				}

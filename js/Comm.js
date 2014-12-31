@@ -51,6 +51,10 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					if (data.status === 'error') {
+						errorHandler(data);
+						return;
+					}
 					notifier.log('GEO files were downloaded');
 					notifier.log(data);
 					events.fire('progressBar');
@@ -74,6 +78,10 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					if (data.status === 'error') {
+						errorHandler(data);
+						return;
+					}
 					var DIR = 'static/genes/';
 					notifier.log('GEO files were differentially expressed');
 					notifier.log(data);
@@ -99,6 +107,10 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					if (data.status === 'error') {
+						errorHandler(data);
+						return;
+					}
 					notifier.log('Enrichr link was returned');
 					notifier.log(data);
 					events.fire('progressBar');
@@ -123,7 +135,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	};
 
 	var errorHandler = function(data) {
-		events.fire('requestFailed', data.responseText);
+		events.fire('requestFailed', data);
 	};
 
 	return {

@@ -54,6 +54,10 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					if (data.status === 'error') {
+						errorHandler(data);
+						return;
+					}
 					notifier.log('GEO files were downloaded');
 					notifier.log(data);
 					events.fire('progressBar');
@@ -77,6 +81,10 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					if (data.status === 'error') {
+						errorHandler(data);
+						return;
+					}
 					var DIR = 'static/genes/';
 					notifier.log('GEO files were differentially expressed');
 					notifier.log(data);
@@ -102,6 +110,10 @@ var Comm = function(events, notifier, scraper, SERVER) {
 				url: SERVER + ENTRY_POINT + endpoint + qs,
 				type: 'GET',
 				success: function(data) {
+					if (data.status === 'error') {
+						errorHandler(data);
+						return;
+					}
 					notifier.log('Enrichr link was returned');
 					notifier.log(data);
 					events.fire('progressBar');
@@ -126,7 +138,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	};
 
 	var errorHandler = function(data) {
-		events.fire('requestFailed', data.responseText);
+		events.fire('requestFailed', data);
 	};
 
 	return {
@@ -461,7 +473,10 @@ var BaseScraper = function(DEBUG, events, notifier) {
 				}
 				// It is important to verify that the user has *tried* to select a gene before warning them
 				// because this code executes every time the data is validated.
-				if (genemap && data.gene && !$.inArray(data.gene, genemap)) {
+				//
+				// * WARNING *
+				// $.inArray() returns -1 if the value is not found. Do not check for truthiness.
+				if (genemap && data.gene && $.inArray(data.gene, genemap) === -1) {
 					notifier.warn('Please input a valid gene.');
 					return false;
 				}
@@ -869,9 +884,9 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 	setup();
 
-	events.on('requestFailed', function(errorMsg) {
-		notifier.warn(errorMsg);
-		resetProgressBar();
+	events.on('requestFailed', function(errorData) {
+		notifier.warn(errorData.message);
+		resetUi();
 	});
 
 	events.on('genemapDownloaded', function(genemap) {
@@ -1020,13 +1035,13 @@ var main = function() {
 		var // Set these configuration values before deploying.
 
 			// Production
-            EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
-			DEBUG = false,
-			SERVER = 'http://amp.pharm.mssm.edu/',
+            //EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
+			//DEBUG = false,
+			//SERVER = 'http://amp.pharm.mssm.edu/',
 			// Development
-			//EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
-			//DEBUG = true,
-			//SERVER = 'http://localhost:8083/',
+			EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
+			DEBUG = true,
+			SERVER = 'http://localhost:8083/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),
@@ -1050,7 +1065,7 @@ var main = function() {
 
 		// This executes in the background, collecting information about the page before the user even inputs.
 		if (scraper.getAccessionFromUrl) {
-			comm.fetchMetadata( scraper.getAccessionFromUrl() );
+			comm.fetchMetadata(scraper.getAccessionFromUrl());
 		}
 
 		// Fetch and store the gene map for later.
