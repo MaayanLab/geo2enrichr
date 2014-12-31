@@ -6,7 +6,6 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-import mimetypes
 import sys
 import urllib2
 
@@ -26,10 +25,13 @@ import traceback
 app = flask.Flask(__name__)
 app.debug = True
 
-# This forces the browser to download txt files rather than rendering them.
-# http://stackoverflow.com/a/3749395/1830334
-mimetypes.add_type('application/x-please-download-me', '.txt')
 
+# In production, Apache HTTPD handles serving static files.
+if app.debug:
+	# This forces the browser to download txt files rather than rendering
+	# them. See http://stackoverflow.com/a/3749395/1830334.
+	import mimetypes
+	mimetypes.add_type('application/x-please-download-me', '.txt')
 
 ENTRY_POINT = '/g2e'
 
