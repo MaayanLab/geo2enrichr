@@ -32,31 +32,6 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	
 	var steps, $overlay, $modal, $progress, $results;
 
-	events.on('requestFailed', function(errorMsg) {
-		notifier.warn(errorMsg);
-		resetProgressBar();
-	});
-
-	events.on('genemapDownloaded', function(genemap) {
-		$('#genemap').autocomplete({
-			source: function(request, response) {
-				var results = $.ui.autocomplete.filter(genemap, request.term);
-				response(results.slice(0, 10));
-			},
-			minLength: 2,
-			delay: 500,
-			autoFocus: true
-		});
-	});
-
-	events.on('dataDiffExped', function(data) {
-		setDownloadLinks(data);
-	});
-
-	events.on('genesEnriched', function(data) {
-		showAllResults(data);
-	});
-
 	var openApp = function() {
 		var scrapedData;
 
@@ -81,28 +56,15 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		$modal.find('#g2e-close-btn')
 			  .click(resetUi)
 			  .end()
-
-			  .find('#g2e-submit-btn')
-			  .click(function() {
-			      notifier.log('Input data was scraped');
-			      notifier.log(scraper.getData($modal));
-			      initProgressBar();
-			      events.on('progressBar', highlightNextStep);
-			      comm.downloadDiffExp($modal);
-			  })
-			  .tooltip({
-			      tooltipClass: 'g2e-tooltip'
-			  })
-			  .end()
-
 			  .find('.g2e-confirm-tbl')
 			  .eq(1)
 			  .end();
+
+		resetSubmit();
 	};
 
 	var initProgressBar = function() {
 		resetProgressBar();
-		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 		$progress.show();
 		highlightNextStep();
 	};
@@ -155,6 +117,23 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 				});
 	};
 
+	var resetSubmit = function() {
+		$modal.find('#g2e-submit-btn')
+		      .removeClass('scraped')
+			  .click(function() {
+			      notifier.log('Input data was scraped');
+			      notifier.log(scraper.getData($modal));
+			      initProgressBar();
+			      comm.downloadDiffExp($modal);
+			      // Lock the button until the process is complete.
+			      $(this).addClass('g2e-lock').off();
+			  })
+			  .tooltip({
+			      tooltipClass: 'g2e-tooltip'
+			  })
+			  .end();
+	};
+
 	var resetResults = function() {
 		$results.hide()
 				.find('button')
@@ -181,11 +160,13 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	};
 
 	var resetUi = function() {
+		resetSubmit();
 		hideModalBox();
 		resetProgressBar();
 	};
 
 	var resetProgressBar = function() {
+		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 		$progress.hide()
 				 .find('.g2e-progress')
 				 .removeClass('g2e-ready');
@@ -219,6 +200,29 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	};
 
 	setup();
+
+	events.on('requestFailed', function(errorMsg) {
+		notifier.warn(errorMsg);
+		resetProgressBar();
+	});
+
+	events.on('genemapDownloaded', function(genemap) {
+		$('#genemap').autocomplete({
+			source: function(request, response) {
+				var results = $.ui.autocomplete.filter(genemap, request.term);
+				response(results.slice(0, 10));
+			},
+			minLength: 2,
+			delay: 500,
+			autoFocus: true
+		});
+	});
+
+	events.on('progressBar', highlightNextStep);
+
+	events.on('dataDiffExped', setDownloadLinks);
+
+	events.on('genesEnriched', showAllResults);
 
 	return {
 		openApp: openApp,
