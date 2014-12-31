@@ -12,14 +12,23 @@ var BaseScraper = function(DEBUG, events, notifier) {
 	return {
 
 		getData: function($modal) {
-			var result;
+			// getSamples() returns an object rather than mutating scrapedData
+			// because the function must be mixed in at runtime.
+			var samples = this.getSamples();
 			if ($modal) {
 				this.getOptions($modal);
 			}
+
+			scrapedData.control      = samples.control;
+			scrapedData.experimental = samples.experimental;
+			scrapedData.accession    = this.getAccession();
+			scrapedData.organism     = this.getOrganism();
+			scrapedData.platform     = this.getPlatform();
+
 			if (this.isValidData(scrapedData)) {
-				result = $.extend({}, scrapedData);
-				return result;
+				return $.extend({}, scrapedData);
 			}
+			return undefined;
 		},
 
 		setData: function(key, val) {
@@ -33,23 +42,6 @@ var BaseScraper = function(DEBUG, events, notifier) {
 				// Reset if necessary.
 				scrapedData[key] = temp;
 			}
-		},
-
-		scrapeData: function($modal) {
-			var samples = this.getSamples();
-
-			// `__scrape_options()` and `__scrape_annotations()` are called on `getData()`,
-			// i.e. when the user clicks submit.
-			scrapedData.control      = samples.control;
-			scrapedData.experimental = samples.experimental;
-			scrapedData.accession    = this.getAccession();
-			scrapedData.organism     = this.getOrganism();
-			scrapedData.platform     = this.getPlatform();
-
-			if (this.isValidData(scrapedData)) {
-				return $.extend({}, scrapedData);
-			}
-			return undefined;
 		},
 
 		getOptions: function($modal) {
@@ -76,7 +68,6 @@ var BaseScraper = function(DEBUG, events, notifier) {
 			if (!($el instanceof $)) {
 				$el = $($el);
 			}
-
 			return $el.contents().filter(function() {
 				return this.nodeType == 3;
 			}).text().trim();
@@ -98,7 +89,7 @@ var BaseScraper = function(DEBUG, events, notifier) {
 				}
 				// It is important to verify that the user has *tried* to select a gene before warning them
 				// because this code executes every time the data is validated.
-				if (genemap && data.gene && !genemap[data.gene]) {
+				if (genemap && data.gene && !$.inArray(data.gene, genemap)) {
 					notifier.warn('Please input a valid gene.');
 					return false;
 				}

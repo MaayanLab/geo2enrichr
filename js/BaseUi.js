@@ -36,7 +36,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		var scrapedData;
 
 		// Show the user the data we have scraped for confirmation.
-		scrapedData = scraper.scrapeData($modal);
+		scrapedData = scraper.getData($modal);
 		if (scrapedData) {
 			fillConfirmTable(scrapedData);
 			showModalBox();
@@ -123,8 +123,6 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			  // This doesn't do anything the first time.
 		      .removeClass('g2e-lock')
 			  .click(function() {
-			      notifier.log('Input data was scraped');
-			      notifier.log(scraper.getData($modal));
 			      initProgressBar();
 			      comm.downloadDiffExp($modal);
 			      // Lock the button until the process is complete.
