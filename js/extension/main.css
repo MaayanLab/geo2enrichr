@@ -234,6 +234,8 @@
 	min-height: 45px;
 }
 #g2e-container #g2e-footer > table {
+	/* Prevents the table's tds from expanding when content is inserted. */
+	table-layout: fixed;
 	width: 100%;
 }
 #g2e-container #g2e-footer > table td {
@@ -291,8 +293,12 @@
 	color: #d90000;
 }
 
-/* jQuery UI
+/* jQuery UI and other overrides
  * --------- */
+#g2e-container .g2e-lock,
+#g2e-container .g2e-lock:hover {
+	background: gray;
+}
 .g2e-tooltip {
 	color: black !important;
 	background: #FFFACD !important;

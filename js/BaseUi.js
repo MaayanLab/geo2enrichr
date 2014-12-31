@@ -100,6 +100,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	};
 
 	var showAllResults = function(enrichrLinks) {
+		resetSubmit();
 		$results.show()	
 				.find('#g2e-enrichr-up')
 				.click(function() {
@@ -119,7 +120,8 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 	var resetSubmit = function() {
 		$modal.find('#g2e-submit-btn')
-		      .removeClass('scraped')
+			  // This doesn't do anything the first time.
+		      .removeClass('g2e-lock')
 			  .click(function() {
 			      notifier.log('Input data was scraped');
 			      notifier.log(scraper.getData($modal));
