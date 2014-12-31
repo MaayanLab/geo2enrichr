@@ -41,16 +41,14 @@ def chdir(A, B, genes, r=1):
 #  r: regulaized term. A parameter that smooths the covariance matrix and reduces
 #     potential noise in the dataset.
 
-# ! CHANGED !
-# All validation happens in a common function that validates data for all
-# differential expression methods.
+# * CHANGED *
+# 1. All validation happens in a common function that validates data for all
+#    differential expression methods.
+# 2. Use numpy to concatenate A and B.
 
 # place control gene expression data and experiment gene expression data into
 # one matrix X.
-	X = []
-	for i in range(len(A)):
-		X.append(A[i] + B[i])
-	X = np.array(X).T
+	X = np.concatenate((A,B), axis = 1).T
 
 # get the number of samples (colCount), namely, the total number of replicates in   
 # control and experiment. Also get the number of genes (rowCount)

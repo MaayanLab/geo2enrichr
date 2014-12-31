@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.chdir import chdir
+from chdir import chdir
 
 
 class TestChdir(unittest.TestCase):

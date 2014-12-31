@@ -20,7 +20,7 @@ def normalize(A, B, genes):
 	"""
 
 	# Raise exceptions if the A and B are not valid data sets.
-	_validate(A, B)
+	_validate(A, B, genes)
 
 	if not _is_log2(A, B):
 		pprint('Taking the log2 of data.')
@@ -73,6 +73,9 @@ def qnorm(A, B):
 
 	# axis=0 means that an operation runs against columns rather than rows.
 
+	# Store where we need to split the matrix.
+	idx = len(A[0])
+
 	# 1. Create matrix, i.e. concatenate the rows vertically.
 	O = np.hstack((A, B))
 
@@ -98,7 +101,9 @@ def qnorm(A, B):
 		O[i] = M[i][I[i]]
 	O = O.T
 
-	A, B = np.hsplit(O, 2)
+	#A, B = np.hsplit(O, 2)
+	A = O[:,:idx]
+	B = O[:,idx:]
 	return (A, B)
 
 
@@ -134,7 +139,11 @@ def avg_dups(A, B, genes):
 
 	pprint('Averaging any duplicates.')
 
+	idx = len(A[0])
 	AB = np.concatenate((A, B), axis=1)
+	#assert(np.array_equal(A, AB[:,:idx]))
+	#assert(np.array_equal(B, AB[:,idx:]))
+
 	genes = np.array(genes)
 	unq_genes = np.unique(genes)
 	out_AB = np.zeros((unq_genes.shape[0], AB.shape[1]))
@@ -142,11 +151,21 @@ def avg_dups(A, B, genes):
 		dups = AB[genes==gene]
 		out_AB[i] = np.mean(dups, axis=0)
 
-	A, B = np.hsplit(out_AB, 2)
+	#A, B = np.hsplit(out_AB, 2)
+	A = out_AB[:,:idx]
+	B = out_AB[:,idx:]
 	return (A, B, unq_genes)
 
 
-def _validate(A, B):
+def _validate(A, B, genes):
+	"""Verifies that A and B each has an equal number of rows. This does *not*
+	check--because we don't care--that there are an equal number of items in
+	each column, i.e. the user selected an equal number of control and
+	experimental samples.
+	"""
+
+	# Both of these exceptions should only be raised in truly exceptional
+	# scenarios, such as a parsing error or a problem with the data itself.
 	if len(A) != len(B) != len(genes):
 		raise ValueError('Control and experimental expression data and gene \
 			symbols must have an equal number of data points.')
@@ -160,10 +179,40 @@ def _all_numbers(A, B):
 	same length at this point.
 	"""
 
+	# Optimization: if we know that A and B each contain rows with an equal
+	# number of elements, we can iterate through them all at once. Otherwise
+	# we have to iterate over them more carefully.
+	#if len(A[0]) == len(B[0]):
+	#	for row in range(len(A)):
+	#		for col in range(len(A[0])):
+	#			if not isinstance(A[row][col], Number):
+	#				return False
+	#			if not isinstance(B[row][col], Number):
+	#				return False
+
+	if len(A[0]) > len(B[0]):
+		lower_limit = len(B[0])
+		upper_limit = len(A[0])
+		upper_sample = A
+	# If A[0] < B[0] or if they are equal--in which case, it shouldn't matter.
+	#else if len(A[0]) < len(B[0]):
+	else:
+		lower_limit = len(A[0])
+		upper_limit = len(B[0])
+		upper_sample = B
+	#else:
+	#	lower_limit = upper_limit = lower_sample = None
+
 	for row in range(len(A)):
-		for col in range(len(A[0])):
+		for col in range(lower_limit):
 			if not isinstance(A[row][col], Number):
 				return False
 			if not isinstance(B[row][col], Number):
 				return False
+
+		# Now look at the upper limits.
+		for col in range(lower_limit, upper_limit):
+			if not isinstance(upper_sample[row][col], Number):
+				return False
+
 	return True

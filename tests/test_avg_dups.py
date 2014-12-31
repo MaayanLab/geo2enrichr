@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.cleaner import avg_dups
+from cleaner import avg_dups
 
 
 class TestAvgDups(unittest.TestCase):

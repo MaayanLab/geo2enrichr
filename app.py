@@ -7,7 +7,6 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import sys
-import urllib2
 
 import flask
 
@@ -20,7 +19,6 @@ import filewriter
 from requestparams import RequestParams
 import softparser
 
-import traceback
 
 app = flask.Flask(__name__)
 app.debug = True
@@ -32,6 +30,7 @@ if app.debug:
 	# them. See http://stackoverflow.com/a/3749395/1830334.
 	import mimetypes
 	mimetypes.add_type('application/x-please-download-me', '.txt')
+
 
 ENTRY_POINT = '/g2e'
 
@@ -67,7 +66,15 @@ def diffexp_endpoint():
 	"""
 
 	rp = RequestParams(flask.request.args)
-	# ! WARNING !
+
+	# Return early if the platform is not supported.
+	if not softparser.platform_supported(rp.metadata.platform):
+		return flask.jsonify({
+			'status': 'error',
+			'message': 'Platform ' + rp.metadata.platform + ' is not supported.'
+		})
+
+	# * WARNING *
 	#
 	# The contents of this try/except are the most complicated part of the
 	# program. It is mission critical that these function works as
@@ -76,6 +83,8 @@ def diffexp_endpoint():
 
 	# Step 1: Parse soft file.
 	# Also discard bad data and convert probe IDs to gene symbols.
+	import pdb
+	pdb.set_trace()
 	A, B, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.A_cols, rp.B_cols)
 
 	# Step 2: Clean data.
@@ -112,9 +121,16 @@ def enrichr_endpoint():
 	})
 
 
-@app.errorhandler((LookupError, IOError, MemoryError, ValueError, StopIteration, urllib2.HTTPError))
+# This error handler should only be used for truly *exceptional* scenarios,
+# i.e. scenarios you do *not* expect to happen. If you can predict a program
+# flow, handle it by returnning valid JSON with "'status': 'error'".
+@app.errorhandler(Exception)
 def server_error(err):
-	return flask.make_response(str(err), 500)
+	return flask.jsonify({
+		'status': 'error',
+		'message': 'Unknown server-side error. Please document your input \
+					and contact the Ma\'ayan Lab'
+	})
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.cleaner import log2, _is_log2
+from cleaner import log2, _is_log2
 
 
 class TestLog2(unittest.TestCase):
