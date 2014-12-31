@@ -14,13 +14,12 @@
 	background-color: rgba(255, 255,255, 1); /* http://stackoverflow.com/a/806189/1830334 */
 	border: 1px solid #808080;
 	box-shadow: 0 4px 16px rgba(0,0,0,.2);
-}
-#g2e-container #g2e-modal {
 	left: 50%;
 	margin-left: -450px;
 	padding: 10px;
 	position: fixed;
 	top: 70px;
+	width: 840px;
 }
 #g2e-container p,
 #g2e-container span,
