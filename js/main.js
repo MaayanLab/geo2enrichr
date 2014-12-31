@@ -16,18 +16,18 @@ var main = function() {
 		var // Set these configuration values before deploying.
 
 			// Production
-            //EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
-			//DEBUG = false,
-			//SERVER = 'http://amp.pharm.mssm.edu/',
+            EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
+			DEBUG = false,
+			SERVER = 'http://amp.pharm.mssm.edu/',
 			// Development
-			EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
-			DEBUG = true,
-			SERVER = 'http://localhost:8083/',
+			//EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
+			//DEBUG = true,
+			//SERVER = 'http://localhost:8083/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),
 			html = Html(EXTENSION_ID),
-			baseScraper = BaseScraper(DEBUG, events, notifier),
+			baseScraper = BaseScraper(DEBUG, events),
 			scraper,
 			ui,
 			comm;
@@ -35,12 +35,12 @@ var main = function() {
 		if (isGds()) {
 			modeScraper = GdsScraper(events);
 			scraper = $.extend(modeScraper, baseScraper);
-			comm = Comm(events, notifier, scraper, SERVER);
+			comm = Comm(events, notifier, SERVER);
 			ui = $.extend(GdsUi(html, events), BaseUi(comm, events, html, notifier, scraper));
 		} else {
 			modeScraper = GseScraper(events, html);
 			scraper = $.extend(modeScraper, baseScraper);
-			comm = Comm(events, notifier, scraper, SERVER);
+			comm = Comm(events, notifier, SERVER);
 			ui = $.extend(GseUi(html, events), BaseUi(comm, events, html, notifier, scraper));
 		}
 

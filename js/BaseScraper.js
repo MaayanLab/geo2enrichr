@@ -1,13 +1,9 @@
 
-var BaseScraper = function(DEBUG, events, notifier) {
+var BaseScraper = function(DEBUG, events) {
 
 	var scrapedData = {};
 
 	var genemap;
-
-	events.on('genemapDownloaded', function(data) {
-		genemap = data;
-	});
 
 	return {
 
@@ -25,23 +21,14 @@ var BaseScraper = function(DEBUG, events, notifier) {
 			scrapedData.organism     = this.getOrganism();
 			scrapedData.platform     = this.getPlatform();
 
-			if (this.isValidData(scrapedData)) {
-				return $.extend({}, scrapedData);
-			}
-			return undefined;
+			return $.extend({}, scrapedData);
 		},
 
 		setData: function(key, val) {
-			// Store any data we might overwrite.
-			var temp = scrapedData[key];
 			if (key == 'cell' || key == 'platform') {
 				val = val.replace(/_|-|\./g, '');
 			}
 			scrapedData[key] = val;
-			if (!this.isValidData(scrapedData)) {
-				// Reset if necessary.
-				scrapedData[key] = temp;
-			}
 		},
 
 		getOptions: function($modal) {
@@ -75,31 +62,6 @@ var BaseScraper = function(DEBUG, events, notifier) {
 
 		normalizeText: function(el) {
 			return el.replace(/\s/g, '').toLowerCase();
-		},
-
-		isValidData: function(data) {
-			if (!DEBUG) {
-				if (!data.control || data.control.length < 2) {
-					notifier.warn('Please select 2 or more control samples');
-					return false;
-				}
-				if (!data.experimental || data.experimental.length < 2) {
-					notifier.warn('Please select 2 or more experimental samples');
-					return false;
-				}
-				// It is important to verify that the user has *tried* to select a gene before warning them
-				// because this code executes every time the data is validated.
-				//
-				// * WARNING *
-				// $.inArray() returns -1 if the value is not found. Do not check for truthiness.
-				if (genemap && data.gene && $.inArray(data.gene, genemap) === -1) {
-					notifier.warn('Please input a valid gene.');
-					return false;
-				}
-				return true;
-			} else {
-				return true;
-			}
 		}
 	};	
 };

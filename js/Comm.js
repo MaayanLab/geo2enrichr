@@ -1,5 +1,5 @@
 
-var Comm = function(events, notifier, scraper, SERVER) {
+var Comm = function(events, notifier, SERVER) {
 
 	var ENTRY_POINT = 'g2e/',
 		fileForDownload = [];
@@ -32,9 +32,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	};
 
 	// This is the workhorse function that chains together multiple AJX requests to the back-end.
-	var downloadDiffExp = function($modal) {
-		var userInput = scraper.getData($modal);
-
+	var downloadDiffExp = function(userInput) {
 		function dlgeo() {
 			var endpoint = 'dlgeo?',
 				qs = $.param({
@@ -58,8 +56,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log('GEO files were downloaded');
 					notifier.log(data);
 					events.fire('progressBar');
-				},
-				error: errorHandler
+				}
 			});
 		}
 
@@ -90,8 +87,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 						'up': SERVER + ENTRY_POINT + DIR + data.up,
 						'down': SERVER + ENTRY_POINT + DIR + data.down
 					});
-				},
-				error: errorHandler
+				}
 			});
 		}
 
@@ -115,12 +111,12 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log(data);
 					events.fire('progressBar');
 					events.fire('genesEnriched', data);
-				},
-				error: errorHandler
+				}
 			});
 		}
 
-		dlgeo().then(diffexp).then(enrichr);
+		// Pass in noops so that we do nothing if the promise is not returned.
+		dlgeo().then(diffexp, $.noop).then(enrichr, $.noop);
 	};
 
 	var fetchGenemap = function() {

@@ -83,8 +83,6 @@ def diffexp_endpoint():
 
 	# Step 1: Parse soft file.
 	# Also discard bad data and convert probe IDs to gene symbols.
-	import pdb
-	pdb.set_trace()
 	A, B, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.A_cols, rp.B_cols)
 
 	# Step 2: Clean data.
@@ -128,8 +126,7 @@ def enrichr_endpoint():
 def server_error(err):
 	return flask.jsonify({
 		'status': 'error',
-		'message': 'Unknown server-side error. Please document your input \
-					and contact the Ma\'ayan Lab'
+		'message': 'Unknown server-side error. Please document your input and contact the Ma\'ayan Lab'
 	})
 
 

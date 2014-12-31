@@ -30,3 +30,8 @@ A sample query sequence is:
 
 Example platform to probe ID mapping:
 http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?view=data&acc=GPL80&id=41379&db=GeoDb_blob32
+
+
+
+UNSUPPORTED PLATFORM
+GDS5093

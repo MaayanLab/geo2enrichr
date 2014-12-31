@@ -99,7 +99,7 @@ var Html = function(EXTENSION_ID) {
 					'<table>' +
 						'<tr>' +
 							'<td id="g2e-actions" class="g2e-tbl-title">' +
-								'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Get gene lists</button>' +
+								'<button id="g2e-submit-btn" class="g2e-btn">Get gene lists</button>' +
 							'</td>' +
 							'<td id="g2e-progress-bar">' +
 								'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +

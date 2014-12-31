@@ -2,7 +2,7 @@
 var G2E = (function() {
 
 
-var Comm = function(events, notifier, scraper, SERVER) {
+var Comm = function(events, notifier, SERVER) {
 
 	var ENTRY_POINT = 'g2e/',
 		fileForDownload = [];
@@ -35,9 +35,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 	};
 
 	// This is the workhorse function that chains together multiple AJX requests to the back-end.
-	var downloadDiffExp = function($modal) {
-		var userInput = scraper.getData($modal);
-
+	var downloadDiffExp = function(userInput) {
 		function dlgeo() {
 			var endpoint = 'dlgeo?',
 				qs = $.param({
@@ -61,8 +59,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log('GEO files were downloaded');
 					notifier.log(data);
 					events.fire('progressBar');
-				},
-				error: errorHandler
+				}
 			});
 		}
 
@@ -93,8 +90,7 @@ var Comm = function(events, notifier, scraper, SERVER) {
 						'up': SERVER + ENTRY_POINT + DIR + data.up,
 						'down': SERVER + ENTRY_POINT + DIR + data.down
 					});
-				},
-				error: errorHandler
+				}
 			});
 		}
 
@@ -118,12 +114,12 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log(data);
 					events.fire('progressBar');
 					events.fire('genesEnriched', data);
-				},
-				error: errorHandler
+				}
 			});
 		}
 
-		dlgeo().then(diffexp).then(enrichr);
+		// Pass in noops so that we do nothing if the promise is not returned.
+		dlgeo().then(diffexp, $.noop).then(enrichr, $.noop);
 	};
 
 	var fetchGenemap = function() {
@@ -278,7 +274,7 @@ var Html = function(EXTENSION_ID) {
 					'<table>' +
 						'<tr>' +
 							'<td id="g2e-actions" class="g2e-tbl-title">' +
-								'<button id="g2e-submit-btn" class="g2e-btn" title="This can take a while.">Get gene lists</button>' +
+								'<button id="g2e-submit-btn" class="g2e-btn">Get gene lists</button>' +
 							'</td>' +
 							'<td id="g2e-progress-bar">' +
 								'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
@@ -383,15 +379,11 @@ var Notifier = function(DEBUG) {
 };
 
 
-var BaseScraper = function(DEBUG, events, notifier) {
+var BaseScraper = function(DEBUG, events) {
 
 	var scrapedData = {};
 
 	var genemap;
-
-	events.on('genemapDownloaded', function(data) {
-		genemap = data;
-	});
 
 	return {
 
@@ -409,23 +401,14 @@ var BaseScraper = function(DEBUG, events, notifier) {
 			scrapedData.organism     = this.getOrganism();
 			scrapedData.platform     = this.getPlatform();
 
-			if (this.isValidData(scrapedData)) {
-				return $.extend({}, scrapedData);
-			}
-			return undefined;
+			return $.extend({}, scrapedData);
 		},
 
 		setData: function(key, val) {
-			// Store any data we might overwrite.
-			var temp = scrapedData[key];
 			if (key == 'cell' || key == 'platform') {
 				val = val.replace(/_|-|\./g, '');
 			}
 			scrapedData[key] = val;
-			if (!this.isValidData(scrapedData)) {
-				// Reset if necessary.
-				scrapedData[key] = temp;
-			}
 		},
 
 		getOptions: function($modal) {
@@ -459,31 +442,6 @@ var BaseScraper = function(DEBUG, events, notifier) {
 
 		normalizeText: function(el) {
 			return el.replace(/\s/g, '').toLowerCase();
-		},
-
-		isValidData: function(data) {
-			if (!DEBUG) {
-				if (!data.control || data.control.length < 2) {
-					notifier.warn('Please select 2 or more control samples');
-					return false;
-				}
-				if (!data.experimental || data.experimental.length < 2) {
-					notifier.warn('Please select 2 or more experimental samples');
-					return false;
-				}
-				// It is important to verify that the user has *tried* to select a gene before warning them
-				// because this code executes every time the data is validated.
-				//
-				// * WARNING *
-				// $.inArray() returns -1 if the value is not found. Do not check for truthiness.
-				if (genemap && data.gene && $.inArray(data.gene, genemap) === -1) {
-					notifier.warn('Please input a valid gene.');
-					return false;
-				}
-				return true;
-			} else {
-				return true;
-			}
 		}
 	};	
 };
@@ -686,7 +644,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
 
-	var elemConfig = {
+	var dataConfig = {
 		'g2e-confirm-tbl-acc': {
 			key: 'accession',
 			prompt: 'Please enter an accession number:'
@@ -701,33 +659,29 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		},
 		'g2e-confirm-tbl-ctrl': {
 			key: 'control',
-			format: function(data) {
+			formatter: function(data) {
 				return data.join(', ');
 			}
 		},
 		'g2e-confirm-tbl-expmt': {
 			key: 'experimental',
-			format: function(data) {
+			formatter: function(data) {
 				return data.join(', ');
 			}
 		}
 	};
 	
-	var steps, $overlay, $modal, $progress, $results;
+	var steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 
-	var openApp = function() {
-		var scrapedData;
+	var genemap, $overlay, $modal, $progress, $results;
 
-		// Show the user the data we have scraped for confirmation.
-		scrapedData = scraper.getData($modal);
-		if (scrapedData) {
-			fillConfirmTable(scrapedData);
-			showModalBox();
-		}
-	};
-
-	var setup = function() {
-		setGlobalSelectors();
+	// This is called once at startup. All variables and bindings should be permanent.
+	var init = function() {
+		var htmlData = html.get('modal');
+		$overlay = $(htmlData).hide().appendTo('body');
+		$modal = $('#g2e-container #g2e-modal').draggable();
+		$progress = $progress || $('#g2e-progress-bar');
+		$results = $results || $('.g2e-results');
 
 		// Allow editing of the values, in case we scraped incorrectly.
 		$('.g2e-editable').click(function(evt) {
@@ -737,19 +691,22 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 		// Add event handlers
 		$modal.find('#g2e-close-btn')
-			  .click(resetUi)
+			  .click(resetModalBox)
 			  .end()
 			  .find('.g2e-confirm-tbl')
 			  .eq(1)
 			  .end();
 
-		resetSubmit();
+		resetSubmitBtn();
 	};
 
-	var initProgressBar = function() {
-		resetProgressBar();
-		$progress.show();
-		highlightNextStep();
+	// This function is called every time the "Pipe to Enrichr" button is clicked.
+	var openModalBox = function() {
+		var scrapedData;
+		// Show the user the data we have scraped for confirmation.
+		scrapedData = scraper.getData($modal);
+		fillConfirmTable(scrapedData);
+		showModalBox();
 	};
 
 	var highlightNextStep = function() {
@@ -760,10 +717,10 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	// TODO: It shouldn't.
 	var fillConfirmTable = function(scrapedData) {
 		var elem, config, html;
-		for (elem in elemConfig) {
-			config = elemConfig[elem];
-			if (config.format) {
-				html = config.format(scrapedData[config.key]);
+		for (elem in dataConfig) {
+			config = dataConfig[elem];
+			if (config.formatter) {
+				html = config.formatter(scrapedData[config.key]);
 			} else {
 				html = scrapedData[config.key];
 			}
@@ -782,8 +739,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 				.end();
 	};
 
-	var showAllResults = function(enrichrLinks) {
-		resetSubmit();
+	var showResults = function(enrichrLinks) {
 		$results.show()	
 				.find('#g2e-enrichr-up')
 				.click(function() {
@@ -801,29 +757,6 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 				});
 	};
 
-	var resetSubmit = function() {
-		$modal.find('#g2e-submit-btn')
-			  // This doesn't do anything the first time.
-		      .removeClass('g2e-lock')
-			  .click(function() {
-			      initProgressBar();
-			      comm.downloadDiffExp($modal);
-			      // Lock the button until the process is complete.
-			      $(this).addClass('g2e-lock').off();
-			  })
-			  .tooltip({
-			      tooltipClass: 'g2e-tooltip'
-			  })
-			  .end();
-	};
-
-	var resetResults = function() {
-		$results.hide()
-				.find('button')
-				.first()
-				.unbind();
-	};
-
 	var showModalBox = function() {
 		$overlay.show();
 		$modal.show();
@@ -834,43 +767,68 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		$modal.hide();
 	};
 
-	var setGlobalSelectors = function() {
-		var htmlData = html.get('modal');
-		$overlay = $(htmlData).hide().appendTo('body');
-		$modal = $('#g2e-container #g2e-modal').draggable();
-		$progress = $progress || $('#g2e-progress-bar');
-		$results = $results || $('.g2e-results');		
-	};
-
-	var resetUi = function() {
-		resetSubmit();
+	var resetModalBox = function() {
+		resetFooter();
 		hideModalBox();
-		resetProgressBar();
 	};
 
-	var resetProgressBar = function() {
+	var resetFooter = function() {
+		// Reset progress bar.
 		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 		$progress.hide()
 				 .find('.g2e-progress')
 				 .removeClass('g2e-ready');
-		resetResults();
+
+		// Result any results.
+		$results.hide()
+				.find('button')
+				.first()
+				.unbind();
+
+		resetSubmitBtn();	
+	};
+
+	var resetSubmitBtn = function() {
+		// Reset submit button.
+		$modal.find('#g2e-submit-btn')
+			  // This doesn't do anything the first time.
+			  .removeClass('g2e-lock')
+			  // Remove any event handlers, just to be save.
+			  // This code smells like jQuery spaghetti.
+			  .off()
+			  .click(function() {
+				  var scrapedData = scraper.getData($modal);
+				  if (isValidData(scrapedData)) {
+					  $progress.show();
+					  highlightNextStep();
+					  $(this).addClass('g2e-lock').off();
+					  comm.downloadDiffExp(scrapedData);
+				  } else {
+					  resetFooter();
+				  }
+			  })
+			  .end();
 	};
 
 	var onEdit = function(id) {
-		var config = elemConfig[id],
-			userInput = notifier.ask(config.prompt, $('#' + id + ' td').eq(1).text());
+		var config = dataConfig[id],
+			userInput = notifier.ask(config.prompt, $('#' + id + ' td').eq(1).text()),
+			newData;
 		if (userInput !== null) {
 			scraper.setData(config.key, userInput);
-			fillConfirmationTable(scraper.getData());
+			newData = scraper.getData();
+			if (isValidData(newData)) {
+				fillConfirmationTable(newData);
+			}
 		}
 	};
 
 	var fillConfirmationTable = function(scrapedData) {
 		var elem, config, html;
-		for (elem in elemConfig) {
-			config = elemConfig[elem];
-			if (config.format) {
-				html = config.format(scrapedData[config.key]);
+		for (elem in dataConfig) {
+			config = dataConfig[elem];
+			if (config.formatter) {
+				html = config.formatter(scrapedData[config.key]);
 			} else {
 				html = scrapedData[config.key];
 			}
@@ -882,14 +840,32 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		$downloadIframe.attr('src', url);
 	};
 
-	setup();
+	var isValidData = function(data) {
+		if (!data.control || data.control.length < 2) {
+			notifier.warn('Please select 2 or more control samples');
+			return false;
+		}
+		if (!data.experimental || data.experimental.length < 2) {
+			notifier.warn('Please select 2 or more experimental samples');
+			return false;
+		}
+		// * WARNINGS *
+		// It is important to verify that the user has *tried* to select a gene before warning them.
+		// $.inArray() returns -1 if the value is not found. Do not check for truthiness.
+		if (genemap && data.gene && $.inArray(data.gene, genemap) === -1) {
+			notifier.warn('Please input a valid gene.');
+			return false;
+		}
+		return true;
+	};
 
 	events.on('requestFailed', function(errorData) {
 		notifier.warn(errorData.message);
-		resetUi();
+		resetFooter();
 	});
 
-	events.on('genemapDownloaded', function(genemap) {
+	events.on('genemapDownloaded', function(data) {
+		genemap = data;
 		$('#genemap').autocomplete({
 			source: function(request, response) {
 				var results = $.ui.autocomplete.filter(genemap, request.term);
@@ -902,15 +878,13 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	});
 
 	events.on('progressBar', highlightNextStep);
-
 	events.on('dataDiffExped', setDownloadLinks);
-
-	events.on('genesEnriched', showAllResults);
+	events.on('genesEnriched', showResults);
+	
+	init();
 
 	return {
-		openApp: openApp,
-		initProgressBar: initProgressBar,
-		highlightNextStep: highlightNextStep
+		openModalBox: openModalBox
 	};
 };
 
@@ -928,7 +902,7 @@ var GdsUi = function(html, events) {
 			});
 
 			$('#g2e-link').click(function() {
-				self.openApp();
+				self.openModalBox();
 			});
 		},
 
@@ -1003,7 +977,7 @@ var GseUi = function(html, events) {
 			});
 
 			$('#g2e-link').click(function() {
-				self.openApp();
+				self.openModalBox();
 			});
 		},
 
@@ -1035,18 +1009,18 @@ var main = function() {
 		var // Set these configuration values before deploying.
 
 			// Production
-            //EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
-			//DEBUG = false,
-			//SERVER = 'http://amp.pharm.mssm.edu/',
+            EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
+			DEBUG = false,
+			SERVER = 'http://amp.pharm.mssm.edu/',
 			// Development
-			EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
-			DEBUG = true,
-			SERVER = 'http://localhost:8083/',
+			//EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
+			//DEBUG = true,
+			//SERVER = 'http://localhost:8083/',
 
 			events = Events(),
 			notifier = Notifier(DEBUG),
 			html = Html(EXTENSION_ID),
-			baseScraper = BaseScraper(DEBUG, events, notifier),
+			baseScraper = BaseScraper(DEBUG, events),
 			scraper,
 			ui,
 			comm;
@@ -1054,12 +1028,12 @@ var main = function() {
 		if (isGds()) {
 			modeScraper = GdsScraper(events);
 			scraper = $.extend(modeScraper, baseScraper);
-			comm = Comm(events, notifier, scraper, SERVER);
+			comm = Comm(events, notifier, SERVER);
 			ui = $.extend(GdsUi(html, events), BaseUi(comm, events, html, notifier, scraper));
 		} else {
 			modeScraper = GseScraper(events, html);
 			scraper = $.extend(modeScraper, baseScraper);
-			comm = Comm(events, notifier, scraper, SERVER);
+			comm = Comm(events, notifier, SERVER);
 			ui = $.extend(GseUi(html, events), BaseUi(comm, events, html, notifier, scraper));
 		}
 

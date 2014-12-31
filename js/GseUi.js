@@ -54,7 +54,7 @@ var GseUi = function(html, events) {
 			});
 
 			$('#g2e-link').click(function() {
-				self.openApp();
+				self.openModalBox();
 			});
 		},
 
