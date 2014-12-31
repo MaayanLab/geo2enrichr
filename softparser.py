@@ -18,13 +18,6 @@ def parse(filename, platform, A_cols, B_cols):
 	"""
 
 	pprint('Parsing SOFT file.')
-
-	if platform not in PROBE2GENE:
-		if platform:
-			raise LookupError('Platform ' + platform + ' is not supported.')
-		else:
-			raise ValueError('Platform not provided.')
-
 	soft_file = SOFTFile(filename).path()
 
 	# COL_OFFSET changes because GDS files are "curated", meaning that they
@@ -104,6 +97,10 @@ def parse(filename, platform, A_cols, B_cols):
 				genes.append(gene)
 
 		conversion_pct = 100.0 - float(len(unconverted_probes)) / float(probe_count)
+
+	# Is this truly exceptional? If someone uses this API endpoint but does
+	# not call the dlgeo endpoint first, this file will simply not exist!
+	# Is this an acceptable API?
 	except IOError:
 		raise IOError('Could not read SOFT file from local server.')
 
@@ -112,6 +109,12 @@ def parse(filename, platform, A_cols, B_cols):
 	B = np.array(B)
 	genes = np.array(genes)
 	return (A, B, genes, conversion_pct)
+
+
+def platform_supported(platform):
+	if platform not in PROBE2GENE:
+		return False
+	return True
 
 
 def _probe2gene(platform, probe):
