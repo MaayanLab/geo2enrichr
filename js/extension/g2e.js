@@ -82,8 +82,8 @@ var Comm = function(events, notifier, scraper, SERVER) {
 					notifier.log(data);
 					events.fire('progressBar');
 					events.fire('dataDiffExped', {
-						'up': SERVER + DIR + data.up,
-						'down': SERVER + DIR + data.down
+						'up': SERVER + ENTRY_POINT + DIR + data.up,
+						'down': SERVER + ENTRY_POINT + DIR + data.down
 					});
 				},
 				error: errorHandler
@@ -91,7 +91,6 @@ var Comm = function(events, notifier, scraper, SERVER) {
 		}
 
 		function enrichr(diffExpData) {
-			debugger;
 			var endpoint = 'enrichr?',
 				qs = $.param({
 					'up': diffExpData.up,
@@ -429,17 +428,19 @@ var BaseScraper = function(DEBUG, events, notifier) {
 			var method = $modal.find('input[type=radio][name=method]:checked').val(),
 				cell = $modal.find('#g2e-confirm-cell td').eq(1).text(),
 				perturbation = $modal.find('#g2e-confirm-pert td').eq(1).text(),
-				gene = $modal.find('#g2e-confirm-gene td').eq(1).text();
+				gene = $modal.find('#g2e-confirm-gene #genemap').val();
 
 			if (method) {
 				scrapedData.method = method;
 			}
-
 			if (cell) {
 				scrapedData.cell = cell.replace(/_|\.|-/, '');
 			}
 			if (perturbation) {
 				scrapedData.perturbation = perturbation.replace(/_|\.|-/, '');	
+			}
+			if (gene) {
+				scrapedData.gene = gene;
 			}
 		},
 
@@ -467,10 +468,12 @@ var BaseScraper = function(DEBUG, events, notifier) {
 					notifier.warn('Please select 2 or more experimental samples');
 					return false;
 				}
-				/*if (genemap && !genemap[data.gene]) {
+				// It is important to verify that the user has *tried* to select a gene before warning them
+				// because this code executes every time the data is validated.
+				if (genemap && data.gene && !genemap[data.gene]) {
 					notifier.warn('Please input a valid gene.');
 					return false;
-				}*/
+				}
 				return true;
 			} else {
 				return true;
@@ -706,31 +709,6 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	
 	var steps, $overlay, $modal, $progress, $results;
 
-	events.on('requestFailed', function(errorMsg) {
-		notifier.warn(errorMsg);
-		resetProgressBar();
-	});
-
-	events.on('genemapDownloaded', function(genemap) {
-		$('#genemap').autocomplete({
-			source: function(request, response) {
-				var results = $.ui.autocomplete.filter(genemap, request.term);
-				response(results.slice(0, 10));
-			},
-			minLength: 2,
-			delay: 500,
-			autoFocus: true
-		});
-	});
-
-	events.on('dataDiffExped', function(data) {
-		setDownloadLinks(data);
-	});
-
-	events.on('genesEnriched', function(data) {
-		showAllResults(data);
-	});
-
 	var openApp = function() {
 		var scrapedData;
 
@@ -755,28 +733,15 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		$modal.find('#g2e-close-btn')
 			  .click(resetUi)
 			  .end()
-
-			  .find('#g2e-submit-btn')
-			  .click(function() {
-			      notifier.log('Input data was scraped');
-			      notifier.log(scraper.getData($modal));
-			      initProgressBar();
-			      events.on('progressBar', highlightNextStep);
-			      comm.downloadDiffExp($modal);
-			  })
-			  .tooltip({
-			      tooltipClass: 'g2e-tooltip'
-			  })
-			  .end()
-
 			  .find('.g2e-confirm-tbl')
 			  .eq(1)
 			  .end();
+
+		resetSubmit();
 	};
 
 	var initProgressBar = function() {
 		resetProgressBar();
-		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 		$progress.show();
 		highlightNextStep();
 	};
@@ -800,33 +765,52 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		}
 	};
 
-	var setDownloadLinks = function(links) {
+	var setDownloadLinks = function(downloadLinks) {
 		$results.find('#g2e-download-btn')
 				.click(function() {
-					downloadUrl(links.up);
+					downloadUrl(downloadLinks.up);
 					setTimeout(function() {
-						downloadUrl(links.down);
+						downloadUrl(downloadLinks.down);
 					}, 1000);
 				})
 				.end();
 	};
 
-	var showAllResults = function(links) {
+	var showAllResults = function(enrichrLinks) {
+		resetSubmit();
 		$results.show()	
 				.find('#g2e-enrichr-up')
 				.click(function() {
-					window.open(links.up, '_blank');
+					window.open(enrichrLinks.up, '_blank');
 				})
 				.end()
 				.find('#g2e-enrichr-down')
 				.click(function() {
-					window.open(links.down, '_blank');
+					window.open(enrichrLinks.down, '_blank');
 				})
 				.end()
 				.find('#g2e-enrichr-combined')
 				.click(function() {
-					window.open(links.combined, '_blank');
+					window.open(enrichrLinks.combined, '_blank');
 				});
+	};
+
+	var resetSubmit = function() {
+		$modal.find('#g2e-submit-btn')
+			  // This doesn't do anything the first time.
+		      .removeClass('g2e-lock')
+			  .click(function() {
+			      notifier.log('Input data was scraped');
+			      notifier.log(scraper.getData($modal));
+			      initProgressBar();
+			      comm.downloadDiffExp($modal);
+			      // Lock the button until the process is complete.
+			      $(this).addClass('g2e-lock').off();
+			  })
+			  .tooltip({
+			      tooltipClass: 'g2e-tooltip'
+			  })
+			  .end();
 	};
 
 	var resetResults = function() {
@@ -855,11 +839,13 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	};
 
 	var resetUi = function() {
+		resetSubmit();
 		hideModalBox();
 		resetProgressBar();
 	};
 
 	var resetProgressBar = function() {
+		steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 		$progress.hide()
 				 .find('.g2e-progress')
 				 .removeClass('g2e-ready');
@@ -893,6 +879,29 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	};
 
 	setup();
+
+	events.on('requestFailed', function(errorMsg) {
+		notifier.warn(errorMsg);
+		resetProgressBar();
+	});
+
+	events.on('genemapDownloaded', function(genemap) {
+		$('#genemap').autocomplete({
+			source: function(request, response) {
+				var results = $.ui.autocomplete.filter(genemap, request.term);
+				response(results.slice(0, 10));
+			},
+			minLength: 2,
+			delay: 500,
+			autoFocus: true
+		});
+	});
+
+	events.on('progressBar', highlightNextStep);
+
+	events.on('dataDiffExped', setDownloadLinks);
+
+	events.on('genesEnriched', showAllResults);
 
 	return {
 		openApp: openApp,
