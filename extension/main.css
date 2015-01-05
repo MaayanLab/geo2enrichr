@@ -1,0 +1,324 @@
+/* Modal general
+ * ------------- */
+#g2e-container {
+	background-color: rgba(255, 255, 255, .50); /* http://stackoverflow.com/a/806189/1830334 */
+	font-family: Arial, Sans-serif;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1000; 
+}
+#g2e-container #g2e-modal {
+	background-color: rgba(255, 255,255, 1); /* http://stackoverflow.com/a/806189/1830334 */
+	border: 1px solid #808080;
+	box-shadow: 0 4px 16px rgba(0,0,0,.2);
+	left: 50%;
+	margin-left: -450px;
+	padding: 10px;
+	position: fixed;
+	top: 70px;
+	width: 840px;
+}
+#g2e-container p,
+#g2e-container span,
+#g2e-container td,
+#g2e-container tr,
+#g2e-container input,
+#g2e-container label {
+	font-family: Arial, Sans-serif;
+	font-size: 13px;
+}
+#g2e-container .g2e-last {
+	padding-top: 20px;
+}
+#g2e-container a {
+	color: #009DFF;
+	font-family: Arial, Sans-serif;
+}
+#g2e-container a:hover,
+#g2e-container a:active,
+#g2e-container a:visited {
+	color: #009DFF;
+}
+#g2e-container h4 {
+	font-size: 14px;
+}
+#g2e-container .g2e-warning {
+	color: 700;
+}
+#g2e-container .g2e-highlight {
+	color: #d90000;
+}
+#g2e-container .g2e-lowlight {
+	color: #555555;
+	font-size: 13px;
+	font-style: italic;
+	padding-bottom: 5px;
+}
+#g2e-container button {
+	color: #fff;
+	background: #009DFF;
+	border: none;
+	font-size: 12px;
+	font-weight: bold;
+	height: 25px;
+}
+#g2e-container button:hover {
+	background: #0078C2;
+	cursor: pointer;
+}
+/* Handle inconsistencies across GDS and GSE sites */
+#g2e-container strong {
+	font-weight: bold;
+}
+#g2e-container p,
+#g2e-container ol {
+	margin-bottom: 13px;
+}
+
+/* Modal "columns" (simulated via table)
+ * ------------------------------------- */
+#g2e-container table {
+	border: none;	
+}
+#g2e-container table,
+#g2e-container tbody,
+#g2e-container tr,
+#g2e-container td {
+	border-spacing: 0;
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+}
+#g2e-container .g2e-column {
+	padding: 10px;
+}
+#g2e-container .g2e-column.g2e-left {
+	width: 540px;
+}
+#g2e-container .g2e-column.g2e-right {
+	vertical-align: top;
+	width: 300px;
+}
+
+/* Modal title
+ * ----------- */
+#g2e-container #g2e-title {
+	font-weight: bold;
+	margin: 10px;
+}
+#g2e-container #g2e-title a,
+#g2e-container #g2e-title a:hover {
+	color: #000;
+}
+#g2e-container #g2e-title a:hover {
+	cursor: pointer;
+	text-decoration: none;
+}
+#g2e-container #g2e-title img {
+	width: 40px;
+}
+#g2e-container #g2e-title span {
+	font-size: 40px;
+	font-family: 'Open Sans';
+	left: 10px;
+	position: relative;
+	top: -4px;
+}
+#g2e-container #g2e-title #g2e-close-btn {
+	background: white;
+	border: none;
+	color: #808080;
+	cursor: pointer;
+	float: right;
+	font-size: 20px;
+	height: 25px;
+	padding: 0 2px;
+	width: 25px;
+}
+#g2e-container #g2e-title #g2e-close-btn:hover {
+	color: #696969;
+}
+
+/* Modal form
+ * ---------- */
+#g2e-container .g2e-right ol {
+	padding-left: 20px;
+}
+#g2e-container .g2e-right #g2e-credits,
+#g2e-container .g2e-right #g2e-credits a {
+	font-style: italic;
+	font-size: 12px;
+}
+
+/* Modal footer progress bar
+ * ------------------------- */
+#g2e-container #g2e-progress-bar {
+	display: none;
+	float: left;
+}
+#g2e-container #g2e-progress-bar .g2e-progress {
+	background: #D3D3D3;
+	color: gray;
+	float: left;
+	font-family: Verdana, Arial, Sans-serif;
+	font-size: 10px;
+	height: 15px;
+	padding: 5px;
+}
+#g2e-container #g2e-progress-bar .g2e-progress.g2e-ready {
+	background: #FFC0CB;
+	color: #000;
+}
+#g2e-container #g2e-progress-bar #g2e-step1,
+#g2e-container #g2e-progress-bar #g2e-step2,
+#g2e-container #g2e-progress-bar #g2e-step3,
+#g2e-container #g2e-progress-bar #g2e-step4 {
+	border-right: 1px solid #bdbdbd;
+}
+
+/* Modal confirm
+ * ------------- */
+#g2e-container #g2e-confirm .g2e-bottom {
+	padding-top: 20px;
+}
+#g2e-container .g2e-confirm-tbl {
+	padding-top: 10px;
+	table-layout: fixed;
+	width: 100%
+}
+#g2e-container .g2e-confirm-tbl tr {
+	border-bottom: 1px solid #ccc;
+	height: 25px;
+}
+#g2e-container .g2e-confirm-tbl td {
+	padding: 2px 0;
+	vertical-align: middle;
+	word-wrap: break-word;
+}
+#g2e-container .g2e-confirm-tbl td.g2e-tbl-title {
+	font-weight: bold;
+	width: 210px;
+}
+#g2e-container .g2e-confirm-tbl td.g2e-tbl-value {
+	background: none;
+	padding-left: 10px;
+	width: 100%;
+}
+#g2e-container .g2e-confirm-tbl td.g2e-editable:hover {
+	cursor: pointer;
+	background: #eee;
+}
+#g2e-container .g2e-confirm-tbl input,
+#g2e-container .g2e-confirm-tbl select {
+	background: none;
+	border: none;
+	border-radius: 0;
+	width: 100%;
+}
+#g2e-container .g2e-confirm-tbl .g2e-tbl-last {
+	border: none;
+}
+#g2e-container .g2e-confirm-tbl #g2e-confirm-tbl-diffexp td {
+	padding: 0;
+}
+
+/* Modal footer results
+ * -------------------- */
+#g2e-container #g2e-footer {
+	clear: both;
+	padding: 10px 0 0 10px;
+	min-height: 45px;
+}
+#g2e-container #g2e-footer > table {
+	/* Prevents the table's tds from expanding when content is inserted. */
+	table-layout: fixed;
+	width: 100%;
+}
+#g2e-container #g2e-footer > table td {
+	padding: 5px 10px 0 0;
+}
+#g2e-container .g2e-results {
+	clear: both;
+	display: none;
+}
+#g2e-container .g2e-results button {
+	display: inline;
+	margin-right: 5px;
+	min-width: 40px;
+	padding: 5px;
+}
+#g2e-container .g2e-results button:hover {
+	background: #0078C2;
+	cursor: pointer;
+}
+#g2e-container #g2e-footer table .g2e-tbl-title {
+	width: 110px;
+}
+
+/* Embedded button
+ * --------------- */
+#g2e-embedded-button {
+	color: #d90000;
+	cursor: pointer;
+}
+#g2e-embedded-button span {
+	display: inline-block;
+}
+#g2e-embedded-button span:hover {
+	text-decoration: underline;
+}
+#g2e-embedded-button b,
+#g2e-embedded-button span {
+	position: relative;
+	top: 8px;
+}
+#g2e-embedded-button img {
+	float: right;
+	width: 32px;
+}
+
+/* Process
+ * ------- */
+#g2e-container ol#g2e-process {
+	list-style: decimal;
+}
+
+/* Embedded table
+ * -------------- */
+#g2e-table-title {
+	color: #d90000;
+}
+
+/* jQuery UI and other overrides
+ * --------- */
+#g2e-container .g2e-lock,
+#g2e-container .g2e-lock:hover {
+	background: gray;
+}
+.g2e-tooltip {
+	color: black !important;
+	background: #FFFACD !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	border: 1px solid #ccc !important;
+}
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content {
+	background: #fff;
+	color: gray;
+	font-size: 10px;
+	z-index: 1001;
+	width: 100px;
+}
+.ui-tooltip,
+.ui-widget,
+.ui-corner-all,
+.ui-widget-content {
+	font-size: 10px !important;
+	border-radius: none !important;
+}
+.ui-state-focus {
+	background: #eee !important;
+}

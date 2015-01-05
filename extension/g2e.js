@@ -1,6 +1,10 @@
 
 var G2E = (function() {
 
+// This file is built by deploy.sh in the root directory.
+var EXTENSION_ID = "jmocdkgcpalhikedehcdnofimpgkljcj";
+var DEBUG = true;
+var SERVER = "http://localhost:8083/";
 
 var Comm = function(events, notifier, SERVER) {
 
@@ -1006,18 +1010,8 @@ var main = function() {
 	};
 
 	var init = function() {
-		var // Set these configuration values before deploying.
-
-			// Production
-            EXTENSION_ID = 'pcbdeobileclecleblcnadplfcicfjlp',
-			DEBUG = false,
-			SERVER = 'http://amp.pharm.mssm.edu/',
-			// Development
-			//EXTENSION_ID = 'jmocdkgcpalhikedehcdnofimpgkljcj',
-			//DEBUG = true,
-			//SERVER = 'http://localhost:8083/',
-
-			events = Events(),
+		// EXTENSION_ID, DEBUG, and SERVER are set in config.js via deploy.sh.
+	    var events = Events(),
 			notifier = Notifier(DEBUG),
 			html = Html(EXTENSION_ID),
 			baseScraper = BaseScraper(DEBUG, events),

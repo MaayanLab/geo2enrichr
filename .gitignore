@@ -30,3 +30,6 @@ venv/
 
 # Hopefully temporary
 probe2gene.py
+
+# VIM
+*.swp

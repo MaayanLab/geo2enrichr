@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
 
 	var src_files = [
+	    '../config.js',
 		'../Comm.js',
 		'../Events.js',
 		'../Html.js',
@@ -33,7 +34,7 @@ module.exports = function(grunt) {
 		concat: {
 			dist: {
 				src: full_files,
-				dest: '../extension/g2e.js',
+				dest: '../../extension/g2e.js',
 			}
 		}
 	});

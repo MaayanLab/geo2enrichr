@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 	<link rel='stylesheet' type='text/css' href='main.css'/>
-	<link rel='stylesheet' type='text/css' href='open-sans.css'/>
+	<link rel='stylesheet' type='text/css' href='../css/open-sans.css'/>
 </head>
 <body>
     <div id='sidebar'>
@@ -18,18 +18,12 @@
             <li><a href='#processing'>Data processing</a></li>
             <li>
                 <a href='#api'>API</a>
-                <!--<ul>
-                    <li>&#8211; dlgeo</li>
-                    <li>&#8211; diffexp</li>
-                    <li>&#8211; enrich</li>
-                    <li>&#8211; full (coming soon)</li>
-                </ul>-->          
             </li>
         </ul>
     </div>
     <div id='content'>
         <h2 id='title'>
-            <img id='logo' src='g2e-logo-50x50.png'/>
+            <img id='logo' src='../images/g2e-logo-50x50.png'/>
             <span>GEO2</span><span class='highlight'>Enrichr</span>
         </h2>
         <section id='introduction'>
@@ -121,71 +115,6 @@
                     <td><span class='mono'>http://amp.pharm.mssm.edu/g2e/full?accession=GDS5077&platform=GPL10558&control=GSM1071454-GSM1071455&experimental=GSM1071457-GSM1071456</span></td>
                 </tr>
             </table>
-            <!--<table>
-                <caption>dlgeo</caption>
-                <tr>
-                    <td>Description</td>
-                    <td>Downloads a SOFT file from GEO.</td>
-                </tr>
-                <tr>
-                    <td>Return value</td>
-                    <td>JSON containing the name of the downloaded, unzipped file, its directory on the server, and optional annotations.</td>
-                </tr>
-                <tr>
-                    <td>Req'd arguments</td>
-                    <td>accession</td>
-                </tr>
-                <tr>
-                    <td>Opt'l arguments</td>
-                    <td>organism, platform, cell, perturbation, gene</td>
-                </tr>
-                <tr>
-                    <td>Example URL</td>
-                    <td><span class='mono'>&#60;BASE_URL&#62;/dlgeo?accession=GDS5077</span></td>
-                </tr>
-            </table>
-            <table>
-                <caption>diffexp</caption>
-                <tr>
-                    <td>Description</td>
-                    <td>Parses and analyzes a SOFT file.</td>
-                </tr>
-                <tr>
-                    <td>Return value</td>
-                    <td>JSON containing the names of three downloadable <span class='mono'>.txt</span> files for each gene list: up, down, and combined.</td>
-                </tr>
-                <tr>
-                    <td>Req'd arguments</td>
-                    <td>filename, platform, control, experimental</td>
-                </tr>
-                <tr>
-                    <td>Opt'l arguments</td>
-                    <td>organism, cell, perturbation, gene, method, inclusion</td>
-                </tr>
-                <tr>
-                    <td>Example URL</td>
-                    <td><span class='mono'>&#60;BASE_URL&#62;/diffexp?filename=GDS5077_GPL10558-Homo+sapiens.soft&platform=GPL10558&method=&control=GSM1071454-GSM1071455&experimental=GSM1071457-GSM1071456</span></td>
-                </tr>
-            </table>
-            <table>
-                <caption>enrichr</caption>
-                <tr>
-                    <td>Description</td>
-                    <td>Submits gene lists to Enrichr.</td>
-                </tr>
-                <tr>
-                    <td>Return value</td>
-                    <td>JSON containing three links to Enrichr for up, down, and combined gene lists.</td>
-                </tr>
-                <tr>
-                    <td>Req'd arguments</td>
-                    <td>up, down, combined</td>
-                </tr>
-                <tr>
-                    <td>Example URL</td>
-                    <td><span class='mono'>&#60;BASE_URL&#62;/enrichr?up=GDS5077_GPL10558-Homo+sapiens_up.genes.txt&down=GDS5077_GPL10558-Homo+sapiens_down.genes.txt&combined=GDS5077_GPL10558-Homo+sapiens_combined.genes.txt</span></td>
-                </tr>
-            </table>-->
         </section>
     </div>
 </body>
