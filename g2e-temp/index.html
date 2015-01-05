@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GEO2Enrichr</title>
+	<meta charset='UTF-8'>
+	<meta content='width=device-width, initial-scale=1' name='viewport'/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+	<link rel='stylesheet' type='text/css' href='main.css'/>
+	<link rel='stylesheet' type='text/css' href='open-sans.css'/>
+</head>
+<body>
+    <div id='sidebar'>
+        <ul>
+            <li><a href='#introduction'>Introduction</a></li>
+            <li><a href='#installation'>Installation</a></li>
+            <li><a href='#tutorial'>Tutorial</a></li>
+            <li><a href='#processing'>Data processing</a></li>
+            <li>
+                <a href='#api'>API</a>
+                <!--<ul>
+                    <li>&#8211; dlgeo</li>
+                    <li>&#8211; diffexp</li>
+                    <li>&#8211; enrich</li>
+                    <li>&#8211; full (coming soon)</li>
+                </ul>-->          
+            </li>
+        </ul>
+    </div>
+    <div id='content'>
+        <h2 id='title'>
+            <img id='logo' src='g2e-logo-50x50.png'/>
+            <span>GEO2</span><span class='highlight'>Enrichr</span>
+        </h2>
+        <section id='introduction'>
+            <h3 class='first'>Introduction</h3>
+            <p>GEO2Enrichr is a <a href='http://en.wikipedia.org/wiki/Browser_extension' target='_blank'>Google Chrome Extension</a> and Python web application that helps you quickly and easily extract gene sets from the <a href='http://www.ncbi.nlm.nih.gov/geo/' target='_blank'>Gene Expression Omnibus</a> (GEO) and analyze these lists for common biological functions via <a href='http://amp.pharm.mssm.edu/Enrichr/' target='_blank'>Enrichr</a>.</p>
+            <p>The source code is hosted on <a href=''>GitHub</a>, and the project is available under the [?] license.</p>
+            </p>
+            <p>The application is being developed by the <a href='http://icahn.mssm.edu/research/labs/maayan-laboratory'>Ma'ayan Lab</a> at the <a href='http://icahn.mssm.edu/' target='_blank'>Icahn School of Medicine</a> at Mount Sinai. The work is funded by grant <a href=''>XXXXXXXXXX</a>.</p>
+        </section>
+        <section id='installation'>
+            <h3>Installation</h3>
+            <p>You can install GEO2Enrichr as an extension in your browser via the <a href='https://chrome.google.com/webstore/detail/geo2enrichr/pcbdeobileclecleblcnadplfcicfjlp' target='_blank'>Chrome Web Store</a>. Click the <strong>+FREE</strong> button to install the application.</p>
+            <p>The Chrome Web Store will ask you to accept GEO2Enrichr's permission settings. The application needs permission to make HTTP requests to <span class='underline'>amp.pharm.mssm.edu</span> for processing data on the back-end and to <span class='underline'>ncbi.nlm.nih.gov</span> for accessing GEO's API.</p>
+        </section>
+        <section id='tutorial'>
+            <h3>Tutorial</h3>
+            <p>GEO2Enrichr works by embedding additional functionality into every GEO page you visit. For example, once the Chrome Extension is installed, visit the page for <a href='http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS5077' target='_blank'>GDS5077</a> and click <strong>Compare 2 sets of samples</strong>. You should see a new button that says <strong>Pipe to Enrichr</strong>:</p>
+            <img src='screenshot-embedded.png'/>
+            <p>If you immediately click that button, you will receive a warning, "Please select 2 or more control samples." This warning occurs because GEO2Enrichr cannot function without data to download and analyze. Click <strong>Select which Samples to put in Group A and Group B</strong> and select two samples. In this example, GSM1071454 and GSM1071455 are the control samples and GSM1071457 and GSM1071457 are the treatment or condition samples:</p>
+            <img src='screenshot-samples.png'/>
+            <p>Now you can open GEO2Enrichr. Click <strong>Pipe to Enrichr</strong> to see the application's main modal box:</p>
+            <img src='screenshot-modal.png'/>
+            <p>GEO2Enrichr will <a href='http://en.wikipedia.org/wiki/Data_scraping#Screen_scraping' target='_blank'>screen scrape</a> the webpage for relevant data. Please confirm that the accession number, platform, organism, and sample files are all correct. You can edit the first three fields by clicking on their text. You must close GEO2Enrichr and re-select the samples via GEO if your samples are incorrect.</p>
+            <p>Please fill in any metadata about the experiment, such as cell type or tissue, perturbation, and manipulated gene (if relevant). This metadata will be used in your downloadable filenames and the description sent to Enrichr.</p>
+            <p>Finally, click <strong>Get gene lists</strong> to submit your data to GEO2Enrichr for data processing. Depending on the size of SOFT file and the number of samples selected, this can take anywhere from a few seconds to a minute or two. A progress bar will keep you posted. The output will be three links to Enrichr, one for up genes, one for down, and one for both, in addition to a button to download your gene lists as <span class='mono'>.txt</span> files.</p>
+        </section>
+        <section id='processing'>
+            <h3>Data processing</h3>
+            <p>Given an accession number, GEO2Enrichr will analyze your data by performing the following operations:</p>
+            <ol id="g2e-process">
+                <li>Download the associated SOFT file from GEO.</li>
+                <li>Discard data with missing values or one-to-many probe-to-gene mappings.</li>
+                <li>log2 transform the data if necessary.</li>
+                <li><a href='http://en.wikipedia.org/wiki/Quantile_normalization' target='_blank'>Quantile normalize</a> the data if necessary.</li>
+                <li>Average multiple probes to single genes.</li>
+                <li>Identify differentially expressed genes with the selected method, defaulting to the <a href='http://maayanlab.net/CD/' target='_blank'>characteristic direction</a>.</li>
+                <li>Write the the top and bottom differentially expressed genes into <span class='mono'>.txt</span> files.</li>
+                <li>Pipe the gene lists to Enrichr for further analysis.</li>
+	        </ol>
+        </section>
+        <section id='api'>
+            <h3>API</h3>
+            <p>If you would like to use GEO2Enrichr's back-end programmatically, you can do using the back-end's API. All requests should go to the <span class='underline'>http://amp.pharm.mssm.edu/g2e/full</span> endpoint:
+            </p>
+            <!-- http://localhost:8083/g2e/full?accession=GDS5077&platform=GPL10558&control=GSM1071454-GSM1071455&experimental=GSM1071457-GSM1071456 -->
+            <table>
+                <caption>Required arguments</caption>
+                <tr>
+                    <td>accession</td>
+                    <td>A valid <a href='http://en.wikipedia.org/wiki/Accession_number_%28bioinformatics%29' target='_blank'>accession number</a> for GEO, e.g. <span class='mono'>accession=GDS5077</span>.</td>
+                </tr>
+                <tr>
+                    <td>platform</td>
+                    <td>The associated platform for a given accession number, e.g. <span class='mono'>platform=GPL10558</span>.</td>
+                </tr>
+                <tr>
+                    <td>control</td>
+                    <td>A hyphen-separated list of GSM files, e.g.<span class='mono'>control=GSM1071454-GSM1071455</span></td>
+                </tr>
+                <tr>
+                    <td>experimental</td>
+                    <td>A hyphen-separated list of GSM files, e.g.<span class='mono'>experimental=GSM1071457-GSM1071456</span></td>
+                </tr>
+            </table>
+            <table>
+                <caption>Optional arguments</caption>
+                <tr>
+                    <td>organism</td>
+                    <td>An organism, e.g. <span class='mono'>organism=Homo+sapiens</span>.<em> Note that GEO2Enrichr and Enrichr currently only support human and mouse genes</em>.</td>
+                </tr>
+                <tr>
+                    <td>cell</td>
+                    <td>The cell or tissue type used in the experiment, e.g. <span class='mono'>cell=RUES2</span>.</td>
+                </tr>
+                <tr>
+                    <td>perturbation</td>
+                    <td>A perturbation, e.g. <span class='mono'>perturbation=depleted+TMEM88</span></td>
+                </tr>
+                <tr>
+                    <td>gene</td>
+                    <td>If relevant, the manipulated gene.</td>
+                </tr>
+            </table>
+
+            <table>
+                <caption>Example</caption>
+                <tr>
+                    <td>Valid request</td>
+                    <td><span class='mono'>http://amp.pharm.mssm.edu/g2e/full?accession=GDS5077&platform=GPL10558&control=GSM1071454-GSM1071455&experimental=GSM1071457-GSM1071456</span></td>
+                </tr>
+            </table>
+            <!--<table>
+                <caption>dlgeo</caption>
+                <tr>
+                    <td>Description</td>
+                    <td>Downloads a SOFT file from GEO.</td>
+                </tr>
+                <tr>
+                    <td>Return value</td>
+                    <td>JSON containing the name of the downloaded, unzipped file, its directory on the server, and optional annotations.</td>
+                </tr>
+                <tr>
+                    <td>Req'd arguments</td>
+                    <td>accession</td>
+                </tr>
+                <tr>
+                    <td>Opt'l arguments</td>
+                    <td>organism, platform, cell, perturbation, gene</td>
+                </tr>
+                <tr>
+                    <td>Example URL</td>
+                    <td><span class='mono'>&#60;BASE_URL&#62;/dlgeo?accession=GDS5077</span></td>
+                </tr>
+            </table>
+            <table>
+                <caption>diffexp</caption>
+                <tr>
+                    <td>Description</td>
+                    <td>Parses and analyzes a SOFT file.</td>
+                </tr>
+                <tr>
+                    <td>Return value</td>
+                    <td>JSON containing the names of three downloadable <span class='mono'>.txt</span> files for each gene list: up, down, and combined.</td>
+                </tr>
+                <tr>
+                    <td>Req'd arguments</td>
+                    <td>filename, platform, control, experimental</td>
+                </tr>
+                <tr>
+                    <td>Opt'l arguments</td>
+                    <td>organism, cell, perturbation, gene, method, inclusion</td>
+                </tr>
+                <tr>
+                    <td>Example URL</td>
+                    <td><span class='mono'>&#60;BASE_URL&#62;/diffexp?filename=GDS5077_GPL10558-Homo+sapiens.soft&platform=GPL10558&method=&control=GSM1071454-GSM1071455&experimental=GSM1071457-GSM1071456</span></td>
+                </tr>
+            </table>
+            <table>
+                <caption>enrichr</caption>
+                <tr>
+                    <td>Description</td>
+                    <td>Submits gene lists to Enrichr.</td>
+                </tr>
+                <tr>
+                    <td>Return value</td>
+                    <td>JSON containing three links to Enrichr for up, down, and combined gene lists.</td>
+                </tr>
+                <tr>
+                    <td>Req'd arguments</td>
+                    <td>up, down, combined</td>
+                </tr>
+                <tr>
+                    <td>Example URL</td>
+                    <td><span class='mono'>&#60;BASE_URL&#62;/enrichr?up=GDS5077_GPL10558-Homo+sapiens_up.genes.txt&down=GDS5077_GPL10558-Homo+sapiens_down.genes.txt&combined=GDS5077_GPL10558-Homo+sapiens_combined.genes.txt</span></td>
+                </tr>
+            </table>-->
+        </section>
+    </div>
+</body>
+</html>
