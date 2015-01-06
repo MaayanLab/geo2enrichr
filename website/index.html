@@ -6,8 +6,8 @@
 	<meta content='width=device-width, initial-scale=1' name='viewport'/>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-	<link rel='stylesheet' type='text/css' href='main.css'/>
-	<link rel='stylesheet' type='text/css' href='../css/open-sans.css'/>
+	<link rel='stylesheet' type='text/css' href='css/main.css'/>
+	<link rel='stylesheet' type='text/css' href='css/open-sans.css'/>
 </head>
 <body>
     <div id='sidebar'>
@@ -23,7 +23,7 @@
     </div>
     <div id='content'>
         <h2 id='title'>
-            <img id='logo' src='../images/g2e-logo-50x50.png'/>
+            <img id='logo' src='images/g2e-logo-50x50.png'/>
             <span>GEO2</span><span class='highlight'>Enrichr</span>
         </h2>
         <section id='introduction'>
@@ -41,11 +41,11 @@
         <section id='tutorial'>
             <h3>Tutorial</h3>
             <p>GEO2Enrichr works by embedding additional functionality into every GEO page you visit. For example, once the Chrome Extension is installed, visit the page for <a href='http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS5077' target='_blank'>GDS5077</a> and click <strong>Compare 2 sets of samples</strong>. You should see a new button that says <strong>Pipe to Enrichr</strong>:</p>
-            <img src='screenshot-embedded.png'/>
+            <img src='images/screenshot-embedded.png'/>
             <p>If you immediately click that button, you will receive a warning, "Please select 2 or more control samples." This warning occurs because GEO2Enrichr cannot function without data to download and analyze. Click <strong>Select which Samples to put in Group A and Group B</strong> and select two samples. In this example, GSM1071454 and GSM1071455 are the control samples and GSM1071457 and GSM1071457 are the treatment or condition samples:</p>
-            <img src='screenshot-samples.png'/>
+            <img src='images/screenshot-samples.png'/>
             <p>Now you can open GEO2Enrichr. Click <strong>Pipe to Enrichr</strong> to see the application's main modal box:</p>
-            <img src='screenshot-modal.png'/>
+            <img src='images/screenshot-modal.png'/>
             <p>GEO2Enrichr will <a href='http://en.wikipedia.org/wiki/Data_scraping#Screen_scraping' target='_blank'>screen scrape</a> the webpage for relevant data. Please confirm that the accession number, platform, organism, and sample files are all correct. You can edit the first three fields by clicking on their text. You must close GEO2Enrichr and re-select the samples via GEO if your samples are incorrect.</p>
             <p>Please fill in any metadata about the experiment, such as cell type or tissue, perturbation, and manipulated gene (if relevant). This metadata will be used in your downloadable filenames and the description sent to Enrichr.</p>
             <p>Finally, click <strong>Get gene lists</strong> to submit your data to GEO2Enrichr for data processing. Depending on the size of SOFT file and the number of samples selected, this can take anywhere from a few seconds to a minute or two. A progress bar will keep you posted. The output will be three links to Enrichr, one for up genes, one for down, and one for both, in addition to a button to download your gene lists as <span class='mono'>.txt</span> files.</p>

@@ -4,13 +4,19 @@
 
 # CSS
 # -----------------------------------------------------------------------------
-cp css/main.css extension/main.css
+cp css/extension-main.css extension/main.css
 cp css/open-sans.css extension/open-sans.cess
+
+cp css/website-main.css website/css/main.css
+cp css/open-sans.css website/css/open-sans.cess
 
 # Images
 # -----------------------------------------------------------------------------
 cp images/g2e-logo-50x50.png extension/images/g2e-logo-50x50.png
 cp images/g2e-logo-128x128.png extension/images/g2e-logo-128x128.png
+
+cp images/g2e-logo-50x50.png website/images/g2e-logo-50x50.png
+cp images/g2e-logo-128x128.png website/images/g2e-logo-128x128.png
 
 # JS
 # -----------------------------------------------------------------------------
@@ -21,7 +27,7 @@ JS_CONFIG='js/config.js'
 if [ "$1" = "dev" ]; then
     echo '--------------------- dev ---------------------'
     printf '%s\n' '// This file is built by deploy.sh in the root directory.' >> $JS_CONFIG
-    printf '%s\n' 'var EXTENSION_ID = "jmocdkgcpalhikedehcdnofimpgkljcj";' >> $JS_CONFIG
+    printf '%s\n' 'var EXTENSION_ID = "ggnfmgkbdnedgillmfoakkajnpeakbel";' >> $JS_CONFIG
     printf '%s\n' 'var DEBUG = true;' >> $JS_CONFIG
     printf '%s'   'var SERVER = "http://localhost:8083/";' >> $JS_CONFIG
 else
