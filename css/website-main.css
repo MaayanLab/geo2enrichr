@@ -84,6 +84,13 @@ strong {
 #content #title {
 	font-size: 40px;
 	font-family: 'Open Sans';
+	margin-bottom: 0;
+}
+#content #subtitle {
+    font-size: 14px;
+	font-family: 'Open Sans';
+	font-weight: normal;
+	margin: 0 0 40px 0;
 }
 #content #title span {
 	position: relative;
@@ -119,4 +126,7 @@ strong {
 }
 #content table tr td:last-child {
     word-wrap: break-word;
+}
+.caption {
+    font-style: italic;
 }
