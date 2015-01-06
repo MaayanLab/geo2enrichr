@@ -8,7 +8,7 @@ cp css/extension-main.css extension/main.css
 cp css/open-sans.css extension/open-sans.cess
 
 cp css/website-main.css website/css/main.css
-cp css/open-sans.css website/css/open-sans.cess
+cp css/open-sans.css website/css/open-sans.css
 
 # Images
 # -----------------------------------------------------------------------------
