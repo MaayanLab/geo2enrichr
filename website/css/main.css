@@ -81,10 +81,14 @@ strong {
 #content img {
     width: 100%;
 }
-#content #title {
+#content #title,
+#content #title a{
 	font-size: 40px;
 	font-family: 'Open Sans';
 	margin-bottom: 0;
+}
+#content #title a:hover {
+    text-decoration: none;
 }
 #content #subtitle {
     font-size: 14px;
