@@ -7,13 +7,14 @@ li {
     font-size: 13px;
 }
 a {
-    color: #009DFF;
-    font-family: Arial, Sans-serif;
-    font-size: 13px;
     text-decoration: none;
 }
 a:hover {
     text-decoration: underline;
+}
+a:visited,
+a:active {
+    color: black;
 }
 strong {
     font-weight: bold;
@@ -64,6 +65,12 @@ strong {
     position: relative;
     width: 550px;
 }
+#content section a {
+    color: #009DFF;
+    font-family: Arial, Sans-serif;
+    font-size: 13px;
+    text-decoration: none;
+}
 #content h3 {
     padding: 30px 0 0 0;
 }
@@ -95,6 +102,12 @@ strong {
 	font-family: 'Open Sans';
 	font-weight: normal;
 	margin: 0 0 40px 0;
+}
+#content #subtitle a {
+    font-size: 14px;
+	font-family: 'Open Sans';
+	font-weight: bold;
+    cursor: pointer;	
 }
 #content #title span {
 	position: relative;
