@@ -2,9 +2,9 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var EXTENSION_ID = "pcbdeobileclecleblcnadplfcicfjlp";
-var DEBUG = false;
-var SERVER = "http://amp.pharm.mssm.edu/";
+var EXTENSION_ID = "ggnfmgkbdnedgillmfoakkajnpeakbel";
+var DEBUG = true;
+var SERVER = "http://localhost:8083/";
 
 var Comm = function(events, notifier, SERVER) {
 
@@ -416,10 +416,10 @@ var BaseScraper = function(DEBUG, events) {
 		},
 
 		getOptions: function($modal) {
-			var method = $modal.find('input[type=radio][name=method]:checked').val(),
-				cell = $modal.find('#g2e-confirm-cell td').eq(1).text(),
-				perturbation = $modal.find('#g2e-confirm-pert td').eq(1).text(),
-				gene = $modal.find('#g2e-confirm-gene #genemap').val();
+			var method = $modal.find('#g2e-confirm-tbl-diffexp option:selected').val(),
+				cell = $modal.find('#g2e-confirm-cell td.g2e-tbl-value input').val(),
+				perturbation = $modal.find('#g2e-confirm-pert td.g2e-tbl-value input').val(),
+			    gene = $modal.find('#g2e-confirm-gene #genemap').val();
 
 			if (method) {
 				scrapedData.method = method;
@@ -440,7 +440,7 @@ var BaseScraper = function(DEBUG, events) {
 				$el = $($el);
 			}
 			return $el.contents().filter(function() {
-				return this.nodeType == 3;
+				return this.nodeType === 3;
 			}).text().trim();
 		},
 
@@ -801,6 +801,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			  // This code smells like jQuery spaghetti.
 			  .off()
 			  .click(function() {
+			      debugger;
 				  var scrapedData = scraper.getData($modal);
 				  if (isValidData(scrapedData)) {
 					  $progress.show();

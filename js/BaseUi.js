@@ -156,6 +156,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 			  // This code smells like jQuery spaghetti.
 			  .off()
 			  .click(function() {
+			      debugger;
 				  var scrapedData = scraper.getData($modal);
 				  if (isValidData(scrapedData)) {
 					  $progress.show();
