@@ -33,7 +33,13 @@ class RequestParams:
 		}
 
 		# We use a namedtuple to retain order yet legibility.
-		# Order is important so we can stringify the tuple in a consistent format.
+		# Order is important so we can stringify the tuple in a consistent
+		# format.
+		#
+		# TODO: "platform" is *not* metadata. It is absolutely required for
+		# this application to work properly. "platform" was added to the
+		# "metadata" tuple to make adding it to the filename easier. This was
+		# a mistake and should be undone when possible.
 		platform       = args.get('platform').encode('ascii')     if 'platform'     in args else None
 		organism       = args.get('organism').encode('ascii')     if 'organism'     in args else None
 		cell           = args.get('cell').encode('ascii')         if 'cell'         in args else None

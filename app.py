@@ -1,6 +1,6 @@
 """This module has the API endpoints for GEO2Enrichr.
 
-__authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
+__authors__ = "Gregory Gundersen"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
@@ -102,7 +102,6 @@ def diffexp_endpoint():
 	# Output filename should be put into database with identifier and returned
 	# ID should be returned to user.
 
-	db.increment_extraction_count()
 	return flask.jsonify(output_files)
 
 
