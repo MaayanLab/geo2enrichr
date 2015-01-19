@@ -2,9 +2,9 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var EXTENSION_ID = "ggnfmgkbdnedgillmfoakkajnpeakbel";
-var DEBUG = true;
-var SERVER = "http://localhost:8083/";
+var EXTENSION_ID = "pcbdeobileclecleblcnadplfcicfjlp";
+var DEBUG = false;
+var SERVER = "http://amp.pharm.mssm.edu/";
 
 var Comm = function(events, notifier, SERVER) {
 
@@ -385,34 +385,35 @@ var Notifier = function(DEBUG) {
 
 var BaseScraper = function(DEBUG, events) {
 
-	var scrapedData = {};
+	var sData = {};
 
 	var genemap;
 
 	return {
 
 		getData: function($modal) {
-			// getSamples() returns an object rather than mutating scrapedData
+			// getSamples() returns an object rather than mutating sData
 			// because the function must be mixed in at runtime.
 			var samples = this.getSamples();
 			if ($modal) {
 				this.getOptions($modal);
 			}
 
-			scrapedData.control      = samples.control;
-			scrapedData.experimental = samples.experimental;
-			scrapedData.accession    = this.getAccession();
-			scrapedData.organism     = this.getOrganism();
-			scrapedData.platform     = this.getPlatform();
+			sData.control      = samples.control;
+			sData.experimental = samples.experimental;
+			// Short circuit select saved data; this represents user input.
+			sData.accession    = sData.accession || this.getAccession();
+			sData.organism     = sData.organism || this.getOrganism();
+			sData.platform     = sData.platform || this.getPlatform();
 
-			return $.extend({}, scrapedData);
+			return $.extend({}, sData);
 		},
 
 		setData: function(key, val) {
 			if (key == 'cell' || key == 'platform') {
 				val = val.replace(/_|-|\./g, '');
 			}
-			scrapedData[key] = val;
+			sData[key] = val;
 		},
 
 		getOptions: function($modal) {
@@ -422,16 +423,16 @@ var BaseScraper = function(DEBUG, events) {
 			    gene = $modal.find('#g2e-confirm-gene #genemap').val();
 
 			if (method) {
-				scrapedData.method = method;
+				sData.method = method;
 			}
 			if (cell) {
-				scrapedData.cell = cell.replace(/_|\.|-/, '');
+				sData.cell = cell.replace(/_|\.|-/, '');
 			}
 			if (perturbation) {
-				scrapedData.perturbation = perturbation.replace(/_|\.|-/, '');	
+				sData.perturbation = perturbation.replace(/_|\.|-/, '');	
 			}
 			if (gene) {
-				scrapedData.gene = gene;
+				sData.gene = gene;
 			}
 		},
 
@@ -797,11 +798,10 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		$modal.find('#g2e-submit-btn')
 			  // This doesn't do anything the first time.
 			  .removeClass('g2e-lock')
-			  // Remove any event handlers, just to be save.
+			  // Remove any event handlers, just to be safe.
 			  // This code smells like jQuery spaghetti.
 			  .off()
 			  .click(function() {
-			      debugger;
 				  var scrapedData = scraper.getData($modal);
 				  if (isValidData(scrapedData)) {
 					  $progress.show();
