@@ -152,11 +152,10 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		$modal.find('#g2e-submit-btn')
 			  // This doesn't do anything the first time.
 			  .removeClass('g2e-lock')
-			  // Remove any event handlers, just to be save.
+			  // Remove any event handlers, just to be safe.
 			  // This code smells like jQuery spaghetti.
 			  .off()
 			  .click(function() {
-			      debugger;
 				  var scrapedData = scraper.getData($modal);
 				  if (isValidData(scrapedData)) {
 					  $progress.show();
