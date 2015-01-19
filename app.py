@@ -12,6 +12,7 @@ import flask
 
 import cleaner
 from crossdomain import crossdomain
+import database as db
 import diffexper
 import enrichrlink
 import geodownloader
@@ -101,6 +102,7 @@ def diffexp_endpoint():
 	# Output filename should be put into database with identifier and returned
 	# ID should be returned to user.
 
+	db.increment_extraction_count()
 	return flask.jsonify(output_files)
 
 
@@ -116,6 +118,18 @@ def enrichr_endpoint():
 		'up': enrichrlink.get_link(rp.up, rp.up.split('.')[0]),
 		'down': enrichrlink.get_link(rp.down, rp.down.split('.')[0]),
 		'combined': enrichrlink.get_link(rp.combined, rp.combined.split('.')[0])
+	})
+
+
+@app.route(ENTRY_POINT + '/count')
+@crossdomain(origin='*')
+def count_entpoint():
+	"""Returns the number of gene lists that have been extracted from GEO.
+	"""
+
+	return flask.jsonify({
+		'status': 'ok',
+		'extraction_count': db.get_extraction_count()
 	})
 
 
