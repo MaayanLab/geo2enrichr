@@ -17,7 +17,9 @@ import diffexper
 import enrichrlink
 import geodownloader
 import filewriter
-from requestparams import RequestParams
+import json
+from request import RequestArgs
+from response import make_json_response
 import softparser
 
 
@@ -33,11 +35,12 @@ if app.debug:
 	mimetypes.add_type('application/x-please-download-me', '.txt')
 
 
+ALLOWED_ORIGINS = '*'
 ENTRY_POINT = '/g2e'
 
 
-@app.route(ENTRY_POINT)
-@crossdomain(origin='*', methods=['GET'])
+@app.route(ENTRY_POINT, methods=['GET'])
+@crossdomain(origin='*')
 def index_endpoint():
 	return flask.jsonify({
 		'status': 'ok',
@@ -45,34 +48,34 @@ def index_endpoint():
 	})
 
 
-@app.route(ENTRY_POINT + '/dlgeo', methods=['POST'])
-@crossdomain(origin='*')
+@app.route(ENTRY_POINT + '/dlgeo', methods=['POST', 'OPTIONS'])
+@crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def dlgeo_endpoint():
 	"""Takes an an accession number and optional annotations and downloads the
 	file from GEO.
 	"""
 
 	# TODO: Check if the file already exists on the file system.
-	rp = RequestParams(flask.request.args)
-	downloaded_file = geodownloader.download(rp.accession, rp.metadata)
-	return flask.jsonify(downloaded_file.__dict__)
+	args = RequestArgs(flask.request.json)
+	downloaded_file = geodownloader.download(args.accession, args.metadata)
+	return make_json_response(downloaded_file.__dict__)
 
 
-@app.route(ENTRY_POINT + '/diffexp', methods=['POST'])
-@crossdomain(origin='*')
+@app.route(ENTRY_POINT + '/diffexp', methods=['POST', 'OPTIONS'])
+@crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def diffexp_endpoint():
 	"""Parses an existing SOFT file on the server, analyzes the contents for
 	differentially expressed genes, and writes the gene list and pvalues to
 	new .txt files.
 	"""
 
-	rp = RequestParams(flask.request.args)
+	args = RequestArgs(flask.request.json)
 
 	# Return early if the platform is not supported.
-	if not softparser.platform_supported(rp.metadata.platform):
-		return flask.jsonify({
+	if not softparser.platform_supported(args.metadata.platform):
+		return make_json_response({
 			'status': 'error',
-			'message': 'Platform ' + rp.metadata.platform + ' is not supported.'
+			'message': 'Platform ' + args.metadata.platform + ' is not supported.'
 		})
 
 	# * WARNING *
@@ -84,17 +87,17 @@ def diffexp_endpoint():
 
 	# Step 1: Parse soft file.
 	# Also discard bad data and convert probe IDs to gene symbols.
-	A, B, genes, conversion_pct = softparser.parse(rp.filename, rp.metadata.platform, rp.A_cols, rp.B_cols)
+	A, B, genes, conversion_pct = softparser.parse(args.filename, args.metadata.platform, args.A_cols, args.B_cols)
 
 	# Step 2: Clean data.
 	# Also, if necessary, take log2 of data and quantile normalize it.
 	A, B, genes = cleaner.normalize(A, B, genes)
 
 	# Step 3: Identify differential expression.
-	gene_pvalue_pairs = diffexper.analyze(A, B, genes, rp.config, rp.filename)
+	gene_pvalue_pairs = diffexper.analyze(A, B, genes, args.config, args.filename)
 
 	# Step 4: Generate output files and return to user.
-	output_files = filewriter.output_gene_pvalue_pairs(rp.filename, gene_pvalue_pairs)
+	output_files = filewriter.output_gene_pvalue_pairs(args.filename, gene_pvalue_pairs)
 	output_files['status'] = 'ok'
 	output_files['conversion_pct'] = str(conversion_pct)
 
@@ -102,26 +105,26 @@ def diffexp_endpoint():
 	# Output filename should be put into database with identifier and returned
 	# ID should be returned to user.
 
-	return flask.jsonify(output_files)
+	return make_json_response(output_files)
 
 
-@app.route(ENTRY_POINT + '/enrichr', methods=['POST'])
-@crossdomain(origin='*')
+@app.route(ENTRY_POINT + '/enrichr', methods=['POST', 'OPTIONS'])
+@crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def enrichr_endpoint():
 	"""Parses any files on the server and returns a valid Enrichr link.
 	"""
 
-	rp = RequestParams(flask.request.args)
+	args = RequestArgs(flask.request.json)
 	return flask.jsonify({
 		'status': 'ok',
-		'up': enrichrlink.get_link(rp.up, rp.up.split('.')[0]),
-		'down': enrichrlink.get_link(rp.down, rp.down.split('.')[0]),
-		'combined': enrichrlink.get_link(rp.combined, rp.combined.split('.')[0])
+		'up': enrichrlink.get_link(args.up, args.up.split('.')[0]),
+		'down': enrichrlink.get_link(args.down, args.down.split('.')[0]),
+		'combined': enrichrlink.get_link(args.combined, args.combined.split('.')[0])
 	})
 
 
 @app.route(ENTRY_POINT + '/count', methods=['GET'])
-@crossdomain(origin='*')
+@crossdomain(origin=ALLOWED_ORIGINS)
 def count_entpoint():
 	"""Returns the number of gene lists that have been extracted from GEO.
 	"""
@@ -133,7 +136,7 @@ def count_entpoint():
 
 
 @app.route(ENTRY_POINT + '/diseases', methods=['GET'])
-@crossdomain(origin='*')
+@crossdomain(origin=ALLOWED_ORIGINS)
 def rare_diseases_endpoint():
 	"""Returns a list of rare diseases.
 	"""
