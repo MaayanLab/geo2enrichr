@@ -40,8 +40,19 @@ fi
 
 # Then build with grunt
 # -----------------------------------------------------------------------------
-grunt --gruntfile js/grunt/gruntfile.js build
+printf '%s\n' 'Building JavaScript'
+grunt --gruntfile js/grunt/gruntfile.js build > /dev/null
+
+# Run unit tests
+# -----------------------------------------------------------------------------
+printf '%s\n' 'Running Python unit tests'
+nosetests --quiet > /dev/null
 
 # All files should be in extension/ now.
 # -----------------------------------------------------------------------------
-zip -r extension.zip extension/
+printf '%s\n' 'Zipping extension'
+zip -r extension.zip extension/ > /dev/null
+
+# Done!
+# -----------------------------------------------------------------------------
+printf '%s\n' 'Done!'
