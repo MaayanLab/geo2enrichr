@@ -15,8 +15,8 @@ var Html = function(EXTENSION_ID) {
 				'</div>' +
 				'<table id="g2e-main-tbl">' +
 					'<tr>' +
-						'<td id="g2e-confirm" class="g2e-column g2e-left">' +
-							'<div class="g2e-lowlight">Please confirm that your data is correct. An asterisk denotes a required field.</div>' +
+						'<td id="g2e-confirm">' +
+							'<div class="g2e-lowlight">Please confirm that your data is correct, *required.</div>' +
 							'<table class="g2e-confirm-tbl">' +
 								'<tr id="g2e-confirm-tbl-diffexp">' +
 									'<td class="g2e-tbl-title">' +
@@ -50,7 +50,7 @@ var Html = function(EXTENSION_ID) {
 									'<td class="g2e-tbl-value"></td>' +
 								'</tr>' +
 							'</table>' +
-							'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
+							'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations, **if relevant.</div>' +
 							'<table class="g2e-confirm-tbl">' +
 								'<tr id="g2e-confirm-cell">' +
 									'<td class="g2e-tbl-title">' +
@@ -68,30 +68,25 @@ var Html = function(EXTENSION_ID) {
 										'<input placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-gene" class="ui-widget g2e-tbl-last">' +
+								'<tr id="g2e-confirm-gene" class="ui-widget">' +
 									'<td class="g2e-tbl-title">' +
-										'<label for="genemap">Manipulated gene (if relevant)</label>' +
+										'<label for="geneList">Manipulated gene**</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value">' +
+										'<input id="geneList" placeholder="No data">' +
+									'</td>' +
+								'</tr>' +
+
+
+								'<tr id="g2e-confirm-disease" class="ui-widget g2e-tbl-last">' +
+									'<td class="g2e-tbl-title">' +
+										'<label for="diseaseList">Rare disease**</label>' +
 									'</td>' +
 									'<td class="g2e-tbl-value g2e-tbl-last">' +
-										'<input id="genemap" placeholder="No data">' +
+										'<input id="diseaseList" placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
 							'</table>' +
-						'</td>' +
-						'<td class="g2e-column g2e-right">' +
-							'<p>GEO2Enrichr performs the following operations:</p>' +
-							'<ol id="g2e-process">' +
-								'<li>Downloads SOFT file from GEO.</li>' +
-								'<li >Discards data with missing values or one-to-many probe-to-gene mappings.</li>' +
-								'<li>log2 transforms the data if necessary.</li>' +
-								'<li>Quantile normalizes the data if necessary.</li>' +
-								'<li>Averages multiple probes to single genes.</li>' +
-								'<li>Identifies differentially expressed genes with the selected method.</li>' +
-								'<li>Returns the top and bottom differentially expressed genes.</li>' +
-								'<li>Pipes the gene lists to <a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> for further analysis.</li>' +
-							'</ol>' +
-							'<p>After the data is processed, you will be able to download your gene lists and open them directly in Enrichr.</p>' +
-							'<p id="g2e-credits">GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
 						'</td>' +
 					'</tr>' +
 				'</table>' +
@@ -99,7 +94,7 @@ var Html = function(EXTENSION_ID) {
 					'<table>' +
 						'<tr>' +
 							'<td id="g2e-actions" class="g2e-tbl-title">' +
-								'<button id="g2e-submit-btn" class="g2e-btn">Get gene lists</button>' +
+								'<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
 							'</td>' +
 							'<td id="g2e-progress-bar">' +
 								'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
@@ -126,8 +121,12 @@ var Html = function(EXTENSION_ID) {
 								'<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
 							'</td>' +
 						'</tr>' +
-					'</div>' +
-				'</div>' +
+					'</table>' +
+                    '<p id="g2e-credits">' + 
+                        'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
+                        ' See the <a href="http://maayanlab.net/g2e/" target="_blank">documentation</a> for details.' +
+                    '</p>' +
+                '</div>' +
 			'</div>' +
 		'</div>';
 

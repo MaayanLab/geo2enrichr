@@ -32,7 +32,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	
 	var steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 
-	var genemap, $overlay, $modal, $progress, $results;
+	var geneList, $overlay, $modal, $progress, $results;
 
 	// This is called once at startup. All variables and bindings should be permanent.
 	var init = function() {
@@ -211,7 +211,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		// * WARNINGS *
 		// It is important to verify that the user has *tried* to select a gene before warning them.
 		// $.inArray() returns -1 if the value is not found. Do not check for truthiness.
-		if (genemap && data.gene && $.inArray(data.gene, genemap) === -1) {
+		if (geneList && data.gene && $.inArray(data.gene, geneList) === -1) {
 			notifier.warn('Please input a valid gene.');
 			return false;
 		}
@@ -223,15 +223,26 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		resetFooter();
 	});
 
-	events.on('genemapDownloaded', function(data) {
-		genemap = data;
-		$('#genemap').autocomplete({
+	events.on('geneListFetched', function(geneList) {
+		$('#geneList').autocomplete({
 			source: function(request, response) {
-				var results = $.ui.autocomplete.filter(genemap, request.term);
+				var results = $.ui.autocomplete.filter(geneList, request.term);
 				response(results.slice(0, 10));
 			},
 			minLength: 2,
-			delay: 500,
+			delay: 250,
+			autoFocus: true
+		});
+	});
+
+	events.on('rareDiseasesFetched', function(diseaseList) {
+		$('#diseaseList').autocomplete({
+			source: function(request, response) {
+				var results = $.ui.autocomplete.filter(diseaseList, request.term);
+				response(results.slice(0, 10));
+			},
+			minLength: 2,
+			delay: 250,
 			autoFocus: true
 		});
 	});

@@ -39,8 +39,6 @@ var main = function() {
 			comm.fetchMetadata(scraper.getAccessionFromUrl());
 		}
 
-		// Fetch and store the gene map for later.
-		comm.fetchGenemap();
 		ui.init();
 		notifier.log('g2e loaded.');
 	};

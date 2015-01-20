@@ -1,8 +1,7 @@
 
 var Comm = function(events, notifier, SERVER) {
 
-	var ENTRY_POINT = 'g2e/',
-		fileForDownload = [];
+	var fileForDownload = [];
 
 	// We need to make back-to-back AJAX requests to get the relevant data.
 	// Querying GEO's esearch endpoint with an accession number returns some JSON with an ID.
@@ -46,9 +45,10 @@ var Comm = function(events, notifier, SERVER) {
 				});
 
 			return $.ajax({
-				url: SERVER + ENTRY_POINT + endpoint + qs,
-				type: 'GET',
+				url: SERVER + endpoint + qs,
+				type: 'POST',
 				success: function(data) {
+				    debugger;
 					if (data.status === 'error') {
 						errorHandler(data);
 						return;
@@ -72,8 +72,8 @@ var Comm = function(events, notifier, SERVER) {
 				});
 
 			return $.ajax({
-				url: SERVER + ENTRY_POINT + endpoint + qs,
-				type: 'GET',
+				url: SERVER + endpoint + qs,
+				type: 'POST',
 				success: function(data) {
 					if (data.status === 'error') {
 						errorHandler(data);
@@ -84,8 +84,8 @@ var Comm = function(events, notifier, SERVER) {
 					notifier.log(data);
 					events.fire('progressBar');
 					events.fire('dataDiffExped', {
-						'up': SERVER + ENTRY_POINT + DIR + data.up,
-						'down': SERVER + ENTRY_POINT + DIR + data.down
+						'up': SERVER + DIR + data.up,
+						'down': SERVER + DIR + data.down
 					});
 				}
 			});
@@ -100,8 +100,8 @@ var Comm = function(events, notifier, SERVER) {
 				});
 
 			return $.ajax({
-				url: SERVER + ENTRY_POINT + endpoint + qs,
-				type: 'GET',
+				url: SERVER + endpoint + qs,
+				type: 'POST',
 				success: function(data) {
 					if (data.status === 'error') {
 						errorHandler(data);
@@ -119,16 +119,27 @@ var Comm = function(events, notifier, SERVER) {
 		dlgeo().then(diffexp, $.noop).then(enrichr, $.noop);
 	};
 
-	var fetchGenemap = function() {
+	var fetchGeneList = function() {
 		$.ajax({
 			url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
 			type: 'GET',
 			dataType: 'JSON',
 			success: function(data) {
-				events.fire('genemapDownloaded', data);
+				events.fire('geneListFetched', data);
 			}
 		});
-	};
+	}();
+
+	var fetchRareDiseases = function() {
+ 		$.ajax({
+			url: SERVER + 'diseases',
+			type: 'GET',
+			dataType: 'JSON',
+			success: function(data) {
+				events.fire('rareDiseasesFetched', data.rare_diseases);
+			}
+		});       
+	}();
 
 	var errorHandler = function(data) {
 		events.fire('requestFailed', data);
@@ -136,7 +147,6 @@ var Comm = function(events, notifier, SERVER) {
 
 	return {
 		downloadDiffExp: downloadDiffExp,
-		fetchMetadata: fetchMetadata,
-		fetchGenemap: fetchGenemap
+		fetchMetadata: fetchMetadata
 	};
 };

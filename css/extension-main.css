@@ -15,11 +15,11 @@
 	border: 1px solid #808080;
 	box-shadow: 0 4px 16px rgba(0,0,0,.2);
 	left: 50%;
-	margin-left: -450px;
-	padding: 10px;
+	margin-left: -370px;
+	padding: 20px;
 	position: fixed;
 	top: 70px;
-	width: 840px;
+	width: 700px;
 }
 #g2e-container p,
 #g2e-container span,
@@ -92,7 +92,7 @@
 	margin: 0;
 	padding: 0;
 }
-#g2e-container .g2e-column {
+/*#g2e-container .g2e-column {
 	padding: 10px;
 }
 #g2e-container .g2e-column.g2e-left {
@@ -101,7 +101,7 @@
 #g2e-container .g2e-column.g2e-right {
 	vertical-align: top;
 	width: 300px;
-}
+}*/
 
 /* Modal title
  * ----------- */
@@ -140,17 +140,6 @@
 }
 #g2e-container #g2e-title #g2e-close-btn:hover {
 	color: #696969;
-}
-
-/* Modal form
- * ---------- */
-#g2e-container .g2e-right ol {
-	padding-left: 20px;
-}
-#g2e-container .g2e-right #g2e-credits,
-#g2e-container .g2e-right #g2e-credits a {
-	font-style: italic;
-	font-size: 12px;
 }
 
 /* Modal footer progress bar
@@ -216,6 +205,7 @@
 	background: none;
 	border: none;
 	border-radius: 0;
+	font-size: 13px;
 	width: 100%;
 }
 #g2e-container .g2e-confirm-tbl .g2e-tbl-last {
@@ -229,7 +219,7 @@
  * -------------------- */
 #g2e-container #g2e-footer {
 	clear: both;
-	padding: 10px 0 0 10px;
+	padding: 10px 0 0 0;
 	min-height: 45px;
 }
 #g2e-container #g2e-footer > table {
@@ -256,6 +246,17 @@
 }
 #g2e-container #g2e-footer table .g2e-tbl-title {
 	width: 110px;
+}
+
+/* Modal credits
+ * ------------- */
+#g2e-container #g2e-credits {
+    padding-top: 20px;
+}
+#g2e-container #g2e-credits,
+#g2e-container #g2e-credits a {
+	font-style: italic;
+	font-size: 12px;
 }
 
 /* Embedded button

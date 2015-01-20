@@ -29,13 +29,13 @@ if [ "$1" = "dev" ]; then
     printf '%s\n' '// This file is built by deploy.sh in the root directory.' >> $JS_CONFIG
     printf '%s\n' 'var EXTENSION_ID = "ggnfmgkbdnedgillmfoakkajnpeakbel";' >> $JS_CONFIG
     printf '%s\n' 'var DEBUG = true;' >> $JS_CONFIG
-    printf '%s'   'var SERVER = "http://localhost:8083/";' >> $JS_CONFIG
+    printf '%s'   'var SERVER = "http://localhost:8083/g2e/";' >> $JS_CONFIG
 else
     echo '--------------------- prod ---------------------'
     printf '%s\n' '// This file is built by deploy.sh in the root directory.' >> $JS_CONFIG
     printf '%s\n' 'var EXTENSION_ID = "pcbdeobileclecleblcnadplfcicfjlp";' >> $JS_CONFIG
     printf '%s\n' 'var DEBUG = false;' >> $JS_CONFIG
-    printf '%s'   'var SERVER = "http://amp.pharm.mssm.edu/";' >> $JS_CONFIG
+    printf '%s'   'var SERVER = "http://amp.pharm.mssm.edu/g2e/";' >> $JS_CONFIG
 fi
 
 # Then build with grunt

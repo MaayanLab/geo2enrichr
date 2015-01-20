@@ -37,7 +37,7 @@ ENTRY_POINT = '/g2e'
 
 
 @app.route(ENTRY_POINT)
-@crossdomain(origin='*')
+@crossdomain(origin='*', methods=['GET'])
 def index_endpoint():
 	return flask.jsonify({
 		'status': 'ok',
@@ -45,7 +45,7 @@ def index_endpoint():
 	})
 
 
-@app.route(ENTRY_POINT + '/dlgeo')
+@app.route(ENTRY_POINT + '/dlgeo', methods=['POST'])
 @crossdomain(origin='*')
 def dlgeo_endpoint():
 	"""Takes an an accession number and optional annotations and downloads the
@@ -58,7 +58,7 @@ def dlgeo_endpoint():
 	return flask.jsonify(downloaded_file.__dict__)
 
 
-@app.route(ENTRY_POINT + '/diffexp')
+@app.route(ENTRY_POINT + '/diffexp', methods=['POST'])
 @crossdomain(origin='*')
 def diffexp_endpoint():
 	"""Parses an existing SOFT file on the server, analyzes the contents for
@@ -105,7 +105,7 @@ def diffexp_endpoint():
 	return flask.jsonify(output_files)
 
 
-@app.route(ENTRY_POINT + '/enrichr')
+@app.route(ENTRY_POINT + '/enrichr', methods=['POST'])
 @crossdomain(origin='*')
 def enrichr_endpoint():
 	"""Parses any files on the server and returns a valid Enrichr link.
@@ -120,7 +120,7 @@ def enrichr_endpoint():
 	})
 
 
-@app.route(ENTRY_POINT + '/count')
+@app.route(ENTRY_POINT + '/count', methods=['GET'])
 @crossdomain(origin='*')
 def count_entpoint():
 	"""Returns the number of gene lists that have been extracted from GEO.
@@ -132,7 +132,7 @@ def count_entpoint():
 	})
 
 
-@app.route(ENTRY_POINT + '/diseases')
+@app.route(ENTRY_POINT + '/diseases', methods=['GET'])
 @crossdomain(origin='*')
 def rare_diseases_endpoint():
 	"""Returns a list of rare diseases.

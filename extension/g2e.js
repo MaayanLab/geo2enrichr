@@ -2,14 +2,13 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var EXTENSION_ID = "pcbdeobileclecleblcnadplfcicfjlp";
-var DEBUG = false;
-var SERVER = "http://amp.pharm.mssm.edu/";
+var EXTENSION_ID = "ggnfmgkbdnedgillmfoakkajnpeakbel";
+var DEBUG = true;
+var SERVER = "http://localhost:8083/g2e/";
 
 var Comm = function(events, notifier, SERVER) {
 
-	var ENTRY_POINT = 'g2e/',
-		fileForDownload = [];
+	var fileForDownload = [];
 
 	// We need to make back-to-back AJAX requests to get the relevant data.
 	// Querying GEO's esearch endpoint with an accession number returns some JSON with an ID.
@@ -53,9 +52,10 @@ var Comm = function(events, notifier, SERVER) {
 				});
 
 			return $.ajax({
-				url: SERVER + ENTRY_POINT + endpoint + qs,
-				type: 'GET',
+				url: SERVER + endpoint + qs,
+				type: 'POST',
 				success: function(data) {
+				    debugger;
 					if (data.status === 'error') {
 						errorHandler(data);
 						return;
@@ -79,8 +79,8 @@ var Comm = function(events, notifier, SERVER) {
 				});
 
 			return $.ajax({
-				url: SERVER + ENTRY_POINT + endpoint + qs,
-				type: 'GET',
+				url: SERVER + endpoint + qs,
+				type: 'POST',
 				success: function(data) {
 					if (data.status === 'error') {
 						errorHandler(data);
@@ -91,8 +91,8 @@ var Comm = function(events, notifier, SERVER) {
 					notifier.log(data);
 					events.fire('progressBar');
 					events.fire('dataDiffExped', {
-						'up': SERVER + ENTRY_POINT + DIR + data.up,
-						'down': SERVER + ENTRY_POINT + DIR + data.down
+						'up': SERVER + DIR + data.up,
+						'down': SERVER + DIR + data.down
 					});
 				}
 			});
@@ -107,8 +107,8 @@ var Comm = function(events, notifier, SERVER) {
 				});
 
 			return $.ajax({
-				url: SERVER + ENTRY_POINT + endpoint + qs,
-				type: 'GET',
+				url: SERVER + endpoint + qs,
+				type: 'POST',
 				success: function(data) {
 					if (data.status === 'error') {
 						errorHandler(data);
@@ -126,16 +126,27 @@ var Comm = function(events, notifier, SERVER) {
 		dlgeo().then(diffexp, $.noop).then(enrichr, $.noop);
 	};
 
-	var fetchGenemap = function() {
+	var fetchGeneList = function() {
 		$.ajax({
 			url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
 			type: 'GET',
 			dataType: 'JSON',
 			success: function(data) {
-				events.fire('genemapDownloaded', data);
+				events.fire('geneListFetched', data);
 			}
 		});
-	};
+	}();
+
+	var fetchRareDiseases = function() {
+ 		$.ajax({
+			url: SERVER + 'diseases',
+			type: 'GET',
+			dataType: 'JSON',
+			success: function(data) {
+				events.fire('rareDiseasesFetched', data.rare_diseases);
+			}
+		});       
+	}();
 
 	var errorHandler = function(data) {
 		events.fire('requestFailed', data);
@@ -143,8 +154,7 @@ var Comm = function(events, notifier, SERVER) {
 
 	return {
 		downloadDiffExp: downloadDiffExp,
-		fetchMetadata: fetchMetadata,
-		fetchGenemap: fetchGenemap
+		fetchMetadata: fetchMetadata
 	};
 };
 
@@ -194,8 +204,8 @@ var Html = function(EXTENSION_ID) {
 				'</div>' +
 				'<table id="g2e-main-tbl">' +
 					'<tr>' +
-						'<td id="g2e-confirm" class="g2e-column g2e-left">' +
-							'<div class="g2e-lowlight">Please confirm that your data is correct. An asterisk denotes a required field.</div>' +
+						'<td id="g2e-confirm">' +
+							'<div class="g2e-lowlight">Please confirm that your data is correct, *required.</div>' +
 							'<table class="g2e-confirm-tbl">' +
 								'<tr id="g2e-confirm-tbl-diffexp">' +
 									'<td class="g2e-tbl-title">' +
@@ -229,7 +239,7 @@ var Html = function(EXTENSION_ID) {
 									'<td class="g2e-tbl-value"></td>' +
 								'</tr>' +
 							'</table>' +
-							'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
+							'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations, **if relevant.</div>' +
 							'<table class="g2e-confirm-tbl">' +
 								'<tr id="g2e-confirm-cell">' +
 									'<td class="g2e-tbl-title">' +
@@ -247,30 +257,25 @@ var Html = function(EXTENSION_ID) {
 										'<input placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-gene" class="ui-widget g2e-tbl-last">' +
+								'<tr id="g2e-confirm-gene" class="ui-widget">' +
 									'<td class="g2e-tbl-title">' +
-										'<label for="genemap">Manipulated gene (if relevant)</label>' +
+										'<label for="geneList">Manipulated gene**</label>' +
+									'</td>' +
+									'<td class="g2e-tbl-value">' +
+										'<input id="geneList" placeholder="No data">' +
+									'</td>' +
+								'</tr>' +
+
+
+								'<tr id="g2e-confirm-disease" class="ui-widget g2e-tbl-last">' +
+									'<td class="g2e-tbl-title">' +
+										'<label for="diseaseList">Rare disease**</label>' +
 									'</td>' +
 									'<td class="g2e-tbl-value g2e-tbl-last">' +
-										'<input id="genemap" placeholder="No data">' +
+										'<input id="diseaseList" placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
 							'</table>' +
-						'</td>' +
-						'<td class="g2e-column g2e-right">' +
-							'<p>GEO2Enrichr performs the following operations:</p>' +
-							'<ol id="g2e-process">' +
-								'<li>Downloads SOFT file from GEO.</li>' +
-								'<li >Discards data with missing values or one-to-many probe-to-gene mappings.</li>' +
-								'<li>log2 transforms the data if necessary.</li>' +
-								'<li>Quantile normalizes the data if necessary.</li>' +
-								'<li>Averages multiple probes to single genes.</li>' +
-								'<li>Identifies differentially expressed genes with the selected method.</li>' +
-								'<li>Returns the top and bottom differentially expressed genes.</li>' +
-								'<li>Pipes the gene lists to <a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">Enrichr</a> for further analysis.</li>' +
-							'</ol>' +
-							'<p>After the data is processed, you will be able to download your gene lists and open them directly in Enrichr.</p>' +
-							'<p id="g2e-credits">GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
 						'</td>' +
 					'</tr>' +
 				'</table>' +
@@ -278,7 +283,7 @@ var Html = function(EXTENSION_ID) {
 					'<table>' +
 						'<tr>' +
 							'<td id="g2e-actions" class="g2e-tbl-title">' +
-								'<button id="g2e-submit-btn" class="g2e-btn">Get gene lists</button>' +
+								'<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
 							'</td>' +
 							'<td id="g2e-progress-bar">' +
 								'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
@@ -305,8 +310,12 @@ var Html = function(EXTENSION_ID) {
 								'<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
 							'</td>' +
 						'</tr>' +
-					'</div>' +
-				'</div>' +
+					'</table>' +
+                    '<p id="g2e-credits">' + 
+                        'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
+                        ' See the <a href="http://maayanlab.net/g2e/" target="_blank">documentation</a> for details.' +
+                    '</p>' +
+                '</div>' +
 			'</div>' +
 		'</div>';
 
@@ -678,7 +687,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 	
 	var steps = ['#g2e-step1', '#g2e-step2', '#g2e-step3', '#g2e-step4'];
 
-	var genemap, $overlay, $modal, $progress, $results;
+	var geneList, $overlay, $modal, $progress, $results;
 
 	// This is called once at startup. All variables and bindings should be permanent.
 	var init = function() {
@@ -857,7 +866,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		// * WARNINGS *
 		// It is important to verify that the user has *tried* to select a gene before warning them.
 		// $.inArray() returns -1 if the value is not found. Do not check for truthiness.
-		if (genemap && data.gene && $.inArray(data.gene, genemap) === -1) {
+		if (geneList && data.gene && $.inArray(data.gene, geneList) === -1) {
 			notifier.warn('Please input a valid gene.');
 			return false;
 		}
@@ -869,15 +878,26 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		resetFooter();
 	});
 
-	events.on('genemapDownloaded', function(data) {
-		genemap = data;
-		$('#genemap').autocomplete({
+	events.on('geneListFetched', function(geneList) {
+		$('#geneList').autocomplete({
 			source: function(request, response) {
-				var results = $.ui.autocomplete.filter(genemap, request.term);
+				var results = $.ui.autocomplete.filter(geneList, request.term);
 				response(results.slice(0, 10));
 			},
 			minLength: 2,
-			delay: 500,
+			delay: 250,
+			autoFocus: true
+		});
+	});
+
+	events.on('rareDiseasesFetched', function(diseaseList) {
+		$('#diseaseList').autocomplete({
+			source: function(request, response) {
+				var results = $.ui.autocomplete.filter(diseaseList, request.term);
+				response(results.slice(0, 10));
+			},
+			minLength: 2,
+			delay: 250,
 			autoFocus: true
 		});
 	});
@@ -1037,8 +1057,6 @@ var main = function() {
 			comm.fetchMetadata(scraper.getAccessionFromUrl());
 		}
 
-		// Fetch and store the gene map for later.
-		comm.fetchGenemap();
 		ui.init();
 		notifier.log('g2e loaded.');
 	};

@@ -30,6 +30,13 @@ RARE_DISEASES_TABLE = 'RareDiseases'
 # Junction table to map an Extraction ID to a Sample ID.
 SELECTED_SAMPLES_TABLE = 'SelectedSamples'
 
+# Cache the rare disease list in memory so we do not make this call on every
+# GEO2Enrichr instance.
+cur = conn.cursor()
+cur.execute('SELECT * FROM %s' % RARE_DISEASES_TABLE)
+RARE_DISEASES_LIST = [x[1] for x in cur.fetchall()]
+cur.close()
+
 
 # See http://stackoverflow.com/questions/2887878.
 def record_extraction(accession, platform, organism, A, B, metadata=None):
@@ -72,9 +79,7 @@ def get_rare_diseases():
 	"""Returns a list of rare diseases.
 	"""
 
-	cur = conn.cursor()
-	cur.execute('SELECT * FROM %s' % RARE_DISEASES_TABLE)
-	return [x[1] for x in cur.fetchall()]
+	return RARE_DISEASES_LIST
 
 
 def reset_database():
