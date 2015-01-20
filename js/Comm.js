@@ -77,7 +77,7 @@ var Comm = function(events, notifier, SERVER) {
                 cell: input.cell,
                 perturbation: input.perturbation,
                 gene: input.gene,
-
+                disease: input.disease
             };
 			
 			var success = function(data) {

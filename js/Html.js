@@ -76,8 +76,6 @@ var Html = function(EXTENSION_ID) {
 										'<input id="geneList" placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
-
-
 								'<tr id="g2e-confirm-disease" class="ui-widget g2e-tbl-last">' +
 									'<td class="g2e-tbl-title">' +
 										'<label for="diseaseList">Rare disease**</label>' +

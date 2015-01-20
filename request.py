@@ -8,7 +8,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from collections import namedtuple
-Metadata = namedtuple('Metadata', 'platform organism cell perturbation gene')
+Metadata = namedtuple('Metadata', 'platform organism cell perturbation gene disease')
 
 
 class RequestArgs:
@@ -45,4 +45,5 @@ class RequestArgs:
 		cell           = args.get('cell').encode('ascii')         if 'cell'         in args else None
 		perturbation   = args.get('perturbation').encode('ascii') if 'perturbation' in args else None
 		gene           = args.get('gene').encode('ascii')         if 'gene'         in args else None
-		self.metadata  = Metadata(platform, organism, cell, perturbation, gene)
+		disease        = args.get('disease').encode('ascii')      if 'disease'      in args else None
+		self.metadata  = Metadata(platform, organism, cell, perturbation, gene, disease)

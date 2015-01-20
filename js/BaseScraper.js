@@ -36,8 +36,9 @@ var BaseScraper = function(DEBUG, events) {
 			var method = $modal.find('#g2e-confirm-tbl-diffexp option:selected').val(),
 				cell = $modal.find('#g2e-confirm-cell td.g2e-tbl-value input').val(),
 				perturbation = $modal.find('#g2e-confirm-pert td.g2e-tbl-value input').val(),
-			    gene = $modal.find('#g2e-confirm-gene #genemap').val();
-
+			    gene = $modal.find('#g2e-confirm-gene #geneList').val();
+			    disease = $modal.find('#g2e-confirm-disease #diseaseList').val();
+            
 			if (method) {
 				sData.method = method;
 			}
@@ -49,6 +50,9 @@ var BaseScraper = function(DEBUG, events) {
 			}
 			if (gene) {
 				sData.gene = gene;
+			}
+			if (disease) {
+                sData.disease = disease;
 			}
 		},
 
