@@ -15,11 +15,11 @@
 	border: 1px solid #808080;
 	box-shadow: 0 4px 16px rgba(0,0,0,.2);
 	left: 50%;
-	margin-left: -370px;
+	margin-left: -420px;
 	padding: 20px;
 	position: fixed;
 	top: 70px;
-	width: 700px;
+	width: 800px;
 }
 #g2e-container p,
 #g2e-container span,
@@ -245,7 +245,7 @@
 	cursor: pointer;
 }
 #g2e-container #g2e-footer table .g2e-tbl-title {
-	width: 110px;
+	width: 130px;
 }
 
 /* Modal credits
