@@ -1,8 +1,6 @@
 
 var Comm = function(events, notifier, SERVER) {
 
-	var fileForDownload = [];
-
 	// We need to make back-to-back AJAX requests to get the relevant data.
 	// The steps:
 	// 1. Query GEO's esearch endpoint with an accession number returns some
@@ -69,16 +67,17 @@ var Comm = function(events, notifier, SERVER) {
 	};
 
 	// This is the workhorse function that chains together multiple AJX requests to the back-end.
-	var downloadDiffExp = function(userInput) {
+	var downloadDiffExp = function(input) {
 		function dlgeo() {
 			var data = {
-                accession: userInput.accession,
-                organism: userInput.organism,
-                platform: userInput.platform,
-                method: userInput.method,
-                cell: userInput.cell,
-                perturbation: userInput.perturbation,
-                gene: userInput.gene
+                accession: input.accession,
+                organism: input.organism,
+                platform: input.platform,
+                method: input.method,
+                cell: input.cell,
+                perturbation: input.perturbation,
+                gene: input.gene,
+
             };
 			
 			var success = function(data) {
@@ -98,10 +97,10 @@ var Comm = function(events, notifier, SERVER) {
 			var data = {
                 // This is the SOFT file, not the gene file.
                 filename: dlgeoData.filename,
-                platform: userInput.platform,
-                method: userInput.method,
-                control: userInput.control.join('-'),
-                experimental: userInput.experimental.join('-')
+                platform: input.platform,
+                method: input.method,
+                control: input.control.join('-'),
+                experimental: input.experimental.join('-')
             };
 
 			var success = function(data) {
