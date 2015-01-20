@@ -7,7 +7,7 @@ var Html = function(EXTENSION_ID) {
 		'<div id="g2e-container">' +
 			'<div id="g2e-modal">' +
 				'<div id="g2e-title">' +
-					'<a href="http://amp.pharm.mssm.edu/Enrichr/" target="_blank">' +
+					'<a href="http://maayanlab.net/g2e/" target="_blank">' +
 						'<img src="' + LOGO50X50 + '">' +
 						'<span>GEO2</span><span class="g2e-highlight">Enrichr</span>' +
 					'</a>' +
