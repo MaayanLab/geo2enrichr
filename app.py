@@ -12,7 +12,7 @@ import flask
 
 import cleaner
 from crossdomain import crossdomain
-import database as db
+import db
 import diffexper
 import enrichrlink
 import geodownloader
@@ -129,6 +129,18 @@ def count_entpoint():
 	return flask.jsonify({
 		'status': 'ok',
 		'extraction_count': db.get_extraction_count()
+	})
+
+
+@app.route(ENTRY_POINT + '/diseases')
+@crossdomain(origin='*')
+def rare_diseases_endpoint():
+	"""Returns a list of rare diseases.
+	"""
+
+	return flask.jsonify({
+		'status': 'ok',
+		'rare_diseases': db.get_rare_diseases()
 	})
 
 
