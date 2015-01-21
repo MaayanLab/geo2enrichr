@@ -21,10 +21,10 @@ def analyze(A, B, genes, config, filename=''):
 
 	# Default is 500, unless set by user and pass via the query string
 	# arguments.
-	HALF_CUTOFF = config['cutoff'] / 2
+	HALF_CUTOFF = config.cutoff / 2
 
 	# Default to the characteristic direction.
-	if config['method'] == 'ttest':
+	if config.method == 'ttest':
 		gene_pvalues = ttest(A, B, genes)
 	else:
 		pprint('Calculating the characteristic direction.')

@@ -96,11 +96,17 @@ var Comm = function(events, notifier, SERVER) {
 		function diffexp(dlgeoData) {
 			var data = {
                 // This is the SOFT file, not the gene file.
+                accession: input.accession,
                 filename: dlgeoData.filename,
                 platform: input.platform,
-                method: input.method,
+                organism: input.organism,
                 control: input.control.join('-'),
-                experimental: input.experimental.join('-')
+                experimental: input.experimental.join('-'),
+                cell: input.cell,
+                perturbation: input.perturbation,
+                gene: input.gene,
+                disease: input.disease,
+                method: input.method
             };
 
 			var success = function(data) {

@@ -17,6 +17,8 @@ conn = sqlite3.connect('euclid.db', check_same_thread=False)
 # We open and close the cursor on every transaction. I don't think this is
 # highly performant, but raw speed is simply not a foreseeable issue.
 
+# TODO: Implement a GENE_TABLE rather than inserting genes as strings.
+
 
 EXTRACTION_TABLE    = 'Extractions'
 # TODO: I have been referring to the experiment accession number as *the*
@@ -39,22 +41,37 @@ cur.close()
 
 
 # See http://stackoverflow.com/questions/2887878.
-def record_extraction(accession, platform, organism, A, B, metadata=None):
+def record_extraction(accession, A, B, metadata, config):
+	"""Records an extraction event in the database, writing the data to multiple
+	tables.
+	"""
+
 	cur = conn.cursor()
 
+	import pdb
+	pdb.set_trace()
 	# Insert the experiment ID and platform into their respective tables;
 	# these queries should create the data if it does not already exist. We
 	# store the transaction IDs in order to build the query for the extraction
 	# table.
 	cur.execute('INSERT INTO %s VALUES("%s");' % (EXPERIMENT_TABLE, accession))
-	experiment_id = cur.lastrowid
+	accession_id = cur.lastrowid
 
-	cur.execute('INSERT INTO %s VALUES("%s");' % (PLATFORM_TABLE, platform))
+	cur.execute('INSERT INTO %s VALUES("%s");' % (PLATFORM_TABLE, metadata.platform))
 	platform_id = cur.lastrowid
 
 	# Record extraction event.
-	cur.execute('INSERT INTO %s VALUES(NULL, "%s", "%s", "%s", "%s", "%s", "%s", "%s");' %\
-		(EXTRACTION_TABLE, experiment_id, platform_id, organism, 'chdir', 'cell', '', 'gene'))
+	cur.execute('INSERT INTO %s VALUES(NULL, "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s");' %\
+		(EXTRACTION_TABLE,\
+		accession_id,
+		platform_id,
+		metadata.organism,\
+		config.method,\
+		metadata.cell,\
+		metadata.perturbation,\
+		metadata.gene,\
+		metadata.disease))
+
 	extraction_id = cur.lastrowid
 
 	# Map the newly created "extraction_id" to every sample the user selected.
@@ -108,7 +125,8 @@ def reset_database():
 			DiffExpMethod TEXT,
 			Cell TEXT,
 			Perturbation TEXT,
-			Gene TEXT)''' % EXTRACTION_TABLE)
+			Gene TEXT,
+			Disease TEXT)''' % EXTRACTION_TABLE)
 	cur.execute('CREATE TABLE %s(ExtractionId INTEGER, Accession TEXT);' % SELECTED_SAMPLES_TABLE)
 	
 	# Setup the rare diseases table.
@@ -124,5 +142,15 @@ def reset_database():
 	cur.close()
 
 
+def show_extractions():
+	"""Helper function for printing the contents of the extraction table.
+	"""
+
+	cur = conn.cursor()
+	cur.execute('SELECT * FROM %s' % EXTRACTION_TABLE)
+	print cur.fetchall()
+
+
 if __name__ == '__main__':
-	get_rare_diseases()
+	#reset_database()
+	show_extractions()

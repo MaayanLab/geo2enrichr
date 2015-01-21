@@ -72,10 +72,10 @@ def diffexp_endpoint():
 	args = RequestArgs(flask.request.json)
 
 	# Return early if the platform is not supported.
-	if not softparser.platform_supported(args.platform):
+	if not softparser.platform_supported(args.metadata.platform):
 		return make_json_response({
 			'status': 'error',
-			'message': 'Platform ' + args.platform + ' is not supported.'
+			'message': 'Platform ' + args.metadata.platform + ' is not supported.'
 		})
 
 	# * WARNING *
@@ -87,7 +87,7 @@ def diffexp_endpoint():
 
 	# Step 1: Parse soft file.
 	# Also discard bad data and convert probe IDs to gene symbols.
-	A, B, genes, conversion_pct = softparser.parse(args.filename, args.platform, args.A_cols, args.B_cols)
+	A, B, genes, conversion_pct = softparser.parse(args.filename, args.metadata.platform, args.A_cols, args.B_cols)
 
 	# Step 2: Clean data.
 	# Also, if necessary, take log2 of data and quantile normalize it.
@@ -104,9 +104,7 @@ def diffexp_endpoint():
 	# ! TODO !
 	# Output filename should be put into database with identifier and returned
 	# ID should be returned to user.
-	import pdb
-	pdb.set_trace()
-	db.record_extraction('GDS5077', args.platform, args.metadata.organism, args.A_cols, args.B_cols, args.metadata)
+	db.record_extraction('GDS5077', args.A_cols, args.B_cols, args.metadata, args.config)
 
 	return make_json_response(output_files)
 
