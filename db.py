@@ -48,8 +48,6 @@ def record_extraction(accession, A, B, metadata, config):
 
 	cur = conn.cursor()
 
-	import pdb
-	pdb.set_trace()
 	# Insert the experiment ID and platform into their respective tables;
 	# these queries should create the data if it does not already exist. We
 	# store the transaction IDs in order to build the query for the extraction
