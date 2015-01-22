@@ -4,25 +4,25 @@ var BaseUi = function(comm, events, templater, notifier, scraper) {
 	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
 
 	var dataConfig = {
-		'g2e-confirm-tbl-acc': {
+		'g2e-accession': {
 			key: 'accession',
 			prompt: 'Please enter an accession number:'
 		},
-		'g2e-confirm-tbl-pltf': {
+		'g2e-platform': {
 			key: 'platform',
 			prompt: 'Please enter a platform:'
 		},
-		'g2e-confirm-tbl-org' : {
+		'g2e-organism' : {
 			key: 'organism',
 			prompt: 'Please enter an organism:'
 		},
-		'g2e-confirm-tbl-ctrl': {
+		'g2e-control': {
 			key: 'control',
 			formatter: function(data) {
 				return data.join(', ');
 			}
 		},
-		'g2e-confirm-tbl-expmt': {
+		'g2e-experimental': {
 			key: 'experimental',
 			formatter: function(data) {
 				return data.join(', ');

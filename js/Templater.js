@@ -18,69 +18,69 @@ var Templater = function(EXTENSION_ID) {
 						'<td id="g2e-confirm">' +
 							'<div class="g2e-lowlight">Please confirm that your data is correct, *required.</div>' +
 							'<table class="g2e-confirm-tbl">' +
-								'<tr id="g2e-confirm-tbl-diffexp">' +
-									'<td class="g2e-tbl-title">' +
+								'<tr id="g2e-diffexp">' +
+									'<td class="g2e-title">' +
 										'<label>Differential expression method</label>' +
 									'</td>' +
-									'<td class="g2e-tbl-value">' +
+									'<td class="g2e-value">' +
 										'<select>' +
 											'<option>Characteristic direction</option>' +
 											'<option>T-test</option>' +
 										'</select>' +
 									'</td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-tbl-acc">' +
-									'<td class="g2e-tbl-title">Accession num.&#42;</td>' +
-									'<td class="g2e-tbl-value g2e-editable"></td>' +
+								'<tr id="g2e-accession">' +
+									'<td class="g2e-title">Accession num.&#42;</td>' +
+									'<td class="g2e-value g2e-editable"></td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-tbl-pltf">' +
-									'<td class="g2e-tbl-title">Platform</td>' +
-									'<td class="g2e-tbl-value g2e-editable"></td>' +
+								'<tr id="g2e-platform">' +
+									'<td class="g2e-title">Platform</td>' +
+									'<td class="g2e-value g2e-editable"></td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-tbl-org">' +
-									'<td class="g2e-tbl-title">Organism</td>' +
-									'<td class="g2e-tbl-value g2e-editable"></td>' +
+								'<tr id="g2e-organism">' +
+									'<td class="g2e-title">Organism</td>' +
+									'<td class="g2e-value g2e-editable"></td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-tbl-ctrl">' +
-									'<td class="g2e-tbl-title">Control samples&#42;</td>' +
-									'<td class="g2e-tbl-value"></td>' +
+								'<tr id="g2e-control">' +
+									'<td class="g2e-title">Control samples&#42;</td>' +
+									'<td class="g2e-value"></td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-tbl-expmt" class="g2e-tbl-last">' +
-									'<td class="g2e-tbl-title">Treatment or condition samples&#42;</td>' +
-									'<td class="g2e-tbl-value"></td>' +
+								'<tr id="g2e-experimental" class="g2e-last">' +
+									'<td class="g2e-title">Treatment or condition samples&#42;</td>' +
+									'<td class="g2e-value"></td>' +
 								'</tr>' +
 							'</table>' +
 							'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations, **if relevant.</div>' +
 							'<table class="g2e-confirm-tbl">' +
 								'<tr id="g2e-confirm-cell">' +
-									'<td class="g2e-tbl-title">' +
+									'<td class="g2e-title">' +
 										'<label>Cell type or tissue</label>' +
 									'</td>' +
-									'<td class="g2e-tbl-value">' +
+									'<td class="g2e-value">' +
 										'<input placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
 								'<tr id="g2e-confirm-pert">' +
-									'<td class="g2e-tbl-title">' +
+									'<td class="g2e-title">' +
 										'<label>Perturbation</label>' +
 									'</td>' +
-									'<td class="g2e-tbl-value">' +
+									'<td class="g2e-value">' +
 										'<input placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
 								'<tr id="g2e-confirm-gene" class="ui-widget">' +
-									'<td class="g2e-tbl-title">' +
+									'<td class="g2e-title">' +
 										'<label for="geneList">Manipulated gene**</label>' +
 									'</td>' +
-									'<td class="g2e-tbl-value">' +
+									'<td class="g2e-value">' +
 										'<input id="geneList" placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-disease" class="ui-widget g2e-tbl-last">' +
-									'<td class="g2e-tbl-title">' +
+								'<tr id="g2e-confirm-disease" class="ui-widget g2e-last">' +
+									'<td class="g2e-title">' +
 										'<label for="diseaseList">Rare disease**</label>' +
 									'</td>' +
-									'<td class="g2e-tbl-value g2e-tbl-last">' +
+									'<td class="g2e-value g2e-last">' +
 										'<input id="diseaseList" placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
@@ -91,7 +91,7 @@ var Templater = function(EXTENSION_ID) {
 				'<div id="g2e-footer">' +
 					'<table>' +
 						'<tr>' +
-							'<td id="g2e-actions" class="g2e-tbl-title">' +
+							'<td id="g2e-actions" class="g2e-title">' +
 								'<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
 							'</td>' +
 							'<td id="g2e-progress-bar">' +
@@ -102,17 +102,17 @@ var Templater = function(EXTENSION_ID) {
 							'</td>' +
 						'</tr>' +
 						'<tr class="g2e-results">' +
-							'<td class="g2e-tbl-title">' +
+							'<td class="g2e-title">' +
 								'<strong>Enriched genes:</strong>' +
 							'</td>' +
-							'<td class="g2e-tbl-title">' +
+							'<td class="g2e-title">' +
 								'<button id="g2e-enrichr-up">Up</button>' +
 								'<button id="g2e-enrichr-down">Down</button>' +
 								'<button id="g2e-enrichr-combined">All</button>' +
 							'</td>' +
 						'</tr>' +
 						'<tr class="g2e-results">' +
-							'<td class="g2e-tbl-title">' +
+							'<td class="g2e-title">' +
 								'<strong>Downloads:</strong>' +
 							'</td>' +
 							'<td>' +

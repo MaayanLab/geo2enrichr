@@ -187,11 +187,11 @@
 	vertical-align: middle;
 	word-wrap: break-word;
 }
-#g2e-container .g2e-confirm-tbl td.g2e-tbl-title {
+#g2e-container .g2e-confirm-tbl td.g2e-title {
 	font-weight: bold;
 	width: 210px;
 }
-#g2e-container .g2e-confirm-tbl td.g2e-tbl-value {
+#g2e-container .g2e-confirm-tbl td.g2e-value {
 	background: none;
 	padding-left: 10px;
 	width: 100%;
@@ -208,10 +208,10 @@
 	font-size: 13px;
 	width: 100%;
 }
-#g2e-container .g2e-confirm-tbl .g2e-tbl-last {
+#g2e-container .g2e-confirm-tbl .g2e-last {
 	border: none;
 }
-#g2e-container .g2e-confirm-tbl #g2e-confirm-tbl-diffexp td {
+#g2e-container .g2e-confirm-tbl #g2e-diffexp td {
 	padding: 0;
 }
 
@@ -244,7 +244,7 @@
 	background: #0078C2;
 	cursor: pointer;
 }
-#g2e-container #g2e-footer table .g2e-tbl-title {
+#g2e-container #g2e-footer table .g2e-title {
 	width: 130px;
 }
 
