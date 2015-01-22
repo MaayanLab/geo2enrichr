@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 	    '../config.js',
 		'../Comm.js',
 		'../Events.js',
-		'../Html.js',
+		'../Templater.js',
 		'../Notifier.js',
 		'../BaseScraper.js',
 		'../GdsScraper.js',

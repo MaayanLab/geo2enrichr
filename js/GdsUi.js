@@ -1,11 +1,11 @@
 
-var GdsUi = function(html, events) {
+var GdsUi = function(templater, events) {
 
 	return {
 
 		embed: function($hook) {
 			var self = this;
-			$hook.children().last().after(html.get('btn', 'gds'));
+			$hook.children().last().after(templater.get('btn', 'gds'));
 
 			events.fire('uiReady', {
 				details: $('#gds_details')

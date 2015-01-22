@@ -1,5 +1,5 @@
 
-var BaseUi = function(comm, events, html, notifier, scraper) {
+var BaseUi = function(comm, events, templater, notifier, scraper) {
 
 	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
 
@@ -36,7 +36,7 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 
 	// This is called once at startup. All variables and bindings should be permanent.
 	var init = function() {
-		var htmlData = html.get('modal');
+		var htmlData = templater.get('modal');
 		$overlay = $(htmlData).hide().appendTo('body');
 		$modal = $('#g2e-container #g2e-modal').draggable();
 		$progress = $progress || $('#g2e-progress-bar');
@@ -64,27 +64,12 @@ var BaseUi = function(comm, events, html, notifier, scraper) {
 		var scrapedData;
 		// Show the user the data we have scraped for confirmation.
 		scrapedData = scraper.getData($modal);
-		fillConfirmTable(scrapedData);
+		fillConfirmationTable(scrapedData);
 		showModalBox();
 	};
 
 	var highlightNextStep = function() {
 		$progress.find(steps.shift()).addClass('g2e-ready');
-	};
-
-	// `scraper` also calls this when new data is set.
-	// TODO: It shouldn't.
-	var fillConfirmTable = function(scrapedData) {
-		var elem, config, html;
-		for (elem in dataConfig) {
-			config = dataConfig[elem];
-			if (config.formatter) {
-				html = config.formatter(scrapedData[config.key]);
-			} else {
-				html = scrapedData[config.key];
-			}
-			$('#' + elem + ' td').eq(1).html(html);
-		}
 	};
 
 	var setDownloadLinks = function(downloadLinks) {

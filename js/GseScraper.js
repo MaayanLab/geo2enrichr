@@ -1,5 +1,5 @@
 
-var GseScraper = function(events, html) {
+var GseScraper = function(events) {
 
 	var key = 'gse',
 		$details,

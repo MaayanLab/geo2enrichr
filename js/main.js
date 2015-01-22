@@ -16,7 +16,7 @@ var main = function() {
 		// EXTENSION_ID, DEBUG, and SERVER are set in config.js via deploy.sh.
 	    var events = Events(),
 			notifier = Notifier(DEBUG),
-			html = Html(EXTENSION_ID),
+			templater = Templater(EXTENSION_ID),
 			baseScraper = BaseScraper(DEBUG, events),
 			scraper,
 			ui,
@@ -26,12 +26,12 @@ var main = function() {
 			modeScraper = GdsScraper(events);
 			scraper = $.extend(modeScraper, baseScraper);
 			comm = Comm(events, notifier, SERVER);
-			ui = $.extend(GdsUi(html, events), BaseUi(comm, events, html, notifier, scraper));
+			ui = $.extend(GdsUi(templater, events), BaseUi(comm, events, templater, notifier, scraper));
 		} else {
-			modeScraper = GseScraper(events, html);
+			modeScraper = GseScraper(events, templater);
 			scraper = $.extend(modeScraper, baseScraper);
 			comm = Comm(events, notifier, SERVER);
-			ui = $.extend(GseUi(html, events), BaseUi(comm, events, html, notifier, scraper));
+			ui = $.extend(GseUi(templater, events), BaseUi(comm, events, templater, notifier, scraper));
 		}
 
 		// This executes in the background, collecting information about the page before the user even inputs.

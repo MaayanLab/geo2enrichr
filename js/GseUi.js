@@ -1,5 +1,5 @@
 
-var GseUi = function(html, events) {
+var GseUi = function(templater, events) {
 
 	var $gse_details;
 
@@ -7,7 +7,7 @@ var GseUi = function(html, events) {
 
 		embed: function($hook) {
 			var self = this;
-			$hook.append(html.get('btn', 'gse'));
+			$hook.append(templater.get('btn', 'gse'));
 
 			// Find the details table.
 			$('table').each(function(i, el) {
@@ -38,14 +38,14 @@ var GseUi = function(html, events) {
 
 			if ($samples_table) {
 				$samples_table.find('tr').each(function(i, tr) {
-					$(tr).append(html.get('chkbxs', 'gse'));
+					$(tr).append(templater.get('chkbxs', 'gse'));
 				});
 
 				$samples_table.find('table')
 							  .first()
 							  .find('tr')
 							  .first()
-							  .before(html.get('thead', 'gse'));
+							  .before(templater.get('thead', 'gse'));
 			}
 
 			events.fire('uiReady', {
