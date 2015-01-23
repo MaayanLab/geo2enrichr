@@ -1,9 +1,9 @@
 
-var Templater = function(EXTENSION_ID) {
+var Templater = function(EXTENSION_ID, targetApp) {
 
 	var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/images/g2e-logo-50x50.png';
 
-	var modal = '' +
+	var $modal = $('' +
 		'<div id="g2e-container">' +
 			'<div id="g2e-modal">' +
 				'<div id="g2e-title">' +
@@ -14,10 +14,10 @@ var Templater = function(EXTENSION_ID) {
 					'</a>' +
 				'</div>' +
             	'<div id="g2e-nav">' +
-                    '<select>' +
+                    /*'<select>' +
                         '<option value="Enrichr">Enrichr</option>' +
                         '<option value="Sigine">Sigine</option>' +
-                    '</select>' +
+                    '</select>' +*/
                     '<button id="g2e-close-btn" class="g2e-btn">&#10006</button>' +
                 '</div>' +
                 '<div class="g2e-clear"></div>' +
@@ -134,14 +134,14 @@ var Templater = function(EXTENSION_ID) {
                     '</p>' +
                 '</div>' +
 			'</div>' +
-		'</div>';
+		'</div>');
 
     var BUTTON_TEXT = 'Open <strong class="g2e-strong">GEO+</strong>';
 
 	var templates = {
-		'modal': modal,
+		'modal': $modal,
 		'gds': {
-			'btn': '' +
+			'btn': $('' +
 				'<tr>' +
 					// "azline" comes from the GEO website.
 					'<td class="azline" id="g2e-embedded-button">' +
@@ -149,43 +149,52 @@ var Templater = function(EXTENSION_ID) {
 						'<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
 						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
-				'</tr>'
+				'</tr>')
 		},
 		'gse': {
-			'btn': '' +
+			'btn': $('' +
 				'<tr>' +
 					'<td id="g2e-embedded-button">' +
 						'<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
 						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
-				'</tr>',
+				'</tr>'),
 			'thead': '' +
 			    // TODO: Rename "table-title" to "title"
-				'<tr valign="top" id="g2e-table-title">' +
+				$('<tr valign="top" id="g2e-table-title">' +
 					'<td></td>' +
 					'<td></td>' +
 					'<td class="g2e-ctrl">Ctrl</td>' +
 					'<td class="g2e-expmt">Expmt</td>' +
-				'</tr>',
+				'</tr>'),
 			'chkbxs': '' +
-				'<td>' +
+				$('<td>' +
 					'<input class="g2e-chkbx g2e-control" type="checkbox" />' +
 				'</td>' +
 				'<td>' +
 					'<input class="g2e-chkbx g2e-experimental" type="checkbox" />' +
-				'</td>'
+				'</td>')
 		}
 	};
 
+    var init = function() {
+        var select = '<select>';
+        $.each(targetApp, function(i, app) {
+            select += '<option value="' + app.name + '">';
+            select += app.name;
+            select += '</option>';
+        });
+        select += '</select>';
+        $modal.find('#g2e-nav').append(select);
+    }();
+
 	return {
+	    // Rename get$, if it consistently returns jQuery object?
 		get: function(el, key) {
-		    var template;
 			if (key) {
-				template = templates[key][el];
-			} else {
-			    template = templates[el];
+				return templates[key][el];
 			}
-			return $(template);
+			return templates[el];
 		}
 	};
 };

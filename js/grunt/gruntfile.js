@@ -4,6 +4,7 @@ module.exports = function(grunt) {
 	    '../config.js',
 		'../Comm.js',
 		'../Events.js',
+		'../TargetApp.js',
 		'../Templater.js',
 		'../Notifier.js',
 		'../BaseScraper.js',

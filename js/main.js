@@ -16,7 +16,8 @@ var main = function() {
 		// EXTENSION_ID, DEBUG, and SERVER are set in config.js via deploy.sh.
 	    var events = Events(),
 			notifier = Notifier(DEBUG),
-			templater = Templater(EXTENSION_ID),
+			targetApp = TargetApp(),
+			templater = Templater(EXTENSION_ID, targetApp),
 			baseScraper = BaseScraper(DEBUG, events),
 			scraper,
 			ui,

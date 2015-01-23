@@ -63,8 +63,10 @@ var BaseUi = function(comm, events, templater, notifier, scraper) {
 	};
 
 	var changeTargetApp = function(data) {
+	    var targetApp = $(this).val();
+	    $modal.find('#g2e-target-app').text(targetApp);
 	    events.fire('targetAppChanged', {
-            targetApp: $(this).val()
+            targetApp: targetApp
         });
 	};
 
@@ -213,7 +215,6 @@ var BaseUi = function(comm, events, templater, notifier, scraper) {
 	};
 
 	events.on('targetAppChanged', function(data) {
-	    $modal.find('#g2e-target-app').text(data.targetApp);
 	});
 
 	events.on('requestFailed', function(errorData) {
