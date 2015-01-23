@@ -36,9 +36,9 @@ var BaseUi = function(comm, events, templater, notifier, scraper) {
 
 	// This is called once at startup. All variables and bindings should be permanent.
 	var init = function() {
-		var htmlData = templater.get('modal');
-		$overlay = $(htmlData).hide().appendTo('body');
-		$modal = $('#g2e-container #g2e-modal').draggable();
+		$modal = templater.get('modal');
+		$overlay = $modal.hide().appendTo('body');
+		$('#g2e-container #g2e-modal').draggable();
 		$progress = $progress || $('#g2e-progress-bar');
 		$results = $results || $('.g2e-results');
 
@@ -49,7 +49,10 @@ var BaseUi = function(comm, events, templater, notifier, scraper) {
 		});
 
 		// Add event handlers
-		$modal.find('#g2e-close-btn')
+		$modal.find('#g2e-nav select')
+		      .change(changeTargetApp)
+		      .end()
+		      .find('#g2e-close-btn')
 			  .click(resetModalBox)
 			  .end()
 			  .find('.g2e-confirm-tbl')
@@ -57,6 +60,12 @@ var BaseUi = function(comm, events, templater, notifier, scraper) {
 			  .end();
 
 		resetSubmitBtn();
+	};
+
+	var changeTargetApp = function(data) {
+	    events.fire('targetAppChanged', {
+            targetApp: $(this).val()
+        });
 	};
 
 	// This function is called every time the "Pipe to Enrichr" button is clicked.
@@ -202,6 +211,10 @@ var BaseUi = function(comm, events, templater, notifier, scraper) {
 		}
 		return true;
 	};
+
+	events.on('targetAppChanged', function(data) {
+	    $modal.find('#g2e-target-app').text(data.targetApp);
+	});
 
 	events.on('requestFailed', function(errorData) {
 		notifier.warn(errorData.message);

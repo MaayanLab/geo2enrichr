@@ -9,10 +9,18 @@ var Templater = function(EXTENSION_ID) {
 				'<div id="g2e-title">' +
 					'<a href="http://maayanlab.net/g2e/" target="_blank">' +
 						'<img src="' + LOGO50X50 + '">' +
-						'<span>GEO2</span><span class="g2e-highlight">Enrichr</span>' +
+						'<span>GEO+</span>' +
+						'<span id="g2e-target-app" class="g2e-highlight">Enrichr</span>' +
 					'</a>' +
-					'<button id="g2e-close-btn" class="g2e-btn">&#10006</button>' +
 				'</div>' +
+            	'<div id="g2e-nav">' +
+                    '<select>' +
+                        '<option value="Enrichr">Enrichr</option>' +
+                        '<option value="Sigine">Sigine</option>' +
+                    '</select>' +
+                    '<button id="g2e-close-btn" class="g2e-btn">&#10006</button>' +
+                '</div>' +
+                '<div class="g2e-clear"></div>' +
 				'<table id="g2e-main-tbl">' +
 					'<tr>' +
 						'<td id="g2e-confirm">' +
@@ -97,7 +105,7 @@ var Templater = function(EXTENSION_ID) {
 							'<td id="g2e-progress-bar">' +
 								'<div id="g2e-step1" class="g2e-progress">Downloading GEO files</div>' +
 								'<div id="g2e-step2" class="g2e-progress">Cleaning data and identifying differential expression</div>' +
-								'<div id="g2e-step3" class="g2e-progress">Enriching gene lists with Enrichr</div>' +
+								'<div id="g2e-step3" class="g2e-progress">Enriching gene lists</div>' +
 								'<div id="g2e-step4" class="g2e-progress">Done!</div>' +
 							'</td>' +
 						'</tr>' +
@@ -121,12 +129,14 @@ var Templater = function(EXTENSION_ID) {
 						'</tr>' +
 					'</table>' +
                     '<p id="g2e-credits">' + 
-                        'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
+                        'GEO+ is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                         ' See the <a href="http://maayanlab.net/g2e/" target="_blank">documentation</a> for details.' +
                     '</p>' +
                 '</div>' +
 			'</div>' +
 		'</div>';
+
+    var BUTTON_TEXT = 'Open <strong class="g2e-strong">GEO+</strong>';
 
 	var templates = {
 		'modal': modal,
@@ -136,7 +146,7 @@ var Templater = function(EXTENSION_ID) {
 					// "azline" comes from the GEO website.
 					'<td class="azline" id="g2e-embedded-button">' +
 						'<b>Step 4: </b>' +
-						'<span id="g2e-link">Pipe into Enrichr</span>' +
+						'<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
 						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
 				'</tr>'
@@ -145,11 +155,12 @@ var Templater = function(EXTENSION_ID) {
 			'btn': '' +
 				'<tr>' +
 					'<td id="g2e-embedded-button">' +
-						'<span id="g2e-link">Pipe into Enrichr</span>' +
+						'<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
 						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
 				'</tr>',
 			'thead': '' +
+			    // TODO: Rename "table-title" to "title"
 				'<tr valign="top" id="g2e-table-title">' +
 					'<td></td>' +
 					'<td></td>' +
@@ -168,10 +179,13 @@ var Templater = function(EXTENSION_ID) {
 
 	return {
 		get: function(el, key) {
+		    var template;
 			if (key) {
-				return templates[key][el];
+				template = templates[key][el];
+			} else {
+			    template = templates[el];
 			}
-			return templates[el];
+			return $(template);
 		}
 	};
 };
