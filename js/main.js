@@ -26,14 +26,12 @@ var main = function() {
 		if (isGds()) {
 			modeScraper = GdsScraper(events);
 			scraper = $.extend(modeScraper, baseScraper);
-			comm = Comm(events, notifier, SERVER);
-			ui = $.extend(GdsUi(templater, events), BaseUi(comm, events, templater, notifier, scraper));
 		} else {
 			modeScraper = GseScraper(events, templater);
 			scraper = $.extend(modeScraper, baseScraper);
-			comm = Comm(events, notifier, SERVER);
-			ui = $.extend(GseUi(templater, events), BaseUi(comm, events, templater, notifier, scraper));
 		}
+		comm = Comm(events, notifier, targetApp, SERVER);
+		ui = $.extend(GdsUi(templater, events), BaseUi(comm, events, notifier, scraper, targetApp, templater));
 
 		// This executes in the background, collecting information about the page before the user even inputs.
 		if (scraper.getAccessionFromUrl) {

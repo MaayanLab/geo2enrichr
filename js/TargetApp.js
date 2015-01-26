@@ -1,18 +1,17 @@
 
 var TargetApp = function() {
-
-    return [
-        {
+    
+    return {
+        'enrichr': {
             name: 'Enrichr',
             selectValue: 'enrichr',
-            color: 'red',
-            apiEndpoint: 'http://amp.pharm.mssm.edu/Enrichr/'
-        },
-        {
-            name: 'Sigine',
-            selectValue: 'sigine',
+            color: 'red'
+        },  
+        'lssr': {
+            name: 'L1000CDS',
+            selectValue: 'lssr',
             color: 'blue',
-            apiEndpoint: 'http://amp.pharm.mssm.edu/Enrichr/'
+            url: 'http://amp.pharm.mssm.edu/lssr/input'
         }
-    ];
+    };
 };

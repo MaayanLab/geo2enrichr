@@ -31,6 +31,8 @@ class RequestArgs:
 		self.down     = args.get('down')     if 'down' in args else None
 		self.combined = args.get('combined') if 'up'   in args else None
 
+		self.targetApp = args.get('targetApp') if 'targetApp' in args else None
+
 		# Set the user's default options in case the client-side code does not.
 		# TODO: Make the cutoff configurable by on the client.
 		method        = args.get('method').encode('ascii') if args.get('method') else 'chdir'

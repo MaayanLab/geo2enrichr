@@ -1,5 +1,5 @@
 
-var BaseUi = function(comm, events, templater, notifier, scraper) {
+var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
 
 	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
 
@@ -63,10 +63,12 @@ var BaseUi = function(comm, events, templater, notifier, scraper) {
 	};
 
 	var changeTargetApp = function(data) {
-	    var targetApp = $(this).val();
-	    $modal.find('#g2e-target-app').text(targetApp);
+	    // This is a great example of jQuery spaghetti. It would be much better to
+	    // have a model just back this view.
+	    var app = targetApp[$(this).val()];
+	    $modal.find('#g2e-target-app').text(app.name);
 	    events.fire('targetAppChanged', {
-            targetApp: targetApp
+            targetApp: app
         });
 	};
 
@@ -152,12 +154,13 @@ var BaseUi = function(comm, events, templater, notifier, scraper) {
 			  // This code smells like jQuery spaghetti.
 			  .off()
 			  .click(function() {
-				  var scrapedData = scraper.getData($modal);
+				  var scrapedData = scraper.getData($modal),
+			          app = targetApp[$('#g2e-nav option:selected').val()];
 				  if (isValidData(scrapedData)) {
 					  $progress.show();
 					  highlightNextStep();
 					  $(this).addClass('g2e-lock').off();
-					  comm.downloadDiffExp(scrapedData);
+					  comm.downloadDiffExp(scrapedData, app);
 				  } else {
 					  resetFooter();
 				  }

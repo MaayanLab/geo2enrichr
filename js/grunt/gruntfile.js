@@ -3,6 +3,8 @@ module.exports = function(grunt) {
 	var src_files = [
 	    '../config.js',
 		'../Comm.js',
+		'../G2EComm.js',
+		'../LssrComm.js',
 		'../Events.js',
 		'../TargetApp.js',
 		'../Templater.js',

@@ -180,7 +180,7 @@ var Templater = function(EXTENSION_ID, targetApp) {
     var init = function() {
         var select = '<select>';
         $.each(targetApp, function(i, app) {
-            select += '<option value="' + app.name + '">';
+            select += '<option value="' + app.selectValue + '">';
             select += app.name;
             select += '</option>';
         });

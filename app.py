@@ -15,6 +15,7 @@ from crossdomain import crossdomain
 import db
 import diffexper
 import enrichrlink
+import l1000cds
 import geodownloader
 import filewriter
 import json
@@ -109,13 +110,20 @@ def diffexp_endpoint():
 	return make_json_response(output_files)
 
 
-@app.route(ENTRY_POINT + '/enrichr', methods=['POST', 'OPTIONS'])
+@app.route(ENTRY_POINT + '/pipe', methods=['POST', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
-def enrichr_endpoint():
-	"""Parses any files on the server and returns a valid Enrichr link.
+def pipe_endpoint():
+	"""Parses any files on the server and returns a valid link to one of the support target apps.
 	"""
 
 	args = RequestArgs(flask.request.json)
+	if args.targetApp['name'] == 'L1000CDS':
+		return flask.jsonify({
+			'status': 'ok',
+			'up': l1000cds.get_link(args.up),
+			'down': '',
+			'combined': ''
+		})
 	return flask.jsonify({
 		'status': 'ok',
 		'up': enrichrlink.get_link(args.up, args.up.split('.')[0]),

@@ -1,5 +1,5 @@
 
-var Comm = function(events, notifier, SERVER) {
+var Comm = function(events, notifier, targetApp, SERVER) {
 
 	// We need to make back-to-back AJAX requests to get the relevant data.
 	// The steps:
@@ -46,7 +46,7 @@ var Comm = function(events, notifier, SERVER) {
 
 	var fetchRareDiseases = function() {
  		$.ajax({
-			url: SERVER + 'diseases',
+			url: SERVER + 'diseases?foo=bar',
 			type: 'GET',
 			dataType: 'JSON',
 			success: function(data) {
@@ -67,7 +67,7 @@ var Comm = function(events, notifier, SERVER) {
 	};
 
 	// This is the workhorse function that chains together multiple AJX requests to the back-end.
-	var downloadDiffExp = function(input) {
+	var downloadDiffExp = function(input, app) {
 		function dlgeo() {
 			var data = {
                 accession: input.accession,
@@ -81,7 +81,7 @@ var Comm = function(events, notifier, SERVER) {
             };
 			
 			var success = function(data) {
-                if (data.status === 'error') {
+                if (isError(data)) {
                     errorHandler(data);
                     return;
                 }
@@ -110,7 +110,7 @@ var Comm = function(events, notifier, SERVER) {
             };
 
 			var success = function(data) {
-                if (data.status === 'error') {
+                if (isError(data)) {
                     errorHandler(data);
                     return;
                 }
@@ -126,16 +126,18 @@ var Comm = function(events, notifier, SERVER) {
 
 			return getAjax('diffexp', data, success);
 		}
-
-		function enrichr(diffExpData) {
-			var data = {
+		
+		function pipe(diffExpData) {
+		    debugger;
+            var data = {
+                'targetApp': app,
                 'up': diffExpData.up,
                 'down': diffExpData.down,
                 'combined': diffExpData.combined
             };
 
-			var success = function(data) {
-                if (data.status === 'error') {
+            var success = function(data) {
+                if (isError(data)) {
                     errorHandler(data);
                     return;
                 }
@@ -145,12 +147,16 @@ var Comm = function(events, notifier, SERVER) {
                 events.fire('genesEnriched', data);
             };
 
-			return getAjax('enrichr', data, success);
-		}
+            return getAjax('pipe', data, success);
+        }
 
 		// Pass in noops so that we do nothing if the promise is not returned.
-		dlgeo().then(diffexp, $.noop).then(enrichr, $.noop);
+		dlgeo().then(diffexp, $.noop).then(pipe, $.noop);
 	};
+
+    var isError = function(data) {
+        return data.status === 'error';
+    };
 
 	var errorHandler = function(data) {
 		events.fire('requestFailed', data);
