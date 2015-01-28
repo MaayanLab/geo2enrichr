@@ -62,7 +62,7 @@ var BaseUi = function(comm, events, notifier, scraper, targetApps, templater) {
 		});
 
 		// Add event handlers
-		$modal.find('#g2e-nav select')
+		$modal.find('#g2e-target-app-select')
 		      .change(changeTargetApp)
 		      .end()
 		      .find('#g2e-close-btn')
@@ -78,9 +78,9 @@ var BaseUi = function(comm, events, notifier, scraper, targetApps, templater) {
 	var changeTargetApp = function(data) {
 	    // This is a great example of jQuery spaghetti. It would be much better to
 	    // have a model just back this view.
-	    targetApps.set($(this).val());
+	    targetApps.set( $(data.target).val() );
 	    $modal
-	        .find('#g2e-target-app')
+	        .find('#g2e-target-app-title')
 	        .text(targetApps.current().name)
 	        .css('color', targetApps.current().color);
 	    resetFooter(); 
@@ -168,9 +168,7 @@ var BaseUi = function(comm, events, notifier, scraper, targetApps, templater) {
 		if (userInput !== null) {
 			scraper.setData(config.key, userInput);
 			newData = scraper.getData();
-			if (isValidData(newData)) {
-				fillConfirmationTable(newData);
-			}
+			fillConfirmationTable(newData);
 		}
 	};
 

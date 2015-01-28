@@ -106,9 +106,6 @@
 
 /* Modal title
  * ----------- */
-#g2e-container #g2e-title {
-	margin: 10px;
-}
 #g2e-container #g2e-title a,
 #g2e-container #g2e-title a:hover {
 	color: #000;
@@ -118,34 +115,30 @@
 	text-decoration: none;
 }
 #g2e-container #g2e-title img {
-	width: 40px;
+	width: 30px;
+}
+#g2e-container #g2e-title span:first-of-type {
+    margin-left: 10px;
 }
 #g2e-container #g2e-title span {
 	font-size: 40px;
 	font-family: 'Open Sans';
-	left: 10px;
+	/*left: 10px;
 	position: relative;
-	top: -4px;
+	top: -4px;*/
 }
-#g2e-container #g2e-title #g2e-x {
-    font-weight: normal;
-}
-
 #g2e-container #g2e-title {
     float: left;
 }
-#g2e-container #g2e-target-app {
+#g2e-container #g2e-target-app-title {
     font-weight: normal;
     text-transform: uppercase;
-}
-#g2e-container #g2e-nav {
-    float: right;
 }
 
 /* Modal navigation
  * ---------------- */
 #g2e-container #g2e-nav {
-    margin: 20px 0 20px 20px;
+    float: right;
 }
 #g2e-container #g2e-nav #g2e-close-btn {
 	background: white;
@@ -162,9 +155,10 @@
 }
 #g2e-container #g2e-nav select {
     background: #009DFF;
-    padding: 4px;
     color: #fff;
+    font-size: 16px;
     margin-right: 5px;
+    padding: 4px;
     position: relative;
     top: -2px;
     -webkit-appearance: none;

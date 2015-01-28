@@ -16,7 +16,7 @@
 				"http://www.ncbi.nlm.nih.gov/sites/*",
 				"http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi*"
 			],
-			"css": ["main.css", "jquery-ui.min.css", "open-sans.css"],
+			"css": ["open-sans.css", "main.css", "jquery-ui.min.css"],
 			"js": ["jquery-1.11.1.min.js", "jquery-ui.min.js", "g2e.js"]
 		}
 	],

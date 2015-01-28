@@ -72,11 +72,6 @@ var TargetApps = function(events) {
                     $form.submit();
                 });
             },
-        },
-        x2k: {
-            name: 'Expression2Kinases',
-            selectValue: 'x2k',
-            color: 'purple'
         }
     };
 

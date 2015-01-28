@@ -23,22 +23,32 @@ var Templater = function(EXTENSION_ID, targetApps) {
 					'<a href="http://maayanlab.net/g2e/" target="_blank">' +
 						'<img src="' + LOGO50X50 + '">' +
 						'<span>GEO2</span>' +
-						'<span id="g2e-target-app" style="color:' + targetApps.current().color + ';">' +
+						'<span id="g2e-target-app-title" style="color:' + targetApps.current().color + ';">' +
 						    targetApps.current().name +
 						'</span>' +
 					'</a>' +
 				'</div>' +
             	'<div id="g2e-nav">' +
-                    '<select>' +
-                        targetAppsOptions() +
-                    '</select>' +
                     '<button id="g2e-close-btn" class="g2e-btn">&#10006</button>' +
                 '</div>' +
                 '<div class="g2e-clear"></div>' +
 				'<table id="g2e-main-tbl">' +
 					'<tr>' +
 						'<td id="g2e-confirm">' +
-							'<div class="g2e-lowlight">Please confirm that your data is correct, *required.</div>' +
+						    '<div class="g2e-lowlight">Please confirm the target application.</div>' +
+                            '<table class="g2e-confirm-tbl">' +
+                                '<tr id="g2e-target-app-select">' +
+                                    '<td class="g2e-title">' +
+                                        '<label>Target application</label>' +
+                                    '</td>' +
+                                    '<td>' +
+                                        '<select>' +
+                                            targetAppsOptions() +
+                                        '</select>' +
+                                    '</td>' +
+                                '</tr>' +
+                            '</table>' +
+							'<div class="g2e-lowlight g2e-bottom">Please verify that your data is correct, *required.</div>' +
 							'<table class="g2e-confirm-tbl">' +
 								'<tr id="g2e-diffexp">' +
 									'<td class="g2e-title">' +
@@ -47,7 +57,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
 									'<td class="g2e-value">' +
 										'<select>' +
 											'<option>Characteristic direction</option>' +
-											'<option>T-test</option>' +
+											//'<option>T-test</option>' +
 										'</select>' +
 									'</td>' +
 								'</tr>' +
