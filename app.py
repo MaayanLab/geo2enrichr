@@ -17,6 +17,7 @@ import diffexper
 import enrichrlink
 import l1000cds
 import geodownloader
+from files import GeneFile
 import filewriter
 import json
 from request import RequestArgs
@@ -110,25 +111,35 @@ def diffexp_endpoint():
 	return make_json_response(output_files)
 
 
-@app.route(ENTRY_POINT + '/pipe', methods=['POST', 'OPTIONS'])
+@app.route(ENTRY_POINT + '/enrichr', methods=['POST', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
-def pipe_endpoint():
-	"""Parses any files on the server and returns a valid link to one of the support target apps.
+def enrichr_endpoint():
+	"""Parses files on the server, pipes the results to Enrichr, and returns a
+	valid link.
 	"""
 
 	args = RequestArgs(flask.request.json)
-	if args.targetApp['name'] == 'L1000CDS':
-		return flask.jsonify({
-			'status': 'ok',
-			'up': l1000cds.get_link(args.up),
-			'down': '',
-			'combined': ''
-		})
 	return flask.jsonify({
 		'status': 'ok',
 		'up': enrichrlink.get_link(args.up, args.up.split('.')[0]),
 		'down': enrichrlink.get_link(args.down, args.down.split('.')[0]),
 		'combined': enrichrlink.get_link(args.combined, args.combined.split('.')[0])
+	})
+
+
+@app.route(ENTRY_POINT + '/stringify', methods=['POST', 'OPTIONS'])
+@crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
+def stringify_endpoint():
+	"""
+	"""
+
+	args = RequestArgs(flask.request.json)
+	up_genes = GeneFile(args.up)
+	dn_genes = GeneFile(args.down)
+	return flask.jsonify({
+		'status': 'ok',
+		'up': up_genes.stringify_contents('-', False),
+		'down': dn_genes.stringify_contents('-', False)
 	})
 
 
@@ -153,6 +164,18 @@ def rare_diseases_endpoint():
 	return flask.jsonify({
 		'status': 'ok',
 		'rare_diseases': db.get_rare_diseases()
+	})
+
+
+@app.route(ENTRY_POINT + '/platforms', methods=['GET'])
+@crossdomain(origin=ALLOWED_ORIGINS)
+def platforms_endpoint():
+	"""Returns a dictionary of support platforms.
+	"""
+
+	return flask.jsonify({
+		'status': 'ok',
+		'supported_platforms': db.get_supported_platforms()
 	})
 
 

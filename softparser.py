@@ -8,8 +8,12 @@ __contact__ = "gregory.gundersen@mssm.edu"
 
 import numpy as np
 
+import db
 from files import SOFTFile
 from log import pprint
+
+
+PROBE2GENE = db.PROBE2GENE
 
 
 def parse(filename, platform, A_cols, B_cols):
@@ -132,26 +136,3 @@ def _probe2gene(platform, probe):
 	except AttributeError:
 		return None
 	return None
-
-
-def _open_probe_dict(platform_probesetid_genesym_file):
-	"""Platform data collected and script written by Andrew Rouillard.
-	"""
-
-	platformdictionary = {}
-	with open(platform_probesetid_genesym_file) as f:
-		for line in f:
-			entries = line.rstrip().split('\t')
-			platform = entries[0]
-			probesetid = entries[1]
-			genesym = entries[2]
-			if platform in platformdictionary:
-				platformdictionary[platform][probesetid] = genesym
-			else:
-				platformdictionary[platform] = {probesetid:genesym}
-	return platformdictionary
-
-
-# This loads a ~300MB Python dictionary into memory. Is there a better way to
-# do this?
-PROBE2GENE = _open_probe_dict('static/probe2gene.txt')

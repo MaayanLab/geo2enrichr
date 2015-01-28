@@ -1,11 +1,9 @@
 
-var BaseScraper = function(DEBUG, events) {
+var BaseScraper = function(DEBUG) {
 
 	var sData = {};
 
-	var genemap;
-
-	return {
+    return {
 
 		getData: function($modal) {
 			// getSamples() returns an object rather than mutating sData
@@ -37,7 +35,7 @@ var BaseScraper = function(DEBUG, events) {
 				cell = $modal.find('#g2e-confirm-cell td.g2e-tbl-value input').val(),
 				perturbation = $modal.find('#g2e-confirm-pert td.g2e-tbl-value input').val(),
 			    gene = $modal.find('#g2e-confirm-gene #geneList').val();
-			    disease = $modal.find('#g2e-confirm-disease #diseaseList').val();
+			    disease = $modal.find('#g2e-confirm-disease #g2e-diseaseList').val();
             
 			if (method) {
 				sData.method = method;

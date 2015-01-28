@@ -40,6 +40,10 @@ RARE_DISEASES_LIST = [x[1] for x in cur.fetchall()]
 cur.close()
 
 
+# Initialized at bottom of the module.
+PROBE2GENE = None
+
+
 # See http://stackoverflow.com/questions/2887878.
 def record_extraction(accession, A, B, metadata, config):
 	"""Records an extraction event in the database, writing the data to multiple
@@ -147,6 +151,36 @@ def show_extractions():
 	cur = conn.cursor()
 	cur.execute('SELECT * FROM %s' % EXTRACTION_TABLE)
 	print cur.fetchall()
+
+
+def get_supported_platforms():
+	"""Returns the PROBE2GENE dict.
+	"""
+
+	return PROBE2GENE.keys()
+
+
+def build_probe_dict(platform_probesetid_genesym_file):
+	"""Platform data collected and script written by Andrew Rouillard.
+	"""
+
+	platform_dict = {}
+	with open(platform_probesetid_genesym_file) as f:
+		for line in f:
+			entries = line.rstrip().split('\t')
+			platform = entries[0]
+			probesetid = entries[1]
+			genesym = entries[2]
+			if platform in platform_dict:
+				platform_dict[platform][probesetid] = genesym
+			else:
+				platform_dict[platform] = {probesetid:genesym}
+	return platform_dict
+
+
+# This loads a ~300MB Python dictionary into memory. Is there a better way to
+# do this?
+PROBE2GENE = build_probe_dict('static/probe2gene.txt')
 
 
 if __name__ == '__main__':

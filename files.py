@@ -52,7 +52,7 @@ class GeneFile(File):
 		filename = filename + '.genes'
 		super(GeneFile, self).__init__(filename, 'genes/', '.txt')
 
-	def stringify_contents(self):
+	def stringify_contents(self, sep='\n', include_membership=False):
 		"""Parse contents and return a string formatted for a POST request to
 		Enrichr.
 		"""
@@ -62,6 +62,9 @@ class GeneFile(File):
 			for i, line in enumerate(f):
 				split_line = line.rstrip().split('\t')
 				gene = split_line[0]
-				membership = split_line[1]
-				result += gene + ',' + membership + '\n'
+				if include_membership:
+					membership = split_line[1]
+					result += gene + ',' + membership + sep
+				else:
+					result += gene + sep
 		return result

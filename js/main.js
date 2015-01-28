@@ -16,29 +16,29 @@ var main = function() {
 		// EXTENSION_ID, DEBUG, and SERVER are set in config.js via deploy.sh.
 	    var events = Events(),
 			notifier = Notifier(DEBUG),
-			targetApp = TargetApp(),
-			templater = Templater(EXTENSION_ID, targetApp),
-			baseScraper = BaseScraper(DEBUG, events),
+			targetApps = TargetApps(events),
+			templater = Templater(EXTENSION_ID, targetApps),
+			baseScraper = BaseScraper(DEBUG),
 			scraper,
+			bootstrapper,
 			ui,
 			comm;
 
+		// TODO: Make GdsUi and GseUi both part of a single Bootstrapper module?.
 		if (isGds()) {
 			modeScraper = GdsScraper(events);
-			scraper = $.extend(modeScraper, baseScraper);
+			bootstrapper = GdsUi(events, templater);
 		} else {
 			modeScraper = GseScraper(events, templater);
-			scraper = $.extend(modeScraper, baseScraper);
-		}
-		comm = Comm(events, notifier, targetApp, SERVER);
-		ui = $.extend(GdsUi(templater, events), BaseUi(comm, events, notifier, scraper, targetApp, templater));
-
-		// This executes in the background, collecting information about the page before the user even inputs.
-		if (scraper.getAccessionFromUrl) {
-			comm.fetchMetadata(scraper.getAccessionFromUrl());
+			bootstrapper = GseUi(events, templater);
 		}
 
-		ui.init();
+		scraper = $.extend(modeScraper, baseScraper);
+		comm = Comm(events, notifier, targetApps, SERVER);
+		ui = BaseUi(comm, events, notifier, scraper, targetApps, templater);
+		
+		bootstrapper.init();
+
 		notifier.log('g2e loaded.');
 	};
 

@@ -107,7 +107,6 @@
 /* Modal title
  * ----------- */
 #g2e-container #g2e-title {
-	font-weight: bold;
 	margin: 10px;
 }
 #g2e-container #g2e-title a,
@@ -135,6 +134,10 @@
 #g2e-container #g2e-title {
     float: left;
 }
+#g2e-container #g2e-target-app {
+    font-weight: normal;
+    text-transform: uppercase;
+}
 #g2e-container #g2e-nav {
     float: right;
 }
@@ -142,10 +145,7 @@
 /* Modal navigation
  * ---------------- */
 #g2e-container #g2e-nav {
-    margin: 20px;
-	/*position: absolute;
-	right: 0;
-	top: 0;*/
+    margin: 20px 0 20px 20px;
 }
 #g2e-container #g2e-nav #g2e-close-btn {
 	background: white;
@@ -187,14 +187,14 @@
 	padding: 5px;
 }
 #g2e-container #g2e-progress-bar .g2e-progress.g2e-ready {
-	background: #FFC0CB;
-	color: #000;
+	background: #009DFF;
+	color: #fff;
 }
 #g2e-container #g2e-progress-bar #g2e-step1,
 #g2e-container #g2e-progress-bar #g2e-step2,
 #g2e-container #g2e-progress-bar #g2e-step3,
 #g2e-container #g2e-progress-bar #g2e-step4 {
-	border-right: 1px solid #bdbdbd;
+	border-right: 1px solid white;
 }
 
 /* Modal confirm
@@ -247,6 +247,9 @@
 	padding: 10px 0 0 0;
 	min-height: 45px;
 }
+#g2e-container #g2e-footer table .g2e-title {
+	width: 130px;
+}
 #g2e-container #g2e-footer > table {
 	/* Prevents the table's tds from expanding when content is inserted. */
 	table-layout: fixed;
@@ -255,22 +258,18 @@
 #g2e-container #g2e-footer > table td {
 	padding: 5px 10px 0 0;
 }
-#g2e-container .g2e-results {
-	clear: both;
-	display: none;
+#g2e-container #g2e-results {
+    display: none;
 }
-#g2e-container .g2e-results button {
+#g2e-container #g2e-results button {
 	display: inline;
 	margin-right: 5px;
 	min-width: 40px;
 	padding: 5px;
 }
-#g2e-container .g2e-results button:hover {
+#g2e-container #g2e-results button:hover {
 	background: #0078C2;
 	cursor: pointer;
-}
-#g2e-container #g2e-footer table .g2e-title {
-	width: 130px;
 }
 
 /* Modal credits

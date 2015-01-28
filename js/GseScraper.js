@@ -1,15 +1,9 @@
 
 var GseScraper = function(events) {
 
-	var key = 'gse',
-		$details,
-		metadata = {};
+	var $details;
 
-	events.on('metadataFetched', function(data) {
-		metadata = data;
-	});
-
-	events.on('uiReady', function(data) {
+	events.on('bootstrapped', function(data) {
 		$details = data.details;
 	});
 
@@ -39,7 +33,7 @@ var GseScraper = function(events) {
 		// If required, this can be used as a general purpose query param getter.
 		// The accession number is not necessarily in the URL for GDS.
 		// Should we check anyway?
-		getAccessionFromUrl: function() {
+		getAccession: function() {
 			var params = window.location.search.substring(1).split('&'),
 				i = 0,
 				len = params.length;
@@ -51,19 +45,7 @@ var GseScraper = function(events) {
 			}
 		},
 
-		getAccession: function() {
-			var accession = this.getAccessionFromUrl();
-			if (accession) {
-				return accession;
-			} else if (metadata.accession) {
-				return metadata.accession;
-			}
-		},
-
 		getOrganism: function() {
-			if (typeof metadata !== 'undefined' && metadata.taxon) {
-				return metadata.taxon;
-			}
 			return this.getByName('organism');
 		},
 

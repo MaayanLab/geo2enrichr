@@ -2,25 +2,19 @@
 var GdsScraper = function(events) {
 
 	var $details,
-		$hook,
-		metadata = {};
+		$hook;
 
-	events.on('embedded', function(hook) {
-		$hook = hook;
-	});
-
-	events.on('metadataFetched', function(data) {
-		metadata = data;
-	});
-
-	events.on('uiReady', function(data) {
+	events.on('bootstrapped', function(data) {
 		$details = data.details;
+		$hook = data.hook;
 	});
 
 	return {
 
 		getAccession: function() {
-			return metadata.accession || this.getAccessionFromPage();
+			var record_caption = $details.find('.caption').text(),
+				re = new RegExp(/(?:GDS|GSE)[0-9]*/);
+			return re.exec(record_caption)[0];
 		},
 
 		getOrganism: function() {
@@ -78,12 +72,6 @@ var GdsScraper = function(events) {
 				}
 			});
 			return result;
-		},
-
-		getAccessionFromPage: function() {
-			var record_caption = $details.find('.caption').text(),
-				re = new RegExp(/(?:GDS|GSE)[0-9]*/);
-			return re.exec(record_caption)[0];
 		}
 	};
 };

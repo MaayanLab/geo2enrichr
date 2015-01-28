@@ -1,7 +1,20 @@
 
-var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
+var BaseUi = function(comm, events, notifier, scraper, targetApps, templater) {
 
 	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
+   
+    // Since this list is so small, it is cached in the browser.
+    // How can we remember to update it?
+    var supportedPlatforms = ["GPL8321", "GPL7091", "GPL11383", "GPL4044",
+        "GPL6887", "GPL3084", "GPL96", "GPL16268", "GPL13692", "GPL2881",
+        "GPL15207", "GPL3697", "GPL339", "GPL17518", "GPL15401", "GPL13712",
+        "GPL201", "GPL1261", "GPL10558", "GPL6193", "GPL6244", "GPL3050",
+        "GPL6101", "GPL6885", "GPL4685", "GPL6102", "GPL4200", "GPL6480",
+        "GPL6106", "GPL7202", "GPL4134", "GPL1708", "GPL3921", "GPL85",
+        "GPL4074", "GPL2897", "GPL4133", "GPL6947", "GPL1536", "GPL1355",
+        "GPL4487", "GPL81", "GPL6096", "GPL8063", "GPL11202", "GPL16686",
+        "GPL15792", "GPL6246", "GPL340", "GPL11180", "GPL13497", "GPL571",
+        "GPL570"];
 
 	var dataConfig = {
 		'g2e-accession': {
@@ -40,7 +53,7 @@ var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
 		$overlay = $modal.hide().appendTo('body');
 		$('#g2e-container #g2e-modal').draggable();
 		$progress = $progress || $('#g2e-progress-bar');
-		$results = $results || $('.g2e-results');
+		$results = $results || $('#g2e-results');
 
 		// Allow editing of the values, in case we scraped incorrectly.
 		$('.g2e-editable').click(function(evt) {
@@ -65,11 +78,12 @@ var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
 	var changeTargetApp = function(data) {
 	    // This is a great example of jQuery spaghetti. It would be much better to
 	    // have a model just back this view.
-	    var app = targetApp[$(this).val()];
-	    $modal.find('#g2e-target-app').text(app.name);
-	    events.fire('targetAppChanged', {
-            targetApp: app
-        });
+	    targetApps.set($(this).val());
+	    $modal
+	        .find('#g2e-target-app')
+	        .text(targetApps.current().name)
+	        .css('color', targetApps.current().color);
+	    resetFooter(); 
 	};
 
 	// This function is called every time the "Pipe to Enrichr" button is clicked.
@@ -78,7 +92,8 @@ var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
 		// Show the user the data we have scraped for confirmation.
 		scrapedData = scraper.getData($modal);
 		fillConfirmationTable(scrapedData);
-		showModalBox();
+		$overlay.show();
+		$modal.show();
 	};
 
 	var highlightNextStep = function() {
@@ -96,37 +111,15 @@ var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
 				.end();
 	};
 
-	var showResults = function(enrichrLinks) {
-		$results.show()	
-				.find('#g2e-enrichr-up')
-				.click(function() {
-					window.open(enrichrLinks.up, '_blank');
-				})
-				.end()
-				.find('#g2e-enrichr-down')
-				.click(function() {
-					window.open(enrichrLinks.down, '_blank');
-				})
-				.end()
-				.find('#g2e-enrichr-combined')
-				.click(function() {
-					window.open(enrichrLinks.combined, '_blank');
-				});
-	};
-
-	var showModalBox = function() {
-		$overlay.show();
-		$modal.show();
-	};
-
-	var hideModalBox = function() {
-		$overlay.hide();
-		$modal.hide();
+	var showResults = function(data) {
+	    targetApps.current().resultsFormatter(data);
+		$results.show();
 	};
 
 	var resetModalBox = function() {
 		resetFooter();
-		hideModalBox();
+		$overlay.hide();
+		$modal.hide();
 	};
 
 	var resetFooter = function() {
@@ -137,9 +130,9 @@ var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
 				 .removeClass('g2e-ready');
 
 		// Result any results.
+		$('#g2e-target-app-results').remove();
 		$results.hide()
 				.find('button')
-				.first()
 				.unbind();
 
 		resetSubmitBtn();	
@@ -155,7 +148,7 @@ var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
 			  .off()
 			  .click(function() {
 				  var scrapedData = scraper.getData($modal),
-			          app = targetApp[$('#g2e-nav option:selected').val()];
+			          app = targetApps.current();
 				  if (isValidData(scrapedData)) {
 					  $progress.show();
 					  highlightNextStep();
@@ -217,8 +210,28 @@ var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
 		return true;
 	};
 
-	events.on('targetAppChanged', function(data) {
-	});
+	var setAutocomplete = function(elemName, data) {
+		$modal.find(elemName).autocomplete({
+			source: function(request, response) {
+				var results = $.ui.autocomplete.filter(data, request.term);
+				response(results.slice(0, 10));
+			},
+			minLength: 2,
+			delay: 250,
+			autoFocus: true
+		});
+	};
+
+    events.on('bootstrapped', function() {
+        var $g2eLink =  $('#g2e-embedded-button #g2e-link'),
+            platform = scraper.getPlatform();
+
+        if (platform && $.inArray(platform, supportedPlatforms) === -1) {
+            $g2eLink.html('<strong class="g2e-strong">GEOX:</strong> This platform is not currently supported.');
+        } else {
+            $g2eLink.click(openModalBox);
+        }
+    });
 
 	events.on('requestFailed', function(errorData) {
 		notifier.warn(errorData.message);
@@ -226,31 +239,17 @@ var BaseUi = function(comm, events, notifier, scraper, targetApp, templater) {
 	});
 
 	events.on('geneListFetched', function(geneList) {
-		$('#geneList').autocomplete({
-			source: function(request, response) {
-				var results = $.ui.autocomplete.filter(geneList, request.term);
-				response(results.slice(0, 10));
-			},
-			minLength: 2,
-			delay: 250,
-			autoFocus: true
-		});
+        setAutocomplete('#g2e-geneList', geneList);
 	});
 
 	events.on('rareDiseasesFetched', function(diseaseList) {
-		$('#diseaseList').autocomplete({
-			source: function(request, response) {
-				var results = $.ui.autocomplete.filter(diseaseList, request.term);
-				response(results.slice(0, 10));
-			},
-			minLength: 2,
-			delay: 250,
-			autoFocus: true
-		});
+	    setAutocomplete('#g2e-diseaseList', diseaseList);
 	});
 
 	events.on('progressBar', highlightNextStep);
+
 	events.on('dataDiffExped', setDownloadLinks);
+
 	events.on('genesEnriched', showResults);
 	
 	init();

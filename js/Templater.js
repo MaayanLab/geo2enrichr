@@ -1,7 +1,20 @@
 
-var Templater = function(EXTENSION_ID, targetApp) {
+var Templater = function(EXTENSION_ID, targetApps) {
 
 	var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/images/g2e-logo-50x50.png';
+
+    var targetAppsOptions = function() {
+        var options = '';
+        $.each(targetApps.all(), function(i, app) {
+            options += '<option value="' + app.selectValue + '"';
+            if (app == targetApps.current()) {
+                 options += 'selected="selected"';
+            }
+            options += '>' + app.name;
+            options += '</option>';
+        });
+        return options;
+    };
 
 	var $modal = $('' +
 		'<div id="g2e-container">' +
@@ -9,15 +22,16 @@ var Templater = function(EXTENSION_ID, targetApp) {
 				'<div id="g2e-title">' +
 					'<a href="http://maayanlab.net/g2e/" target="_blank">' +
 						'<img src="' + LOGO50X50 + '">' +
-						'<span>GEO+</span>' +
-						'<span id="g2e-target-app" class="g2e-highlight">Enrichr</span>' +
+						'<span>GEO2</span>' +
+						'<span id="g2e-target-app" style="color:' + targetApps.current().color + ';">' +
+						    targetApps.current().name +
+						'</span>' +
 					'</a>' +
 				'</div>' +
             	'<div id="g2e-nav">' +
-                    /*'<select>' +
-                        '<option value="Enrichr">Enrichr</option>' +
-                        '<option value="Sigine">Sigine</option>' +
-                    '</select>' +*/
+                    '<select>' +
+                        targetAppsOptions() +
+                    '</select>' +
                     '<button id="g2e-close-btn" class="g2e-btn">&#10006</button>' +
                 '</div>' +
                 '<div class="g2e-clear"></div>' +
@@ -78,18 +92,18 @@ var Templater = function(EXTENSION_ID, targetApp) {
 								'</tr>' +
 								'<tr id="g2e-confirm-gene" class="ui-widget">' +
 									'<td class="g2e-title">' +
-										'<label for="geneList">Manipulated gene**</label>' +
+										'<label for="g2e-geneList">Manipulated gene**</label>' +
 									'</td>' +
 									'<td class="g2e-value">' +
-										'<input id="geneList" placeholder="No data">' +
+										'<input id="g2e-geneList" placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
 								'<tr id="g2e-confirm-disease" class="ui-widget g2e-last">' +
 									'<td class="g2e-title">' +
-										'<label for="diseaseList">Rare disease**</label>' +
+										'<label for="g2e-diseaseList">Rare disease**</label>' +
 									'</td>' +
 									'<td class="g2e-value g2e-last">' +
-										'<input id="diseaseList" placeholder="No data">' +
+										'<input id="g2e-diseaseList" placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
 							'</table>' +
@@ -109,34 +123,30 @@ var Templater = function(EXTENSION_ID, targetApp) {
 								'<div id="g2e-step4" class="g2e-progress">Done!</div>' +
 							'</td>' +
 						'</tr>' +
-						'<tr class="g2e-results">' +
-							'<td class="g2e-title">' +
-								'<strong>Enriched genes:</strong>' +
-							'</td>' +
-							'<td class="g2e-title">' +
-								'<button id="g2e-enrichr-up">Up</button>' +
-								'<button id="g2e-enrichr-down">Down</button>' +
-								'<button id="g2e-enrichr-combined">All</button>' +
-							'</td>' +
-						'</tr>' +
-						'<tr class="g2e-results">' +
-							'<td class="g2e-title">' +
-								'<strong>Downloads:</strong>' +
-							'</td>' +
-							'<td>' +
-								'<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
-							'</td>' +
-						'</tr>' +
 					'</table>' +
+				    '<table id="g2e-results">' +
+                        '<tr id="g2e-downloads">' +
+                            '<td class="g2e-title">' +
+                                '<strong>Downloads:</strong>' +
+                            '</td>' +
+                            '<td>' +
+                                '<button id="g2e-download-btn" class="g2e-btn">Download gene list</button>' +
+                            '</td>' +
+                        '</tr>' +
+
+                        // This is filled in by the TargetApps module.
+                        '<td id="g2e-results-title" class="g2e-title"></td>' +
+                        '<td id="g2e-results-value" class="g2e-value"></td>' +
+                    '</table>' +
                     '<p id="g2e-credits">' + 
-                        'GEO+ is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
+                        'GEO2X is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                         ' See the <a href="http://maayanlab.net/g2e/" target="_blank">documentation</a> for details.' +
                     '</p>' +
                 '</div>' +
 			'</div>' +
 		'</div>');
 
-    var BUTTON_TEXT = 'Open <strong class="g2e-strong">GEO+</strong>';
+    var BUTTON_TEXT = 'Extract knowledge with <strong class="g2e-strong">GEO2X</strong>';
 
 	var templates = {
 		'modal': $modal,
@@ -159,37 +169,26 @@ var Templater = function(EXTENSION_ID, targetApp) {
 						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
 				'</tr>'),
-			'thead': '' +
+			'thead': $('' +
 			    // TODO: Rename "table-title" to "title"
-				$('<tr valign="top" id="g2e-table-title">' +
+				'<tr valign="top" id="g2e-table-title">' +
 					'<td></td>' +
 					'<td></td>' +
-					'<td class="g2e-ctrl">Ctrl</td>' +
-					'<td class="g2e-expmt">Expmt</td>' +
+					'<td class="g2e-ctrl">Control</td>' +
+					'<td class="g2e-expmt">Experimental</td>' +
 				'</tr>'),
+
 			'chkbxs': '' +
-				$('<td>' +
+				'<td>' +
 					'<input class="g2e-chkbx g2e-control" type="checkbox" />' +
 				'</td>' +
 				'<td>' +
 					'<input class="g2e-chkbx g2e-experimental" type="checkbox" />' +
-				'</td>')
+				'</td>'
 		}
 	};
 
-    var init = function() {
-        var select = '<select>';
-        $.each(targetApp, function(i, app) {
-            select += '<option value="' + app.selectValue + '">';
-            select += app.name;
-            select += '</option>';
-        });
-        select += '</select>';
-        $modal.find('#g2e-nav').append(select);
-    }();
-
 	return {
-	    // Rename get$, if it consistently returns jQuery object?
 		get: function(el, key) {
 			if (key) {
 				return templates[key][el];
