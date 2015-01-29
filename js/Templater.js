@@ -158,13 +158,15 @@ var Templater = function(EXTENSION_ID, targetApps) {
 
     var BUTTON_TEXT = 'Extract knowledge with <strong class="g2e-strong">GEO2X</strong>';
 
+    var EMBED_BTN_ID ="g2e-embedded-button";
+
 	var templates = {
 		'modal': $modal,
 		'gds': {
 			'btn': $('' +
 				'<tr>' +
 					// "azline" comes from the GEO website.
-					'<td class="azline" id="g2e-embedded-button">' +
+					'<td class="azline" id="' + EMBED_BTN_ID + '">' +
 						'<b>Step 4: </b>' +
 						'<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
 						'<img src="' + LOGO50X50 + '">' +
@@ -174,7 +176,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
 		'gse': {
 			'btn': $('' +
 				'<tr>' +
-					'<td id="g2e-embedded-button">' +
+					'<td id="' + EMBED_BTN_ID + '">' +
 						'<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
 						'<img src="' + LOGO50X50 + '">' +
 					'</td>' +
@@ -204,6 +206,9 @@ var Templater = function(EXTENSION_ID, targetApps) {
 				return templates[key][el];
 			}
 			return templates[el];
+		},
+		embedBtnId: function() {
+            return EMBED_BTN_ID;
 		}
 	};
 };

@@ -1,5 +1,5 @@
 
-var BaseUi = function(comm, events, notifier, scraper, targetApps, templater) {
+var Ui = function(comm, events, notifier, scraper, targetApps, templater) {
 
 	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
    

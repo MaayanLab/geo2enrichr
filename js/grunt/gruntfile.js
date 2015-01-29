@@ -3,6 +3,9 @@ module.exports = function(grunt) {
 	var src_files = [
 	    '../config.js',
 		'../Comm.js',
+        '../Bootstrapper.js',
+		'../GdsBootstrapper.js',
+		'../GseBootstrapper.js',
 		'../G2EComm.js',
 		'../LssrComm.js',
 		'../Events.js',
@@ -12,9 +15,7 @@ module.exports = function(grunt) {
 		'../BaseScraper.js',
 		'../GdsScraper.js',
 		'../GseScraper.js',
-		'../BaseUi.js',
-		'../GdsUi.js',
-		'../GseUi.js',
+		'../Ui.js',
 		'../main.js'
 	];
 

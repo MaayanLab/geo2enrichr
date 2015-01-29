@@ -1,8 +1,11 @@
 
-var GdsUi = function(events, templater) {
+var GdsBootstrapper = function(events, templater) {
 
     var embed = function($hook) {
-        $hook.children().last().after(templater.get('btn', 'gds'));
+        $hook
+            .children()
+            .last()
+            .after(templater.get('btn', 'gds'));
         events.fire('bootstrapped', {
             details: $('#gds_details'),
             hook: $hook

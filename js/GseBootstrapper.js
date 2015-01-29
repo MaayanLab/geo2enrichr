@@ -1,5 +1,5 @@
 
-var GseUi = function(events, templater) {
+var GseBootstrapper = function(events, templater) {
 
 	var $gse_details;
 
@@ -54,9 +54,7 @@ var GseUi = function(events, templater) {
     var init = function() {
         // Go up two parents to find the table.
         var $hook = $('#geo2r').next();
-        if ($hook) {
-            embed($hook);
-        }
+        embed($hook);
     };
 
 	return {
