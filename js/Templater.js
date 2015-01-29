@@ -84,7 +84,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
 							'</table>' +
 							'<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations, **if relevant.</div>' +
 							'<table class="g2e-confirm-tbl">' +
-								'<tr id="g2e-confirm-cell">' +
+								'<tr id="g2e-cell">' +
 									'<td class="g2e-title">' +
 										'<label>Cell type or tissue</label>' +
 									'</td>' +
@@ -92,7 +92,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
 										'<input placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-pert">' +
+								'<tr id="g2e-perturbation">' +
 									'<td class="g2e-title">' +
 										'<label>Perturbation</label>' +
 									'</td>' +
@@ -100,7 +100,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
 										'<input placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-gene" class="ui-widget">' +
+								'<tr id="g2e-gene" class="ui-widget">' +
 									'<td class="g2e-title">' +
 										'<label for="g2e-geneList">Manipulated gene**</label>' +
 									'</td>' +
@@ -108,7 +108,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
 										'<input id="g2e-geneList" placeholder="No data">' +
 									'</td>' +
 								'</tr>' +
-								'<tr id="g2e-confirm-disease" class="ui-widget g2e-last">' +
+								'<tr id="g2e-disease" class="ui-widget g2e-last">' +
 									'<td class="g2e-title">' +
 										'<label for="g2e-diseaseList">Rare disease**</label>' +
 									'</td>' +

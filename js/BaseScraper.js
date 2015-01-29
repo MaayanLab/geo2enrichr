@@ -31,11 +31,11 @@ var BaseScraper = function(DEBUG) {
 		},
 
 		getOptions: function($modal) {
-			var method = $modal.find('#g2e-confirm-tbl-diffexp option:selected').val(),
-				cell = $modal.find('#g2e-confirm-cell td.g2e-tbl-value input').val(),
-				perturbation = $modal.find('#g2e-confirm-pert td.g2e-tbl-value input').val(),
-			    gene = $modal.find('#g2e-confirm-gene #geneList').val();
-			    disease = $modal.find('#g2e-confirm-disease #g2e-diseaseList').val();
+			var method = $modal.find('#g2e-diffexp option:selected').val(),
+				cell = $modal.find('#g2e-cell td.g2e-value input').val(),
+				perturbation = $modal.find('#g2e-perturbation td.g2e-value input').val(),
+			    gene = $modal.find('#g2e-gene #g2e-geneList').val();
+			    disease = $modal.find('#g2e-disease #g2e-diseaseList').val();
             
 			if (method) {
 				sData.method = method;

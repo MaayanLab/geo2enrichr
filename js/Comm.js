@@ -56,7 +56,7 @@ var Comm = function(events, notifier, targetApps, SERVER) {
                 gene: input.gene,
                 disease: input.disease
             };
-			
+
 			var success = function(data) {
                 if (isError(data)) {
                     errorHandler(data);

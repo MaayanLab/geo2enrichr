@@ -181,7 +181,7 @@
 	padding: 5px;
 }
 #g2e-container #g2e-progress-bar .g2e-progress.g2e-ready {
-	background: #009DFF;
+	background: gray;
 	color: #fff;
 }
 #g2e-container #g2e-progress-bar #g2e-step1,
