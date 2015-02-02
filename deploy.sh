@@ -24,6 +24,9 @@ cp images/g2e-logo-128x128.png website/images/g2e-logo-128x128.png
 JS_CONFIG='js/config.js'
 # Empty file
 > $JS_CONFIG
+
+python db.py >> $JS_CONFIG
+
 if [ "$1" = "dev" ]; then
     echo '--------------------- dev ---------------------'
     printf '%s\n' '// This file is built by deploy.sh in the root directory.' >> $JS_CONFIG

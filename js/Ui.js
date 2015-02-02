@@ -1,21 +1,8 @@
 
-var Ui = function(comm, events, notifier, scraper, targetApps, templater) {
+var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetApps, templater) {
 
 	var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
    
-    // Since this list is so small, it is cached in the browser.
-    // How can we remember to update it?
-    var supportedPlatforms = ["GPL8321", "GPL7091", "GPL11383", "GPL4044",
-        "GPL6887", "GPL3084", "GPL96", "GPL16268", "GPL13692", "GPL2881",
-        "GPL15207", "GPL3697", "GPL339", "GPL17518", "GPL15401", "GPL13712",
-        "GPL201", "GPL1261", "GPL10558", "GPL6193", "GPL6244", "GPL3050",
-        "GPL6101", "GPL6885", "GPL4685", "GPL6102", "GPL4200", "GPL6480",
-        "GPL6106", "GPL7202", "GPL4134", "GPL1708", "GPL3921", "GPL85",
-        "GPL4074", "GPL2897", "GPL4133", "GPL6947", "GPL1536", "GPL1355",
-        "GPL4487", "GPL81", "GPL6096", "GPL8063", "GPL11202", "GPL16686",
-        "GPL15792", "GPL6246", "GPL340", "GPL11180", "GPL13497", "GPL571",
-        "GPL570"];
-
 	var dataConfig = {
 		'g2e-accession': {
 			key: 'accession',
@@ -224,7 +211,14 @@ var Ui = function(comm, events, notifier, scraper, targetApps, templater) {
         var $g2eLink =  $('#g2e-embedded-button #g2e-link'),
             platform = scraper.getPlatform();
 
-        if (platform && $.inArray(platform, supportedPlatforms) === -1) {
+        /* SUPPORTED_PLATFORMS is a global variable built by the deployment
+         * script. We do this because (1) the array is small and can be loaded
+         * into the client's memory; (2) any network, if the array was fetched
+         * from the server, would erroneously tell the client we support that
+         * platform; and (3) manually updating this variable in JS is easy to
+         * forget.
+         */
+        if (platform && $.inArray(platform, SUPPORTED_PLATFORMS) === -1) {
             $g2eLink.html('<strong class="g2e-strong">GEOX:</strong> This platform is not currently supported.');
         } else {
             $g2eLink.click(openModalBox);

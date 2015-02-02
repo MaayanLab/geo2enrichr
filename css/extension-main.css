@@ -123,16 +123,13 @@
 #g2e-container #g2e-title span {
 	font-size: 40px;
 	font-family: 'Open Sans';
+    font-weight: bold;
 	/*left: 10px;
 	position: relative;
 	top: -4px;*/
 }
 #g2e-container #g2e-title {
     float: left;
-}
-#g2e-container #g2e-target-app-title {
-    font-weight: normal;
-    text-transform: uppercase;
 }
 
 /* Modal navigation

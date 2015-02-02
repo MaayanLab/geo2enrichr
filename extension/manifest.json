@@ -1,6 +1,6 @@
 {
-	"name": "GEO2X",
-	"short_name": "GEO2X",
+	"name": "GEO2Enrichr",
+	"short_name": "g2e",
 	"version": "1.7",
 	"description": "Ma'ayan Lab",
 	"icons": {

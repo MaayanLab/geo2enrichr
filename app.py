@@ -15,7 +15,6 @@ from crossdomain import crossdomain
 import db
 import diffexper
 import enrichrlink
-import l1000cds
 import geodownloader
 from files import GeneFile
 import filewriter
@@ -50,7 +49,7 @@ def index_endpoint():
 	})
 
 
-@app.route(ENTRY_POINT + '/dlgeo', methods=['POST', 'OPTIONS'])
+@app.route(ENTRY_POINT + '/dlgeo', methods=['PUT', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def dlgeo_endpoint():
 	"""Takes an an accession number and optional annotations and downloads the

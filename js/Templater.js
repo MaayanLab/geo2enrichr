@@ -35,7 +35,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
 				'<table id="g2e-main-tbl">' +
 					'<tr>' +
 						'<td id="g2e-confirm">' +
-						    '<div class="g2e-lowlight">Please confirm the target application.</div>' +
+						    /*'<div class="g2e-lowlight">Please confirm the target application.</div>' +
                             '<table class="g2e-confirm-tbl">' +
                                 '<tr id="g2e-target-app-select">' +
                                     '<td class="g2e-title">' +
@@ -47,7 +47,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
-                            '</table>' +
+                            '</table>' +*/
 							'<div class="g2e-lowlight g2e-bottom">Please verify that your data is correct, *required.</div>' +
 							'<table class="g2e-confirm-tbl">' +
 								'<tr id="g2e-diffexp">' +
@@ -57,7 +57,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
 									'<td class="g2e-value">' +
 										'<select>' +
 											'<option>Characteristic direction</option>' +
-											//'<option>T-test</option>' +
+											'<option>T-test</option>' +
 										'</select>' +
 									'</td>' +
 								'</tr>' +
@@ -156,7 +156,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
 			'</div>' +
 		'</div>');
 
-    var BUTTON_TEXT = 'Extract knowledge with <strong class="g2e-strong">GEO2X</strong>';
+    var BUTTON_TEXT = 'Extract knowledge with <strong class="g2e-strong">GEO2Enrichr</strong>';
 
     var EMBED_BTN_ID ="g2e-embedded-button";
 

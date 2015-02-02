@@ -19,7 +19,6 @@ conn = sqlite3.connect('euclid.db', check_same_thread=False)
 
 # TODO: Implement a GENE_TABLE rather than inserting genes as strings.
 
-
 EXTRACTION_TABLE    = 'Extractions'
 # TODO: I have been referring to the experiment accession number as *the*
 # "accession" but in fact the platform and sample IDs are also accessions.
@@ -178,11 +177,10 @@ def build_probe_dict(platform_probesetid_genesym_file):
 	return platform_dict
 
 
-# This loads a ~300MB Python dictionary into memory. Is there a better way to
-# do this?
+# This loads a ~37MB Python dictionary into memory. Is there a problem with this?
 PROBE2GENE = build_probe_dict('static/probe2gene.txt')
 
 
+# This is for the deployment script. 
 if __name__ == '__main__':
-	#reset_database()
-	show_extractions()
+	print 'var SUPPORTED_PLATFORMS = ' + str(PROBE2GENE.keys()) + ';'

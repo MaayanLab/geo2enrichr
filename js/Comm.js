@@ -23,13 +23,15 @@ var Comm = function(events, notifier, targetApps, SERVER) {
 		});       
 	}();
 
-	// This is the workhorse function that chains together multiple AJX requests to the back-end.
+	/* This is the workhorse function that chains together multiple AJX
+	 * requests to the back-end.
+	 */
 	var downloadDiffExp = function(input) {
   
-        var getPost = function(endpoint, data, callback) {
+        var getAjax = function(endpoint, type, data, callback) {
             return $.ajax({
                 url: SERVER + endpoint,
-                type: 'POST',
+                type: type,
                 data: JSON.stringify(data),
                 contentType: 'application/json;charset=UTF-8',
                 crossDomain: true,
@@ -67,7 +69,7 @@ var Comm = function(events, notifier, targetApps, SERVER) {
                 events.fire('progressBar');
             };
 
-			return getPost('dlgeo', data, success);
+			return getAjax('dlgeo', 'PUT', data, success);
 		}
 
 		function diffexp(dlgeoData) {
@@ -101,7 +103,7 @@ var Comm = function(events, notifier, targetApps, SERVER) {
                 });
             };
 
-			return getPost('diffexp', data, success);
+			return getAjax('diffexp', 'POST', data, success);
 		}
 
 		function pipe(diffExpData) {
@@ -122,10 +124,11 @@ var Comm = function(events, notifier, targetApps, SERVER) {
                 events.fire('genesEnriched', data);
             };
 
-            return getPost(targetApps.current().endpoint, data, success);
+            return getAjax(targetApps.current().endpoint, 'POST', data, success);
         }
 
-		// Pass in noops so that we do nothing if the promise is not returned.
+		/* Pass in noops so that we do nothing if the promise is not returned.
+		 */
 		dlgeo().then(diffexp, $.noop).then(pipe, $.noop);
 	};
 
