@@ -70,6 +70,8 @@ def diffexp_endpoint():
 	new .txt files.
 	"""
 
+	import pdb
+	pdb.set_trace()
 	args = RequestArgs(flask.request.json)
 
 	# Return early if the platform is not supported.

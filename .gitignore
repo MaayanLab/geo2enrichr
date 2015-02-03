@@ -37,3 +37,6 @@ probe2gene.py
 
 # VIM
 *.swp
+
+# Database (We want to manually update this)
+*.db
