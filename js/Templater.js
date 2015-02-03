@@ -149,7 +149,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
                         '<td id="g2e-results-value" class="g2e-value"></td>' +
                     '</table>' +
                     '<p id="g2e-credits">' + 
-                        'GEO2X is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
+                        'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                         ' See the <a href="http://maayanlab.net/g2e/" target="_blank">documentation</a> for details.' +
                     '</p>' +
                 '</div>' +
