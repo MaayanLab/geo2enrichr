@@ -49,6 +49,8 @@ def record_extraction(accession, A, B, metadata, config):
 	tables.
 	"""
 
+	print 'Inputing ' + accession + ' into DB'
+	
 	cur = conn.cursor()
 
 	# Insert the experiment ID and platform into their respective tables;

@@ -49,6 +49,44 @@ def index_endpoint():
 	})
 
 
+# TODO: This is an absolutely awful hack that I (GWG) wrote to get the `full`
+# endpoint restabilized for a user. Long term, we *must* re-architecture this
+# module so that we are more dry.
+#
+# Nearly every line of code is actually repeated somewhere else in this
+# module. Comments should be with the original code.
+@app.route(ENTRY_POINT + '/full', methods=['GET'])
+@crossdomain(origin='*')
+def full_endpoint():
+
+	args = RequestArgs(flask.request.args)
+	filename = geodownloader.download(args.accession, args.metadata).filename
+
+	A, B, genes, conversion_pct = softparser.parse(filename, args.metadata.platform, args.A_cols, args.B_cols)
+	A, B, genes = cleaner.normalize(A, B, genes)
+
+	gene_pvalue_pairs = diffexper.analyze(A, B, genes, args.config, filename)
+	output_files = filewriter.output_gene_pvalue_pairs(filename, gene_pvalue_pairs)
+	
+	accession = filename.split('_')[0]
+	db.record_extraction(accession, args.A_cols, args.B_cols, args.metadata, args.config)
+
+	up = output_files['up']
+	dn = output_files['down']
+	cb = output_files['combined']
+
+	return flask.jsonify({
+		'status': 'ok',
+		'conversion_pct':   str(conversion_pct),
+		'up_genes':         GeneFile(up).to_dict(True),
+		'down_genes':       GeneFile(up).to_dict(True),
+		'combined_genes':   GeneFile(up).to_dict(True),
+		'up_enrichr':       enrichrlink.get_link(up, up.split('.')[0]),
+		'down_enrichr':     enrichrlink.get_link(dn, dn.split('.')[0]),
+		'combined_enrichr': enrichrlink.get_link(cb, cb.split('.')[0])
+	})
+
+
 @app.route(ENTRY_POINT + '/dlgeo', methods=['PUT', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def dlgeo_endpoint():
@@ -70,8 +108,6 @@ def diffexp_endpoint():
 	new .txt files.
 	"""
 
-	import pdb
-	pdb.set_trace()
 	args = RequestArgs(flask.request.json)
 
 	# Return early if the platform is not supported.
@@ -104,10 +140,14 @@ def diffexp_endpoint():
 	output_files['status'] = 'ok'
 	output_files['conversion_pct'] = str(conversion_pct)
 
-	# ! TODO !
+	# TODO: This is a *hack* to get the accession number. This *should* be
+	# passed from the front-end or better yet saved in the DB from the
+	# previous request--I'm not sure what the architecture should be in this
+	# latter scenario.
+	accession = args.filename.split('_')[0]
 	# Output filename should be put into database with identifier and returned
 	# ID should be returned to user.
-	db.record_extraction('GDS5077', args.A_cols, args.B_cols, args.metadata, args.config)
+	db.record_extraction(accession, args.A_cols, args.B_cols, args.metadata, args.config)
 
 	return make_json_response(output_files)
 
@@ -139,8 +179,8 @@ def stringify_endpoint():
 	dn_genes = GeneFile(args.down)
 	return flask.jsonify({
 		'status': 'ok',
-		'up': up_genes.stringify_contents('-', False),
-		'down': dn_genes.stringify_contents('-', False)
+		'up': up_genes.to_str('-', False),
+		'down': dn_genes.to_str('-', False)
 	})
 
 

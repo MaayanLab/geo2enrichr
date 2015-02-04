@@ -16,7 +16,7 @@ BASE_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
 
 
 def get_link(filename, description):
-	gene_str = GeneFile(filename).stringify_contents()
+	gene_str = GeneFile(filename).to_str()
 	link = _post_and_build_link(gene_str, description)
 	return link
 

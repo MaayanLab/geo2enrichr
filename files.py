@@ -15,6 +15,7 @@ from time import time
 
 class File(object):
 
+
 	def __init__(self, filename, directory, extension, metadata=None):
 		if metadata:
 			self.annotations = filter(None, metadata)
@@ -25,6 +26,7 @@ class File(object):
 		self.filename = '_'.join(filter(None, [filename, anno, timestamp])) + extension
 		self.directory = directory
 
+
 	# Does this need to be a method? What is the value?
 	def path(self):
 		return 'static/' + self.directory + self.filename
@@ -33,6 +35,7 @@ class File(object):
 
 
 class SOFTFile(File):
+
 
 	def __init__(self, accessionOrFile, metadata=None):
 		# This constructor can take either an accession number or a reference
@@ -46,13 +49,15 @@ class SOFTFile(File):
 
 class GeneFile(File):
 
+
 	def __init__(self, filename):
 		if '.genes.txt' in filename:
 			filename = filename.replace('.genes.txt', '')
 		filename = filename + '.genes'
 		super(GeneFile, self).__init__(filename, 'genes/', '.txt')
 
-	def stringify_contents(self, sep='\n', include_membership=False):
+
+	def to_str(self, sep='\n', include_membership=False):
 		"""Parse contents and return a string formatted for a POST request to
 		Enrichr.
 		"""
@@ -68,3 +73,17 @@ class GeneFile(File):
 				else:
 					result += gene + sep
 		return result
+
+
+	def to_dict(self, include_membership=False):
+		result = {}
+		with open(self.path()) as f:
+			for i, line in enumerate(f):
+				split_line = line.rstrip().split('\t')
+				gene = split_line[0]
+				if include_membership:
+					membership = split_line[1]
+					result[gene] = membership
+				else:
+					result[gene] = 1
+			return result

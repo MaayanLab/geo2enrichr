@@ -17,7 +17,7 @@ BASE_URL = 'http://amp.pharm.mssm.edu/lssr/input'
 
 
 def get_link(filename):
-	gene_str = GeneFile(filename).stringify_contents()
+	gene_str = GeneFile(filename).to_str()
 	link = _post_and_build_link(gene_str)
 	return link
 
@@ -37,9 +37,3 @@ def _post_and_build_link(genes_str):
 	response = urllib2.urlopen(req)
 	the_page = response.read()
 	print the_page
-	import pdb
-	pdb.set_trace()
-	#split_phrases = response_str.split('"')
-	#link_ID = split_phrases[3]
-	#share_url_head = BASE_URL + 'enrich?dataset='
-	#enrichr_link = share_url_head + link_ID
