@@ -69,7 +69,7 @@ def full_endpoint():
 	A, B, genes = cleaner.normalize(A, B, genes)
 
 	gene_pvalue_pairs = diffexper.analyze(A, B, genes, args.config, filename)
-	output_files = filewriter.output_gene_pvalue_pairs(filename, gene_pvalue_pairs, args.config)
+	output_files = filewriter.output_gene_pvalue_pairs(filename, gene_pvalue_pairs)
 	
 	accession = filename.split('_')[0]
 	db.record_extraction(accession, args.A_cols, args.B_cols, args.metadata, args.config)
@@ -84,7 +84,7 @@ def full_endpoint():
 		'up_genes': GeneFile(up).to_dict(include_membership=True),
 		'down_genes': GeneFile(down).to_dict(include_membership=True),
 	}
-	if args.config.enrichr:
+	if args.config.cutoff:
 		response['up_enrichr'] = enrichrlink.get_link(up, up.split('.')[0])
 		response['down_enrichr'] = enrichrlink.get_link(down, down.split('.')[0])
 	return flask.jsonify(response)

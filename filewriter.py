@@ -9,7 +9,7 @@ __contact__ = "avi.maayan@mssm.edu"
 from files import GeneFile
 
 
-def output_gene_pvalue_pairs(input_file, gene_pvalue_pairs, config=None):
+def output_gene_pvalue_pairs(input_file, gene_pvalue_pairs):
 	"""Outputs genes and pvalues to file(s) on the server and returns their
 	names.
 	"""
@@ -25,10 +25,7 @@ def output_gene_pvalue_pairs(input_file, gene_pvalue_pairs, config=None):
 			if pvalue > 0:
 				up_out.write('%s\t%f\n' % (gene, pvalue))
 			if pvalue < 0:
-				if config and config.absval:
-					down_out.write('%s\t%f\n' % (gene, abs(pvalue)))
-				else:
-					down_out.write('%s\t%f\n' % (gene, pvalue))
+				down_out.write('%s\t%f\n' % (gene, pvalue))
 			# We have already sorted the pvalues by absolute value. Just take
 			# it again to remove the sign.
 			combined_out.write('%s\t%f\n' % (gene, abs(pvalue)))
