@@ -15,7 +15,6 @@ from time import time
 
 class File(object):
 
-
 	def __init__(self, filename, directory, extension, metadata=None):
 		if metadata:
 			self.annotations = filter(None, metadata)
@@ -26,16 +25,12 @@ class File(object):
 		self.filename = '_'.join(filter(None, [filename, anno, timestamp])) + extension
 		self.directory = directory
 
-
 	# Does this need to be a method? What is the value?
 	def path(self):
 		return 'static/' + self.directory + self.filename
 
 
-
-
 class SOFTFile(File):
-
 
 	def __init__(self, accessionOrFile, metadata=None):
 		# This constructor can take either an accession number or a reference
@@ -45,10 +40,7 @@ class SOFTFile(File):
 		super(SOFTFile, self).__init__(accessionOrFile, 'soft/', '.soft', metadata)
 
 
-
-
 class GeneFile(File):
-
 
 	def __init__(self, filename):
 		if '.genes.txt' in filename:
@@ -56,8 +48,7 @@ class GeneFile(File):
 		filename = filename + '.genes'
 		super(GeneFile, self).__init__(filename, 'genes/', '.txt')
 
-
-	def to_str(self, sep='\n', include_membership=False):
+	def to_str(self, sep='\n', include_membership=False, abs_val=False):
 		"""Parse contents and return a string formatted for a POST request to
 		Enrichr.
 		"""
@@ -68,14 +59,13 @@ class GeneFile(File):
 				split_line = line.rstrip().split('\t')
 				gene = split_line[0]
 				if include_membership:
-					membership = split_line[1]
+					membership = abs(split_line[1]) if abs_val else split_line[1]
 					result += gene + ',' + membership + sep
 				else:
 					result += gene + sep
 		return result
 
-
-	def to_dict(self, include_membership=False):
+	def to_dict(self, include_membership=False, abs_val=False):
 		result = {}
 		with open(self.path()) as f:
 			for i, line in enumerate(f):

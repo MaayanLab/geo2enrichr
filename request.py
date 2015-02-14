@@ -10,7 +10,7 @@ from collections import namedtuple
 # We use a namedtuple to retain order, which is important for stringification,
 # and legibility, i.e. tuple.prop rather than tuple[0].
 Metadata = namedtuple('Metadata', 'platform organism cell perturbation gene disease')
-Config = namedtuple('Config', 'method cutoff')
+Config = namedtuple('Config', 'absval cutoff enrichr method')
 
 
 class RequestArgs:
@@ -23,25 +23,33 @@ class RequestArgs:
 
 		self.accession = args.get('accession') if 'accession' in args else None
 		
-		self.A_cols = [x.encode('ascii') for x in args.get('control').split('-')]      if 'control'      in args else None
-		self.B_cols = [x.encode('ascii') for x in args.get('experimental').split('-')] if 'experimental' in args else None	
+		self.A_cols    = [x.encode('ascii') for x in args.get('control').split('-')]      if 'control'      in args else None
+		self.B_cols    = [x.encode('ascii') for x in args.get('experimental').split('-')] if 'experimental' in args else None	
 		
-		self.filename = args.get('filename')  if 'filename'  in args else None
-		self.up       = args.get('up')       if 'up'   in args else None
-		self.down     = args.get('down')     if 'down' in args else None
-		self.combined = args.get('combined') if 'up'   in args else None
+		self.filename  = args.get('filename') if 'filename'  in args else None
+		self.up        = args.get('up')       if 'up'   in args else None
+		self.down      = args.get('down')     if 'down' in args else None
+		self.combined  = args.get('combined') if 'up'   in args else None
 
 		self.targetApp = args.get('targetApp') if 'targetApp' in args else None
 
 		# Set the user's default options in case the client-side code does not.
 		# TODO: Make the cutoff configurable by on the client.
-		method        = args.get('method').encode('ascii') if args.get('method') else 'chdir'
-		self.config   = Config(method, 500)
-
-		platform      = args.get('platform')  if 'platform'  in args else None
-		organism      = args.get('organism').encode('ascii')     if 'organism'     in args else None
-		cell          = args.get('cell').encode('ascii')         if 'cell'         in args else None
-		perturbation  = args.get('perturbation').encode('ascii') if 'perturbation' in args else None
-		gene          = args.get('gene').encode('ascii')         if 'gene'         in args else None
-		disease       = args.get('disease').encode('ascii')      if 'disease'      in args else None
-		self.metadata = Metadata(platform, organism, cell, perturbation, gene, disease)
+		method  = args.get('method').encode('ascii') if 'method' in args else 'chdir'
+		# Do *not* use bool() built-in:
+		# http://stackoverflow.com/a/715455/1830334.
+		absval  = args.get('absval').encode('ascii') == 'True' if 'absval' in args else True
+		enrichr = args.get('enrichr').encode('ascii') == 'True' if 'enrichr' in args else True
+		if 'cutoff' in args:
+			cutoff = None if args.get('cutoff') == 'None' else int(args.get('cutoff').encode('ascii')) 
+		else:
+			cutoff = 500
+		self.config = Config(absval, cutoff, enrichr, method)
+		
+		platform       = args.get('platform').encode('ascii')     if 'platform'     in args else None
+		organism       = args.get('organism').encode('ascii')     if 'organism'     in args else None
+		cell           = args.get('cell').encode('ascii')         if 'cell'         in args else None
+		perturbation   = args.get('perturbation').encode('ascii') if 'perturbation' in args else None
+		gene           = args.get('gene').encode('ascii')         if 'gene'         in args else None
+		disease        = args.get('disease').encode('ascii')      if 'disease'      in args else None
+		self.metadata  = Metadata(platform, organism, cell, perturbation, gene, disease)

@@ -19,9 +19,8 @@ def analyze(A, B, genes, config, filename=''):
 	helper function based on client or default configuration.
 	"""
 
-	# Default is 500, unless set by user and pass via the query string
-	# arguments.
-	HALF_CUTOFF = config.cutoff / 2
+	# Default is 500.
+	HALF_CUTOFF = config.cutoff / 2 if config.cutoff else None
 
 	# Default to the characteristic direction.
 	if config.method == 'ttest':
@@ -30,12 +29,17 @@ def analyze(A, B, genes, config, filename=''):
 		pprint('Calculating the characteristic direction.')
 		genes, pvalues = chdir.chdir(A, B, genes.tolist())
 
-	# Sort pvalues and genes by the absolute values pvalues in descending order.
-	grouped = zip([abs(item) for item in pvalues], genes, pvalues)
-	grouped = sorted(grouped, key=lambda x: x[0], reverse=True)
+	# Sort pvalues and genes by the absolute pvalues in descending order.
+	# Notice we do *not* return the absolute pvalue; we return the unmodified
+	# pvalue!
+	grouped = zip([abs(pv) for pv in pvalues], genes, pvalues)
+	grouped = sorted(grouped, key=lambda item: item[0], reverse=True)
 
-	# Apply cutoff.
-	result = grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:]
+	# Apply cutoff. In Python, you can index with None; for example:
+	# >>> a = range(10)
+	# >>> a[None:None]
+	# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+	result = grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
 	return [(item[1], item[2]) for item in result]
 
 

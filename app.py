@@ -7,6 +7,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import sys
+import time
 
 import flask
 
@@ -59,6 +60,8 @@ def index_endpoint():
 @crossdomain(origin='*')
 def full_endpoint():
 
+	s = time.time()
+
 	args = RequestArgs(flask.request.args)
 	filename = geodownloader.download(args.accession, args.metadata).filename
 
@@ -66,25 +69,25 @@ def full_endpoint():
 	A, B, genes = cleaner.normalize(A, B, genes)
 
 	gene_pvalue_pairs = diffexper.analyze(A, B, genes, args.config, filename)
-	output_files = filewriter.output_gene_pvalue_pairs(filename, gene_pvalue_pairs)
+	output_files = filewriter.output_gene_pvalue_pairs(filename, gene_pvalue_pairs, args.config)
 	
 	accession = filename.split('_')[0]
 	db.record_extraction(accession, args.A_cols, args.B_cols, args.metadata, args.config)
 
-	up = output_files['up']
-	dn = output_files['down']
-	cb = output_files['combined']
+	up   = output_files['up']
+	down = output_files['down']
 
-	return flask.jsonify({
+	response = {
 		'status': 'ok',
-		'conversion_pct':   str(conversion_pct),
-		'up_genes':         GeneFile(up).to_dict(True),
-		'down_genes':       GeneFile(up).to_dict(True),
-		'combined_genes':   GeneFile(up).to_dict(True),
-		'up_enrichr':       enrichrlink.get_link(up, up.split('.')[0]),
-		'down_enrichr':     enrichrlink.get_link(dn, dn.split('.')[0]),
-		'combined_enrichr': enrichrlink.get_link(cb, cb.split('.')[0])
-	})
+		'time': time.time() - s,
+		'conversion_pct': str(conversion_pct),
+		'up_genes': GeneFile(up).to_dict(include_membership=True),
+		'down_genes': GeneFile(down).to_dict(include_membership=True),
+	}
+	if args.config.enrichr:
+		response['up_enrichr'] = enrichrlink.get_link(up, up.split('.')[0])
+		response['down_enrichr'] = enrichrlink.get_link(down, down.split('.')[0])
+	return flask.jsonify(response)
 
 
 @app.route(ENTRY_POINT + '/dlgeo', methods=['PUT', 'OPTIONS'])
@@ -223,12 +226,12 @@ def platforms_endpoint():
 # This error handler should only be used for truly *exceptional* scenarios,
 # i.e. scenarios you do *not* expect to happen. If you can predict a program
 # flow, handle it by returnning valid JSON with "'status': 'error'".
-@app.errorhandler(Exception)
-def server_error(err):
-	return flask.jsonify({
-		'status': 'error',
-		'message': 'Unknown server-side error. Please document your input and contact the Ma\'ayan Lab'
-	})
+#@app.errorhandler(Exception)
+#def server_error(err):
+#	return flask.jsonify({
+#		'status': 'error',
+#		'message': 'Unknown server-side error. Please document your input and contact the Ma\'ayan Lab'
+#	})
 
 
 if __name__ == '__main__':
