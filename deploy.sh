@@ -7,16 +7,16 @@
 cp css/extension-main.css extension/main.css
 cp css/open-sans.css extension/open-sans.css
 
-cp css/website-main.css website/css/main.css
-cp css/open-sans.css website/css/open-sans.css
+cp css/website-main.css web/css/main.css
+cp css/open-sans.css web/css/open-sans.css
 
 # Images
 # -----------------------------------------------------------------------------
 cp images/g2e-logo-50x50.png extension/images/g2e-logo-50x50.png
 cp images/g2e-logo-128x128.png extension/images/g2e-logo-128x128.png
 
-cp images/g2e-logo-50x50.png website/images/g2e-logo-50x50.png
-cp images/g2e-logo-128x128.png website/images/g2e-logo-128x128.png
+cp images/g2e-logo-50x50.png web/images/g2e-logo-50x50.png
+cp images/g2e-logo-128x128.png web/images/g2e-logo-128x128.png
 
 # JS
 # -----------------------------------------------------------------------------
