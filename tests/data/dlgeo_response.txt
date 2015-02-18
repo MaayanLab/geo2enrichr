@@ -1,0 +1,5 @@
+{
+    "directory": "soft/",
+    "annotations": ["GPL10558"],
+    "filename": "GSE62359_GPL10558.soft"
+}

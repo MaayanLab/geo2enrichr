@@ -4,24 +4,24 @@
 
 # CSS
 # -----------------------------------------------------------------------------
-cp css/extension-main.css extension/main.css
-cp css/open-sans.css extension/open-sans.css
+cp common/css/extension-main.css extension/main.css
+cp common/css/open-sans.css extension/open-sans.css
 
-cp css/website-main.css web/css/main.css
-cp css/open-sans.css web/css/open-sans.css
+cp common/css/website-main.css webapp/css/main.css
+cp common/css/open-sans.css webapp/css/open-sans.css
 
 # Images
 # -----------------------------------------------------------------------------
-cp images/g2e-logo-50x50.png extension/images/g2e-logo-50x50.png
-cp images/g2e-logo-128x128.png extension/images/g2e-logo-128x128.png
+cp common/images/g2e-logo-50x50.png extension/images/g2e-logo-50x50.png
+cp common/images/g2e-logo-128x128.png extension/images/g2e-logo-128x128.png
 
-cp images/g2e-logo-50x50.png web/images/g2e-logo-50x50.png
-cp images/g2e-logo-128x128.png web/images/g2e-logo-128x128.png
+cp common/images/g2e-logo-50x50.png webapp/images/g2e-logo-50x50.png
+cp common/images/g2e-logo-128x128.png webapp/images/g2e-logo-128x128.png
 
 # JS
 # -----------------------------------------------------------------------------
 # Write configuration variables into config file.
-JS_CONFIG='js/config.js'
+JS_CONFIG='extension/js/config.js'
 # Empty file
 > $JS_CONFIG
 

@@ -11,18 +11,10 @@ import time
 
 import flask
 
-import cleaner
-from crossdomain import crossdomain
-import db
-import diffexper
-import enrichrlink
-import geodownloader
-from files import GeneFile
-import filewriter
-import json
-from request import RequestArgs
-from response import make_json_response
-import softparser
+import dataprocessor as dp
+import server as svr
+import database as db
+from server.crossdomain import crossdomain
 
 
 app = flask.Flask(__name__)
@@ -62,17 +54,17 @@ def full_endpoint():
 
 	s = time.time()
 
-	args = RequestArgs(flask.request.args)
-	filename = geodownloader.download(args.accession, args.metadata).filename
+	args = svr.RequestArgs(flask.request.args)
+	filename = dp.geodownloader.download(args.accession, args.metadata).filename
 
-	A, B, genes, conversion_pct = softparser.parse(filename, args.metadata.platform, args.A_cols, args.B_cols)
-	A, B, genes = cleaner.normalize(A, B, genes)
+	A, B, genes, conversion_pct = dp.softparser.parse(filename, args.metadata.platform, args.A_cols, args.B_cols)
+	A, B, genes = dp.cleaner.normalize(A, B, genes)
 
-	gene_pvalue_pairs = diffexper.analyze(A, B, genes, args.config, filename)
-	output_files = filewriter.output_gene_pvalue_pairs(filename, gene_pvalue_pairs)
+	gene_pvalue_pairs = dp.diffexper.analyze(A, B, genes, args.config, filename)
+	output_files = svr.filewriter.output_gene_pvalue_pairs(filename, gene_pvalue_pairs)
 	
 	accession = filename.split('_')[0]
-	db.record_extraction(accession, args.A_cols, args.B_cols, args.metadata, args.config)
+	db.euclid.record_extraction(accession, args.A_cols, args.B_cols, args.metadata, args.config)
 
 	up   = output_files['up']
 	down = output_files['down']
@@ -81,12 +73,12 @@ def full_endpoint():
 		'status': 'ok',
 		'time': time.time() - s,
 		'conversion_pct': str(conversion_pct),
-		'up_genes': GeneFile(up).to_dict(include_membership=True),
-		'down_genes': GeneFile(down).to_dict(include_membership=True),
+		'up_genes': svr.GeneFile(up).to_dict(include_membership=True),
+		'down_genes': svr.GeneFile(down).to_dict(include_membership=True),
 	}
 	if args.config.cutoff:
-		response['up_enrichr'] = enrichrlink.get_link(up, up.split('.')[0])
-		response['down_enrichr'] = enrichrlink.get_link(down, down.split('.')[0])
+		response['up_enrichr'] = dp.enrichrlink.get_link(up, up.split('.')[0])
+		response['down_enrichr'] = dp.enrichrlink.get_link(down, down.split('.')[0])
 	return flask.jsonify(response)
 
 
@@ -98,9 +90,9 @@ def dlgeo_endpoint():
 	"""
 
 	# TODO: Check if the file already exists on the file system.
-	args = RequestArgs(flask.request.json)
-	downloaded_file = geodownloader.download(args.accession, args.metadata)
-	return make_json_response(downloaded_file.__dict__)
+	args = svr.RequestArgs(flask.request.json)
+	downloaded_file = dp.geodownloader.download(args.accession, args.metadata)
+	return svr.make_json_response(downloaded_file.__dict__)
 
 
 @app.route(ENTRY_POINT + '/diffexp', methods=['POST', 'OPTIONS'])
@@ -111,11 +103,11 @@ def diffexp_endpoint():
 	new .txt files.
 	"""
 
-	args = RequestArgs(flask.request.json)
+	args = svr.RequestArgs(flask.request.json)
 
 	# Return early if the platform is not supported.
-	if not softparser.platform_supported(args.metadata.platform):
-		return make_json_response({
+	if not dp.softparser.platform_supported(args.metadata.platform):
+		return svr.make_json_response({
 			'status': 'error',
 			'message': 'Platform ' + args.metadata.platform + ' is not supported.'
 		})
@@ -129,17 +121,17 @@ def diffexp_endpoint():
 
 	# Step 1: Parse soft file.
 	# Also discard bad data and convert probe IDs to gene symbols.
-	A, B, genes, conversion_pct = softparser.parse(args.filename, args.metadata.platform, args.A_cols, args.B_cols)
+	A, B, genes, conversion_pct = dp.softparser.parse(args.filename, args.metadata.platform, args.A_cols, args.B_cols)
 
 	# Step 2: Clean data.
 	# Also, if necessary, take log2 of data and quantile normalize it.
-	A, B, genes = cleaner.normalize(A, B, genes)
+	A, B, genes = dp.cleaner.normalize(A, B, genes)
 
 	# Step 3: Identify differential expression.
-	gene_pvalue_pairs = diffexper.analyze(A, B, genes, args.config, args.filename)
+	gene_pvalue_pairs = dp.diffexper.analyze(A, B, genes, args.config, args.filename)
 
 	# Step 4: Generate output files and return to user.
-	output_files = filewriter.output_gene_pvalue_pairs(args.filename, gene_pvalue_pairs)
+	output_files = svr.filewriter.output_gene_pvalue_pairs(args.filename, gene_pvalue_pairs)
 	output_files['status'] = 'ok'
 	output_files['conversion_pct'] = str(conversion_pct)
 
@@ -150,7 +142,7 @@ def diffexp_endpoint():
 	accession = args.filename.split('_')[0]
 	# Output filename should be put into database with identifier and returned
 	# ID should be returned to user.
-	db.record_extraction(accession, args.A_cols, args.B_cols, args.metadata, args.config)
+	db.euclid.record_extraction(accession, args.A_cols, args.B_cols, args.metadata, args.config)
 
 	return make_json_response(output_files)
 
@@ -162,11 +154,11 @@ def enrichr_endpoint():
 	valid link.
 	"""
 
-	args = RequestArgs(flask.request.json)
-	up_link =  enrichrlink.get_link(args.up, args.up.split('.')[0])
+	args = svr.RequestArgs(flask.request.json)
+	up_link =  dp.enrichrlink.get_link(args.up, args.up.split('.')[0])
 	# Do not use Enrichr if the first timeout fails. Assume Enrichr is down.
-	down_link = enrichrlink.get_link(args.down, args.down.split('.')[0]) if up_link else ''
-	combined_link = enrichrlink.get_link(args.combined, args.combined.split('.')[0]) if up_link else ''
+	down_link = dp.enrichrlink.get_link(args.down, args.down.split('.')[0]) if up_link else ''
+	combined_link = dp.enrichrlink.get_link(args.combined, args.combined.split('.')[0]) if up_link else ''
 
 	return flask.jsonify({
 		'status': 'ok',
@@ -182,9 +174,9 @@ def stringify_endpoint():
 	"""
 	"""
 
-	args = RequestArgs(flask.request.json)
-	up_genes = GeneFile(args.up)
-	dn_genes = GeneFile(args.down)
+	args = svr.RequestArgs(flask.request.json)
+	up_genes = svr.GeneFile(args.up)
+	dn_genes = svr.GeneFile(args.down)
 	return flask.jsonify({
 		'status': 'ok',
 		'up': up_genes.to_str('-', False),

@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from cleaner import avg_dups
+from dataprocessor.cleaner import avg_dups
 
 
 class TestAvgDups(unittest.TestCase):

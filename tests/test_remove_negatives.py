@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from cleaner import _remove_negatives
+from dataprocessor.cleaner import _remove_negatives
 
 
 class TestRemoveNegatives(unittest.TestCase):
