@@ -163,12 +163,10 @@ def enrichr_endpoint():
 	"""
 
 	args = RequestArgs(flask.request.json)
-	# All descriptions should be the same.
-	description = args.up.split('.')[0]
-	up_link =  enrichrlink.get_link(args.up, description)
+	up_link =  enrichrlink.get_link(args.up, args.up.split('.')[0])
 	# Do not use Enrichr if the first timeout fails. Assume Enrichr is down.
-	down_link = enrichrlink.get_link(args.down, description) if up_link else ''
-	combined_link = enrichrlink.get_link(args.combined, description) if up_link else ''
+	down_link = enrichrlink.get_link(args.down, args.down.split('.')[0]) if up_link else ''
+	combined_link = enrichrlink.get_link(args.combined, args.combined.split('.')[0]) if up_link else ''
 
 	return flask.jsonify({
 		'status': 'ok',
