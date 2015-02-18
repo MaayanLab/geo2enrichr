@@ -75,11 +75,16 @@ def parse(filename, platform, A_cols, B_cols):
 				values = split_line[COL_OFFSET:]
 				probe_count = probe_count + 1
 
-				# Perform a conservative cleanup by ignoring any rows that have
-				# null values or an atypical number of columns.
-				if len(values) is not line_length:
+				# Perform a conservative cleanup by ignoring any rows that
+				# have null values or an atypical number of columns.
+				if '' in values:
+					continue
+				# GG: I have not seen the strings 'null' or 'NULL' in any of
+				# the data, but AF or KH put this check in place and it does
+				# no harm. 
+				if 'null' in values or 'NULL' in values:
 					continue		
-				if 'null' in values:
+				if len(values) is not line_length:
 					continue
 				# Three forward slashes, \\\, denotes multiple genes.
 				if '\\\\\\' in probe:

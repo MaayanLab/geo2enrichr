@@ -1,3 +1,10 @@
+/* General
+ * ------- */
+.g2e-error {
+    color: red;
+    font-weight: bold;
+}
+
 /* Modal general
  * ------------- */
 #g2e-container {

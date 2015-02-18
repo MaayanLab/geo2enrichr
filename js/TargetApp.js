@@ -19,22 +19,30 @@ var TargetApps = function(events) {
             endpoint: 'enrichr',
             resultsFormatter: function(geneLists) {
                 $resultsTitle.html('<strong>Enriched genes:</strong>');
-                $resultsValue.html('' +
-                    '<button id="g2e-enrichr-up">Up</button>' +
-                    '<button id="g2e-enrichr-down">Down</button>' +
-                    '<button id="g2e-enrichr-combined">All</button>');
+                if (geneLists.up === '' ||
+                    geneLists.down === '' ||
+                    geneLists.combined === '') {
+                    $resultsValue.html('' +
+                        '<span class="g2e-error">Timeout using Enrichr. Please try again later.</span>'
+                    );
+                } else {
+                    $resultsValue.html('' +
+                        '<button id="g2e-enrichr-up">Up</button>' +
+                        '<button id="g2e-enrichr-down">Down</button>' +
+                        '<button id="g2e-enrichr-combined">All</button>');
 
-		        $('#g2e-enrichr-up').click(function() {
-                    window.open(geneLists.up, '_blank');
-                });
-                
-                $('#g2e-enrichr-down').click(function() {
-                    window.open(geneLists.down, '_blank');
-                });
+                    $('#g2e-enrichr-up').click(function() {
+                        window.open(geneLists.up, '_blank');
+                    });
+                    
+                    $('#g2e-enrichr-down').click(function() {
+                        window.open(geneLists.down, '_blank');
+                    });
 
-                $('#g2e-enrichr-combined').click(function() {
-                    window.open(geneLists.combined, '_blank');
-                });
+                    $('#g2e-enrichr-combined').click(function() {
+                        window.open(geneLists.combined, '_blank');
+                    });
+                }
             }
         },  
         l1000cds: {

@@ -23,6 +23,7 @@ def normalize(A, B, genes):
 	_validate(A, B, genes)
 
 	if not _is_log2(A, B):
+		A, B, genes = _remove_negatives(A, B, genes)
 		pprint('Taking the log2 of data.')
 		A, B = log2(A, B)
 
@@ -54,6 +55,41 @@ def _is_log2(A, B):
 	if AB_max - AB_min < 100:
 		return True
 	return False
+
+
+# Negative values are fine per se, but we cannot allow them if we log2
+# transform the data.
+def _remove_negatives(A, B, genes):
+	"""Removes any rows with negative values.
+	"""
+
+	# Store where we need to split the matrix.
+	idx = len(A[0])
+	
+	# Rebuild the data so we remove gene symbols when we remove negative
+	# values.
+	AB = np.hstack((A, B))
+	X = np.column_stack([genes, AB])
+	
+	# Boolean index, keeping only positive values.
+	X = X[(AB > 0).all(axis=1)]
+
+	# Remove gene list. This should be smaller if we removed any negatives.
+	genes = X[:,0]
+	AB = X[:,1:]
+
+	# GG: I don't love changing the type from float to string to float again,
+	# but (1) this isn't code for the space shuttle and (2) it doesn't seem to
+	# have a deleterious effect on the data. If we ever want it, this function
+	# will create a numpy record, that can have multiple types:
+	#
+	#     X = np.core.records.fromarrays([genes] + [AB[:,i] for i in range(AB.shape[1])])
+	#
+	# I did not opt to use it because it seemed overly complicated for now.
+	A = AB[:,:idx].astype(np.float)
+	B = AB[:,idx:].astype(np.float)
+
+	return (A, B, genes)
 
 
 def qnorm(A, B):

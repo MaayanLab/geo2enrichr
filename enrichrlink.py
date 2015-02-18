@@ -6,9 +6,11 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import cookielib
-import urllib2
 import poster
+import socket
+import urllib2
 
+from log import pprint
 from files import GeneFile
 
 
@@ -16,8 +18,16 @@ BASE_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
 
 
 def get_link(filename, description):
+	"""Attempts to return a link to Enrichr. Returns the string 'None' if it
+	fails.
+	"""
+
 	gene_str = GeneFile(filename).to_str()
-	link = _post_and_build_link(gene_str, description)
+	link = ''
+	try:
+		link = _post_and_build_link(gene_str, description)
+	except socket.timeout:
+		pprint('Error using Enrichr\'s API')
 	return link
 
 
@@ -36,7 +46,7 @@ def _post_and_build_link(genes_str, description):
 
 	datagen, headers = poster.encode.multipart_encode(params)
 	request = urllib2.Request(BASE_URL + 'enrich', datagen, headers)
-	urllib2.urlopen(request)
+	urllib2.urlopen(request, timeout=20)
 
 	x = urllib2.urlopen(BASE_URL + 'share')
 	response_str = x.read()
