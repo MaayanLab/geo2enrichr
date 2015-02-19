@@ -25,7 +25,7 @@ JS_CONFIG='extension/js/config.js'
 # Empty file
 > $JS_CONFIG
 
-python db.py >> $JS_CONFIG
+python database/euclid.py >> $JS_CONFIG
 
 if [ "$1" = "dev" ]; then
     echo '--------------------- dev ---------------------'

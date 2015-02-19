@@ -11,9 +11,14 @@ import time
 
 import flask
 
+from softfile import *
+from server import *
+
+
 import dataprocessor as dp
 import server as svr
 import database as db
+
 from server.crossdomain import crossdomain
 
 
@@ -33,6 +38,43 @@ ALLOWED_ORIGINS = '*'
 ENTRY_POINT = '/g2e'
 
 
+@app.route(ENTRY_POINT + '/getgeo', methods=['PUT', 'OPTIONS'])
+@crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
+def getgeo_endpoint():
+	"""Takes an an accession number and optional annotations and downloads the
+	file from GEO.
+	"""
+
+	args = GetGeoRequestArgs(flask.request.json)
+	sf = SoftFile(args.dataset, args.platform, args.gsms)
+	if True:
+		sf.normalize()
+	return get_flask_json_response(sf.__dict__)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route(ENTRY_POINT, methods=['GET'])
 @crossdomain(origin='*')
 def index_endpoint():
@@ -41,6 +83,7 @@ def index_endpoint():
 		'message': ''
 	})
 
+'''
 
 # TODO: This is an absolutely awful hack that I (GWG) wrote to get the `full`
 # endpoint restabilized for a user. Long term, we *must* re-architecture this
@@ -80,19 +123,6 @@ def full_endpoint():
 		response['up_enrichr'] = dp.enrichrlink.get_link(up, up.split('.')[0])
 		response['down_enrichr'] = dp.enrichrlink.get_link(down, down.split('.')[0])
 	return flask.jsonify(response)
-
-
-@app.route(ENTRY_POINT + '/dlgeo', methods=['PUT', 'OPTIONS'])
-@crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
-def dlgeo_endpoint():
-	"""Takes an an accession number and optional annotations and downloads the
-	file from GEO.
-	"""
-
-	# TODO: Check if the file already exists on the file system.
-	args = svr.RequestArgs(flask.request.json)
-	downloaded_file = dp.geodownloader.download(args.accession, args.metadata)
-	return svr.make_json_response(downloaded_file.__dict__)
 
 
 @app.route(ENTRY_POINT + '/diffexp', methods=['POST', 'OPTIONS'])
@@ -228,7 +258,7 @@ def platforms_endpoint():
 #	return flask.jsonify({
 #		'status': 'error',
 #		'message': 'Unknown server-side error. Please document your input and contact the Ma\'ayan Lab'
-#	})
+#	})'''
 
 
 if __name__ == '__main__':

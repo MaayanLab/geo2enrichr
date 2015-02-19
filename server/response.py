@@ -6,14 +6,13 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-import flask
-
 import json
 
+import flask
 
-def make_json_response(data):
+
+def get_flask_json_response(data):
 
 	resp = flask.Response(json.dumps(data), mimetype='application/json')
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
-

@@ -8,21 +8,19 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
+import os.path
 from gzip import GzipFile
 import zlib
 from urllib2 import urlopen, URLError
 from StringIO import StringIO
 
+from server.log import pprint
 from server.files import SOFTFile
 
 
-def download(accession, metadata):
+def download(accession, downloaded_file_path):
 	"""Downloads GEO file based on accession number. Returns a SOFTFile
 	instance with optional metadata as annotations.
-
-	While `metadata` is optional, optional arguments are handled at the
-	endpoints, meaning that `RequestParams` will set `metadata` to an empty
-	dict if no metadata is provided.
 
 	For reading and unzipping binary chunks, see:
 		http://stackoverflow.com/a/27053335/1830334
@@ -38,15 +36,13 @@ def download(accession, metadata):
 		url = _construct_GSE_url(accession)
 	response = _get_file_by_url(url)
 	
-	soft_file = SOFTFile(accession, metadata)
-	with open(soft_file.path(), 'w+') as f:
+	with open(downloaded_file_path, 'w+') as f:
 		while True:
 			bin_chunk = response.read(CHUNK_SIZE)
 			if not bin_chunk:
 				break
 			string = decompressor.decompress(bin_chunk)
 			f.write(string)
-	return soft_file
 
 
 def _get_file_by_url(url, attempts=5):

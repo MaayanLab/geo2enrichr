@@ -16,42 +16,34 @@ from database import euclid
 PROBE2GENE = euclid.PROBE2GENE
 
 
-def parse(filename, platform, A_cols, B_cols):
-	"""Parses SOFT files, discarding bad data, averaging duplicates, and
-	converting probe IDs to gene sybmols.
+def parse(filename, platform, gsms=None):
+	"""Parses SOFT files, discarding bad dataand converting probe IDs to gene
+	sybmols.
 	"""
 
 	pprint('Parsing SOFT file.')
-	soft_file = SOFTFile(filename).path()
 
 	# COL_OFFSET changes because GDS files are "curated", meaning that they
 	# have their gene symbols included. GSE files do not and are 1 column
 	# thinner. That said, we do not trust the DGS mapping and do the probe-to-
 	# gene mapping ourselves.
 	if 'GDS' in filename:
-		A_cols = [x.upper() for x in A_cols]
-		B_cols = [x.upper() for x in B_cols]
 		BOF = '!dataset_table_begin'
 		EOF = '!dataset_table_end'
 		COL_OFFSET = 2
 	else:
-		A_cols = ['"{}"'.format(x.upper()) for x in A_cols]
-		B_cols = ['"{}"'.format(x.upper()) for x in B_cols]
 		BOF = '!series_matrix_table_begin'
 		EOF = '!series_matrix_table_end'
 		COL_OFFSET = 1
 
-	# For `dict` fast hashing to track a running mean of duplicate probe IDs.
-	A = []
-	B = []
-	genes = []
+	expression_values = {}
 
 	# For statistics about data quality.
 	unconverted_probes = []
 	probe_count = 0
 
 	try:
-		with open(soft_file, 'r') as soft_in:
+		with open(filename, 'r') as soft_in:
 			# Skip comments.
 			discard = next(soft_in)
 			while discard.rstrip() != BOF:
@@ -62,9 +54,11 @@ def parse(filename, platform, A_cols, B_cols):
 			header = header[COL_OFFSET:]
 			line_length = len(header)
 
-			# Find the columns indices.
-			A_incides = [header.index(gsm) for gsm in A_cols]
-			B_incides = [header.index(gsm) for gsm in B_cols]
+			# Find column indices.
+			if gsms:
+				header_indices = [header.index(gsm) for gsm in gsms]
+			else:
+				header_indices = range(line_length)
 
 			for line in soft_in:
 				split_line = line.rstrip('\r\n').split('\t')
@@ -97,13 +91,7 @@ def parse(filename, platform, A_cols, B_cols):
 					unconverted_probes.append(gene)
 					continue
 
-				# Don't do any of these steps until we know the data is
-				# worthwhile.
-				A_row = [float(values[i]) for i in A_incides]
-				B_row = [float(values[i]) for i in B_incides]
-				A.append(A_row)
-				B.append(B_row)
-				genes.append(gene)
+				expression_values[gene] = [float(values[i]) for i in header_indices]
 
 		conversion_pct = 100.0 - float(len(unconverted_probes)) / float(probe_count)
 
@@ -114,10 +102,7 @@ def parse(filename, platform, A_cols, B_cols):
 		raise IOError('Could not read SOFT file from local server.')
 
 	# Convert to numpy arrays, which are more compact and faster.
-	A = np.array(A)
-	B = np.array(B)
-	genes = np.array(genes)
-	return (A, B, genes, conversion_pct)
+	return (expression_values, conversion_pct)
 
 
 def platform_supported(platform):
