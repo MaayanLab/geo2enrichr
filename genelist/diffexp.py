@@ -14,33 +14,23 @@ import chdir
 from server.log import pprint
 
 
-def analyze(A, B, genes, config, filename=''):
+def diffexp(A, B, genes, method, cutoff):
 	"""Identifies differentially expressed genes, delegating to the correct
 	helper function based on client or default configuration.
 	"""
-
-	# Default is 500.
-	HALF_CUTOFF = config.cutoff / 2 if config.cutoff else None
-
-	# Default to the characteristic direction.
-	if config.method == 'ttest':
+	HALF_CUTOFF = cutoff / 2 if cutoff is not 'None' else None
+	if method == 'ttest':
 		gene_pvalues = ttest(A, B, genes)
 	else:
 		pprint('Calculating the characteristic direction.')
-		genes, pvalues = chdir.chdir(A, B, genes.tolist())
+		genes, pvalues = chdir.chdir(A, B, genes)
 
-	# Sort pvalues and genes by the absolute pvalues in descending order.
-	# Notice we do *not* return the absolute pvalue; we return the unmodified
-	# pvalue!
+	# Notice we return the unmodified pvalue, *not* the absolute pvalue.
 	grouped = zip([abs(pv) for pv in pvalues], genes, pvalues)
 	grouped = sorted(grouped, key=lambda item: item[0], reverse=True)
 
-	# Apply cutoff. In Python, you can index with None; for example:
-	# >>> a = range(10)
-	# >>> a[None:None]
-	# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-	result = grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
-	return [(item[1], item[2]) for item in result]
+	# Apply cutoff; indexing with None is safe.
+	return grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
 
 
 def ttest(A, B, genes):

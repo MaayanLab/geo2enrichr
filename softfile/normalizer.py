@@ -14,12 +14,12 @@ from numbers import Number
 from server.log import pprint
 
 
-def normalize(genes, values):
+def normalize(genes_values_dict):
 	"""Normalizes the data, taking the log2 of and quantile normalizing the
 	data if necessary.
 	"""
-	genes = np.array(genes)
-	values = np.array(values)
+	genes = np.array(genes_values_dict.keys())
+	values = np.array(genes_values_dict.values())
 
 	# Raise exceptions if the A and B are not valid data sets.
 	_validate(genes, values)
@@ -33,8 +33,8 @@ def normalize(genes, values):
 		pprint('Quantile normalizing the data.')
 		values = qnorm(values)
 
-	values, genes = avg_dups(values, genes)
-	return (genes.tolist(), values.tolist())
+	genes, values = avg_dups(genes, values)
+	return { k:v for k,v in zip(genes.tolist(), values.tolist()) }
 
 
 def log2(values):

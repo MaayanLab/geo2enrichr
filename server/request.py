@@ -5,14 +5,39 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-from collections import namedtuple
+class GetGeoRequestArgs:
 
-# We use a namedtuple to retain order, which is important for stringification,
-# and legibility, i.e. tuple.prop rather than tuple[0].
-Metadata = namedtuple('Metadata', 'platform organism cell perturbation gene disease')
-Config = namedtuple('Config', 'absval cutoff enrichr method')
+	def __init__(self, args):
+		self.dataset = args.get('dataset')
+		self.platform = args.get('platform')
+		self.A_cols = args.get('A_cols')
+		self.B_cols = args.get('B_cols')
+
+		# Use "norm" instead of "normalize" for namespace reasons.
+		if 'normalize' in args and args.get('normalize') is 'False':
+			self.norm = False
+		else:
+			self.norm = True
 
 
+class DiffExpRequestArgs:
+
+	def __init__(self, args):
+		self.genes = args.get('genes')
+		self.A = args.get('A')
+		self.B = args.get('B')
+		if 'cutoff' in args:
+			if args.get('cutoff') == 'None':
+				self.cutoff = False
+			else:
+				self.cutoff = int(args.get('cutoff').encode('ascii'))
+		else:
+			# TODO: Change to 500 before deploying.
+			self.cutoff = 200
+		self.method = args.get('method') or 'chdir'
+
+
+'''
 class RequestArgs:
 
 	def __init__(self, args):
@@ -22,7 +47,7 @@ class RequestArgs:
 
 		self.accession = args.get('accession') if 'accession' in args else None
 		self.A_cols    = [x.encode('ascii') for x in args.get('control').split('-')]      if 'control'      in args else None
-		self.B_cols    = [x.encode('ascii') for x in args.get('experimental').split('-')] if 'experimental' in args else None	
+		self.B_cols    = [x.encode('ascii') for x in args.get('experimental').split('-')] if 'experimental' in args else None
 		self.filename  = args.get('filename') if 'filename'  in args else None
 		self.up        = args.get('up')       if 'up'   in args else None
 		self.down      = args.get('down')     if 'down' in args else None
@@ -42,24 +67,11 @@ class RequestArgs:
 			cutoff = 500
 		self.config = Config(absval, cutoff, enrichr, method)
 		
-		platform       = args.get('platform').encode('ascii')     if 'platform'     in args else None
-		organism       = args.get('organism').encode('ascii')     if 'organism'     in args else None
-		cell           = args.get('cell').encode('ascii')         if 'cell'         in args else None
-		perturbation   = args.get('perturbation').encode('ascii') if 'perturbation' in args else None
-		gene           = args.get('gene').encode('ascii')         if 'gene'         in args else None
-		disease        = args.get('disease').encode('ascii')      if 'disease'      in args else None
+		platform       = args.get('platform').encode('ascii') or None
+		organism       = args.get('organism').encode('ascii') or None
+		cell           = args.get('cell').encode('ascii') or None
+		perturbation   = args.get('perturbation').encode('ascii') or None
+		gene           = args.get('gene').encode('ascii') or None
+		disease        = args.get('disease').encode('ascii') or None
 		self.metadata  = Metadata(platform, organism, cell, perturbation, gene, disease)
-
-
-class GetGeoRequestArgs:
-
-	def __init__(self, args):
-		"""Handles all valid arguments for the getgeo endpoint. 
-		"""
-
-		self.dataset  = args.get('dataset')  if 'dataset'  in args else None
-		self.platform = args.get('platform') if 'platform' in args else None
-		gsms          = args.get('gsms')     if 'gsms'     in args else None
-		if gsms:
-			self.gsms = [x.encode('ascii') for x in gsms]
-		self.clean    = args.get('clean')    if 'clean'    in args else None
+'''

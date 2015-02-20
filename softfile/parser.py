@@ -16,7 +16,7 @@ from database import euclid
 PROBE2GENE = euclid.PROBE2GENE
 
 
-def parse(filename, platform, gsms=None):
+def parse(filename, platform, A_cols, B_cols):
 	"""Parses SOFT files, discarding bad dataand converting probe IDs to gene
 	sybmols.
 	"""
@@ -36,11 +36,16 @@ def parse(filename, platform, gsms=None):
 		EOF = '!series_matrix_table_end'
 		COL_OFFSET = 1
 
+	genes = []
+	A = []
+	B = []
 	expression_values = {}
 
 	# For statistics about data quality.
-	unconverted_probes = []
-	probe_count = 0
+	discarded_lines = 0.0
+	line_count = 0.0
+	unconverted_probes = 0.0
+	probe_count = 0.0
 
 	try:
 		with open(filename, 'r') as soft_in:
@@ -55,11 +60,9 @@ def parse(filename, platform, gsms=None):
 			line_length = len(header)
 
 			# Find column indices.
-			if gsms:
-				header_indices = [header.index(gsm) for gsm in gsms]
-			else:
-				header_indices = range(line_length)
-
+			A_incides = [header.index(gsm) for gsm in A_cols]
+			B_incides = [header.index(gsm) for gsm in B_cols]
+	
 			for line in soft_in:
 				split_line = line.rstrip('\r\n').split('\t')
 				if split_line[0] == EOF or split_line[1] == '--Control':
@@ -67,33 +70,40 @@ def parse(filename, platform, gsms=None):
 
 				probe  = split_line[0]
 				values = split_line[COL_OFFSET:]
-				probe_count = probe_count + 1
 
 				# Perform a conservative cleanup by ignoring any rows that
 				# have null values or an atypical number of columns.
-				if '' in values:
+				line_count += 1
+				if ('' in values or
+					# GG: I have not seen the strings 'null' or 'NULL' in any
+					# of the data, but AF or KH put this check in place and it
+					# does no harm. 
+					'null' in values or 'NULL' in values or
+					len(values) is not line_length or
+					# Three forward slashes, \\\, denotes multiple genes.
+					'\\\\\\' in probe):
+	
+					discarded_lines += 1
 					continue
-				# GG: I have not seen the strings 'null' or 'NULL' in any of
-				# the data, but AF or KH put this check in place and it does
-				# no harm. 
-				if 'null' in values or 'NULL' in values:
-					continue		
-				if len(values) is not line_length:
-					continue
-				# Three forward slashes, \\\, denotes multiple genes.
-				if '\\\\\\' in probe:
-					continue
-
+				
 				# GSD files already contain a column with gene symbols but we
 				# do not trust that mapping.
+				probe_count += 1
 				gene = _probe2gene(platform, probe)
 				if gene is None:
-					unconverted_probes.append(gene)
+					unconverted_probes += 1
 					continue
 
-				expression_values[gene] = [float(values[i]) for i in header_indices]
+				A_row = [float(values[i]) for i in A_incides]
+				B_row = [float(values[i]) for i in B_incides]
+				A.append(A_row)
+				B.append(B_row)
+				genes.append(gene)
 
-		conversion_pct = 100.0 - float(len(unconverted_probes)) / float(probe_count)
+		stats = {
+			'unconverted_probes_pct': unconverted_probes / probe_count * 100,
+			'discarded_lines_pct': discarded_lines / line_count * 100
+		}
 
 	# Is this truly exceptional? If someone uses this API endpoint but does
 	# not call the dlgeo endpoint first, this file will simply not exist!
@@ -102,7 +112,7 @@ def parse(filename, platform, gsms=None):
 		raise IOError('Could not read SOFT file from local server.')
 
 	# Convert to numpy arrays, which are more compact and faster.
-	return (expression_values, conversion_pct)
+	return (genes, A, B, stats)
 
 
 def platform_supported(platform):
