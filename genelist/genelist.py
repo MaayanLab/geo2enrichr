@@ -13,4 +13,12 @@ class GeneList(object):
 
 	def __init__(self, A, B, genes, method, cutoff):
 		gene_pvalues = diffexp(A, B, genes, method, cutoff)
-		self.gene_pvalues = { x[0]:x[1] for x in gene_pvalues }
+		self.method = method
+		self.cutoff = cutoff
+		self.data = { x[0]:x[1] for x in gene_pvalues }
+
+	'''def genes(self):
+		return self.lst.keys()
+
+	def pvalues(self):
+		return self.lst.values()'''

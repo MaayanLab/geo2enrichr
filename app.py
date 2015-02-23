@@ -62,7 +62,8 @@ def diffexp_endpoint():
 	"""Identifies differentially expressed genes for any input of genes and
 	expression values.
 	"""
-
+	import pdb
+	pdb.set_trace()
 	args = DiffExpRequestArgs(flask.request.json)
 	gl = GeneList(args.A, args.B, args.genes, args.method, args.cutoff)
 	return get_flask_json_response(gl.__dict__)
@@ -85,7 +86,7 @@ def diffexp_endpoint():
 
 
 '''
-@app.route(PATH + '/enrichr', methods=['POST', 'OPTIONS'])
+@app.route(PATH + '/enrichr', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def enrichr_endpoint():
 	"""Parses files on the server, pipes the results to Enrichr, and returns a
