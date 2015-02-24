@@ -3,7 +3,7 @@ var Row = Backbone.Model.extend({
         id: '',
         name: '',
         value: '',
-        onEditPrompt: '',
+        onEditPrompt: undefined,
         options: undefined
     }
 });

@@ -7,14 +7,14 @@ from softfile.normalizer import avg_dups
 class TestAvgDups(unittest.TestCase):
 
 	def setUp(self):
-		self.genes = ['A', 'C', 'C', 'B', 'A']
-		self.vals = [
+		self.genes = np.array(['A', 'C', 'C', 'B', 'A'])
+		self.vals = np.array([
 			[2.0, 2.0, 9.0, 9.0],
 			[3.0, 3.0, 3.0, 3.0],
 			[8.0, 8.0, 2.0, 2.0],
 			[4.0, 4.0, 4.0, 3.0],
 			[1.0, 1.0, 1.0, 1.0]
-		]
+		])
 
 	def testLen(self):
 		genes, vals = avg_dups(self.genes, self.vals)
@@ -22,13 +22,14 @@ class TestAvgDups(unittest.TestCase):
 		self.assertEqual(len(vals), len(genes))
 
 	def testData(self):
-		genes_ans = ['A', 'B', 'C']
-		vals_ans  = [
+		genes_ans = np.array(['A', 'B', 'C'])
+		vals_ans  = np.array([
 			[1.5, 1.5, 5.0, 5.0],
 			[4.0, 4.0, 4.0, 3.0],
 			[5.5, 5.5, 2.5, 2.5]
-		]
+		])
 
 		genes, vals = avg_dups(self.genes, self.vals)
+		import pdb; pdb.set_trace()
 		self.assertTrue(np.array_equal(vals, vals_ans))
 		self.assertTrue(np.array_equal(genes, genes_ans))

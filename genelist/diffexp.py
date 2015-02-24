@@ -30,7 +30,8 @@ def diffexp(A, B, genes, method, cutoff):
 	grouped = sorted(grouped, key=lambda item: item[0], reverse=True)
 
 	# Apply cutoff; indexing with None is safe.
-	return grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
+	grouped = grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
+	return { k:v for (discard,k,v) in grouped }
 
 
 def ttest(A, B, genes):

@@ -62,8 +62,6 @@ def diffexp_endpoint():
 	"""Identifies differentially expressed genes for any input of genes and
 	expression values.
 	"""
-	import pdb
-	pdb.set_trace()
 	args = DiffExpRequestArgs(flask.request.json)
 	gl = GeneList(args.A, args.B, args.genes, args.method, args.cutoff)
 	return get_flask_json_response(gl.__dict__)

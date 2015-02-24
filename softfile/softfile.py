@@ -23,9 +23,7 @@ class SoftFile(object):
 		gene_values_dict = { k:v for k,v in zip(self.genes, AB) }
 		if norm:
 			gene_values_dict = normalize(gene_values_dict)
-
-		if not os.path.isfile(self.clean_path()):
-			self._write(gene_values_dict)
+		self._write(gene_values_dict)
 		self.link = self.clean_path()
 
 	def path(self):
@@ -35,6 +33,9 @@ class SoftFile(object):
 		return 'static/soft/clean/' + self.dataset + '-'.join(self.gsms) + '.soft'
 
 	def _write(self, gene_values_dict):
+		if os.path.isfile(self.clean_path()):
+			return
+
 		pprint('Writing clean SOFT file.')
 		with open(self.clean_path(), 'w+') as f:
 			f.write('!datset\t' + self.dataset + '\n')

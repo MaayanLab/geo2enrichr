@@ -139,13 +139,15 @@ def _is_norm(values):
 def avg_dups(genes, values):
 	"""Finds duplicate genes and averages their expression data.
 	"""
-	pprint('Averaging any duplicates.')
-	unq_genes = np.unique(genes)
-	out_values = np.zeros((unq_genes.shape[0], values.shape[1]))
-	for i, gene in enumerate(unq_genes):
-		dups = values[genes==gene]
-		out_values[i] = np.mean(dups, axis=0)
-	return (unq_genes, out_values)
+	import time
+	import pdb; pdb.set_trace()
+
+	folded, indices, counts = np.unique(genes, True, return_inverse=True)
+	output = np.zeros((folded.shape[0], values.shape[1]))
+	np.add.at(output, indices, values)
+	output /= counts[:, np.newaxis]
+	print 'averging time:' + str(time.time() - s)
+	return folded, output
 
 
 def _validate(genes, values):
