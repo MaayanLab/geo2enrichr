@@ -1,9 +1,14 @@
+"""
+"""
+
+
+import numpy as np
 import os.path
 
 from server.log import pprint
-from geodownloader import download
-from parser import parse
-from normalizer import normalize
+from .geodownloader import download
+from .parser import parse
+from .normalizer import normalize
 
 
 class SoftFile(object):
@@ -17,13 +22,21 @@ class SoftFile(object):
 			# This function writes a file to disk; the file's location can be
 			# found at self.path().
 			download(self.dataset, self.path())
-		self.genes, self.A, self.B, self.stats = parse(self.path(), self.platform, A_cols, B_cols)
-		# Convert to dictionary for easy normalizing and writing to file.
-		AB = [x+y for x,y in zip(self.A, self.B)]
-		gene_values_dict = { k:v for k,v in zip(self.genes, AB) }
+		
+		genes, A, B, self.stats = parse(self.path(), self.platform, A_cols, B_cols)
+		AB = np.concatenate((A, B), axis=1)
 		if norm:
-			gene_values_dict = normalize(gene_values_dict)
-		self._write(gene_values_dict)
+			idx = len(A[0])
+			genes, AB = normalize(np.array(genes), AB)
+			self.genes = genes.tolist()
+			self.A = AB[:,:idx].tolist()
+			self.B = AB[:,idx:].tolist()
+		else:
+			self.genes = genes
+			self.A = A
+			self.B = B
+			
+		self._write(self.genes, AB)
 		self.link = self.clean_path()
 
 	def path(self):
@@ -32,7 +45,8 @@ class SoftFile(object):
 	def clean_path(self):
 		return 'static/soft/clean/' + self.dataset + '-'.join(self.gsms) + '.soft'
 
-	def _write(self, gene_values_dict):
+	def _write(self, genes, values):
+		gene_values_dict = { k:v for (k,v) in zip(genes, values) }
 		if os.path.isfile(self.clean_path()):
 			return
 

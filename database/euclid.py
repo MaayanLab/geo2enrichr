@@ -7,6 +7,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import sqlite3
+from server.log import pprint
 
 
 # This connection persists for as long as the server is up and running.
@@ -49,7 +50,7 @@ def record_extraction(accession, A, B, metadata, config):
 	tables.
 	"""
 
-	print 'Inputing ' + accession + ' into DB'
+	pprint('Inputing ' + accession + ' into DB')
 	
 	cur = conn.cursor()
 
@@ -151,7 +152,7 @@ def show_extractions():
 
 	cur = conn.cursor()
 	cur.execute('SELECT * FROM %s' % EXTRACTION_TABLE)
-	print cur.fetchall()
+	pprint(cur.fetchall())
 
 
 def get_supported_platforms():
@@ -186,4 +187,4 @@ PROBE2GENE = build_probe_dict('static/probe2gene.txt')
 # This is for the deployment script. 
 if __name__ == '__main__':
 	#reset_database()
-	print 'var SUPPORTED_PLATFORMS = ' + str(PROBE2GENE.keys()) + ';'
+	pprint('var SUPPORTED_PLATFORMS = ' + str(PROBE2GENE.keys()) + ';')

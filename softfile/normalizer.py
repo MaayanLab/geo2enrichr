@@ -14,12 +14,12 @@ from numbers import Number
 from server.log import pprint
 
 
-def normalize(genes_values_dict):
+def normalize(genes, values):
 	"""Normalizes the data, taking the log2 of and quantile normalizing the
 	data if necessary.
 	"""
-	genes = np.array(genes_values_dict.keys())
-	values = np.array(genes_values_dict.values())
+	genes = np.array(genes)
+	values = np.array(values)
 
 	# Raise exceptions if the A and B are not valid data sets.
 	_validate(genes, values)
@@ -34,7 +34,7 @@ def normalize(genes_values_dict):
 		values = qnorm(values)
 
 	genes, values = avg_dups(genes, values)
-	return { k:v for k,v in zip(genes.tolist(), values.tolist()) }
+	return (genes, values)
 
 
 def log2(values):
@@ -139,14 +139,11 @@ def _is_norm(values):
 def avg_dups(genes, values):
 	"""Finds duplicate genes and averages their expression data.
 	"""
-	import time
-	import pdb; pdb.set_trace()
-
-	folded, indices, counts = np.unique(genes, True, return_inverse=True)
+	# See http://codereview.stackexchange.com/a/82020/59381 for details.
+	folded, indices, counts = np.unique(genes, return_inverse=True, return_counts=True)
 	output = np.zeros((folded.shape[0], values.shape[1]))
 	np.add.at(output, indices, values)
 	output /= counts[:, np.newaxis]
-	print 'averging time:' + str(time.time() - s)
 	return folded, output
 
 

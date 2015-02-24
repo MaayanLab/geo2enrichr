@@ -30,6 +30,5 @@ class TestAvgDups(unittest.TestCase):
 		])
 
 		genes, vals = avg_dups(self.genes, self.vals)
-		import pdb; pdb.set_trace()
 		self.assertTrue(np.array_equal(vals, vals_ans))
 		self.assertTrue(np.array_equal(genes, genes_ans))

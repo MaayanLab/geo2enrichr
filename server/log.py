@@ -14,4 +14,4 @@ def pprint(msg):
 	"""
 
 	if DEBUG:
-		print msg
+		print(msg)

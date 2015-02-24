@@ -1,1 +1,1 @@
-from softfile import SoftFile
+from .softfile import SoftFile

@@ -41,9 +41,12 @@ var SubmissionForm = Backbone.View.extend({
                 B_cols: self.requiredData.get('experimental').get('value').replace(/ /g,'').split(',')
             };
 
-        self.ajax('/getgeo', 'PUT', getGeoData, $.noop).then(function(diffExpData) {
-            self.ajax('/diffexp', 'POST', diffExpData, function(results) {
-                debugger;
+        self.ajax('/getgeo', 'PUT', getGeoData, $.noop).then(function(getGeoData) {
+            self.ajax('/diffexp', 'POST', getGeoData, function(diffExpData) {
+                new ResultList({
+                    parent: self,
+                    results: diffExpData
+                });
             });   
         });
     }

@@ -10,7 +10,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 from scipy import stats
 
-import chdir
+from . import chdir
 from server.log import pprint
 
 
@@ -18,7 +18,7 @@ def diffexp(A, B, genes, method, cutoff):
 	"""Identifies differentially expressed genes, delegating to the correct
 	helper function based on client or default configuration.
 	"""
-	HALF_CUTOFF = cutoff / 2 if cutoff is not 'None' else None
+	HALF_CUTOFF = int(cutoff / 2) if cutoff is not 'None' else None
 	if method == 'ttest':
 		gene_pvalues = ttest(A, B, genes)
 	else:
@@ -31,7 +31,7 @@ def diffexp(A, B, genes, method, cutoff):
 
 	# Apply cutoff; indexing with None is safe.
 	grouped = grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
-	return { k:v for (discard,k,v) in grouped }
+	return [ (k,v) for (discard,k,v) in grouped ]
 
 
 def ttest(A, B, genes):

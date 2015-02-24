@@ -1,2 +1,1 @@
-from genelist import GeneList
-import enrichrlink
+from .genelist import GeneList

@@ -11,10 +11,10 @@ __contact__ = "avi.maayan@mssm.edu"
 import os.path
 from gzip import GzipFile
 import zlib
-from urllib2 import urlopen, URLError
-from StringIO import StringIO
+import urllib.request
+import urllib.error
+from io import StringIO
 
-from server.log import pprint
 from server.files import SOFTFile
 
 
@@ -51,8 +51,8 @@ def _get_file_by_url(url, attempts=5):
 
 	while attempts > 0:
 		try:
-			response = urlopen(url)
-		except URLError:
+			response = urllib.request.urlopen(url)
+		except urllib.error.URLError:
 			raise IOError('urllib2 failed to open URL.')
 		if response.getcode() < 201:
 			break
@@ -69,7 +69,6 @@ def _unzip(compressed_string):
 
 	f = StringIO(compressed_string)
 	decompressed = GzipFile(fileobj=f)
-	print 'Unzipping file'
 	return decompressed.read()
 
 
