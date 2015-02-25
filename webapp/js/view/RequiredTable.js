@@ -1,6 +1,6 @@
-var RequiredTable = Backbone.View.extend({
+App.View.RequiredTable = Backbone.View.extend({
 
-    el: $('#requiredData'),
+    tagName: 'table',
 
     events: {
         'click .editable': 'edit'
@@ -23,7 +23,7 @@ var RequiredTable = Backbone.View.extend({
         '</tr>'
     ),
 
-    initialize: function() {
+    initialize: function(options) {
         this.listenTo(this.collection, 'change', this.update);
         this.render();
     },

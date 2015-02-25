@@ -1,4 +1,4 @@
-var ResultList = Backbone.View.extend({
+App.View.ResultList = Backbone.View.extend({
 
     tagName: 'table',
 
@@ -7,19 +7,22 @@ var ResultList = Backbone.View.extend({
     },
 
     template: _.template('' +
-        "<%_.forEach(up.genes, function (u) {%>"
-        + "<%=u%>, "
-        + "<%})%>"
+        '<% _.each(genes, function(value, gene) { %>' +
+            '<tr>' +
+                '<td><%= gene %></td><td><%= value %></td>' +
+            '</tr>' +
+        '<% }); %>'
     ),
 
     initialize: function(options) {
-        console.log(options);
-        debugger;
-        var html = $(this.el).append(this.template(options.results));
-        options.parent.$el.append(html);
+        this.model = options.model;
+        this.model.on('change', this.render, this);
     },
 
-    download: function(evt) {
-        debugger;
+    render: function() {
+        var html = this.template({
+            genes: this.model.get('genes')
+        });
+        this.$el.html(html);
     }
 });

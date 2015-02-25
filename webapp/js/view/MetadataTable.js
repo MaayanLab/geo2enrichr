@@ -1,6 +1,6 @@
-var MetadataTable = Backbone.View.extend({
+App.View.MetadataTable = Backbone.View.extend({
 
-    el: $('#metadataTable'),
+    tagName: 'table',
 
     events: {
         'change input': 'edit'
@@ -17,7 +17,7 @@ var MetadataTable = Backbone.View.extend({
         '</tr>'
     ),
 
-    initialize: function() {
+    initialize: function(options) {
         this.render();
     },
 

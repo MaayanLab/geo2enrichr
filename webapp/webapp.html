@@ -10,18 +10,20 @@
 </head>
 <body>
 <div id="page">
-    <div id="title">
+    <!--<div id="title">
         <a href="http://maayanlab.net/g2e/" target="_blank">
             <img src="images/logo-50x50.png">
             <span>GEO2Enrichr</span>
         </a>
-    </div>
-    <div class="clear"></div>
+    </div>-->
+    <!--<div class="clear"></div>
+    <button id="open">Custom</button>
+    <button id="close">GEO</button>
     <div class="lowlight bottom">Please verify that your data is correct, *required.</div>
     <table id="requiredData" class="confirm-tbl"></table>
     <div class="lowlight bottom">Please fill out these optional annotations, **if relevant.</div>
     <table id="metadataTable" class="confirm-tbl"></table>              
-    <div id="submissionForm">
+    <div id="submissionForm">-->
         <!--<table>
             <tr>
                 <td id="actions" class="title">
@@ -47,9 +49,9 @@
             <td id="results-title" class="title"></td>
             <td id="results-value" class="value"></td>
         </table>-->
-    </div>
+    <!--</div>
     <p id="credits"> GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma'ayan Lab</a>. See the <a href="http://maayanlab.net/g2e/" target="_blank">documentation</a> for details.
-    </p>
+    </p>-->
 </div><!-- End of page -->
 
 <!-- Dependencies -->
@@ -58,12 +60,21 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js'></script>
 
 <!-- Application -->
+<script src='js/app.js'></script>
+
+<!-- Models -->
 <script src='js/model/Row.js'></script>
+<script src='js/model/GeneList.js'></script>
+
+<!-- Views -->
 <script src='js/collection/Table.js'></script>
 <script src='js/view/RequiredTable.js'></script>
 <script src='js/view/MetadataTable.js'></script>
 <script src='js/view/ResultList.js'></script>
-<script src='js/view/SubmissionForm.js'></script>
-<script src='app.js'></script>
+<script src='js/view/SubmissionPanel.js'></script>
+<script src='js/view/GeoInputForm.js'></script>
+<script src='js/view/CustomInputForm.js'></script>
+<script src='js/view/Index.js'></script>
+<script src='js/view/Page.js'></script>
 
 </body>

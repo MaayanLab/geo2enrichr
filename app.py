@@ -52,7 +52,7 @@ def getgeo_endpoint():
 	download the data from GEO if the file exists the server.
 	"""
 	args = GetGeoRequestArgs(flask.request.json)
-	sf = SoftFile(args.dataset, args.platform, args.A_cols, args.B_cols, args.norm)
+	sf = SoftFile.from_geo(args.dataset, args.platform, args.A_cols, args.B_cols, args.norm)
 	return get_flask_json_response(sf.__dict__)
 
 
@@ -65,9 +65,15 @@ def diffexp_endpoint():
 	args = DiffExpRequestArgs(flask.request.json)
 	gl = GeneList(args.A, args.B, args.genes, args.method, args.cutoff)
 	return get_flask_json_response(gl.__dict__)
-	
 
 
+@app.route(PATH + '/custom', methods=['POST', 'OPTIONS'])
+@crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
+def custom_endpoint():
+	args = CustomRequestArgs(flask.request.json)
+	sf = SoftFile.from_string(args.input_string)
+	gl = GeneList(sf.A, sf.B, sf.genes, 'chdir', 500)
+	return get_flask_json_response(gl.__dict__)
 
 
 
