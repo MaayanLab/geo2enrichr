@@ -61,8 +61,6 @@ class SoftFile(object):
 			line = line[1:]
 			A.append([ float(line[i]) for i in A_indices ])
 			B.append([ float(line[i]) for i in B_indices ])
-		lines = lines[2:]
-
 		return cls('TODO', genes=genes, A=A, B=B)
 
 	@classmethod

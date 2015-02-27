@@ -2,17 +2,12 @@ App.View.Page = Backbone.View.extend({
 
     el: '#page',
 
-    events: {},
-
     initialize: function() {
-        this.$el.append(
-            '<ul>' +
-            '   <li><a href="#">Index</a></li>' +
-            '   <li><a href="#geo">GEO</a></li>' +
-            '   <li><a href="#custom">Custom</a></li>' +
-            '</ul>');
+        this.nav = new App.View.Nav();
+        this.render();
     },
 
     render: function() {
+        this.$el.append(this.nav.$el);
     }
 });

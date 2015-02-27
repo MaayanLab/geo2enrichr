@@ -1,9 +1,12 @@
-var Row = Backbone.Model.extend({
+App.Model.Row = Backbone.Model.extend({
     defaults: {
         id: '',
         name: '',
         value: '',
-        onEditPrompt: undefined,
-        options: undefined
+        prompt: undefined,
+        options: undefined,
+        required: false,
+        editable: false,
+        input: false
     }
 });

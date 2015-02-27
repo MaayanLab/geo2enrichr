@@ -16,17 +16,18 @@ from .diffexp import diffexp
 
 class GeneList(object):
 
+	# It is critical that this *preserves order*!
 	def __init__(self, A, B, genes, method, cutoff):
 		data = diffexp(A, B, genes, method, cutoff)
 		self.method = method
 		self.cutoff = cutoff
-		up = { t[0]:t[1] for t in data if t[1] > 0 }
+		up = [(t[0],format(t[1],'.6g')) for t in reversed(data) if t[1] > 0 ]
 		self.up = {
 			'genes': up,
 			'link': self.path(up),
 			'count': len(up)
 		}
-		down = { t[0]:t[1] for t in data if t[1] < 0 }
+		down = [(t[0],format(t[1],'.6g')) for t in data if t[1] < 0 ]
 		self.down = {
 			'genes': down,
 			'link': self.path(down),
@@ -44,12 +45,11 @@ class GeneList(object):
 		return hashlib.sha1(str(data).encode('utf-8')).hexdigest()
 
 	def _write(self, data, direction):
-		#if os.path.isfile(self.path(data)):
-		#	return
-		#with open(self.path(data), 'w+') as f:
-		#	f.write('!method\t' + self.method + '\n')
-		#	f.write('!cutoff\t' + str(self.cutoff) + '\n')
-		#	f.write('!direction\t' + direction + '\n')
-		#	for gene in data:
-		#		f.write(gene + '\t' + str(data[gene]) + '\n')
-		print(euclid2.test())
+		if os.path.isfile(self.path(data)):
+			return
+		with open(self.path(data), 'w+') as f:
+			f.write('!method\t' + self.method + '\n')
+			f.write('!cutoff\t' + str(self.cutoff) + '\n')
+			f.write('!direction\t' + direction + '\n')
+			for gene in getattr(self, direction)['genes']:
+				f.write(gene[0] + '\t' + gene[1] + '\n')

@@ -1,8 +1,47 @@
 var App = {
     Collection: {},
     Model: {},
-    View: {}
+    View: {},
+    EventAggregator: _.extend({}, Backbone.Events),
+    BASE: 'http://localhost:8083',
+    SERVER: 'http://localhost:8083/g2e'
 };
+
+/* Update Backbone's API for common functionality.
+ */
+Backbone.View.prototype.show = function() {
+    this.$el.show();
+    return this;
+}
+Backbone.View.prototype.hide = function() {
+    this.$el.hide();
+    return this;
+}
+Backbone.View.prototype.appendTo = function(parent) {
+    var paren = this.parent || parent;
+    var html;
+    if (this.template && this.model) {
+        html = this.$el.append(this.template(this.model.toJSON()));
+    } else if (this.template) {
+        html = this.$el.append(this.template());
+    } else {
+        html = this.el;
+    }
+    paren.$el.append(html);
+    return this;
+}
+Backbone.View.prototype.after = function(elem) {
+    var html;
+    if (this.template && this.model) {
+        html = this.$el.append(this.template(this.model.toJSON()));
+    } else if (this.template) {
+        html = this.$el.append(this.template());
+    } else {
+        html = this.el;
+    }
+    elem.$el.after(html);
+    return this;
+}
 
 $(function() {
 
@@ -16,10 +55,10 @@ $(function() {
         index: new App.View.Index({
             parent: page
         }),
-        geo: new App.View.GeoInputForm({
+        about: new App.View.About({
             parent: page
         }),
-        custom: new App.View.CustomInputForm({
+        documentation: new App.View.Documentation({
             parent: page
         })
     };
@@ -28,29 +67,28 @@ $(function() {
      * views.
      */
     App.show = function(view) {
-        if (App.contentViews.current) {
-            $(App.contentViews.current.el).hide();
-        }
-        App.contentViews.current = view;
-        $(App.contentViews.current.el).show();
+        _.each(App.contentViews, function(v) {
+            v.hide();
+        });
+        view.show();
     };
 
     App.Router = Backbone.Router.extend({
         routes: {
             '': 'index',
-            'geo': 'geo',
-            'custom': 'custom'
+            'documentation': 'documentation',
+            'about': 'about'
         },
         index: function() {
             App.show(App.contentViews.index);
         },
-        geo: function() {
-            App.show(App.contentViews.geo);
+        documentation: function() {
+            App.show(App.contentViews.documentation);
         },
-        custom: function() {
-            App.show(App.contentViews.custom);
+        about: function() {
+            App.show(App.contentViews.about);
         }
     });
-    new App.Router();
+    App.router = new App.Router();
     Backbone.history.start();
 });

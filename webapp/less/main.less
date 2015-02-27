@@ -1,0 +1,82 @@
+@import 'common.less';
+
+/* Reset
+ * ----- */
+
+*,
+html,
+body {
+    margin: 0;
+}
+body {
+    font-family: @font-family-base;
+    font-size: @font-size-base;
+}
+
+/* Tag selectors
+ * ------------- */
+input {
+    border: none;
+    font-size: @font-size-base;
+}
+
+/* Structure
+ * --------- */
+nav,
+.content {
+    padding: 20px 40px;
+}
+nav {
+    background: black;
+    h1, ul {
+        display: inline;
+    }
+    h1 {
+        a {
+            color: white;
+            font-family: @font-family-accent;
+            font-size: 30px;
+            font-weight: normal;
+        }
+    }
+    ul {
+        li {
+            display: inline;
+            list-style-type: none;
+            padding-left: 10px;
+        }
+    }
+    a {
+        border: none;
+        background: transparent;
+        color: white;
+        font-family: @font-family-accent;
+        font-size: 16px;
+        font-weight: bold;
+        &:hover {
+            cursor: pointer;
+            color: @color-blue;
+        }
+    }
+}
+table {
+    border-spacing: 0;
+    tr {
+        height: 25px;
+    }
+    td {
+        border-bottom: 1px solid @color-lightgray;
+    }
+    .locked {
+        color: @color-gray;
+    }
+}
+.geneList div {
+    font-size: @font-size-base;
+    font-family: @font-family-base;
+    background-color: @color-blue;
+    text-align: right;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+}

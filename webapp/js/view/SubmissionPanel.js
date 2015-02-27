@@ -2,37 +2,28 @@ App.View.SubmissionPanel = Backbone.View.extend({
 
     tagName: 'div',
 
-    className: 'content',
-
-    template: _.template('' +
-        '<td id="actions" class="title">' +
-            '<button class="submit-btn" class="btn">Extract gene lists</button>' +
-        '</td>'
-    ),
-
-    initialize: function(options) {
-        this.SERVER = options.SERVER;
-        this.upGenes = new App.Model.GeneList();
-        this.downGenes = new App.Model.GeneList();
-        this.render();
+    events: {
+        'click .submit-btn': 'submit'
     },
 
-    render: function() {
-        this.upGenesResult = new App.View.ResultList({
-            model: this.upGenes
-        });
-        this.downGenesResult = new App.View.ResultList({
-            model: this.upGenes
-        });
-        this.$el.html(this.template());
-        this.$el.append(this.upGenesResult.$el);
-        this.$el.append(this.downGenesResult.$el);
+    template: _.template('<button class="submit-btn" class="btn">Extract gene lists</button>'),
+
+    initialize: function(options) {
+        this.parent = options.parent;
+    },
+
+    submit: function() {
+        if (this.parent.mode === 'geo') {
+            this.submitGeoSoftFile();
+        } else {
+            this.submitCustomSoftFile();
+        }
     },
 
     ajax: function(endpoint, type, data, callback) {
         var self = this;
         return $.ajax({
-            url: self.SERVER + endpoint,
+            url: App.SERVER + endpoint,
             type: type,
             data: JSON.stringify(data),
             contentType: 'application/json;charset=UTF-8',
@@ -41,21 +32,31 @@ App.View.SubmissionPanel = Backbone.View.extend({
         });
     },
 
-    submit: function(data) {
-        var self = this;
+    submitGeoSoftFile: function() {
+        var self = this,
+            data = {
+                dataset: this.collection.get('dataset').get('value'),
+                platform: this.collection.get('platform').get('value'),
+                A_cols: this.collection.get('control').get('value').replace(/ /g,'').split(','),
+                B_cols: this.collection.get('experimental').get('value').replace(/ /g,'').split(',')
+            };
         self.ajax('/getgeo', 'PUT', data, $.noop).then(function(getGeoData) {
             self.ajax('/diffexp', 'POST', getGeoData, function(diffExpData) {
-                self.upGenes.set('genes', diffExpData.up.genes);
-                self.downGenes.set('genes', diffExpData.down.genes);
+                App.EventAggregator.trigger('genesDownloaded', diffExpData);
             });   
         });
     },
 
-    submitCustomSoftFile: function(data) {
-        var self = this;
-        self.ajax('/custom', 'POST', data, $.noop).then(function(customData) {
-            self.upGenes.set('genes', customData.up.genes);
-            self.downGenes.set('genes', customData.down.genes);
+    submitCustomSoftFile: function() {
+        var self = this,
+            data = {
+                dataset: this.collection.get('dataset').get('value'),
+                platform: this.collection.get('platform').get('value'),
+                A_cols: this.collection.get('control').get('value').replace(/ /g,'').split(','),
+                B_cols: this.collection.get('experimental').get('value').replace(/ /g,'').split(',')
+            };
+        self.ajax('/custom', 'POST', data, $.noop).then(function(diffExpData) {
+            App.EventAggregator.trigger('genesDownloaded', diffExpData);
         });
     }
 });

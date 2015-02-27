@@ -1,5 +1,8 @@
 App.Model.GeneList = Backbone.Model.extend({
     defaults: {
-        genes: {}
+        direction: '',
+        genes: [],
+        count: 0,
+        link: ''
     }
 });

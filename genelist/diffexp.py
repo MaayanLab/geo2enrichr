@@ -12,6 +12,7 @@ from scipy import stats
 
 from . import chdir
 from server.log import pprint
+import numpy as np
 
 
 def diffexp(A, B, genes, method, cutoff):
@@ -25,13 +26,14 @@ def diffexp(A, B, genes, method, cutoff):
 		pprint('Calculating the characteristic direction.')
 		genes, pvalues = chdir.chdir(A, B, genes)
 
-	# Notice we return the unmodified pvalue, *not* the absolute pvalue.
-	grouped = zip([abs(pv) for pv in pvalues], genes, pvalues)
-	grouped = sorted(grouped, key=lambda item: item[0], reverse=True)
+	genes = np.array(genes)
+	ind = np.argsort(pvalues)
+	genes = genes[ind]
+	pvalues = pvalues[ind]
+	grouped = [t for t in zip(genes, pvalues)]
 
 	# Apply cutoff; indexing with None is safe.
-	grouped = grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
-	return [ (k,v) for (discard,k,v) in grouped ]
+	return grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
 
 
 def ttest(A, B, genes):

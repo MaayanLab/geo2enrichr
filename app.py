@@ -72,7 +72,7 @@ def diffexp_endpoint():
 def custom_endpoint():
 	args = CustomRequestArgs(flask.request.json)
 	sf = SoftFile.from_string(args.input_string)
-	gl = GeneList(sf.A, sf.B, sf.genes, 'chdir', 500)
+	gl = GeneList(sf.A, sf.B, sf.genes, 'chdir', 'None')
 	return get_flask_json_response(gl.__dict__)
 
 
