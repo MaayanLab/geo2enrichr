@@ -18,28 +18,11 @@ Backbone.View.prototype.hide = function() {
     return this;
 }
 Backbone.View.prototype.appendTo = function(parent) {
-    var paren = this.parent || parent;
-    var html;
-    if (this.template && this.model) {
-        html = this.$el.append(this.template(this.model.toJSON()));
-    } else if (this.template) {
-        html = this.$el.append(this.template());
-    } else {
-        html = this.el;
-    }
-    paren.$el.append(html);
+    (this.parent || parent).$el.append(this.el);
     return this;
 }
 Backbone.View.prototype.after = function(elem) {
-    var html;
-    if (this.template && this.model) {
-        html = this.$el.append(this.template(this.model.toJSON()));
-    } else if (this.template) {
-        html = this.$el.append(this.template());
-    } else {
-        html = this.el;
-    }
-    elem.$el.after(html);
+    elem.$el.after(this.el);
     return this;
 }
 

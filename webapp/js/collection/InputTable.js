@@ -1,75 +1,74 @@
 App.Collection.InputTable = Backbone.Collection.extend({
-    model: App.Model.Row
+    model: App.Model.Field
 });
 
 App.Collection.inputTableFactory = function() {
     return new App.Collection.InputTable([
-        {
+        new App.Model.Option({
             id: 'diffexp',
             name: 'Differential expression method',
             options: ['Characteristic direction', 'T-test'],
-            required: true,
-            editable: true
-        },
-        {
+            required: true
+        }),
+        new App.Model.Input({
             id: 'dataset',
             name: 'Dataset',
-            value: 'GDS5077',
-            prompt: 'Please enter a valid dataset accession number:',
-            required: true
-        },
-        {
+            value: '',
+            required: true,
+            disabled: true
+        }),
+        new App.Model.Input({
             id: 'platform',
             name: 'Platform',
-            value: 'GPL10558',
-            prompt: 'Please enter a valid platform accession number:',
-            required: true
-        },
-        {
+            value: '',
+            required: true,
+            disabled: true
+        }),
+        new App.Model.Input({
             id: 'organism',
             name: 'Organism',
-            prompt: 'Please enter a support species ("Homo Sapiens" or "Mus Musculus"):',
-            required: true
-        },
-        {
+            value: '',
+            required: true,
+            disabled: true
+        }),
+        new App.Model.Input({
             id: 'control',
             name: 'Control samples',
-            value: 'GSM1071454, GSM1071455',
-            prompt: 'Please enter a comma-separated list of sample accession numbers:',
-        },
-        {
+            value: '',
+            required: true,
+            disabled: true
+        }),
+        new App.Model.Input({
             id: 'experimental',
             name: 'Experimental samples',
-            value: 'GSM1071457, GSM1071456',
-            prompt: 'Please enter a comma-separated list of sample accession numbers:',
-        },
-        {
+            value: '',
+            required: true,
+            disabled: true
+        }),
+        new App.Model.Input({
             id: 'cell',
             name: 'Cell type or tissue',
-            value: 'No data',
-            editable: true,
-            input: true
-        },
-        {
+            value: ''
+        }),
+        new App.Model.Input({
             id: 'perturbation',
             name: 'Perturbation',
-            value: 'No data',
-            editable: true,
-            input: true
-        },
-        {
+            value: ''
+        }),
+        new App.Model.Input({
             id: 'gene',
             name: 'Manipulated gene**',
-            value: 'No data',
-            editable: true,
-            input: true
-        },
-        {
+            value: ''
+        }),
+        new App.Model.Input({
             id: 'disease',
             name: 'Disease**',
-            value: 'No data',
-            editable: true,
-            input: true
-        }
+            value: ''
+        }),
+        new App.Model.TextArea({
+            id: 'textArea',
+            name: 'Text Area',
+            value: ''
+        })
     ]);
 }

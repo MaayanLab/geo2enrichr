@@ -6,14 +6,21 @@ App.View.SubmissionPanel = Backbone.View.extend({
         'click .submit-btn': 'submit'
     },
 
+    mode: 'geo',
+
     template: _.template('<button class="submit-btn" class="btn">Extract gene lists</button>'),
 
     initialize: function(options) {
-        this.parent = options.parent;
+        this.textArea = options.textArea;
+        App.EventAggregator.on('mode:change', this.change, this);
+    },
+
+    change: function(mode) {
+        this.mode = mode;
     },
 
     submit: function() {
-        if (this.parent.mode === 'geo') {
+        if (this.mode === 'geo') {
             this.submitGeoSoftFile();
         } else {
             this.submitCustomSoftFile();
@@ -48,14 +55,8 @@ App.View.SubmissionPanel = Backbone.View.extend({
     },
 
     submitCustomSoftFile: function() {
-        var self = this,
-            data = {
-                dataset: this.collection.get('dataset').get('value'),
-                platform: this.collection.get('platform').get('value'),
-                A_cols: this.collection.get('control').get('value').replace(/ /g,'').split(','),
-                B_cols: this.collection.get('experimental').get('value').replace(/ /g,'').split(',')
-            };
-        self.ajax('/custom', 'POST', data, $.noop).then(function(diffExpData) {
+        var inputString = this.textArea.model.get('value');
+        this.ajax('/custom', 'POST', inputString, $.noop).then(function(diffExpData) {
             App.EventAggregator.trigger('genesDownloaded', diffExpData);
         });
     }

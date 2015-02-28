@@ -60,7 +60,10 @@ table tr {
 table td {
   border-bottom: 1px solid #cccccc;
 }
-table .locked {
+table .disabled {
+  color: #aaaaaa;
+}
+table .disabled input {
   color: #aaaaaa;
 }
 .geneList div {

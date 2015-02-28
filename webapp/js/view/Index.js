@@ -8,13 +8,21 @@ App.View.Index = Backbone.View.extend({
         'click button': 'click'
     },
 
-    mode: 'geo',
-
     template: _.template('' +
         '<button data-command="geo">GEO</button>' +
         '<button data-command="custom">Custom</button>' +
-        '<button data-command="clear">Clear</button>'
+        '<button data-command="clear">Clear</button>' +
+        '<button data-command="mock">Mock</button>'
     ),
+
+    commands: {
+        'clear': function() {
+            App.EventAggregator.trigger('clear:form');
+        },
+        'mock': function() {
+            App.EventAggregator.trigger('mock:input');
+        }
+    },
 
     initialize: function(options) {
         this.parent = options.parent;
@@ -24,10 +32,10 @@ App.View.Index = Backbone.View.extend({
         this.inputForm = new App.View.InputForm({
             collection: this.collection
         });
-        this.textArea = new App.View.TextArea();
+
         this.submissionPanel = new App.View.SubmissionPanel({
             collection: this.collection,
-            parent: this
+            textArea: this.textArea
         });
         
         this.resultsPanel = new App.View.ResultsPanel();
@@ -35,25 +43,19 @@ App.View.Index = Backbone.View.extend({
     },
 
     render: function() {
+        this.$el.html(this.template());
         this.appendTo();
         this.inputForm.appendTo(this);
-        this.textArea.hide().appendTo(this.inputForm);
-        this.submissionPanel.appendTo(this.inputForm);
         this.resultsPanel.appendTo(this);
+        this.submissionPanel.appendTo(this.inputForm);
     },
 
     click: function(evt) {
-        var command = $(evt.currentTarget).attr('data-command');
-        if (command === 'clear') {
-            App.EventAggregator.trigger('clear');
+        var cmd = $(evt.currentTarget).attr('data-command');
+        if (this.commands[cmd]) {
+            this.commands[cmd]();
             return;
         }
-        
-        if (command === 'custom') {
-            this.textArea.show();
-        } else if (command === 'geo') {
-            this.textArea.hide();
-        }
-        this.inputForm.changeMode(command);
+        App.EventAggregator.trigger('change:mode', cmd);
     }
 });

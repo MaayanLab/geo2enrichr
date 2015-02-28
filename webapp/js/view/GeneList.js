@@ -2,10 +2,6 @@ App.View.GeneList = Backbone.View.extend({
 
     tagName: 'table',
 
-    events: {
-        'click tr td a': 'download'
-    },
-
     template: _.template('' +
         '<h3><%= direction %></h3>' +
         '<a href="<%= App.BASE + "/" + link %>" target="_blank">Download gene list</a>'
@@ -14,11 +10,13 @@ App.View.GeneList = Backbone.View.extend({
     initialize: function(options) {
         this.model = options.model;
         this.model.on('change', this.update, this);
-        App.EventAggregator.on('clear', function() {
-            d3.select(this.el).remove();
-            this.model.set('genes', []);
-            this.hide();
-        }, this);
+        App.EventAggregator.on('clear:form', this.clear, this);
+    },
+
+    clear: function() {
+        d3.select(this.el).remove();
+        this.model.set('genes', []);
+        this.hide();
     },
 
     update: function() {
@@ -48,13 +46,6 @@ App.View.GeneList = Backbone.View.extend({
             .text(function(d, i) {
                 return genes[i];
             });
-
-        /*var geneList = this.model.get('genes'),
-            html = this.template({
-                direction: this.model.get('direction'),
-                genes: geneList.slice(0,10)
-            });*/
-        //this.$el.html(html);
         this.$el.fadeIn();
     }
 });
