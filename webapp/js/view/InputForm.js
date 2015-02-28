@@ -57,6 +57,9 @@ App.View.InputForm = Backbone.View.extend({
             this.collection.where({'id':'organism'})[0].set('value', 'Homo Sapiens');
             this.collection.where({'id':'control'})[0].set('value', 'GSM1071454, GSM1071455');
             this.collection.where({'id':'experimental'})[0].set('value', 'GSM1071457, GSM1071456');
+            this.collection.where({'id':'cell'})[0].set('value', 'RUES2 stem cells');
+            this.collection.where({'id':'perturbation'})[0].set('value', 'Depleted for transmembrane protein 88');
+            this.collection.where({'id':'gene'})[0].set('value', 'TMEM 88');
         }
     }
 });

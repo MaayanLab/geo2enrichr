@@ -74,7 +74,7 @@ App.View.Input = App.View.Field.extend({
 
     template: _.template('' +
         '<td><%= name %></td>' +
-        '<td><input placeholder="<%= value %>"></td>'
+        '<td><input value="<%= value %>"></td>'
     ),
 
     initialize: function(options) {
