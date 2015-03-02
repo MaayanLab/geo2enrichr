@@ -74,12 +74,19 @@ table {
         }
     }
 }
-#results div {
-    font-size: @font-size-base;
-    font-family: @font-family-base;
-    background-color: @color-blue;
-    text-align: right;
-    padding: 3px;
-    margin: 1px;
-    color: white;
+#results {
+    div {
+        font-size: @font-size-base;
+        font-family: @font-family-base;
+        text-align: right;
+        padding: 3px;
+        margin: 1px;
+        color: white;
+    }
+    table.up div {
+        background-color: @color-blue;
+    }
+    table.down div {
+        background-color: red;
+    }
 }

@@ -23,7 +23,7 @@ App.Collection.inputTableFactory = function() {
             hide: true,
             geo: -1,
             upload: 1,
-            uploadMock: 'ExampleFile.txt'
+            uploadMock: 'ExampleFile'
         }),
         new App.Model.Input({
             id: 'dataset',
@@ -57,7 +57,7 @@ App.Collection.inputTableFactory = function() {
             value: '',
             geo: 0,
             geoMock: 'GSM1071454, GSM1071455',
-            upload: 0,
+            upload: -1,
         }),
         new App.Model.Input({
             id: 'experimental',
@@ -65,7 +65,7 @@ App.Collection.inputTableFactory = function() {
             value: '',
             geo: 0,
             geoMock: 'GSM1071457, GSM1071456',
-            upload: 0
+            upload: -1
         }),
         new App.Model.Input({
             id: 'cell',

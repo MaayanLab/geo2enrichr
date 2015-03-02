@@ -57,7 +57,7 @@ App.View.SubmissionPanel = Backbone.View.extend({
             }
             self.ajax('/diffexp', 'POST', getGeoData, function(diffExpData) {
                 _.extend(result, diffExpData);
-                App.EventAggregator.trigger('genesDownloaded', result);
+                App.EventAggregator.trigger('downloaded:genes', result);
             });   
         });
     },

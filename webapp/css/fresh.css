@@ -69,9 +69,14 @@ table .disabled input {
 #results div {
   font-size: 13px;
   font-family: 'arial', 'sans-serif';
-  background-color: #009dff;
   text-align: right;
   padding: 3px;
   margin: 1px;
   color: white;
+}
+#results table.up div {
+  background-color: #009dff;
+}
+#results table.down div {
+  background-color: red;
 }

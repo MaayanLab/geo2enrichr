@@ -9,6 +9,7 @@ App.View.GeneList = Backbone.View.extend({
 
     initialize: function(options) {
         this.model = options.model;
+        this.$el.addClass(this.model.get('direction'));
         this.model.on('change', this.update, this);
         App.EventAggregator.on('clear:form', this.clear, this);
     },

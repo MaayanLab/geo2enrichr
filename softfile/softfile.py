@@ -65,8 +65,6 @@ class SoftFile(object):
 		# Prevent collisions in user file names.
 		if os.path.isfile(cls.path(name)):
 			name += str(time())[10:]
-		if name[-5:] != '.soft':
-			name += '.soft'
 
 		file_obj.save(cls.path(name))
 		genes, samples, header, A, B = softparser.parse_custom(cls.path(name))
@@ -98,5 +96,5 @@ class SoftFile(object):
 			f.write('!end_metadata\n')
 			f.write('GENE SYMBOL\t' + '\t'.join(self.samples) + '\n')
 			for gene, val in gene_values_dict.items():
-				val_str = '\t'.join(map(str, val))
+				val_str = '\t'.join([format(n,'.3g') for n in val])
 				f.write(gene + '\t' + val_str + '\n')

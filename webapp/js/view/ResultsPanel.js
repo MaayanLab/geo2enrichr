@@ -14,7 +14,8 @@ App.View.ResultsPanel = Backbone.View.extend({
                 model: downModel
             }).hide().appendTo(this);
 
-        App.EventAggregator.on('genesDownloaded', function(data) {
+        App.EventAggregator.on('downloaded:genes', function(data) {
+            debugger;
             this.$el.prepend('<a href="' + App.BASE + '/' + data.soft.link + '">SOFT file</a>');
             upModel.set({
                 'genes': data.up.genes,
