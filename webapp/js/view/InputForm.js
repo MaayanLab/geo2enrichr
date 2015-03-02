@@ -16,13 +16,22 @@ App.View.InputForm = Backbone.View.extend({
         this.collection.each(function(f) {
             var field;
             if (f instanceof App.Model.Input) {
-                field = new App.View.Input({ model: f });
+                field = new App.View.Input({
+                    model: f,
+                    parent: this
+                });
                 field.appendTo(this);
             } else if (f instanceof App.Model.Option) {
-                field = new App.View.Option({ model: f });
+                field = new App.View.Option({
+                    model: f,
+                    parent: this
+                });
                 field.appendTo(this);
             } else if (f instanceof App.Model.TextArea) {
-                field = new App.View.TextArea({ model: f });
+                field = new App.View.TextArea({
+                    model: f,
+                    parent: this
+                });
                 field.appendTo(this);
             }
         }, this);
