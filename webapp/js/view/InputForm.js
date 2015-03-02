@@ -3,6 +3,8 @@ App.View.InputForm = Backbone.View.extend({
     tagName: 'form',
     
     mode: 'geo',
+
+    mockUsed: false,
     
     initialize: function(options) {
         this.render();
@@ -27,66 +29,54 @@ App.View.InputForm = Backbone.View.extend({
             }
             $table.append(field.el);
         }, this);
+        this.secure();
     },
-    
-    change: function(mode) {
-        this.mode = mode;
-        var datasetModel,
-            textAreaModel,
-            fileModel;
-
-        datasetModel = this.collection.where({ id: 'dataset' })[0];
-        if (this.mode === 'custom') {
-            datasetModel.set({ name: 'Name' });
-        } else {
-            datasetModel.set({ name: 'Dataset' });
-        }
-
-        //textAreaModel = this.collection.where({ id: 'textArea' })[0];
-        fileModel = this.collection.where({ id: 'file' })[0];
-        if (this.mode === 'geo') {
-            //textAreaModel.set('hide', true);
-            fileModel.set('hide', true);
-        } else {
-            //textAreaModel.set('hide', false);
-            fileModel.set('hide', false);
-        }
-
+   
+    secure: function() {
         this.collection.each(function(model) {
-            if (this.mode === model.get('mode')) {
-                model.set('disabled', true);
-            } else if (this.mode === 'custom') {
+            var triFlag = model.get(this.mode);
+            if (triFlag === 1) {
+                model.set('hide', false);
                 model.set('disabled', false);
+            } else if (triFlag === -1) {
+                model.set('hide', true);
+            } else {
+                model.set('hide', false);
+                model.set('disabled', true);
             }
         }, this);
     },
 
+    change: function(mode) {
+        this.mode = mode;
+        var datasetModel = this.collection.where({ id: 'dataset' })[0];
+        if (this.mode === 'upload') {
+            datasetModel.set({ name: 'Name' });
+        } else {
+            datasetModel.set({ name: 'Dataset' });
+        }
+        this.secure();
+        if (this.mockUsed) {
+            this.mock();
+        }
+    },
+
     clear: function() {
+        this.mockUsed = false;
         this.collection.each(function(row) {
             row.set('value', '');
         });
     },
 
     mock: function() {
+        this.mockUsed = true;
         this.collection.each(function(model) {
-            model.set('value', '');
-        });
-
-        if (this.mode === 'custom') {
-            this.collection.where({'id':'dataset'})[0].set('value', 'ExampleData');
-            this.collection.where({'id':'platform'})[0].set('value', 'NA');
-            this.collection.where({'id':'organism'})[0].set('value', 'Homo Sapiens');
-            this.collection.where({'id':'control'})[0].set('value', 'A, B, C, D');
-            this.collection.where({'id':'experimental'})[0].set('value', 'E, F');
-        } else {
-            this.collection.where({'id':'dataset'})[0].set('value', 'GDS5077');
-            this.collection.where({'id':'platform'})[0].set('value', 'GPL10558');
-            this.collection.where({'id':'organism'})[0].set('value', 'Homo Sapiens');
-            this.collection.where({'id':'control'})[0].set('value', 'GSM1071454, GSM1071455');
-            this.collection.where({'id':'experimental'})[0].set('value', 'GSM1071457, GSM1071456');
-            this.collection.where({'id':'cell'})[0].set('value', 'RUES2 stem cells');
-            this.collection.where({'id':'perturbation'})[0].set('value', 'Depleted for transmembrane protein 88');
-            this.collection.where({'id':'gene'})[0].set('value', 'TMEM 88');
-        }
+            var prop = model.get(this.mode + 'Mock');
+            if (_.isUndefined(prop)) {
+                model.set('value', '');
+            } else {
+                model.set('value', prop);
+            }
+        }, this);
     }
 });

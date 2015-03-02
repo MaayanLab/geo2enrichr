@@ -28,13 +28,13 @@ App.View.Field = Backbone.View.extend({
     },
 
     enable: function() {
-        this.$el.find('*').last().prop('disabled', false);
-        this.$el.find('td').eq(1).removeClass('disabled');
+        this.$el.prop('disabled', false);
+        this.$el.removeClass('disabled');
     },
 
     disable: function() {
-        this.$el.find('*').last().prop('disabled', true);
-        this.$el.find('td').eq(1).addClass('disabled');
+        this.$el.prop('disabled', true);
+        this.$el.addClass('disabled');
     }
 });
 
@@ -93,7 +93,11 @@ App.View.File = App.View.Field.extend({
     template: _.template('' +
         '<td><%= name %></td>' +
         '<td>' +
-        '   <input type="file" name="file">' +
+        '   <% if (value) { %>' +
+        '       <%= value %>' +
+        '   <% } else { %>' +
+        '       <input type="file" name="file"><%= value %>' +
+        '   <% } %>' +
         '</td>'
     ),
 

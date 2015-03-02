@@ -64,9 +64,9 @@ class SoftFile(object):
 		"""
 		# Prevent collisions in user file names.
 		if os.path.isfile(cls.path(name)):
-			name = name + str(time())[10:]
+			name += str(time())[10:]
 		if name[-5:] != '.soft':
-			name = name + '.soft'
+			name += '.soft'
 
 		file_obj.save(cls.path(name))
 		genes, samples, header, A, B = softparser.parse_custom(cls.path(name))

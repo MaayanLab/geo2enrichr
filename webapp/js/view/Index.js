@@ -11,9 +11,9 @@ App.View.Index = Backbone.View.extend({
     template: _.template('' +
         '<nav>' +
         '   <button data-command="geo">GEO</button>' +
-        '   <button data-command="custom">Custom</button>' +
+        '   <button data-command="upload">Upload</button>' +
         '   <button data-command="clear">Clear</button>' +
-        '   <button data-command="mock">Mock</button>' +
+        '   <button data-command="example">Example</button>' +
         '</nav>' +
         '<div id="input-form"></div>'
     ),
@@ -22,26 +22,21 @@ App.View.Index = Backbone.View.extend({
         'clear': function() {
             App.EventAggregator.trigger('clear:form');
         },
-        'mock': function() {
+        'example': function() {
             App.EventAggregator.trigger('mock:input');
         }
     },
 
     initialize: function(options) {
         this.parent = options.parent;
-        
-
         this.collection = App.Collection.inputTableFactory();
         this.inputForm = new App.View.InputForm({
             collection: this.collection
         });
-
         this.submissionPanel = new App.View.SubmissionPanel({
             collection: this.collection,
-            parent: this.inputForm//,
-            //textArea: this.textArea
+            parent: this.inputForm
         });
-        
         this.resultsPanel = new App.View.ResultsPanel();
         this.render();
     },
@@ -58,6 +53,9 @@ App.View.Index = Backbone.View.extend({
         var cmd = $(evt.currentTarget).attr('data-command');
         if (this.commands[cmd]) {
             this.commands[cmd]();
+            return;
+        }
+        if (_.isUndefined(cmd)) {
             return;
         }
         App.EventAggregator.trigger('change:mode', cmd);
