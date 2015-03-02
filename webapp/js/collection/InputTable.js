@@ -7,8 +7,8 @@ App.Collection.inputTableFactory = function() {
         new App.Model.Option({
             id: 'diffexp',
             name: 'Differential expression method',
-            options: ['Characteristic direction', 'T-test'],
-            required: true
+            options: ['Characteristic direction', 'T-test']
+            // This option is required but the user can't unselect it so we're fine.
         }),
         new App.Model.Input({
             id: 'dataset',

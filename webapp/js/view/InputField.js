@@ -7,23 +7,14 @@ App.View.Field = Backbone.View.extend({
     },
 
     initialize: function(options) {
-        this.parent = options.parent;
         this.model = options.model;
         this.model.on('change', this.render, this);
-        App.EventAggregator.on('clear:form', this.clear, this);
-        App.EventAggregator.on('change:mode', this.secure, this);
         this.render();
-        this.secure();
     },
     
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
-        this.secure();
-    },
-
-    secure: function(mode) {
-        mode = mode || this.parent.mode;
-        if (mode === 'geo' && this.model.get('disabled')) {
+        if (this.model.get('disabled')) {
             this.disable();
         } else {
             this.enable();
@@ -80,10 +71,5 @@ App.View.Input = App.View.Field.extend({
 
     initialize: function(options) {
         App.View.Field.prototype.initialize.apply(this, [options]);
-    }/*,
-
-    edit: function(evt) {
-        var val = $(evt.currentTarget).find('td input').val();
-        this.model.set('value', val);
-    }*/
+    }
 });

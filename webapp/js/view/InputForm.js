@@ -38,13 +38,22 @@ App.View.InputForm = Backbone.View.extend({
     },
     
     change: function(mode) {
+        this.mode = mode;
+
         var datasetModel = this.collection.where({ id: 'dataset' })[0];
         if (mode === 'custom') {
             datasetModel.set({ name: 'Name' });
         } else {
             datasetModel.set({ name: 'Dataset' });
         }
-        this.mode = mode;
+
+        this.collection.each(function(model) {
+            if (this.mode === 'geo' && model.get('required')) {
+                model.set('disabled', true);
+            } else if (this.mode === 'custom') {
+                model.set('disabled', false);
+            }
+        }, this);
     },
 
     clear: function() {
@@ -54,6 +63,10 @@ App.View.InputForm = Backbone.View.extend({
     },
 
     mock: function() {
+        this.collection.each(function(model) {
+            model.set('value', '');
+        });
+
         if (this.mode === 'custom') {
             this.collection.where({'id':'dataset'})[0].set('value', 'My experimental data');
             this.collection.where({'id':'platform'})[0].set('value', 'NA');
