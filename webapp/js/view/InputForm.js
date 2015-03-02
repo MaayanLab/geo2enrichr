@@ -16,35 +16,33 @@ App.View.InputForm = Backbone.View.extend({
         this.collection.each(function(f) {
             var field;
             if (f instanceof App.Model.Input) {
-                field = new App.View.Input({
-                    model: f,
-                    parent: this
-                });
-                field.appendTo(this);
+                field = new App.View.Input({ model: f });
             } else if (f instanceof App.Model.Option) {
-                field = new App.View.Option({
-                    model: f,
-                    parent: this
-                });
-                field.appendTo(this);
+                field = new App.View.Option({ model: f });
             } else if (f instanceof App.Model.TextArea) {
-                field = new App.View.TextArea({
-                    model: f,
-                    parent: this
-                });
-                field.appendTo(this);
+                field = new App.View.TextArea({ model: f });
             }
+            field.appendTo(this);
         }, this);
     },
     
     change: function(mode) {
         this.mode = mode;
+        var datasetModel,
+            textAreaModel;
 
-        var datasetModel = this.collection.where({ id: 'dataset' })[0];
-        if (mode === 'custom') {
+        datasetModel = this.collection.where({ id: 'dataset' })[0];
+        if (this.mode === 'custom') {
             datasetModel.set({ name: 'Name' });
         } else {
             datasetModel.set({ name: 'Dataset' });
+        }
+
+        textAreaModel = this.collection.where({ id: 'textArea' })[0];
+        if (this.mode === 'geo') {
+            textAreaModel.set('hide', true);
+        } else {
+            textAreaModel.set('hide', false);
         }
 
         this.collection.each(function(model) {

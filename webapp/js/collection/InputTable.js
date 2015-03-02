@@ -67,8 +67,9 @@ App.Collection.inputTableFactory = function() {
         }),
         new App.Model.TextArea({
             id: 'textArea',
-            name: 'Text Area',
-            value: ''
+            name: 'Gene list',
+            value: '',
+            hide: true
         })
     ]);
 }

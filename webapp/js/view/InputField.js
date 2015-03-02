@@ -13,6 +13,13 @@ App.View.Field = Backbone.View.extend({
     },
     
     render: function() {
+        console.log(this.model.get('id'));
+        if (this.model.get('hide')) {
+            this.hide();
+        } else {
+            this.show();
+        }
+
         this.$el.html(this.template(this.model.toJSON()));
         if (this.model.get('disabled')) {
             this.disable();
@@ -54,7 +61,9 @@ App.View.TextArea = App.View.Field.extend({
 
     template: _.template('' +
         '<td><%= name %></td>' +
-        '<td><textarea placeholder="<%= value %>"></td>'
+        '<td>' +
+            '<textarea placeholder="<%= value %>"></textarea>' +
+        '</td>'
     ),
 
     initialize: function(options) {
