@@ -3,24 +3,28 @@ App.View.SubmissionPanel = Backbone.View.extend({
     tagName: 'div',
 
     events: {
-        'click .submit-btn': 'submit'
+        'button': 'submit'
     },
 
-    mode: 'geo',
+    template: _.template('' +
+        '<nav>' +
+        '   <button data-command="submit">Submit</button>' +
+        '</nav>'
+    ),
+
+    events: {
+        'click .submit-btn': 'submit'
+    },
 
     template: _.template('<button class="submit-btn" class="btn">Extract gene lists</button>'),
 
     initialize: function(options) {
-        this.textArea = options.textArea;
-        App.EventAggregator.on('mode:change', this.change, this);
-    },
-
-    change: function(mode) {
-        this.mode = mode;
+        this.parent = options.parent;
+        this.$el.append(this.template());
     },
 
     submit: function() {
-        if (this.mode === 'geo') {
+        if (this.parent.mode === 'geo') {
             this.submitGeoSoftFile();
         } else {
             this.submitCustomSoftFile();
@@ -28,7 +32,6 @@ App.View.SubmissionPanel = Backbone.View.extend({
     },
 
     ajax: function(endpoint, type, data, callback) {
-        var self = this;
         return $.ajax({
             url: App.SERVER + endpoint,
             type: type,
@@ -46,18 +49,51 @@ App.View.SubmissionPanel = Backbone.View.extend({
                 platform: this.collection.get('platform').get('value'),
                 A_cols: this.collection.get('control').get('value').replace(/ /g,'').split(','),
                 B_cols: this.collection.get('experimental').get('value').replace(/ /g,'').split(',')
-            };
+            },
+            result = {};
         self.ajax('/getgeo', 'PUT', data, $.noop).then(function(getGeoData) {
+            result.soft = {
+                link: getGeoData.link
+            }
             self.ajax('/diffexp', 'POST', getGeoData, function(diffExpData) {
-                App.EventAggregator.trigger('genesDownloaded', diffExpData);
+                _.extend(result, diffExpData);
+                App.EventAggregator.trigger('genesDownloaded', result);
             });   
         });
     },
 
     submitCustomSoftFile: function() {
-        var inputString = this.textArea.model.get('value');
-        this.ajax('/custom', 'POST', inputString, $.noop).then(function(diffExpData) {
+        debugger;
+        //var inputString = this.textArea.model.get('value');
+        /*this.ajax('/custom', 'POST', inputString, $.noop).then(function(diffExpData) {
             App.EventAggregator.trigger('genesDownloaded', diffExpData);
+        });*/
+
+        var formData = new FormData($('form')[0]);
+        formData.append('name', this.collection.get('dataset').get('value'));
+        formData.append('platform', this.collection.get('platform').get('value'));
+
+        $.ajax({
+            url: App.SERVER + '/getcustom',
+            type: 'PUT',
+            data: formData,
+            success: function(data) {
+                debugger;
+            },
+            error: function(data) {
+                debugger;
+            },
+            /*xhr: function() {  // Custom XMLHttpRequest
+                var myXhr = $.ajaxSettings.xhr();
+                if(myXhr.upload){ // Check if upload property exists
+                    myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+                }
+                return myXhr;
+            },*/
+            // Tell jQuery not to process data or worry about content-type.
+            cache: false,
+            contentType: false,
+            processData: false
         });
     }
 });

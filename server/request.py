@@ -5,6 +5,9 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
+import time
+
+
 class GetGeoRequestArgs:
 
 	def __init__(self, args):
@@ -39,5 +42,8 @@ class DiffExpRequestArgs:
 
 class CustomRequestArgs:
 
-	def __init__(self, args):
-		self.input_string = args
+	def __init__(self, request):
+		self.file = request.files['file']
+		name = request.form.get('name') or self.file.name
+		self.name = name
+		self.platform = request.form.get('platform')

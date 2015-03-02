@@ -9,10 +9,13 @@ App.View.Index = Backbone.View.extend({
     },
 
     template: _.template('' +
-        '<button data-command="geo">GEO</button>' +
-        '<button data-command="custom">Custom</button>' +
-        '<button data-command="clear">Clear</button>' +
-        '<button data-command="mock">Mock</button>'
+        '<nav>' +
+        '   <button data-command="geo">GEO</button>' +
+        '   <button data-command="custom">Custom</button>' +
+        '   <button data-command="clear">Clear</button>' +
+        '   <button data-command="mock">Mock</button>' +
+        '</nav>' +
+        '<div id="input-form"></div>'
     ),
 
     commands: {
@@ -35,7 +38,8 @@ App.View.Index = Backbone.View.extend({
 
         this.submissionPanel = new App.View.SubmissionPanel({
             collection: this.collection,
-            textArea: this.textArea
+            parent: this.inputForm//,
+            //textArea: this.textArea
         });
         
         this.resultsPanel = new App.View.ResultsPanel();
@@ -45,7 +49,7 @@ App.View.Index = Backbone.View.extend({
     render: function() {
         this.$el.html(this.template());
         this.appendTo();
-        this.inputForm.appendTo(this);
+        this.$el.find('#input-form').append(this.inputForm.el);
         this.resultsPanel.appendTo(this);
         this.submissionPanel.appendTo(this.inputForm);
     },

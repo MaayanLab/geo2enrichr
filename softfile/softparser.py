@@ -16,7 +16,7 @@ from database import euclid
 PROBE2GENE = euclid.PROBE2GENE
 
 
-def parse(filename, platform, A_cols, B_cols):
+def parse_geo(filename, platform, A_cols, B_cols):
 	"""Parses SOFT files, discarding bad dataand converting probe IDs to gene
 	sybmols.
 	"""
@@ -113,6 +113,34 @@ def parse(filename, platform, A_cols, B_cols):
 
 	# Convert to numpy arrays, which are more compact and faster.
 	return (genes, A, B, stats)
+
+
+def parse_custom(filename):
+	"""Parses custom SOFT files uploaded by the user.
+	"""
+
+	genes = []
+	A = []
+	B = []
+	expression_values = {}
+
+	with open(filename) as soft_in:
+		samples = next(soft_in).strip().split('\t')
+		header = next(soft_in).strip().split('\t')
+		A_indices = [i for i,k in enumerate(header) if k == '0']
+		B_indices = [i for i,k in enumerate(header) if k == '1']
+
+		for line in soft_in:
+			line = line.rstrip().split('\t')
+			genes.append(line[0])
+			values = line[1:]
+			A_row = [float(values[i]) for i in A_indices]
+			B_row = [float(values[i]) for i in B_indices]
+			A.append(A_row)
+			B.append(B_row)
+	
+	return genes, samples, header, A, B
+
 
 
 def platform_supported(platform):

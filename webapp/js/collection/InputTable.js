@@ -10,6 +10,12 @@ App.Collection.inputTableFactory = function() {
             options: ['Characteristic direction', 'T-test']
             // This option is required but the user can't unselect it so we're fine.
         }),
+        new App.Model.File({
+            id: 'file',
+            name: 'Custom SOFT file',
+            value: '',
+            hide: true
+        }),
         new App.Model.Input({
             id: 'dataset',
             name: 'Dataset',
@@ -67,7 +73,7 @@ App.Collection.inputTableFactory = function() {
         }),
         new App.Model.TextArea({
             id: 'textArea',
-            name: 'Gene list',
+            name: 'Custom SOFT file as text',
             value: '',
             hide: true
         })

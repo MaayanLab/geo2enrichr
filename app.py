@@ -67,13 +67,15 @@ def diffexp_endpoint():
 	return get_flask_json_response(gl.__dict__)
 
 
-@app.route(PATH + '/custom', methods=['POST', 'OPTIONS'])
+@app.route(PATH + '/getcustom', methods=['PUT', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def custom_endpoint():
-	args = CustomRequestArgs(flask.request.json)
-	sf = SoftFile.from_string(args.input_string)
-	gl = GeneList(sf.A, sf.B, sf.genes, 'chdir', 'None')
-	return get_flask_json_response(gl.__dict__)
+	"""
+	"""
+	import pdb; pdb.set_trace()
+	args = CustomRequestArgs(flask.request)
+	sf = SoftFile.from_file(args.name, args.file, args.platform)
+	return get_flask_json_response(sf.__dict__)
 
 
 

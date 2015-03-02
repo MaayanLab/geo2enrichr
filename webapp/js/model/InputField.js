@@ -9,8 +9,7 @@ App.Model.Field = Backbone.Model.extend({
 });
 
 App.Model.Input = App.Model.Field.extend({
-    defaults: {
-    }
+    defaults: {}
 });
 
 App.Model.Option = App.Model.Field.extend({
@@ -20,6 +19,9 @@ App.Model.Option = App.Model.Field.extend({
 });
 
 App.Model.TextArea = App.Model.Field.extend({
-    defaults: {
-    }
+    defaults: {}
+});
+
+App.Model.File = App.Model.Field.extend({
+    defaults: {}
 });

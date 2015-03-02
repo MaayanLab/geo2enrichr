@@ -15,6 +15,7 @@ import urllib.request
 import urllib.error
 from io import StringIO
 
+from server.log import pprint
 from server.files import SOFTFile
 
 
@@ -41,20 +42,25 @@ def download(accession, downloaded_file_path):
 			bin_chunk = response.read(CHUNK_SIZE)
 			if not bin_chunk:
 				break
-			string = decompressor.decompress(bin_chunk)
+			string = decompressor.decompress(bin_chunk).decode('utf-8')
 			f.write(string)
 
 
 def _get_file_by_url(url, attempts=5):
 	"""Attempts to get the file from URL. Tries 5 times before giving up.
 	"""
-
+	
+	pprint('Downloading GEO SOFT file from: ' + url)
 	while attempts > 0:
 		try:
 			response = urllib.request.urlopen(url)
-		except urllib.error.URLError:
-			raise IOError('urllib2 failed to open URL.')
-		if response.getcode() < 201:
+		except URLError as e:
+			# See: https://docs.python.org/3/howto/urllib2.html.
+			if hasattr(e, 'reason'):
+				pprint('Failed to reach a server because' + str(e.reason))
+			elif hasattr(e, 'code'):
+				pprint('The server couldn\'t fulfill the request; status code ' + str(e.code))
+		if response is not None:
 			break
 		else:
 			attempts -= 1

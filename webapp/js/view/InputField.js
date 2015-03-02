@@ -13,7 +13,6 @@ App.View.Field = Backbone.View.extend({
     },
     
     render: function() {
-        console.log(this.model.get('id'));
         if (this.model.get('hide')) {
             this.hide();
         } else {
@@ -39,16 +38,13 @@ App.View.Field = Backbone.View.extend({
     }
 });
 
-App.View.Option = App.View.Field.extend({
+
+App.View.Input = App.View.Field.extend({
 
     template: _.template('' +
         '<td><%= name %></td>' +
         '<td>' +
-            '<select>' +
-                '<% _.each(options, function(opt) { %>' +
-                    '<option><%= opt %></option>' +
-                '<% }); %>' + 
-            '</select>' +
+        '   <input value="<%= value %>">' +
         '</td>'
     ),
 
@@ -56,13 +52,33 @@ App.View.Option = App.View.Field.extend({
         App.View.Field.prototype.initialize.apply(this, [options]);
     }
 });
+
+
+App.View.Option = App.View.Field.extend({
+
+    template: _.template('' +
+        '<td><%= name %></td>' +
+        '<td>' +
+        '   <select>' +
+        '       <% _.each(options, function(opt) { %>' +
+        '           <option><%= opt %></option>' +
+        '       <% }); %>' + 
+        '   </select>' +
+        '</td>'
+    ),
+
+    initialize: function(options) {
+        App.View.Field.prototype.initialize.apply(this, [options]);
+    }
+});
+
 
 App.View.TextArea = App.View.Field.extend({
 
     template: _.template('' +
         '<td><%= name %></td>' +
         '<td>' +
-            '<textarea placeholder="<%= value %>"></textarea>' +
+        '   <textarea placeholder="<%= value %>"></textarea>' +
         '</td>'
     ),
 
@@ -71,11 +87,14 @@ App.View.TextArea = App.View.Field.extend({
     }
 });
 
-App.View.Input = App.View.Field.extend({
+
+App.View.File = App.View.Field.extend({
 
     template: _.template('' +
         '<td><%= name %></td>' +
-        '<td><input value="<%= value %>"></td>'
+        '<td>' +
+        '   <input type="file" name="file">' +
+        '</td>'
     ),
 
     initialize: function(options) {

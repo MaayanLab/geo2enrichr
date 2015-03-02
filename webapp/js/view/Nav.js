@@ -2,6 +2,8 @@ App.View.Nav = Backbone.View.extend({
 
     tagName: 'nav',
 
+    id: 'main',
+
     events: {
         'click a': 'navigate'
     },

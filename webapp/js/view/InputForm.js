@@ -1,11 +1,10 @@
 App.View.InputForm = Backbone.View.extend({
 
-    tagName: 'table',
+    tagName: 'form',
     
     mode: 'geo',
     
     initialize: function(options) {
-        this.collection = options.collection;
         this.render();
         App.EventAggregator.on('clear:form', this.clear, this);
         App.EventAggregator.on('change:mode', this.change, this);
@@ -13,6 +12,8 @@ App.View.InputForm = Backbone.View.extend({
     },
 
     render: function() {
+        var $table = $('<table></table>');
+        this.$el.append($table);
         this.collection.each(function(f) {
             var field;
             if (f instanceof App.Model.Input) {
@@ -21,15 +22,18 @@ App.View.InputForm = Backbone.View.extend({
                 field = new App.View.Option({ model: f });
             } else if (f instanceof App.Model.TextArea) {
                 field = new App.View.TextArea({ model: f });
+            } else if (f instanceof App.Model.File) {
+                field = new App.View.File({ model: f });
             }
-            field.appendTo(this);
+            $table.append(field.el);
         }, this);
     },
     
     change: function(mode) {
         this.mode = mode;
         var datasetModel,
-            textAreaModel;
+            textAreaModel,
+            fileModel;
 
         datasetModel = this.collection.where({ id: 'dataset' })[0];
         if (this.mode === 'custom') {
@@ -38,15 +42,18 @@ App.View.InputForm = Backbone.View.extend({
             datasetModel.set({ name: 'Dataset' });
         }
 
-        textAreaModel = this.collection.where({ id: 'textArea' })[0];
+        //textAreaModel = this.collection.where({ id: 'textArea' })[0];
+        fileModel = this.collection.where({ id: 'file' })[0];
         if (this.mode === 'geo') {
-            textAreaModel.set('hide', true);
+            //textAreaModel.set('hide', true);
+            fileModel.set('hide', true);
         } else {
-            textAreaModel.set('hide', false);
+            //textAreaModel.set('hide', false);
+            fileModel.set('hide', false);
         }
 
         this.collection.each(function(model) {
-            if (this.mode === 'geo' && model.get('required')) {
+            if (this.mode === model.get('mode')) {
                 model.set('disabled', true);
             } else if (this.mode === 'custom') {
                 model.set('disabled', false);
@@ -66,7 +73,7 @@ App.View.InputForm = Backbone.View.extend({
         });
 
         if (this.mode === 'custom') {
-            this.collection.where({'id':'dataset'})[0].set('value', 'My experimental data');
+            this.collection.where({'id':'dataset'})[0].set('value', 'ExampleData');
             this.collection.where({'id':'platform'})[0].set('value', 'NA');
             this.collection.where({'id':'organism'})[0].set('value', 'Homo Sapiens');
             this.collection.where({'id':'control'})[0].set('value', 'A, B, C, D');
