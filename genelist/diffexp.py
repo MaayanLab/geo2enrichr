@@ -21,12 +21,16 @@ def diffexp(A, B, genes, method, cutoff):
 	"""
 	HALF_CUTOFF = int(cutoff / 2) if cutoff is not 'None' else None
 	if method == 'ttest':
-		gene_pvalues = ttest(A, B, genes)
+		genes, pvalues = ttest(A, B, genes)
+		import pdb; pdb.set_trace()
 	else:
 		pprint('Calculating the characteristic direction.')
 		genes, pvalues = chdir.chdir(A, B, genes)
 
+	# Just in case.
 	genes = np.array(genes)
+	pvalues = np.array(pvalues)
+
 	ind = np.argsort(pvalues)
 	genes = genes[ind]
 	pvalues = pvalues[ind]
@@ -47,5 +51,5 @@ def ttest(A, B, genes):
 		signed_pvalue = ttest_results[1] if (ttest_results[0] > 0).all() else (ttest_results[1] * -1)
 		pvalues.append((genes[i], signed_pvalue))
 
-	# TODO: This should also handle a cutoff.
-	return pvalues
+	l = list(zip(*pvalues))
+	return l[0], l[1]
