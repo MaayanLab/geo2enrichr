@@ -13,6 +13,25 @@ App.Collection.inputTableFactory = function() {
             id: 'diffexp',
             name: 'Differential expression method',
             options: ['Characteristic direction', 'T-test'],
+            backend: ['chdir', 'ttest'],
+            value: 'Characteristic direction',
+            geo: 1,
+            upload: 1
+        }),
+        new App.Model.Option({
+            id: 'cutoff',
+            name: 'Gene list cutoff',
+            options: ['500', '400', '300', '200', 'None'],
+            value: '500',
+            geo: 1,
+            upload: 1
+        }),
+        new App.Model.Option({
+            id: 'norm',
+            name: 'Normalize data if necessary',
+            options: ['Yes', 'No'],
+            backend: ['True', 'False'],
+            value: 'Yes',
             geo: 1,
             upload: 1
         }),
@@ -54,17 +73,17 @@ App.Collection.inputTableFactory = function() {
         new App.Model.Input({
             id: 'control',
             name: 'Control samples',
-            value: '',
+            value: [],
             geo: 0,
-            geoMock: 'GSM1071454, GSM1071455',
+            geoMock: ['GSM1071454', 'GSM1071455'],
             upload: -1,
         }),
         new App.Model.Input({
             id: 'experimental',
             name: 'Experimental samples',
-            value: '',
+            value: [],
             geo: 0,
-            geoMock: 'GSM1071457, GSM1071456',
+            geoMock: ['GSM1071457', 'GSM1071456'],
             upload: -1
         }),
         new App.Model.Input({

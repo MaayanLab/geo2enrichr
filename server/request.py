@@ -15,12 +15,9 @@ class GetGeoRequestArgs:
 		self.platform = args.get('platform')
 		self.A_cols = args.get('A_cols')
 		self.B_cols = args.get('B_cols')
-
-		# Use "norm" instead of "normalize" for namespace reasons.
-		if 'normalize' in args and args.get('normalize') is 'False':
-			self.norm = False
-		else:
-			self.norm = True
+		#self.method = args.get('method') or 'chdir'
+		#self.cutoff = args.get('cutoff') or 500
+		self.norm = args.get('norm') != 'False'
 
 
 class DiffExpRequestArgs:
@@ -38,6 +35,8 @@ class DiffExpRequestArgs:
 			# TODO: Change to 500 before deploying.
 			self.cutoff = 200
 		self.method = args.get('method') or 'chdir'
+		self.cutoff = int(args.get('cutoff')) if args.get('cutoff') else 500
+		self.norm = args.get('norm') != 'False'
 
 
 class CustomRequestArgs:

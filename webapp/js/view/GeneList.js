@@ -15,15 +15,17 @@ App.View.GeneList = Backbone.View.extend({
     },
 
     clear: function() {
-        d3.select(this.el).remove();
-        this.model.set('genes', []);
+        d3.select(this.el).selectAll('div').remove();
         this.hide();
     },
 
     update: function() {
         var data = this.model.get('genes');
         
-        if (!data.length) { return; }
+        if (!data.length) {
+            this.clear();
+            return;
+        }
 
         var unpack = _.unzip(data.slice(0,10)),
             genes = unpack[0],

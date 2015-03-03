@@ -35,7 +35,8 @@ App.View.Index = Backbone.View.extend({
         });
         this.submissionPanel = new App.View.SubmissionPanel({
             collection: this.collection,
-            parent: this.inputForm
+            parent: this.inputForm,
+            index: this
         });
         this.resultsPanel = new App.View.ResultsPanel();
         this.render();

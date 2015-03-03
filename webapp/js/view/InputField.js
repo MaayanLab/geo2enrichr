@@ -2,10 +2,6 @@ App.View.Field = Backbone.View.extend({
 
     tagName: 'tr',
 
-    events: {
-        'change': 'edit'
-    },
-
     initialize: function(options) {
         this.model = options.model;
         this.model.on('change', this.render, this);
@@ -56,12 +52,20 @@ App.View.Input = App.View.Field.extend({
 
 App.View.Option = App.View.Field.extend({
 
+    events: {
+        'change select': 'change'
+    },
+
     template: _.template('' +
         '<td><%= name %></td>' +
         '<td>' +
         '   <select>' +
         '       <% _.each(options, function(opt) { %>' +
-        '           <option><%= opt %></option>' +
+        '           <% if (opt === value) { %>' +
+        '               <option selected="selected"><%= opt %></option>' +
+        '           <% } else { %>' +
+        '               <option><%= opt %></option>' +
+        '           <% } %>' +
         '       <% }); %>' + 
         '   </select>' +
         '</td>'
@@ -69,6 +73,11 @@ App.View.Option = App.View.Field.extend({
 
     initialize: function(options) {
         App.View.Field.prototype.initialize.apply(this, [options]);
+    },
+
+    change: function(evt) {
+        //debugger;
+        this.model.set('value', $(evt.currentTarget).val());
     }
 });
 

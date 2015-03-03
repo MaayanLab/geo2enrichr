@@ -96,5 +96,5 @@ class SoftFile(object):
 			f.write('!end_metadata\n')
 			f.write('GENE SYMBOL\t' + '\t'.join(self.samples) + '\n')
 			for gene, val in gene_values_dict.items():
-				val_str = '\t'.join([format(n,'.3g') for n in val])
+				val_str = '\t'.join([format(n,'.4g') for n in val])
 				f.write(gene + '\t' + val_str + '\n')

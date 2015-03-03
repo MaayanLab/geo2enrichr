@@ -20,10 +20,12 @@ App.View.SubmissionPanel = Backbone.View.extend({
 
     initialize: function(options) {
         this.parent = options.parent;
+        this.index = options.index;
         this.$el.append(this.template());
     },
 
     submit: function() {
+        this.index.resultsPanel.clear()
         if (this.parent.mode === 'geo') {
             this.submitGeoSoftFile();
         } else {
@@ -42,28 +44,63 @@ App.View.SubmissionPanel = Backbone.View.extend({
         });
     },
 
+    getData: function() {
+        var result = {};
+
+        /* Handles which inputs are used for the current mode; also maps any
+         * displayed options to backend options if necessary.
+         */
+        this.collection.each(function(model) {
+            if (model.get(this.parent.mode) >= 0) {
+                var key = model.get('id'),
+                    val = model.get('value') || model.get('default');
+                if (model.get('backend')) {
+                    var idx = model.get('options').indexOf(val);
+                    result[key] = model.get('backend')[idx];
+                } else {
+                    result[key] = val;
+                }
+            }
+        }, this);
+        
+        /* Handles the select samples for GEO mode; the user does not input
+         * selected samples on Upload mode.
+         */
+        if (this.parent.mode === 'geo') {
+            var A_cols = this.collection.get('control').get('value'),
+                B_cols = this.collection.get('experimental').get('value');
+            if (_.isString(A_cols)) {
+                A_cols = A_cols.replace(/ /g,'').split(',');
+            }
+            if (_.isString(B_cols)) {
+                B_cols = B_cols.replace(/ /g,'').split(',');
+            }
+            result.A_cols = A_cols;
+            result.B_cols = B_cols;
+        }
+
+        return result;
+    },
+
     submitGeoSoftFile: function() {
         var self = this,
-            data = {
-                dataset: this.collection.get('dataset').get('value'),
-                platform: this.collection.get('platform').get('value'),
-                A_cols: this.collection.get('control').get('value').replace(/ /g,'').split(','),
-                B_cols: this.collection.get('experimental').get('value').replace(/ /g,'').split(',')
+            data = this.getData(),
+            options = {
+                method: data.diffexp,
+                cutoff: data.cutoff
             },
             result = {};
         self.ajax('/getgeo', 'PUT', data, $.noop).then(function(getGeoData) {
             result.soft = {
                 link: getGeoData.link
             }
-            self.ajax('/diffexp', 'POST', getGeoData, function(diffExpData) {
-                _.extend(result, diffExpData);
-                App.EventAggregator.trigger('downloaded:genes', result);
+            self.ajax('/diffexp', 'POST', _.extend(options, getGeoData), function(diffExpData) {
+                App.EventAggregator.trigger('downloaded:genes', _.extend(result, diffExpData));
             });   
         });
     },
 
     submitCustomSoftFile: function() {
-        debugger;
         //var inputString = this.textArea.model.get('value');
         /*this.ajax('/custom', 'POST', inputString, $.noop).then(function(diffExpData) {
             App.EventAggregator.trigger('genesDownloaded', diffExpData);
@@ -90,6 +127,7 @@ App.View.SubmissionPanel = Backbone.View.extend({
                 }
                 return myXhr;
             },*/
+
             // Tell jQuery not to process data or worry about content-type.
             cache: false,
             contentType: false,

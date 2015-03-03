@@ -21,13 +21,13 @@ class GeneList(object):
 		data = diffexp(A, B, genes, method, cutoff)
 		self.method = method
 		self.cutoff = cutoff
-		up = [(t[0],format(t[1],'.3g')) for t in reversed(data) if t[1] > 0 ]
+		up = [(t[0],format(t[1],'.4g')) for t in reversed(data) if t[1] > 0 ]
 		self.up = {
 			'genes': up,
 			'link': self.path(up),
 			'count': len(up)
 		}
-		down = [(t[0],format(t[1],'.3g')) for t in data if t[1] < 0 ]
+		down = [(t[0],format(t[1],'.4g')) for t in data if t[1] < 0 ]
 		self.down = {
 			'genes': down,
 			'link': self.path(down),

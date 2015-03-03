@@ -63,8 +63,12 @@ App.View.InputForm = Backbone.View.extend({
 
     clear: function() {
         this.mockUsed = false;
-        this.collection.each(function(row) {
-            row.set('value', '');
+        this.collection.each(function(model) {
+            if (model.get('options')) {
+                model.set('value', model.get('value'));
+            } else {
+                model.set('value', '');
+            }
         });
     },
 
