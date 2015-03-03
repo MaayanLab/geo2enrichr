@@ -25,6 +25,44 @@ App.View.SubmissionPanel = Backbone.View.extend({
 
 /* Helper fucntions for submitting data.
  * ------------------------------------- */
+  
+    getData: function() {
+        var result = {};
+
+        /* Handles which inputs are used for the current mode; also maps any
+         * displayed options to backend options if necessary.
+         */
+        this.collection.each(function(model) {
+            if (model.get(this.parent.mode) >= 0) {
+                var key = model.get('id'),
+                    val = model.get('value') || model.get('default');
+                if (model.get('backend')) {
+                    var idx = model.get('options').indexOf(val);
+                    result[key] = model.get('backend')[idx];
+                } else {
+                    result[key] = val;
+                }
+            }
+        }, this);
+        
+        /* Handles the select samples for GEO mode; the user does not input
+         * selected samples on Upload mode.
+         */
+        if (this.parent.mode === 'geo') {
+            var A_cols = this.collection.get('control').get('value'),
+                B_cols = this.collection.get('experimental').get('value');
+            if (_.isString(A_cols)) {
+                A_cols = A_cols.replace(/ /g,'').split(',');
+            }
+            if (_.isString(B_cols)) {
+                B_cols = B_cols.replace(/ /g,'').split(',');
+            }
+            result.A_cols = A_cols;
+            result.B_cols = B_cols;
+        }
+
+        return result;
+    },
 
     submit: function() {
         App.EventAggregator.trigger('clear:results');
@@ -99,7 +137,10 @@ App.View.SubmissionPanel = Backbone.View.extend({
             results = {};
         this.getgeo(inputData, results).then(function(getgeoData) {
             _.extend(getgeoData, options);
-            self.diffexp(getgeoData, results);
+            self.diffexp(getgeoData, results).then(function(diffexpData) {
+                debugger;  
+                self.enrichr(diffexpData);
+            });
         });
     },
 
@@ -124,49 +165,15 @@ App.View.SubmissionPanel = Backbone.View.extend({
         _.each(inputData, function(v,k) {
             formData.append(k, v);
         });
-        this.getcustom(formData).then(function(responseData) {
+        this.getcustom(formData).then(function(getcustomData) {
             results.soft = {
-                link: responseData.link
+                link: getcustomData.link
             }
-            self.diffexp(responseData, results);
+            _.extend(getcustomData, options);
+            self.diffexp(getcustomData, results);
         });
     },
 
-    getData: function() {
-        var result = {};
-
-        /* Handles which inputs are used for the current mode; also maps any
-         * displayed options to backend options if necessary.
-         */
-        this.collection.each(function(model) {
-            if (model.get(this.parent.mode) >= 0) {
-                var key = model.get('id'),
-                    val = model.get('value') || model.get('default');
-                if (model.get('backend')) {
-                    var idx = model.get('options').indexOf(val);
-                    result[key] = model.get('backend')[idx];
-                } else {
-                    result[key] = val;
-                }
-            }
-        }, this);
-        
-        /* Handles the select samples for GEO mode; the user does not input
-         * selected samples on Upload mode.
-         */
-        if (this.parent.mode === 'geo') {
-            var A_cols = this.collection.get('control').get('value'),
-                B_cols = this.collection.get('experimental').get('value');
-            if (_.isString(A_cols)) {
-                A_cols = A_cols.replace(/ /g,'').split(',');
-            }
-            if (_.isString(B_cols)) {
-                B_cols = B_cols.replace(/ /g,'').split(',');
-            }
-            result.A_cols = A_cols;
-            result.B_cols = B_cols;
-        }
-
-        return result;
+    enrichr: function(options) {
     }
 });

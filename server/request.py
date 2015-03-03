@@ -34,6 +34,7 @@ class DiffExpRequestArgs:
 		else:
 			# TODO: Change to 500 before deploying.
 			self.cutoff = 200
+		self.enrichr = True if not args.get('enrichr') else False
 		self.method = args.get('method') or 'chdir'
 		self.cutoff = int(args.get('cutoff')) if args.get('cutoff') else 500
 		self.norm = args.get('norm') != 'False'

@@ -5,53 +5,36 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-import cookielib
-import poster
-import socket
-import urllib2
+#import cookielib
+#import poster
+#import socket
+#import urllib2
 
-from server.log import pprint
-from server.files import GeneFile
+import requests
+
+#from server.log import pprint
+#from server.files import GeneFile
 
 
 BASE_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
 
 
-def get_link(filename, description):
-	"""Attempts to return a link to Enrichr. Returns the string 'None' if it
-	fails.
-	"""
 
-	gene_str = GeneFile(filename).to_str()
-	link = ''
-	try:
-		link = _post_and_build_link(gene_str, description)
-	except socket.timeout:
-		pprint('Error using Enrichr\'s API')
-	return link
-
-
-def _post_and_build_link(genes_str, description):
-	""" POST a gene list to Enrichr server and get a stable link to the
-	enriched data.
-	"""
-
-	opener = poster.streaminghttp.register_openers()
-	opener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
-
-	params = {
+def get_link(genes, description):
+	import pdb; pdb.set_trace()
+	#genes_str = '\n'.join(genes[:25]).encode('ascii')
+	genes_str = '\n'.join([t[0]+','+t[1] for t in genes]).encode('ascii')
+	payload = {
 		'list': genes_str,
-		'description': description
+		'description': ''
 	}
-
-	datagen, headers = poster.encode.multipart_encode(params)
-	request = urllib2.Request(BASE_URL + 'enrich', datagen, headers)
-	urllib2.urlopen(request, timeout=20)
-
-	x = urllib2.urlopen(BASE_URL + 'share')
-	response_str = x.read()
-	split_phrases = response_str.split('"')
-	link_ID = split_phrases[3]
-	share_url_head = BASE_URL + 'enrich?dataset='
-	enrichr_link = share_url_head + link_ID
-	return enrichr_link
+	sess = requests.session()
+	
+	# 1. POST the data to the server. We do not need the response.
+	sess.post(BASE_URL + 'enrich', files={ 'list': (None, genes_str), 'description': (None, 'this is a test') })
+	
+	# 2. GET our link via the "share" endpoint. The requests module (and
+	# Enrichr) handle cookies for us.
+	resp = sess.get(BASE_URL + 'share')
+	link_id = resp.text.split('"')[3]
+	return BASE_URL + 'enrich?dataset=' + link_id

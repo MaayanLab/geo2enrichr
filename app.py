@@ -56,17 +56,6 @@ def getgeo_endpoint():
 	return get_flask_json_response(sf.__dict__)
 
 
-@app.route(PATH + '/diffexp', methods=['POST', 'OPTIONS'])
-@crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
-def diffexp_endpoint():
-	"""Identifies differentially expressed genes for any input of genes and
-	expression values.
-	"""
-	args = DiffExpRequestArgs(flask.request.json)
-	gl = GeneList(args.A, args.B, args.genes, args.method, args.cutoff)
-	return get_flask_json_response(gl.__dict__)
-
-
 @app.route(PATH + '/getcustom', methods=['PUT', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def custom_endpoint():
@@ -78,6 +67,17 @@ def custom_endpoint():
 	else:
 		sf = SoftFile.from_file(args.name, args.file, args.platform)
 	return get_flask_json_response(sf.__dict__)
+
+
+@app.route(PATH + '/diffexp', methods=['POST', 'OPTIONS'])
+@crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
+def diffexp_endpoint():
+	"""Identifies differentially expressed genes for any input of genes and
+	expression values.
+	"""
+	args = DiffExpRequestArgs(flask.request.json)
+	gl = GeneList(args.A, args.B, args.genes, args.method, args.cutoff)
+	return get_flask_json_response(gl.__dict__)
 
 
 

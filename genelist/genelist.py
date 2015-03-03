@@ -12,6 +12,10 @@ import os.path
 
 from database import euclid2
 from .diffexp import diffexp
+#import genelist.enrichrlink as enrichrlink
+from server.log import pprint
+import genelist.enrichrlink
+
 
 
 class GeneList(object):
@@ -35,6 +39,7 @@ class GeneList(object):
 		}
 		self._write(up, 'up')
 		self._write(down, 'down')
+		genelist.enrichrlink.get_link(up, self.path(up))
 
 	def path(self, data):
 		return 'static/genelist/' + self._hash(data) + '.txt'
@@ -46,6 +51,7 @@ class GeneList(object):
 
 	def _write(self, data, direction):
 		if os.path.isfile(self.path(data)):
+			pprint('Gene list file already created')
 			return
 		with open(self.path(data), 'w+') as f:
 			f.write('!method\t' + self.method + '\n')
