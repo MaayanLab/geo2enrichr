@@ -20,12 +20,11 @@ App.View.SubmissionPanel = Backbone.View.extend({
 
     initialize: function(options) {
         this.parent = options.parent;
-        this.index = options.index;
         this.$el.append(this.template());
     },
 
     submit: function() {
-        this.index.resultsPanel.clear()
+        App.EventAggregator.trigger('clear:results');
         if (this.parent.mode === 'geo') {
             this.submitGeoSoftFile();
         } else {

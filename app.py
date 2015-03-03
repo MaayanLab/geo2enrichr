@@ -52,6 +52,7 @@ def getgeo_endpoint():
 	download the data from GEO if the file exists the server.
 	"""
 	args = GetGeoRequestArgs(flask.request.json)
+	import pdb; pdb.set_trace()
 	sf = SoftFile.from_geo(args.dataset, args.platform, args.A_cols, args.B_cols, args.norm)
 	return get_flask_json_response(sf.__dict__)
 

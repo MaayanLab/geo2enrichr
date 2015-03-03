@@ -16,6 +16,7 @@ App.View.ResultsPanel = Backbone.View.extend({
 
         App.EventAggregator.on('downloaded:genes', this.render, this);
         App.EventAggregator.on('clear:form', this.clear, this);
+        App.EventAggregator.on('clear:results', this.clear, this);
     },
 
     render: function(data) {

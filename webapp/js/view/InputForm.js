@@ -7,6 +7,7 @@ App.View.InputForm = Backbone.View.extend({
     mockUsed: false,
     
     initialize: function(options) {
+        this.index = options.index;
         this.render();
         App.EventAggregator.on('clear:form', this.clear, this);
         App.EventAggregator.on('change:mode', this.change, this);
@@ -49,6 +50,8 @@ App.View.InputForm = Backbone.View.extend({
 
     change: function(mode) {
         this.mode = mode;
+        App.EventAggregator.trigger('clear:form');
+        App.EventAggregator.trigger('clear:results');
         var datasetModel = this.collection.where({ id: 'dataset' })[0];
         if (this.mode === 'upload') {
             datasetModel.set({ name: 'Name' });
