@@ -52,7 +52,6 @@ def getgeo_endpoint():
 	download the data from GEO if the file exists the server.
 	"""
 	args = GetGeoRequestArgs(flask.request.json)
-	import pdb; pdb.set_trace()
 	sf = SoftFile.from_geo(args.dataset, args.platform, args.A_cols, args.B_cols, args.norm)
 	return get_flask_json_response(sf.__dict__)
 
@@ -73,9 +72,11 @@ def diffexp_endpoint():
 def custom_endpoint():
 	"""
 	"""
-	import pdb; pdb.set_trace()
 	args = CustomRequestArgs(flask.request)
-	sf = SoftFile.from_file(args.name, args.file, args.platform)
+	if args.example:
+		sf = SoftFile.from_example()
+	else:
+		sf = SoftFile.from_file(args.name, args.file, args.platform)
 	return get_flask_json_response(sf.__dict__)
 
 

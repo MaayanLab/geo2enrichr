@@ -47,7 +47,7 @@ App.View.GeneList = Backbone.View.extend({
                 return x(d) + "px";
             })
             .text(function(d, i) {
-                return genes[i];
+                return genes[i] + '\t' + d;
             });
         this.$el.fadeIn();
     }

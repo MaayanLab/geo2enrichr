@@ -42,7 +42,12 @@ class DiffExpRequestArgs:
 class CustomRequestArgs:
 
 	def __init__(self, request):
-		self.file = request.files['file']
-		name = request.form.get('name') or self.file.name
-		self.name = name
-		self.platform = request.form.get('platform')
+		if request.files:
+			import pdb; pdb.set_trace()
+			self.file = request.files['file']
+			name = request.form.get('name') or self.file.filename
+			self.name = name
+			self.platform = request.form.get('platform')
+			self.example = False
+		else:
+			self.example = True

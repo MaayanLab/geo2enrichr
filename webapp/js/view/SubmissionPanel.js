@@ -23,10 +23,15 @@ App.View.SubmissionPanel = Backbone.View.extend({
         this.$el.append(this.template());
     },
 
+/* Helper fucntions for submitting data.
+ * ------------------------------------- */
+
     submit: function() {
         App.EventAggregator.trigger('clear:results');
         if (this.parent.mode === 'geo') {
             this.submitGeoSoftFile();
+        } else if (!$(':file').length) {
+            this.submitExampleSoftFile();
         } else {
             this.submitCustomSoftFile();
         }
@@ -40,6 +45,90 @@ App.View.SubmissionPanel = Backbone.View.extend({
             contentType: 'application/json;charset=UTF-8',
             crossDomain: true,
             success: callback
+        });
+    },
+    
+    getgeo: function(inputData, results) {
+        return this.ajax('/getgeo', 'PUT', inputData, function(responseData) {
+            results.soft = {
+                link: responseData.link
+            }
+        });
+    },
+
+    diffexp: function(getgeoData, results) {
+        return this.ajax('/diffexp', 'POST', getgeoData, function(diffExpData) {
+            _.extend(results, diffExpData)
+            App.EventAggregator.trigger('downloaded:genes', results);
+        });
+    },
+  
+    getcustom: function(formData) {
+        return $.ajax({
+            url: App.SERVER + '/getcustom',
+            type: 'PUT',
+            data: formData,
+            // Tell jQuery not to process data or worry about content-type.
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    },
+
+    /* Send nothing over the wire, indicating we want the server to parse the
+     * example SOFT file.
+     */
+    getExample: function(results) {
+        return this.ajax('/getcustom', 'PUT', {}, function(responseData) {
+            results.soft = {
+                link: responseData.link
+            }
+        });
+    },
+
+/* Core functions for submitting data.
+ * ----------------------------------- */
+
+    submitGeoSoftFile: function() {
+        var self = this,
+            inputData = this.getData(),
+            options = {
+                method: inputData.diffexp,
+                cutoff: inputData.cutoff
+            },
+            results = {};
+        this.getgeo(inputData, results).then(function(getgeoData) {
+            _.extend(getgeoData, options);
+            self.diffexp(getgeoData, results);
+        });
+    },
+
+    submitExampleSoftFile: function() {
+        var self = this,
+            results = {};
+        this.getExample(results).then(function(getgeoData) {
+            self.diffexp(getgeoData, results);
+        });
+    },
+
+    submitCustomSoftFile: function() {
+        var self = this,
+            results = {},
+            formData = new FormData($('form')[0]),
+            inputData = this.getData(),
+            options = {
+                method: inputData.diffexp,
+                cutoff: inputData.cutoff
+            };
+
+        _.each(inputData, function(v,k) {
+            formData.append(k, v);
+        });
+        this.getcustom(formData).then(function(responseData) {
+            results.soft = {
+                link: responseData.link
+            }
+            self.diffexp(responseData, results);
         });
     },
 
@@ -79,58 +168,5 @@ App.View.SubmissionPanel = Backbone.View.extend({
         }
 
         return result;
-    },
-
-    submitGeoSoftFile: function() {
-        var self = this,
-            data = this.getData(),
-            options = {
-                method: data.diffexp,
-                cutoff: data.cutoff
-            },
-            result = {};
-        self.ajax('/getgeo', 'PUT', data, $.noop).then(function(getGeoData) {
-            result.soft = {
-                link: getGeoData.link
-            }
-            self.ajax('/diffexp', 'POST', _.extend(options, getGeoData), function(diffExpData) {
-                App.EventAggregator.trigger('downloaded:genes', _.extend(result, diffExpData));
-            });   
-        });
-    },
-
-    submitCustomSoftFile: function() {
-        //var inputString = this.textArea.model.get('value');
-        /*this.ajax('/custom', 'POST', inputString, $.noop).then(function(diffExpData) {
-            App.EventAggregator.trigger('genesDownloaded', diffExpData);
-        });*/
-
-        var formData = new FormData($('form')[0]);
-        formData.append('name', this.collection.get('dataset').get('value'));
-        formData.append('platform', this.collection.get('platform').get('value'));
-
-        $.ajax({
-            url: App.SERVER + '/getcustom',
-            type: 'PUT',
-            data: formData,
-            success: function(data) {
-                debugger;
-            },
-            error: function(data) {
-                debugger;
-            },
-            /*xhr: function() {  // Custom XMLHttpRequest
-                var myXhr = $.ajaxSettings.xhr();
-                if(myXhr.upload){ // Check if upload property exists
-                    myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
-                }
-                return myXhr;
-            },*/
-
-            // Tell jQuery not to process data or worry about content-type.
-            cache: false,
-            contentType: false,
-            processData: false
-        });
     }
 });

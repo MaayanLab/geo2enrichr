@@ -21,7 +21,6 @@ App.View.ResultsPanel = Backbone.View.extend({
 
     render: function(data) {
         this.$el.prepend('<a href="' + App.BASE + '/' + data.soft.link + '">SOFT file</a>');
-        debugger;
         this.upModel.set({
             'genes': data.up.genes,
             'count': data.up.count,
@@ -35,7 +34,6 @@ App.View.ResultsPanel = Backbone.View.extend({
     },
 
     clear: function() {
-        debugger;
         this.$el.find('a').remove();
         this.upModel.set({ 'genes': '', 'count': '', 'link': '' });
         this.downModel.set({ 'genes': '', 'count': '', 'link': '' });

@@ -50,8 +50,7 @@ App.Collection.inputTableFactory = function() {
             value: '',
             geo: 0,
             geoMock: 'GDS5077',
-            upload: 1,
-            uploadMock: 'ExampleData'
+            upload: -1
         }),
         new App.Model.Input({
             id: 'platform',

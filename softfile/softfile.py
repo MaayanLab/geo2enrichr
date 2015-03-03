@@ -71,6 +71,13 @@ class SoftFile(object):
 		return cls(name, samples, genes, A, B, platform, pairs=[x for x in zip(samples, header)])
 
 	@classmethod
+	def from_example(cls):
+		"""Delegates to __init__ after parsing the example file on the server.
+		"""
+		genes, samples, header, A, B = softparser.parse_custom(cls.path('example'))
+		return cls('example', samples, genes, A, B)
+
+	@classmethod
 	def path(cls, name, clean=False):
 		if clean:
 			return 'static/soft/clean/' + name + '.soft'
