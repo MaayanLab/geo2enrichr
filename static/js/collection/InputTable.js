@@ -2,7 +2,7 @@ App.Collection.InputTable = Backbone.Collection.extend({
     model: App.Model.Field
 });
 
-App.Collection.inputTableFactory = function() {
+App.Collection.inputTableFactory = function(urlObj) {
 
     /* The properties "geo" and "upload" refer to which mode on which the input
      * field is activated. 1 indicates hide; -1 indicates show; 0 indicates show

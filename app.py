@@ -38,10 +38,7 @@ PATH = '/g2e'
 def index_endpoint():
 	"""Returns verification that the server is running.
 	"""
-	return get_flask_json_response({
-		'status': 'ok',
-		'message': ''
-	})
+	return app.send_static_file('webapp.html')
 
 
 @app.route(PATH + '/getgeo', methods=['PUT', 'OPTIONS'])

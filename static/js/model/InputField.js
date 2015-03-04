@@ -9,7 +9,8 @@ App.Model.Field = Backbone.Model.extend({
 });
 
 App.Model.Input = App.Model.Field.extend({
-    defaults: {}
+    defaults: {},
+    urlRoot: '/g2e#input'
 });
 
 App.Model.Option = App.Model.Field.extend({

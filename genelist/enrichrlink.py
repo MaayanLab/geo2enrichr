@@ -21,9 +21,10 @@ BASE_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
 
 
 def get_link(genes, description):
-	import pdb; pdb.set_trace()
-	#genes_str = '\n'.join(genes[:25]).encode('ascii')
-	genes_str = '\n'.join([t[0]+','+t[1] for t in genes]).encode('ascii')
+	"""Returns a shareable link to Enrichr for enriched gene list.
+	"""
+	print('Generating links to Enrichr')
+	genes_str = '\n'.join([t[0] + ',' + t[1] for t in genes]).encode('ascii')
 	payload = {
 		'list': genes_str,
 		'description': ''

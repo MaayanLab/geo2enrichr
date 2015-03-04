@@ -8,13 +8,7 @@ App.View.InputForm = Backbone.View.extend({
     
     initialize: function(options) {
         this.index = options.index;
-        this.render();
-        App.EventAggregator.on('clear:form', this.clear, this);
-        App.EventAggregator.on('change:mode', this.change, this);
-        App.EventAggregator.on('mock:input', this.mock, this);
-    },
 
-    render: function() {
         var $table = $('<table></table>');
         this.$el.append($table);
         this.collection.each(function(f) {
@@ -30,10 +24,32 @@ App.View.InputForm = Backbone.View.extend({
             }
             $table.append(field.el);
         }, this);
+
+        App.EventAggregator.on('clear:form', this.clear, this);
+        App.EventAggregator.on('change:mode', this.change, this);
+        App.EventAggregator.on('mock:input', this.mock, this);
+        
+        this.secure()
+        //this.render();
+    },
+
+    render: function(url) {
+        this.collection.each(function(model) {
+            model.set('value', '');
+        });
+        _.each(url.queryString, function(value, field) {
+            var model = this.collection.get(field);
+            model.set('value', value.replace(/\+/g, ' '));
+        }, this);
         this.secure();
     },
    
     secure: function() {
+        var hash = Backbone.history.location.hash.split('?');
+        if (hash.length) {
+            this.mode = hash[0].slice(1);
+        }
+        console.log('securing under mode ' + this.mode);
         this.collection.each(function(model) {
             var triFlag = model.get(this.mode);
             if (triFlag === 1) {
@@ -56,7 +72,7 @@ App.View.InputForm = Backbone.View.extend({
         if (this.mockUsed) {
             this.mock();
         }
-    },
+    }/*,
 
     clear: function() {
         this.mockUsed = false;
@@ -79,5 +95,5 @@ App.View.InputForm = Backbone.View.extend({
                 model.set('value', prop);
             }
         }, this);
-    }
+    }*/
 });

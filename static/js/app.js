@@ -56,13 +56,46 @@ $(function() {
         view.show();
     };
 
+    App.objectFromQueryString = function(queryString) {
+        if (_.isNull(queryString) || _.isUndefined(queryString))
+            return '';
+        var result = {},
+            queryString = queryString.split('&');
+        _.each(queryString, function(frag) {
+            f = frag.split('=');
+            result[f[0]] = f[1];
+        });
+        return result;
+    };
+
     App.Router = Backbone.Router.extend({
         routes: {
-            '': 'index',
+            '(?*queryString)': 'index',
+            'geo(?*queryString)': 'geo',
+            'upload(?*queryString)': 'upload',
             'documentation': 'documentation',
             'about': 'about'
         },
         index: function() {
+            App.contentViews.index.hide();
+            //App.show(App.contentViews.index);
+        },
+        geo: function(queryString) {
+            console.log('index page being rebuilt with:');
+            console.log(arguments);
+            App.contentViews.index.inputForm.render({
+                path: 'geo',
+                queryString: App.objectFromQueryString(queryString)
+            });
+            App.show(App.contentViews.index);
+        },
+        upload: function(queryString) {
+            console.log('index page being rebuilt with:');
+            console.log(arguments);
+            App.contentViews.index.inputForm.render({
+                path: 'upload',
+                queryString: App.objectFromQueryString(queryString)
+            });
             App.show(App.contentViews.index);
         },
         documentation: function() {
@@ -73,5 +106,7 @@ $(function() {
         }
     });
     App.router = new App.Router();
-    Backbone.history.start();
+    Backbone.history.start({
+        root: '/g2e'
+    });
 });

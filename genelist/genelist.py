@@ -14,7 +14,7 @@ from database import euclid2
 from .diffexp import diffexp
 #import genelist.enrichrlink as enrichrlink
 from server.log import pprint
-import genelist.enrichrlink
+import genelist.enrichrlink as enrichr
 
 
 
@@ -29,17 +29,18 @@ class GeneList(object):
 		self.up = {
 			'genes': up,
 			'link': self.path(up),
-			'count': len(up)
+			'count': len(up),
+			'enrichr': enrichr.get_link(up, self.path(up))
 		}
 		down = [(t[0],format(t[1],'.4g')) for t in data if t[1] < 0 ]
 		self.down = {
 			'genes': down,
 			'link': self.path(down),
-			'count': len(down)
+			'count': len(down),
+			'enrichr': enrichr.get_link(down, self.path(down))
 		}
 		self._write(up, 'up')
 		self._write(down, 'down')
-		genelist.enrichrlink.get_link(up, self.path(up))
 
 	def path(self, data):
 		return 'static/genelist/' + self._hash(data) + '.txt'
