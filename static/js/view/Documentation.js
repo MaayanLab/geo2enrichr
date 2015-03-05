@@ -7,6 +7,6 @@ App.View.Documentation = Backbone.View.extend({
     template: _.template('<h3>Documentation</h3>'),
 
     initialize: function(options) {
-        this.appendTo(options.parent);
+        options.parent.$el.append(this.el);
     },
 });

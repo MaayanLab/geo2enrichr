@@ -7,32 +7,14 @@ var App = {
     SERVER: 'http://localhost:8083/g2e'
 };
 
-/* Update Backbone's API for common functionality.
- */
-Backbone.View.prototype.show = function() {
-    this.$el.show();
-    return this;
-}
-Backbone.View.prototype.hide = function() {
-    this.$el.hide();
-    return this;
-}
-Backbone.View.prototype.appendTo = function(parent) {
-    (this.parent || parent).$el.append(this.el);
-    return this;
-}
-Backbone.View.prototype.after = function(elem) {
-    elem.$el.after(this.el);
-    return this;
-}
-
 $(function() {
 
     /* Bootstraps the page to the DOM, creating the header, nav, and footer.
      */
     var page = new App.View.Page();
 
-    /* contentViews are replaceable views in the SAP; other views are static. 
+    /* contentViews are replaceable views in the SAP; other views are static.
+     * The helper function below allows for easy toggling between main views.
      */
     App.contentViews = {
         index: new App.View.Index({
@@ -46,17 +28,45 @@ $(function() {
         })
     };
 
-    /* Abstraction allowing for easy handling of an arbitrary number of content
-     * views.
-     */
     App.show = function(view) {
         _.each(App.contentViews, function(v) {
-            v.hide();
+            v.$el.hide();
         });
-        view.show();
+        view.$el.show();
     };
 
-    App.objectFromQueryString = function(queryString) {
+    /* Delegates routes, silencing invalid URLs before delegating to the
+     * default GEO form view.
+     */
+    App.Router = Backbone.Router.extend({
+        routes: {
+            '(soft)': 'index',
+            'soft/:mode(/:qs)': 'soft',
+            'upload(?*queryString)': 'upload',
+            'documentation': 'documentation',
+            'about': 'about'
+        },
+        index: function(qs) {
+            qs = _.isNull(qs) ? {} : App.objectFromQs(qs);
+            App.contentViews.index.rerender('geo', qs);
+            App.show(App.contentViews.index);
+        },
+        soft: function(mode, qs) {
+            qs = App.objectFromQs(qs);
+            App.contentViews.index.rerender(mode, qs);
+            App.show(App.contentViews.index);
+        },
+        documentation: function() {
+            App.show(App.contentViews.documentation);
+        },
+        about: function() {
+            App.show(App.contentViews.about);
+        }
+    });
+
+    App.router = new App.Router();
+    
+    App.objectFromQs = function(queryString) {
         if (_.isNull(queryString) || _.isUndefined(queryString))
             return '';
         var result = {},
@@ -76,46 +86,6 @@ $(function() {
         return result;
     };
 
-    App.Router = Backbone.Router.extend({
-        routes: {
-            '(*queryString)': 'geo',
-            //'geo(?*queryString)': 'geo',
-            'upload(?*queryString)': 'upload',
-            'documentation': 'documentation',
-            'about': 'about'
-        },
-        index: function() {
-            console.log('index');
-            //App.contentViews.index.hide();
-            App.show(App.contentViews.index);
-        },
-        geo: function(queryString) {
-            App.EventAggregator.trigger('clear:form');
-            console.log('index page being rebuilt with:');
-            console.log(arguments);
-            App.contentViews.index.inputForm.render({
-                path: 'geo',
-                queryString: App.objectFromQueryString(queryString)
-            });
-            App.show(App.contentViews.index);
-        },
-        upload: function(queryString) {
-            console.log('index page being rebuilt with:');
-            console.log(arguments);
-            App.contentViews.index.inputForm.render({
-                path: 'upload',
-                queryString: App.objectFromQueryString(queryString)
-            });
-            App.show(App.contentViews.index);
-        },
-        documentation: function() {
-            App.show(App.contentViews.documentation);
-        },
-        about: function() {
-            App.show(App.contentViews.about);
-        }
-    });
-    App.router = new App.Router();
     Backbone.history.start({
         root: '/g2e'
     });
