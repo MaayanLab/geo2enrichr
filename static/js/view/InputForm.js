@@ -1,57 +1,104 @@
 App.View.InputForm = Backbone.View.extend({
 
-    tagName: 'form',
-    
-    mode: 'geo',
+    tagName: 'table',
 
-    mockUsed: false,
+    events: {
+        'change input': 'update',
+        'click button': 'example',
+        'click a': 'submit'
+    },
+
+    template: _.template('' +
+        '<tr>' +
+        '   <td>Method</td>' +
+        '   <td>' +
+        '       <select>' +
+        '           <option>Characteristic direction</option>' +
+        '       </select>' +
+        '   </td>' +
+        '</tr>' +
+        '<tr id="dataset">' +
+        '   <td>Dataset</td>' +
+        '   <td>' +
+        '       <input name="dataset" value="<%= dataset %>">' +
+        '   </td>' +
+        '</tr>' +
+        '<tr>' +
+        '   <td>Platform</td>' +
+        '   <td>' +
+        '       <input name="platform" value="<%= platform %>">' +
+        '   </td>' +
+        '</tr>' +
+        '<tr>' +
+        '   <td>Organism</td>' +
+        '   <td>' +
+        '       <input name="organism" value="<%= organism %>">' +
+        '   </td>' +
+        '</tr>' +
+        '<tr>' +
+        '   <td>Examples</td>' +
+        '   <td>' +
+        '       <input name="A_cols" value="<%= A_cols %>">' +
+        '   </td>' +
+        '</tr>' +
+        '<tr>' +
+        '   <td>Controls</td>' +
+        '   <td>' +
+        '       <input name="B_cols" value="<%= A_cols %>"' +
+        '   </td>' +
+        '</tr>' +
+        '<tr><td>Cell</td><td><%= cell %></td></tr>' +
+        '<tr><td>Perturbation</td><td><%= perturbation %></td></tr>' +
+        '<tr><td>Gene</td><td><%= gene %></td></tr>' +
+        '<tr><td>Disease</td><td><%= disease %></td></tr>' +
+        '<tr>' +
+        '   <td><button>Example</button></td>' +
+        '</tr>' +
+        '<tr>' +
+        '   <td><a href="">Submit</a></td>' +
+        '</tr>' +
+    ''),
     
     initialize: function(options) {
-        this.index = options.index;
-
-        var $table = $('<table></table>');
-        this.$el.append($table);
-        this.collection.each(function(f) {
-            var field;
-            if (f instanceof App.Model.Input) {
-                field = new App.View.Input({ model: f });
-            } else if (f instanceof App.Model.Option) {
-                field = new App.View.Option({ model: f });
-            } else if (f instanceof App.Model.TextArea) {
-                field = new App.View.TextArea({ model: f });
-            } else if (f instanceof App.Model.File) {
-                field = new App.View.File({ model: f });
-            }
-            $table.append(field.el);
-        }, this);
-
+        this.$el.append(this.template(this.model.toJSON()));
+        this.model.on('change', this.rerender, this);
         App.EventAggregator.on('clear:form', this.clear, this);
-        App.EventAggregator.on('change:mode', this.change, this);
-        App.EventAggregator.on('mock:input', this.mock, this);
-        
-        this.secure()
-        //this.render();
+    },
+
+    rerender: function() {
+        this.$el.html(this.template(this.model.toJSON()));
+    },
+
+    clear: function() {
+        _.each(this.model.attributes, function(val, key) {
+            this.model.set(key, '');
+        }, this);
     },
 
     render: function(url) {
-        this.collection.each(function(model) {
-            model.set('value', '');
-        });
-        _.each(url.queryString, function(value, field) {
-            var model = this.collection.get(field);
-            model.set('value', value.replace(/\+/g, ' '));
+        var mode = Backbone.history.location.href.split('#')[1];
+        console.log('rerendering form on mode ' + mode);
+
+        _.each(url.queryString, function(val, key) {
+            this.model.set(key, val);
         }, this);
-        this.secure();
-    },
-   
-    secure: function() {
-        var hash = Backbone.history.location.hash.split('?');
-        if (hash.length) {
-            this.mode = hash[0].slice(1);
+
+        if (mode === 'upload') {
+            var ds = this.$el.find('#dataset');
+            ds.find('td').first().html('File name');
+            ds.find('tr').html('<div>Hi</div>');
+            //this.$el.find('dataset').attr('disable');
+            //this.$el.find('dataset').hide();
         }
-        console.log('securing under mode ' + this.mode);
-        this.collection.each(function(model) {
-            var triFlag = model.get(this.mode);
+
+        /* Certain options are only visible and/or editable on each mode.
+         * Check that the correct options are selected.
+         */
+        //hash = Backbone.history.location.hash.split('?');
+        //mode = hash.length ? hash[0].slice(1) : 'geo';
+        //console.log('securing under mode ' + mode);
+        /*this.collection.each(function(model) {
+            var triFlag = model.get(mode);
             if (triFlag === 1) {
                 model.set('hide', false);
                 model.set('disabled', false);
@@ -61,39 +108,41 @@ App.View.InputForm = Backbone.View.extend({
                 model.set('hide', false);
                 model.set('disabled', true);
             }
-        }, this);
+        }, this);*/
+
     },
 
-    change: function(mode) {
-        this.mode = mode;
-        App.EventAggregator.trigger('clear:form');
-        App.EventAggregator.trigger('clear:results');
-        this.secure();
-        if (this.mockUsed) {
-            this.mock();
-        }
-    }/*,
-
-    clear: function() {
-        this.mockUsed = false;
-        this.collection.each(function(model) {
-            if (model.get('options')) {
-                model.set('value', model.get('value'));
-            } else {
-                model.set('value', '');
-            }
+    submit: function(evt) {
+        evt.preventDefault();
+        this.model.save().then(function() {
+            debugger;
         });
     },
 
-    mock: function() {
-        this.mockUsed = true;
-        this.collection.each(function(model) {
-            var prop = model.get(this.mode + 'Mock');
-            if (_.isUndefined(prop)) {
-                model.set('value', '');
-            } else {
-                model.set('value', prop);
-            }
-        }, this);
-    }*/
+    update: function(evt) {
+        var $changedEl = $(evt.currentTarget),
+            value = $changedEl.val(),
+            id = $changedEl.attr('name');
+
+        console.log('setting model ' + id + ' with value ' + value);
+        if (value.indexOf(',') > 0) {
+            this.model.set(id, value.split(','));
+        } else if (value.indexOf('+') > 0) {
+            this.model.set(id, value.replace('+', ' '));
+        } else {
+            this.model.set(id, value);
+        }
+    },
+
+    example: function() {
+        console.log('building example');
+        var qs = {
+            'dataset': 'GDS5077',
+            'platform': 'GPL10558',
+            'organism': 'Homo sapiens',
+            'A_cols': 'GSM1071454,GSM1071455',
+            'B_cols': 'GSM1071457,GSM1071456'
+        }
+        App.router.navigate($.param(qs), { trigger: true, replace: true });
+    }
 });

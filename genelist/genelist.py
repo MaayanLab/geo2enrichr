@@ -28,14 +28,14 @@ class GeneList(object):
 		up = [(t[0],format(t[1],'.4g')) for t in reversed(data) if t[1] > 0 ]
 		self.up = {
 			'genes': up,
-			'link': self.path(up),
+			'soft': self.path(up),
 			'count': len(up),
 			'enrichr': enrichr.get_link(up, self.path(up))
 		}
 		down = [(t[0],format(t[1],'.4g')) for t in data if t[1] < 0 ]
 		self.down = {
 			'genes': down,
-			'link': self.path(down),
+			'soft': self.path(down),
 			'count': len(down),
 			'enrichr': enrichr.get_link(down, self.path(down))
 		}

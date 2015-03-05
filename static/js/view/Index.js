@@ -5,7 +5,6 @@ App.View.Index = Backbone.View.extend({
     className: 'content',
 
     events: {
-        'click a': 'click',
         'click button': 'example'
     },
 
@@ -13,7 +12,7 @@ App.View.Index = Backbone.View.extend({
         '<nav>' +
         '   <a href="#geo">GEO</a>' +
         '   <a href="#upload">Upload</a>' +
-        '   <button>Example</button>' +
+        //'   <button>Example</button>' +
         '</nav>' +
         '<div id="input-form"></div>'
     ),
@@ -28,28 +27,19 @@ App.View.Index = Backbone.View.extend({
         this.parent = options.parent;
         this.collection = App.Collection.inputTableFactory();
         this.inputForm = new App.View.InputForm({
-            collection: this.collection
-        });
-        this.submissionPanel = new App.View.SubmissionPanel({
             collection: this.collection,
-            parent: this.inputForm
+            model: new App.Model.SoftFile()
         });
+        /*this.submissionPanel = new App.View.SubmissionPanel({
+            parent: this.inputForm
+        });*/
         this.resultsPanel = new App.View.ResultsPanel();
 
         this.$el.html(this.template());
         this.appendTo();
         this.$el.find('#input-form').append(this.inputForm.el);
         this.resultsPanel.appendTo(this);
-        this.submissionPanel.appendTo(this.inputForm);
-    },
-
-    click: function(evt) {
-        /* Get which link was just clicked. This is not in
-         * Backbone.history.fragment.
-         */
-        var href = $(evt.currentTarget).attr('href').slice(1),
-            mode = href === 'upload' ? 'upload' : 'geo';
-       // App.EventAggregator.trigger('change:mode', mode);
+        //this.submissionPanel.appendTo(this.inputForm);
     },
 
     getMode: function() {
@@ -61,7 +51,7 @@ App.View.Index = Backbone.View.extend({
     },
 
     example: function() {
-        console.log('Getting example with ' + this.getMode() + ' as mode');
+        /*console.log('Getting example with ' + this.getMode() + ' as mode');
         this.mode = this.getMode();
         this.queryString = {};
         this.collection.each(function(model) {
@@ -74,7 +64,7 @@ App.View.Index = Backbone.View.extend({
                 }
                 this.queryString[modelId] = prop;
             }
-        }, this);
-        App.router.navigate(this.mode + '?' + $.param(this.queryString), { trigger: true, replace: true });
+        }, this);*/
+        //App.router.navigate(this.mode + '?' + $.param(this.queryString), { trigger: true, replace: true });
     }
 });

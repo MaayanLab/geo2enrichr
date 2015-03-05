@@ -4,7 +4,10 @@ App.View.GeneList = Backbone.View.extend({
 
     template: _.template('' +
         '<h3><%= direction %></h3>' +
-        '<a href="<%= App.BASE + "/" + link %>" target="_blank">Download gene list</a>'
+        '<ul>' +
+            '<li><a href="<%= App.BASE + "/" + soft %>" target="_blank">Download gene list</a></li>' +
+            '<li><a href="<%= enrichr %>">Enrichr</a></li>' +
+        '</ul>'
     ),
 
     initialize: function(options) {

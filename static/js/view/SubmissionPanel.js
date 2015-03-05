@@ -33,7 +33,7 @@ App.View.SubmissionPanel = Backbone.View.extend({
          * displayed options to backend options if necessary.
          */
         this.collection.each(function(model) {
-            if (model.get(this.parent.mode) >= 0) {
+            if (model.get('geo') >= 0) {
                 var key = model.get('id'),
                     val = model.get('value') || model.get('default');
                 if (model.get('backend')) {
@@ -48,7 +48,7 @@ App.View.SubmissionPanel = Backbone.View.extend({
         /* Handles the select samples for GEO mode; the user does not input
          * selected samples on Upload mode.
          */
-        if (this.parent.mode === 'geo') {
+        if (true) {
             var A_cols = this.collection.get('control').get('value'),
                 B_cols = this.collection.get('experimental').get('value');
             if (_.isString(A_cols)) {
@@ -66,7 +66,7 @@ App.View.SubmissionPanel = Backbone.View.extend({
 
     submit: function() {
         App.EventAggregator.trigger('clear:results');
-        if (this.parent.mode === 'geo') {
+        if (true) {
             this.submitGeoSoftFile();
         } else if (!$(':file').length) {
             this.submitExampleSoftFile();
@@ -135,13 +135,18 @@ App.View.SubmissionPanel = Backbone.View.extend({
                 cutoff: inputData.cutoff
             },
             results = {};
-        this.getgeo(inputData, results).then(function(getgeoData) {
+        
+        var sf = new App.Model.SoftFile(inputData);
+        sf.save().then(function() {
+            debugger;
+        });
+        /*this.getgeo(inputData, results).then(function(getgeoData) {
             _.extend(getgeoData, options);
             self.diffexp(getgeoData, results).then(function(diffexpData) {
                 debugger;  
                 self.enrichr(diffexpData);
             });
-        });
+        });*/
     },
 
     submitExampleSoftFile: function() {

@@ -62,25 +62,35 @@ $(function() {
         var result = {},
             queryString = queryString.split('&');
         _.each(queryString, function(frag) {
+            var key, value;
             f = frag.split('=');
-            result[f[0]] = f[1];
+            key = f[0];
+            value = f[1];
+            if (value.indexOf(',') > 0) {
+                value = value.split(',');
+            } else if (value.indexOf('+') > 0) {
+                value = value.replace('+', ' ');
+            }
+            result[key] = value;
         });
         return result;
     };
 
     App.Router = Backbone.Router.extend({
         routes: {
-            '(?*queryString)': 'index',
-            'geo(?*queryString)': 'geo',
+            '(*queryString)': 'geo',
+            //'geo(?*queryString)': 'geo',
             'upload(?*queryString)': 'upload',
             'documentation': 'documentation',
             'about': 'about'
         },
         index: function() {
-            App.contentViews.index.hide();
-            //App.show(App.contentViews.index);
+            console.log('index');
+            //App.contentViews.index.hide();
+            App.show(App.contentViews.index);
         },
         geo: function(queryString) {
+            App.EventAggregator.trigger('clear:form');
             console.log('index page being rebuilt with:');
             console.log(arguments);
             App.contentViews.index.inputForm.render({

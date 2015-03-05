@@ -41,13 +41,14 @@ def index_endpoint():
 	return app.send_static_file('webapp.html')
 
 
-@app.route(PATH + '/getgeo', methods=['PUT', 'OPTIONS'])
+@app.route(PATH + '/getgeo', methods=['PUT', 'POST', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def getgeo_endpoint():
 	"""Returns a JSON blob representing the GEO SOFT file. Takes an optional
 	argument to indicate that the data should not be cleaned. Does not
 	download the data from GEO if the file exists the server.
 	"""
+	import pdb; pdb.set_trace()
 	args = GetGeoRequestArgs(flask.request.json)
 	sf = SoftFile.from_geo(args.dataset, args.platform, args.A_cols, args.B_cols, args.norm)
 	return get_flask_json_response(sf.__dict__)
@@ -72,10 +73,10 @@ def diffexp_endpoint():
 	"""Identifies differentially expressed genes for any input of genes and
 	expression values.
 	"""
+	import pdb; pdb.set_trace()
 	args = DiffExpRequestArgs(flask.request.json)
 	gl = GeneList(args.A, args.B, args.genes, args.method, args.cutoff)
 	return get_flask_json_response(gl.__dict__)
-
 
 
 

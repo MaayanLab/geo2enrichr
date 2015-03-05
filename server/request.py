@@ -44,7 +44,6 @@ class CustomRequestArgs:
 
 	def __init__(self, request):
 		if request.files:
-			import pdb; pdb.set_trace()
 			self.file = request.files['file']
 			name = request.form.get('name') or self.file.filename
 			self.name = name
