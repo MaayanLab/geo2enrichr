@@ -1,1 +1,0 @@
-from .softfile import SoftFile
