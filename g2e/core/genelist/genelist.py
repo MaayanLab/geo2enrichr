@@ -10,37 +10,36 @@ import hashlib
 import numpy as np
 import os.path
 
-from database import euclid2
 from .diffexp import diffexp
-#import genelist.enrichrlink as enrichrlink
-from server.log import pprint
-import genelist.enrichrlink as enrichr
-
+from . import enrichrlink
+from orm import orm
 
 
 class GeneList(object):
 
 	# It is critical that this *preserves order*!
 	def __init__(self, A, B, genes, method, cutoff):
+		"""Constructs a gene list.
+		"""
 		data = diffexp(A, B, genes, method, cutoff)
+		#self.genes = genes
 		self.method = method
 		self.cutoff = cutoff
-		up = [(t[0],format(t[1],'.4g')) for t in reversed(data) if t[1] > 0 ]
-		self.up = {
-			'genes': up,
-			'soft': self.path(up),
-			'count': len(up),
-			'enrichr': enrichr.get_link(up, self.path(up))
-		}
-		down = [(t[0],format(t[1],'.4g')) for t in data if t[1] < 0 ]
-		self.down = {
-			'genes': down,
-			'soft': self.path(down),
-			'count': len(down),
-			'enrichr': enrichr.get_link(down, self.path(down))
-		}
-		self._write(up, 'up')
-		self._write(down, 'down')
+
+		self.up = [(t[0],str(t[1])) for t in reversed(data) if t[1] > 0 ]
+		self.down = [(t[0],str(t[1])) for t in data if t[1] < 0 ]
+		self.enrichr_link_up = enrichrlink.get_link(self.up, 'up genes')
+		self.enrichr_link_down = enrichrlink.get_link(self.down, 'down genes')
+
+		self.id = orm.save_genelist(self)
+
+	@classmethod
+	def create(cls, softfile, args):
+		return cls(softfile.A, softfile.B, softfile.genes, 'chdir', 500)
+
+	@classmethod
+	def fetch(cls):
+		pass
 
 	def path(self, data):
 		return 'static/genelist/' + self._hash(data) + '.txt'
@@ -52,7 +51,7 @@ class GeneList(object):
 
 	def _write(self, data, direction):
 		if os.path.isfile(self.path(data)):
-			pprint('Gene list file already created')
+			print('Gene list file already created')
 			return
 		with open(self.path(data), 'w+') as f:
 			f.write('!method\t' + self.method + '\n')

@@ -103,6 +103,9 @@ def chdir(A, B, genes, r=1):
 # matrix from the subspace to full space.
 	b = np.dot(np.dot(np.dot(loadings,shrunkMats),loadings.T),meanvec)
 
+# PURPLE_WIRE: Verify that this new line from Zichen works.
+	#b = np.dot(loadings, np.dot(np.dot(loadings.T, meanvec), shrunkMats))
+
 # normlize b to unit vector
 	b /= np.linalg.norm(b)
 

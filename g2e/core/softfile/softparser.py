@@ -8,12 +8,7 @@ __contact__ = "gregory.gundersen@mssm.edu"
 
 import numpy as np
 
-from server.files import SOFTFile
-from server.log import pprint
-from database import euclid
-
-
-PROBE2GENE = euclid.PROBE2GENE
+from orm.orm import PROBE2GENE
 
 
 def parse_geo(filename, platform, A_cols, B_cols):
@@ -21,7 +16,7 @@ def parse_geo(filename, platform, A_cols, B_cols):
 	sybmols.
 	"""
 
-	pprint('Parsing SOFT file.')
+	print('Parsing SOFT file.')
 
 	# COL_OFFSET changes because GDS files are "curated", meaning that they
 	# have their gene symbols included. GSE files do not and are 1 column

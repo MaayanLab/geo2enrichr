@@ -11,8 +11,6 @@ __contact__ = "avi.maayan@mssm.edu"
 import numpy as np
 from numbers import Number
 
-from server.log import pprint
-
 
 def normalize(genes, values):
 	"""Normalizes the data, taking the log2 of and quantile normalizing the
@@ -26,11 +24,11 @@ def normalize(genes, values):
 
 	if not _is_log(values):
 		genes, values = _remove_negatives(genes, values)
-		pprint('Taking the log2 of data.')
+		print('Taking the log2 of data.')
 		values = log2(values)
 
 	if not _is_norm(values):
-		pprint('Quantile normalizing the data.')
+		print('Quantile normalizing the data.')
 		values = qnorm(values)
 
 	genes, values = avg_dups(genes, values)

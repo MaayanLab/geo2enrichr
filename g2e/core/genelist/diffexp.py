@@ -11,7 +11,6 @@ __contact__ = "avi.maayan@mssm.edu"
 from scipy import stats
 
 from . import chdir
-from server.log import pprint
 import numpy as np
 
 
@@ -24,7 +23,7 @@ def diffexp(A, B, genes, method, cutoff):
 		genes, pvalues = ttest(A, B, genes)
 		import pdb; pdb.set_trace()
 	else:
-		pprint('Calculating the characteristic direction.')
+		print('Calculating the characteristic direction.')
 		genes, pvalues = chdir.chdir(A, B, genes)
 
 	# Just in case.
@@ -33,10 +32,13 @@ def diffexp(A, B, genes, method, cutoff):
 
 	ind = np.argsort(pvalues)
 	genes = genes[ind]
+	genes = [str(x) for x in genes]
 	pvalues = pvalues[ind]
 	grouped = [t for t in zip(genes, pvalues)]
 
 	# Apply cutoff; indexing with None is safe.
+	# TODO CRITICAL: This is *WRONG*. See:
+	# http://amp.pharm.mssm.edu/jira/browse/GE-33
 	return grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
 
 

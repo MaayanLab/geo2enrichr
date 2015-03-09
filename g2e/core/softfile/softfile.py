@@ -3,86 +3,64 @@ fetching SOFT files.
 """
 
 
-import orm.orm
+import os.path
+import numpy as np
 
-
-#import numpy as np
-#import os.path
-#from time import time
-
-#from .requesthandler import PostRequestArgs
-#from .geodownloader import download
-#from . import softparser
-#from .normalizer import normalize
+from orm import orm
+from .geodownloader import download
+from . import softparser
+from .normalizer import normalize
 
 
 class SoftFile(object):
 
-	def __init__(self, args):
+	def __init__(self, name, samples, genes, A, B, is_geo=False, platform=None, stats=None):
 		"""Constructs a SOFT file.
-		"""
-		import pdb; pdb.set_trace()
-		if args.get('extraction_id'):
-			# Construct SOFT file from data from database.
-			pass
-
-		elif args.get('geo_dataset'):
-			name = args.get('geo_dataset')
-			id = orm.save_soft_file(name)
-
-		else:
-			# Construct from file
-			pass
-
-
-	def save(self):
-		"""Saves the SOFT file data to the database.
-		"""
-		pass
-
-
-	def fetch(self):
-		"""Returns the database access object for associated SOFT file data.
-		"""
-		pass
-
-
-	def from_geo(self):
-		"""
-		"""
-		pass
-
-
-
-
-
-
-
-
-
-
-
-
-	'''def __init__(self, name, samples, genes, A, B, platform=None, stats=None, pairs=None):
-		"""Constructs a SOFT file. This method should not be called directly;
-		rather, one of the class methods should be used.
 		"""
 		self.name = name
 		self.samples = samples
 		self.genes = genes
 		self.A = A
 		self.B = B
-		
-		# Optional
+		self.is_geo = is_geo
 		self.platform = platform
 		self.stats = stats
-		self.pairs = pairs
+		self.id = orm.save_softfile(self)
 
-		# Write file and save link.
-		AB = self.concat(A, B)
-		self._write(self.name, self.genes, AB)
-		self.link = self.path(name, True)
+	@classmethod
+	def create(cls, args):
+		if 'geo_dataset' in args:
+			name = args.get('geo_dataset')
+			is_geo = True
 
+			if not os.path.isfile(cls.path(name)):
+				download(name, cls.path(name))
+
+			platform = args.get('platform')
+			A_cols = args.get('A_cols').split(',')
+			B_cols = args.get('B_cols').split(',')
+			samples = A_cols + B_cols
+
+			genes, A, B, stats = softparser.parse_geo(cls.path(name), platform, A_cols, B_cols)
+			AB = cls.concat(A, B)
+			
+			idx = len(A[0])
+			genes, AB = normalize(np.array(genes), AB)
+			genes = genes.tolist()
+			A = AB[:,:idx].tolist()
+			B = AB[:,idx:].tolist()
+
+			return cls(name, samples, genes, A, B, is_geo, platform, stats)
+
+		else:
+			# Construct from file
+			pass
+
+	@classmethod
+	def path(cls, name, clean=False):
+		if clean:
+			return 'static/softfile/clean/' + name + '.soft'
+		return 'static/softfile/' + name + '.soft'
 
 	@classmethod
 	def from_geo(cls, dataset, platform, A_cols, B_cols, norm=True):
@@ -97,8 +75,6 @@ class SoftFile(object):
 			# found at self.path().
 			download(name, cls.path(name))
 		
-		genes, A, B, stats = softparser.parse_geo(cls.path(name), platform, A_cols, B_cols)
-		AB = cls.concat(A, B)
 		if norm:
 			idx = len(A[0])
 			genes, AB = normalize(np.array(genes), AB)
@@ -108,6 +84,24 @@ class SoftFile(object):
 
 		return cls(name, samples, genes, A, B, platform, stats)
 
+	# This semlls.
+	@classmethod
+	def concat(cls, A, B):
+		return np.concatenate((A, B), axis=1)
+
+
+	@classmethod
+	def fetch(cls, extraction_id):
+		pass
+
+	
+
+
+
+
+
+
+	'''
 	@classmethod
 	def from_file(cls, name, file_obj, platform=None):
 		"""Delegates to __init__ after handling a user's custom SOFT file.
@@ -127,15 +121,6 @@ class SoftFile(object):
 		genes, samples, header, A, B = softparser.parse_custom(cls.path('example'))
 		return cls('example', samples, genes, A, B)
 
-	@classmethod
-	def path(cls, name, clean=False):
-		if clean:
-			return 'static/soft/clean/' + name + '.soft'
-		return 'static/soft/' + name + '.soft'
-
-	@classmethod
-	def concat(cls, A, B):
-		return np.concatenate((A, B), axis=1)
 
 	def _write(self, name, genes, values):
 		gene_values_dict = { k:v for (k,v) in zip(genes, values) }

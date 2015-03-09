@@ -7,10 +7,10 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import sys
-
 import flask
 
 from core.softfile.softfile import SoftFile
+from core.genelist.genelist import GeneList
 #from genelist import *
 #from server import *
 #import database as db
@@ -30,6 +30,7 @@ SERVER_ROOT = '/Users/gwg/g2e'
 
 # http://superuser.com/questions/149329/what-is-the-curl-command-line-syntax-to-do-a-post-request
 # curl --data "geo_dataset=GDS5077" http://localhost:8083/g2e/extract
+# curl --data "geo_dataset=GDS5077&platform=GPL10558&A_cols=GSM1071454,GSM1071455&B_cols=GSM1071457,GSM1071455" http://localhost:8083/g2e/extract
 
 
 @app.route(ENTRY_POINT + '/', methods=['GET'])
@@ -42,21 +43,30 @@ def index():
 @app.route(ENTRY_POINT + '/extract', methods=['GET', 'PUT', 'POST', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
 def extract():
-	try:
-		if flask.request.method == 'PUT' or flask.request.method == 'POST':
-			do_post(flask.request.form)
-		elif flask.request.method == 'GET':
-			do_get(flask.request.args)
-	except:
-		pass
+	"""Single entry point for extracting a gene list from a SOFT file.
+	Delegates to constructors that handle data processing and further
+	delegation to the ORM.
+	"""
+
+	if flask.request.method == 'PUT' or flask.request.method == 'POST':
+		softfile = SoftFile.create(flask.request.form)
+		genelist = GeneList.create(softfile, flask.request.form)
+		return flask.jsonify({
+			'softfile_id': softfile.id,
+			'genelist_id': genelist.id
+		})
+
+	elif flask.request.method == 'GET':
+		soft_file = SoftFile(flask.request.args)
+		soft_file_db = orm.fetch(session, soft_file)
+		return flask.jsonify({
+			'soft_file_name': soft_file_db.name
+		})
 	
 
-def do_post(args):
-	soft_file = SoftFile(args)
 
 
-def do_get(args):
-	pass
+
 
 
 if __name__ == '__main__':

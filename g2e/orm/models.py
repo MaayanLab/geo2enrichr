@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship, backref
 from orm.commondb import Base, engine
 
 
-association_table = Table('rankedgene2genelist', Base.metadata,
+rankedgenes_2_genelists = Table('rankedgene2genelist', Base.metadata,
     Column('rankedgene_id', Integer, ForeignKey('rankedgenes.id')),
     Column('genelist_id', Integer, ForeignKey('genelists.id'))
 )
@@ -23,25 +23,15 @@ class Gene(Base):
 		return '<Gene %r>' % self.id
 
 
-class RankedGene(Base):
-	"""Gene symbol with an associated pvalue. This does not have to be unique
-	and has a many-to-many relationship with a GeneList.
-	"""
-	__tablename__ = 'rankedgenes'
-	id = Column(Integer, primary_key=True)
-	pvalue = Column(Integer)
-	name = relationship('Gene', backref=backref('rankedgenes', order_by=id))
-
-	def __repr__(self):
-		return '<RankedGene %r>' % self.id
-
-
 class GeneList(Base):
 	"""List of gene symbols with metadata about how the list was created.
 	"""
 	__tablename__ = 'genelists'
 	id = Column(Integer, primary_key=True)
-	enrichr_link = Column(Text)
+	up = relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=backref('genelists', order_by=id))
+	#down = relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=backref('genelists', order_by=id))
+	enrichr_link_up = Column(Text)
+	enrichr_link_down = Column(Text)
 	cutoff = Column(Integer)
 	diff_exp_method = Column(String(50))
 
@@ -54,7 +44,7 @@ class SoftFile(Base):
 	"""
 	__tablename__ = 'softfiles'
 	id = Column(Integer, primary_key=True)
-	name = Column(Text, unique=True)
+	name = Column(String(200))
 	# is_geo == False indicates a custom dataset. 
 	is_geo = Column(Boolean)
 	# PURPLE_WIRE: Link this table to diseases.
@@ -63,17 +53,31 @@ class SoftFile(Base):
 		return '<SoftFile %r>' % self.id
 
 
-class Extraction(Base):
+class RankedGene(Base):
+	"""Gene symbol with an associated pvalue. This does not have to be unique
+	and has a many-to-many relationship with a GeneList.
+	"""
+	__tablename__ = 'rankedgenes'
+	id = Column(Integer, primary_key=True)
+	rank = Column(Integer)
+	gene_id = Column(Integer, ForeignKey('genes.id'))
+
+	def __repr__(self):
+		return '<RankedGene %r>' % self.id
+
+
+'''class Extraction(Base):
 	"""Event caused when gene list is extracted from a user uploaded or GEO-
 	specified SOFT file.
 	"""
 	__tablename__ = 'extractions'
 	id = Column(Integer, primary_key=True)
 	genelist_id = Column(Integer, ForeignKey('genelists.id'))
+	#datasets_id = Column(Integer, ForeignKey('datasets.id'))
 	# backref allows the GeneList class to reference *all* the extractions in
 	# the many-to-one (genelist-to-extraction) relationship.
-	genelist = relationship('GeneList', backref=backref('extractions', order_by=id))
-	dataset = relationship('SoftFile', backref=backref('softfiles', order_by=id))
+	genelist = relationship('GeneList', foreign_keys='extractions.genelist_id')
+	#dataset = relationship('SoftFile', foreign_keys='extractions.datasets_id')
 
 	def __repr__(self):
-		return '<Extraction %r>' % self.id
+		return '<Extraction %r>' % self.id'''

@@ -15,13 +15,10 @@ import urllib.request
 import urllib.error
 from io import StringIO
 
-from server.log import pprint
-from server.files import SOFTFile
-
 
 def download(accession, downloaded_file_path):
-	"""Downloads GEO file based on accession number. Returns a SOFTFile
-	instance with optional metadata as annotations.
+	"""Downloads GEO file based on accession number. Side effect is a
+	downloaded SOFT file on disk.
 
 	For reading and unzipping binary chunks, see:
 		http://stackoverflow.com/a/27053335/1830334
@@ -50,16 +47,16 @@ def _get_file_by_url(url, attempts=5):
 	"""Attempts to get the file from URL. Tries 5 times before giving up.
 	"""
 	
-	pprint('Downloading GEO SOFT file from: ' + url)
+	print('Downloading GEO SOFT file from: ' + url)
 	while attempts > 0:
 		try:
 			response = urllib.request.urlopen(url)
 		except URLError as e:
 			# See: https://docs.python.org/3/howto/urllib2.html.
 			if hasattr(e, 'reason'):
-				pprint('Failed to reach a server because' + str(e.reason))
+				print('Failed to reach a server because' + str(e.reason))
 			elif hasattr(e, 'code'):
-				pprint('The server couldn\'t fulfill the request; status code ' + str(e.code))
+				print('The server couldn\'t fulfill the request; status code ' + str(e.code))
 		if response is not None:
 			break
 		else:
