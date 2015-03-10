@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey
-from sqlalchemy import Table, Column, Integer, String, Text, Boolean
+from sqlalchemy import Table, Column, Integer, Float, String, Text, Boolean
 from sqlalchemy.orm import relationship, backref
 
 # These are references to common instances of SQLAlchemy utilities.
@@ -28,8 +28,7 @@ class GeneList(Base):
 	"""
 	__tablename__ = 'genelists'
 	id = Column(Integer, primary_key=True)
-	up = relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=backref('genelists', order_by=id))
-	#down = relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=backref('genelists', order_by=id))
+	genes = relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=backref('genelists', order_by=id))
 	enrichr_link_up = Column(Text)
 	enrichr_link_down = Column(Text)
 	cutoff = Column(Integer)
@@ -59,25 +58,23 @@ class RankedGene(Base):
 	"""
 	__tablename__ = 'rankedgenes'
 	id = Column(Integer, primary_key=True)
-	rank = Column(Integer)
+	rank = Column(Float)
 	gene_id = Column(Integer, ForeignKey('genes.id'))
 
 	def __repr__(self):
 		return '<RankedGene %r>' % self.id
 
 
-'''class Extraction(Base):
+class Extraction(Base):
 	"""Event caused when gene list is extracted from a user uploaded or GEO-
 	specified SOFT file.
 	"""
 	__tablename__ = 'extractions'
 	id = Column(Integer, primary_key=True)
+	softfile_id = Column(Integer, ForeignKey('softfiles.id'))
 	genelist_id = Column(Integer, ForeignKey('genelists.id'))
-	#datasets_id = Column(Integer, ForeignKey('datasets.id'))
-	# backref allows the GeneList class to reference *all* the extractions in
-	# the many-to-one (genelist-to-extraction) relationship.
-	genelist = relationship('GeneList', foreign_keys='extractions.genelist_id')
-	#dataset = relationship('SoftFile', foreign_keys='extractions.datasets_id')
+	softfile = relationship('SoftFile')
+	genelist = relationship('GeneList')
 
 	def __repr__(self):
-		return '<Extraction %r>' % self.id'''
+		return '<Extraction %r>' % self.id

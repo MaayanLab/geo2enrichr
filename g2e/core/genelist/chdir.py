@@ -112,7 +112,10 @@ def chdir(A, B, genes, r=1):
 # ! CHANGED !
 # Do not sort the genes before returning them. This is because Neil's unit
 # test data is not sorted.
-	return (genes, b)
+# 
+# ! CHANGED!
+# Return values as Python list for consistent user interface.
+	return (genes, b.tolist())
 
 
 def nipals(X,a,it=100,tol=1e-4):

@@ -18,40 +18,51 @@ def diffexp(A, B, genes, method, cutoff):
 	"""Identifies differentially expressed genes, delegating to the correct
 	helper function based on client or default configuration.
 	"""
-	HALF_CUTOFF = int(cutoff / 2) if cutoff is not 'None' else None
 	if method == 'ttest':
-		genes, pvalues = ttest(A, B, genes)
-		import pdb; pdb.set_trace()
+		genes, values = ttest(A, B, genes)
 	else:
 		print('Calculating the characteristic direction.')
-		genes, pvalues = chdir.chdir(A, B, genes)
-
-	# Just in case.
-	genes = np.array(genes)
-	pvalues = np.array(pvalues)
-
-	ind = np.argsort(pvalues)
-	genes = genes[ind]
-	genes = [str(x) for x in genes]
-	pvalues = pvalues[ind]
-	grouped = [t for t in zip(genes, pvalues)]
-
-	# Apply cutoff; indexing with None is safe.
-	# TODO CRITICAL: This is *WRONG*. See:
-	# http://amp.pharm.mssm.edu/jira/browse/GE-33
-	return grouped[:HALF_CUTOFF] + grouped[-HALF_CUTOFF:] if HALF_CUTOFF else grouped
+		genes, values = chdir.chdir(A, B, genes)
+	genes, values = _sort_by_value(genes, values)
+	genes, values = _apply_cutoff(genes, values, cutoff)
+	return genes, values
 
 
 def ttest(A, B, genes):
 	"""Performs a standard T-test.
 	"""
-
-	pvalues = []
+	values = []
 	for i in range(len(A)):
 		ttest_results = stats.ttest_ind(A[i], B[i])
 		# TODO: Ask Andrew if I should use `all()` or `any()`.
 		signed_pvalue = ttest_results[1] if (ttest_results[0] > 0).all() else (ttest_results[1] * -1)
-		pvalues.append((genes[i], signed_pvalue))
+		values.append((genes[i], signed_pvalue))
 
-	l = list(zip(*pvalues))
+	l = list(zip(*values))
 	return l[0], l[1]
+
+
+def _sort_by_value(genes, values):
+	"""Sorts two lists, one of genes and another of values, by the absolute
+	value of the values.
+	"""
+	genes = np.array(genes)
+	values = np.array(values)
+	ind = np.argsort(values)
+	genes = genes[ind]
+	genes = [str(x) for x in genes]
+	values = values[ind]
+	return genes, values.tolist()
+
+
+# http://amp.pharm.mssm.edu/jira/browse/GE-33
+# http://amp.pharm.mssm.edu/jira/browse/GE-34
+def _apply_cutoff(genes, values, cutoff):
+	"""Applies a cutoff to both lists.
+	"""
+	if cutoff is 'None':
+		return genes, values
+	HALF_CUTOFF = int(cutoff / 2)
+	genes = genes[:HALF_CUTOFF] + genes[-HALF_CUTOFF:]
+	values = values[:HALF_CUTOFF] + values[-HALF_CUTOFF:]
+	return genes, values

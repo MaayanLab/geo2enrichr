@@ -9,12 +9,8 @@ __contact__ = "avi.maayan@mssm.edu"
 import sys
 import flask
 
-from core.softfile.softfile import SoftFile
-from core.genelist.genelist import GeneList
-#from genelist import *
-#from server import *
-#import database as db
 from core.util.crossdomain import crossdomain
+from core.extractionmaker import extraction_maker
 
 
 app = flask.Flask(__name__, static_url_path='')
@@ -47,20 +43,15 @@ def extract():
 	Delegates to constructors that handle data processing and further
 	delegation to the ORM.
 	"""
-
+	import pdb; pdb.set_trace()
 	if flask.request.method == 'PUT' or flask.request.method == 'POST':
-		softfile = SoftFile.create(flask.request.form)
-		genelist = GeneList.create(softfile, flask.request.form)
 		return flask.jsonify({
-			'softfile_id': softfile.id,
-			'genelist_id': genelist.id
+			'extraction_id': extraction_maker(args=flask.request.form)
 		})
 
 	elif flask.request.method == 'GET':
-		soft_file = SoftFile(flask.request.args)
-		soft_file_db = orm.fetch(session, soft_file)
 		return flask.jsonify({
-			'soft_file_name': soft_file_db.name
+			'softfile': extraction_maker(id=flask.request.args.get('id'))
 		})
 	
 

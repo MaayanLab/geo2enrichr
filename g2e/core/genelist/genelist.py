@@ -12,7 +12,6 @@ import os.path
 
 from .diffexp import diffexp
 from . import enrichrlink
-from orm import orm
 
 
 class GeneList(object):
@@ -21,25 +20,20 @@ class GeneList(object):
 	def __init__(self, A, B, genes, method, cutoff):
 		"""Constructs a gene list.
 		"""
-		data = diffexp(A, B, genes, method, cutoff)
-		#self.genes = genes
+		genes, values = diffexp(A, B, genes, method, cutoff)
+		self.ranked_genes = [x for x in zip(reversed(genes), reversed(values))]
 		self.method = method
 		self.cutoff = cutoff
 
-		self.up = [(t[0],str(t[1])) for t in reversed(data) if t[1] > 0 ]
-		self.down = [(t[0],str(t[1])) for t in data if t[1] < 0 ]
-		self.enrichr_link_up = enrichrlink.get_link(self.up, 'up genes')
-		self.enrichr_link_down = enrichrlink.get_link(self.down, 'down genes')
-
-		self.id = orm.save_genelist(self)
+		up = [(t[0],str(t[1])) for t in reversed(self.ranked_genes) if t[1] > 0 ]
+		down = [(t[0],str(t[1])) for t in self.ranked_genes if t[1] < 0 ]
+		
+		self.enrichr_link_up = enrichrlink.get_link(up, 'up genes')
+		self.enrichr_link_down = enrichrlink.get_link(down, 'down genes')
 
 	@classmethod
 	def create(cls, softfile, args):
 		return cls(softfile.A, softfile.B, softfile.genes, 'chdir', 500)
-
-	@classmethod
-	def fetch(cls):
-		pass
 
 	def path(self, data):
 		return 'static/genelist/' + self._hash(data) + '.txt'

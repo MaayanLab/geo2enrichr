@@ -6,10 +6,9 @@ fetching SOFT files.
 import os.path
 import numpy as np
 
-from orm import orm
-from .geodownloader import download
-from . import softparser
-from .normalizer import normalize
+import core.softfile.geodownloader as geodownloader
+import core.softfile.softparser as softparser
+import core.softfile.normalizer as normalizer
 
 
 class SoftFile(object):
@@ -25,7 +24,6 @@ class SoftFile(object):
 		self.is_geo = is_geo
 		self.platform = platform
 		self.stats = stats
-		self.id = orm.save_softfile(self)
 
 	@classmethod
 	def create(cls, args):
@@ -34,7 +32,7 @@ class SoftFile(object):
 			is_geo = True
 
 			if not os.path.isfile(cls.path(name)):
-				download(name, cls.path(name))
+				geodownloader.download(name, cls.path(name))
 
 			platform = args.get('platform')
 			A_cols = args.get('A_cols').split(',')
@@ -45,7 +43,7 @@ class SoftFile(object):
 			AB = cls.concat(A, B)
 			
 			idx = len(A[0])
-			genes, AB = normalize(np.array(genes), AB)
+			genes, AB = normalizer.normalize(np.array(genes), AB)
 			genes = genes.tolist()
 			A = AB[:,:idx].tolist()
 			B = AB[:,idx:].tolist()
@@ -62,38 +60,10 @@ class SoftFile(object):
 			return 'static/softfile/clean/' + name + '.soft'
 		return 'static/softfile/' + name + '.soft'
 
-	@classmethod
-	def from_geo(cls, dataset, platform, A_cols, B_cols, norm=True):
-		"""Delegates to __init__ after downloading, parsing, and normalizing
-		data from GEO.
-		"""
-		name = dataset
-		samples = A_cols + B_cols
-			
-		if not os.path.isfile(cls.path(name)):
-			# This function writes a file to disk; the file's location can be
-			# found at self.path().
-			download(name, cls.path(name))
-		
-		if norm:
-			idx = len(A[0])
-			genes, AB = normalize(np.array(genes), AB)
-			genes = genes.tolist()
-			A = AB[:,:idx].tolist()
-			B = AB[:,idx:].tolist()
-
-		return cls(name, samples, genes, A, B, platform, stats)
-
 	# This semlls.
 	@classmethod
 	def concat(cls, A, B):
 		return np.concatenate((A, B), axis=1)
-
-
-	@classmethod
-	def fetch(cls, extraction_id):
-		pass
-
 	
 
 

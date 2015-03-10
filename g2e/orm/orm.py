@@ -16,6 +16,76 @@ Session.configure(bind=engine)
 Base.metadata.create_all(engine)
 
 
+def save_softfile(softfile):
+    with session_scope() as session:
+        softfile_db = models.SoftFile(name=softfile.name, is_geo=softfile.is_geo)
+        session.add(softfile_db)
+        session.commit()
+        return softfile_db.id
+
+
+def save_genelist(genelist):
+    with session_scope() as session:
+        ranked_genes = []
+        for gene_name,rank in genelist.ranked_genes:
+            gene_db = get_or_create(session, models.Gene, name=gene_name)
+            ranked_gene_db = models.RankedGene(gene_id=gene_db.id, rank=rank)
+            ranked_genes.append(ranked_gene_db)
+
+        genelist_db = models.GeneList(
+            genes = ranked_genes,
+            diff_exp_method = genelist.method,
+            cutoff = genelist.cutoff,
+            enrichr_link_up = genelist.enrichr_link_up,
+            enrichr_link_down = genelist.enrichr_link_down
+        )
+        session.add(genelist_db)
+        session.commit()
+        return genelist_db.id
+
+
+def save_extraction(softfile_id, genelist_id):
+	with session_scope() as session:
+		extraction_db = models.Extraction(
+			softfile_id=softfile_id,
+			genelist_id=genelist_id
+		)
+		session.add(extraction_db)
+		session.commit()
+		return extraction_db.id
+
+
+def fetch_extraction(extraction_id):
+    """Single entry point for fetching extractions from database by ID.
+    """
+    result = {}
+    with session_scope() as session:
+    	extraction = session.query(models.Extraction).filter_by(id=extraction_id).first()
+    	softfile = session.query(models.SoftFile).filter_by(id=extraction.softfile_id).first()
+    	result['dataset'] = softfile.name
+    	#result['platform'] = softfile.platform
+    	return result
+
+
+def build_probe_dict(platform_probesetid_genesym_file):
+    """Builds an in-memory dictionary mapping platforms to probe IDs to gene
+    symbols.
+    """
+    # Platform data collected and script written by Andrew Rouillard.
+    platform_dict = {}
+    with open(platform_probesetid_genesym_file) as f:
+        for line in f:
+            entries = line.rstrip().split('\t')
+            platform = entries[0]
+            probesetid = entries[1]
+            genesym = entries[2]
+            if platform in platform_dict:
+                platform_dict[platform][probesetid] = genesym
+            else:
+                platform_dict[platform] = {probesetid:genesym}
+    return platform_dict
+
+
 @contextmanager
 def session_scope():
     """Provides a transactional scope around a series of operations. Credit:
@@ -40,93 +110,8 @@ def get_or_create(session, model, **kwargs):
     else:
         instance = model(**kwargs)
         session.add(instance)
-        session.commit()
+        session.flush()
         return instance
 
 
-def save_softfile(softfile):
-    """Single entry point for saving classes to database.
-    """
-    with session_scope() as session:
-        softfile_db = models.SoftFile(name=softfile.name, is_geo=softfile.is_geo)
-        session.add(softfile_db)
-        session.commit()
-        return softfile_db.id
-
-
-def save_genelist(genelist):
-    with session_scope() as session:
-        import pdb; pdb.set_trace()
-        ranked_genes_up = []
-        for gene_name,rank in genelist.up:
-            gene_db = get_or_create(session, models.Gene, name=gene_name)
-            ranked_gene_db = get_or_create(session, models.RankedGene, gene_id=gene_db.id, rank=rank)
-            ranked_genes_up.append(ranked_gene_db)
-
-        import pdb; pdb.set_trace()
-        ranked_genes_down = []
-        for gene_name,rank in genelist.down:
-            gene_db = get_or_create(session, models.Gene, name=gene_name)
-            ranked_gene_db = get_or_create(session, models.RankedGene, gene_id=gene_db.id, rank=rank)
-            ranked_genes_down.append(ranked_gene_db)
-
-        import pdb; pdb.set_trace()
-        genelist_db = models.GeneList(
-            up = ranked_genes_up,
-            down = ranked_genes_down,
-            diff_exp_method = genelist.method,
-            cutoff = genelist.cutoff,
-            enrichr_link_up = genelist.enrichr_link_up,
-            enrichr_link_down = genelist.enrichr_link_down
-        )
-        session.add(genelist_db)
-        session.commit()
-        return genelist_db.id
-
-
-def fetch(obj):
-    """Single entry point for fetching data from database.
-    """
-    pass
-
-
-def build_probe_dict(platform_probesetid_genesym_file):
-    """Builds an in-memory dictionary mapping platforms to probe IDs to gene
-    symbols.
-    """
-    # Platform data collected and script written by Andrew Rouillard.
-    platform_dict = {}
-    with open(platform_probesetid_genesym_file) as f:
-        for line in f:
-            entries = line.rstrip().split('\t')
-            platform = entries[0]
-            probesetid = entries[1]
-            genesym = entries[2]
-            if platform in platform_dict:
-                platform_dict[platform][probesetid] = genesym
-            else:
-                platform_dict[platform] = {probesetid:genesym}
-    return platform_dict
-
-
 PROBE2GENE = build_probe_dict('orm/probe2gene.txt')
-
-
-
-
-'''
-def save_soft_file(soft_file):
-    with session_scope() as session:
-        soft_file_db = models.SoftFile(name=soft_file.name, is_geo=soft_file.is_geo)
-        session.add(soft_file_db)
-        session.commit()
-        db_id = soft_file_db.id
-        soft_file.db_id = db_id
-        return db_id
-
-
-def fetch_soft_file(soft_file):
-    with session_scope() as session:
-        query = session.query(models.SoftFile).filter_by(id=soft_file.db_id)
-        return query.first()
-'''

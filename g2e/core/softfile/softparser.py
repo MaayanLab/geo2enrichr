@@ -113,7 +113,6 @@ def parse_geo(filename, platform, A_cols, B_cols):
 def parse_custom(filename):
 	"""Parses custom SOFT files uploaded by the user.
 	"""
-
 	genes = []
 	A = []
 	B = []
@@ -137,7 +136,6 @@ def parse_custom(filename):
 	return genes, samples, header, A, B
 
 
-
 def platform_supported(platform):
 	if platform not in PROBE2GENE:
 		return False
@@ -148,7 +146,6 @@ def _probe2gene(platform, probe):
 	"""Converts probe IDs to gene symbols. Does not check if the platform is
 	supported.
 	"""
-
 	# Strip any potential quotation marks.
 	probe = probe.replace('"', '').replace('\'', '')
 	try:
