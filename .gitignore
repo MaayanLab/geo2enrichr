@@ -5,6 +5,9 @@
 extension/g2e.js
 extension/main.css
 
+# Probe ID to gene symbol mapping
+core/softfile/probe2gene.txt
+
 # Chrome Extension zip file
 *.zip
 
