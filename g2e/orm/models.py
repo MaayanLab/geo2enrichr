@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey
-from sqlalchemy import Table, Column, Integer, Float, String, Text, Boolean
+from sqlalchemy import Table, Column, BLOB, Boolean, Float, Integer, String, Text
 from sqlalchemy.orm import relationship, backref
 
 # These are references to common instances of SQLAlchemy utilities.
@@ -28,28 +28,10 @@ class GeneList(Base):
 	"""
 	__tablename__ = 'genelists'
 	id = Column(Integer, primary_key=True)
-	genes = relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=backref('genelists', order_by=id))
-	enrichr_link_up = Column(Text)
-	enrichr_link_down = Column(Text)
-	cutoff = Column(Integer)
-	diff_exp_method = Column(String(50))
+	ranked_genes = relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=backref('genelists', order_by=id))
 
 	def __repr__(self):
 		return '<GeneList %r>' % self.id
-
-
-class SoftFile(Base):
-	"""List of gene symbols and expression values.
-	"""
-	__tablename__ = 'softfiles'
-	id = Column(Integer, primary_key=True)
-	name = Column(String(200))
-	# is_geo == False indicates a custom dataset. 
-	is_geo = Column(Boolean)
-	# PURPLE_WIRE: Link this table to diseases.
-
-	def __repr__(self):
-		return '<SoftFile %r>' % self.id
 
 
 class RankedGene(Base):
@@ -59,10 +41,41 @@ class RankedGene(Base):
 	__tablename__ = 'rankedgenes'
 	id = Column(Integer, primary_key=True)
 	rank = Column(Float)
+	gene = relationship('Gene', backref=backref('rankedgenes', order_by=id))
 	gene_id = Column(Integer, ForeignKey('genes.id'))
 
 	def __repr__(self):
 		return '<RankedGene %r>' % self.id
+
+
+class SoftFile(Base):
+	"""List of gene symbols and expression values.
+	"""
+	__tablename__ = 'softfiles'
+	id = Column(Integer, primary_key=True)
+	name = Column(String(200))
+	platform = Column(String(200))
+	# is_geo == False indicates a custom dataset. 
+	is_geo = Column(Boolean)
+	genes = Column(BLOB)
+	# PURPLE_WIRE: Link this table to diseases.
+
+	def __repr__(self):
+		return '<SoftFile %r>' % self.id
+
+
+'''class Sample(Base):
+	"""A selected sample, control or experimental.
+	"""
+	__tablename__ = 'samples'
+	id = Column(Integer, primary_key=True)
+	name = Column(String(200))
+	is_control = Column(Boolean)
+	softfile = relationship('SoftFile', backref=backref('softfiles', order_by=id))
+	softfile_id = Column(Integer, ForeignKey('softfiles.id'))
+
+	def __repr__(self):
+		return '<Sample %r>' % self.id'''
 
 
 class Extraction(Base):
@@ -75,6 +88,10 @@ class Extraction(Base):
 	genelist_id = Column(Integer, ForeignKey('genelists.id'))
 	softfile = relationship('SoftFile')
 	genelist = relationship('GeneList')
+	method = Column(String(200))
+	cutoff = Column(Integer)
+	enrichr_link_up = Column(Text)
+	enrichr_link_down = Column(Text)
 
 	def __repr__(self):
 		return '<Extraction %r>' % self.id

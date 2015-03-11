@@ -3,6 +3,7 @@ primary class, GeneList and SoftFile, and saves them accordingly.
 """
 
 
+import copy
 from contextlib import contextmanager
 from sqlalchemy.orm import sessionmaker
 
@@ -17,34 +18,46 @@ Session.configure(bind=engine)
 Base.metadata.create_all(engine)
 
 
-def save(softfile, genelist):
+def save(extraction):
     """Saves the SoftFile and GeneList to the database and returns the ID from
     the extraction table.
     """
+    sf = extraction.softfile
+    gl = extraction.genelist
+    
     with session_scope() as session:
-        softfile_dao = models.SoftFile(name=softfile.name, is_geo=softfile.is_geo)
-        session.add(softfile_dao)
+
+        softfile_dao = models.SoftFile(
+            name     = sf.name,
+            platform = sf.platform,
+            is_geo   = sf.is_geo,
+            genes    = sf.genes
+        )
 
         ranked_genes = []
-        for gene_name,rank in genelist.ranked_genes:
+        for gene_name,rank in gl.ranked_genes:
             gene_dao = get_or_create(session, models.Gene, name=gene_name)
-            ranked_gene_dao = models.RankedGene(gene_id=gene_dao.id, rank=rank)
+            ranked_gene_dao = models.RankedGene(
+                gene = gene_dao,
+                rank = rank
+            )
             ranked_genes.append(ranked_gene_dao)
 
         genelist_dao = models.GeneList(
-            genes = ranked_genes,
-            diff_exp_method = genelist.method,
-            cutoff = genelist.cutoff,
-            enrichr_link_up = genelist.enrichr_link_up,
-            enrichr_link_down = genelist.enrichr_link_down
+            ranked_genes = ranked_genes,
+        )
+        import pdb; pdb.set_trace()
+        
+        extraction_dao = models.Extraction(
+            softfile          = softfile_dao,
+            genelist          = genelist_dao,
+            method            = extraction.method,
+            cutoff            = extraction.cutoff,
+            enrichr_link_up   = extraction.enrichr_link_up,
+            enrichr_link_down = extraction.enrichr_link_down
         )
 
-        extraction_dao = models.Extraction(
-            softfile_id=softfile_dao.id,
-            genelist_id=genelist_dao.id
-        )
         session.add(extraction_dao)
-        
         session.flush()
         return extraction_dao.id
 
@@ -52,12 +65,16 @@ def save(softfile, genelist):
 def fetch(extraction_id):
     """Single entry point for fetching extractions from database by ID.
     """
-    result = {}
     with session_scope() as session:
         extraction_dao = session.query(models.Extraction).filter_by(id=extraction_id).first()
-        softfile = session.query(models.SoftFile).filter_by(id=extraction_dao.softfile_id).first()
-        result['dataset'] = softfile.name
-        return result
+        softfile_dao = extraction_dao.softfile
+        genelist_dao = extraction_dao.genelist
+
+        result = copy.deepcopy(extraction_dao.__dict__)
+        result['softfile'] = softfile_dao.name
+        result['platform'] = softfile_dao.platform
+        result['genelist'] = [(rg.gene.name,rg.rank) for rg in genelist_dao.ranked_genes]
+        return clean_sqlalchemy_dict(result)
 
 
 @contextmanager
@@ -86,3 +103,11 @@ def get_or_create(session, model, **kwargs):
         session.add(instance)
         session.flush()
         return instance
+
+
+def clean_sqlalchemy_dict(obj):
+    del obj['_sa_instance_state']
+    del obj['genelist_id']
+    del obj['softfile_id']
+    del obj['id']
+    return obj

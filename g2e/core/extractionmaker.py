@@ -4,8 +4,6 @@ them to the DAO and returns a new Extraction.
 """
 
 
-from core.softfile.softfile import SoftFile
-from core.genelist.genelist import GeneList
 from core.extraction.extraction import Extraction
 from dao import dao
 
@@ -15,11 +13,13 @@ def extraction_maker(**kwargs):
 	"""
 	if 'id' in kwargs:
 		import pdb; pdb.set_trace()
-		extraction = dao.fetch(kwargs.get('id'))
+
+		args = dao.fetch(kwargs.get('id'))
+		extraction = Extraction(args)
 		return extraction
 	else:
+		import pdb; pdb.set_trace()
 		args = kwargs.get('args')
-		
-		softfile = SoftFile.create(args)
-		genelist = GeneList.create(softfile, args)
-		return dao.save(softfile, genelist)
+		extraction = Extraction(args)
+		ex_id = dao.save(extraction)
+		return ex_id
