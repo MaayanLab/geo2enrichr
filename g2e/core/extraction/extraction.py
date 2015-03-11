@@ -1,13 +1,13 @@
-"""Represents a single gene list-from-SOFT file extraction event.
+"""This module creates an Extraction instance.
 """
 
 
 class Extraction(object):
-	
-	def __init__(self, softfile, genelist):
-		self.softfile_id = softfile.id
-		self.genelist_id = genelist.id
+
+	def __init__(self, softfile=None, genelist=None):
+		self.softfile = softfile
+		self.genelist = genelist
 
 	@classmethod
-	def create(cls, softfile, genelist):
+	def create(cls, softfile=None, genelist=None):
 		return cls(softfile, genelist)

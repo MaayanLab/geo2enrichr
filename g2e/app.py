@@ -41,9 +41,8 @@ def index():
 def extract():
 	"""Single entry point for extracting a gene list from a SOFT file.
 	Delegates to constructors that handle data processing and further
-	delegation to the ORM.
+	delegation to the DAO and ORM.
 	"""
-	import pdb; pdb.set_trace()
 	if flask.request.method == 'PUT' or flask.request.method == 'POST':
 		return flask.jsonify({
 			'extraction_id': extraction_maker(args=flask.request.form)
@@ -54,11 +53,6 @@ def extract():
 			'softfile': extraction_maker(id=flask.request.args.get('id'))
 		})
 	
-
-
-
-
-
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1:

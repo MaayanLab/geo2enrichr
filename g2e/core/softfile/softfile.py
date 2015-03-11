@@ -60,53 +60,6 @@ class SoftFile(object):
 			return 'static/softfile/clean/' + name + '.soft'
 		return 'static/softfile/' + name + '.soft'
 
-	# This semlls.
 	@classmethod
 	def concat(cls, A, B):
 		return np.concatenate((A, B), axis=1)
-	
-
-
-
-
-
-
-	'''
-	@classmethod
-	def from_file(cls, name, file_obj, platform=None):
-		"""Delegates to __init__ after handling a user's custom SOFT file.
-		"""
-		# Prevent collisions in user file names.
-		if os.path.isfile(cls.path(name)):
-			name += str(time())[10:]
-
-		file_obj.save(cls.path(name))
-		genes, samples, header, A, B = softparser.parse_custom(cls.path(name))
-		return cls(name, samples, genes, A, B, platform, pairs=[x for x in zip(samples, header)])
-
-	@classmethod
-	def from_example(cls):
-		"""Delegates to __init__ after parsing the example file on the server.
-		"""
-		genes, samples, header, A, B = softparser.parse_custom(cls.path('example'))
-		return cls('example', samples, genes, A, B)
-
-
-	def _write(self, name, genes, values):
-		gene_values_dict = { k:v for (k,v) in zip(genes, values) }
-		if os.path.isfile(self.path(name, True)):
-			return
-
-		pprint('Writing clean SOFT file.')
-		with open(self.path(name, True), 'w+') as f:
-			f.write('!datset\t' + self.name + '\n')
-			if self.platform:
-				f.write('!platform\t' + self.platform + '\n')
-			if self.stats:
-				f.write('!unconverted_probes_pct\t' + str(self.stats['unconverted_probes_pct']) + '\n')
-				f.write('!discarded_lines_pct\t' + str(self.stats['discarded_lines_pct']) + '\n')
-			f.write('!end_metadata\n')
-			f.write('GENE SYMBOL\t' + '\t'.join(self.samples) + '\n')
-			for gene, val in gene_values_dict.items():
-				val_str = '\t'.join([format(n,'.4g') for n in val])
-				f.write(gene + '\t' + val_str + '\n')'''

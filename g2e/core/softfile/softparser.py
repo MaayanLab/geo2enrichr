@@ -8,8 +8,6 @@ __contact__ = "gregory.gundersen@mssm.edu"
 
 import numpy as np
 
-from orm.orm import PROBE2GENE
-
 
 def parse_geo(filename, platform, A_cols, B_cols):
 	"""Parses SOFT files, discarding bad dataand converting probe IDs to gene
@@ -70,10 +68,8 @@ def parse_geo(filename, platform, A_cols, B_cols):
 				# have null values or an atypical number of columns.
 				line_count += 1
 				if ('' in values or
-					# GG: I have not seen the strings 'null' or 'NULL' in any
-					# of the data, but AF or KH put this check in place and it
-					# does no harm. 
-					'null' in values or 'NULL' in values or
+					'null' in values or
+					'NULL' in values or
 					len(values) is not line_length or
 					# Three forward slashes, \\\, denotes multiple genes.
 					'\\\\\\' in probe):
@@ -156,3 +152,25 @@ def _probe2gene(platform, probe):
 	except AttributeError:
 		return None
 	return None
+
+
+def build_probe_dict(platform_probesetid_genesym_file):
+    """Builds an in-memory dictionary mapping platforms to probe IDs to gene
+    symbols.
+    """
+    # Platform data collected and script written by Andrew Rouillard.
+    platform_dict = {}
+    with open(platform_probesetid_genesym_file) as f:
+        for line in f:
+            entries = line.rstrip().split('\t')
+            platform = entries[0]
+            probesetid = entries[1]
+            genesym = entries[2]
+            if platform in platform_dict:
+                platform_dict[platform][probesetid] = genesym
+            else:
+                platform_dict[platform] = {probesetid:genesym}
+    return platform_dict
+
+
+PROBE2GENE = build_probe_dict('core/softfile/probe2gene.txt')
