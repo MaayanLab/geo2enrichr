@@ -31,13 +31,6 @@ SERVER_ROOT = '/Users/gwg/g2e'
 # curl --data "geo_dataset=GDS5077&platform=GPL10558&A_cols=GSM1071454,GSM1071455&B_cols=GSM1071457,GSM1071455" http://localhost:8083/g2e/extract
 
 
-# git diff --stat
-# git diff --shortstat
-
-# last release: b30a09a90ce3ab4582b5546b0e98bf7c9500c514
-# current: 595aa71294dadd3f5334ac6bd364f614fd377689
-
-
 @app.route(ENTRY_POINT + '/', methods=['GET'])
 @crossdomain(origin='*')
 def index():

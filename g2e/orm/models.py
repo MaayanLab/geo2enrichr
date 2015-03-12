@@ -35,7 +35,7 @@ class GeneList(Base):
 
 
 class RankedGene(Base):
-	"""Gene symbol with an associated pvalue. This does not have to be unique
+	"""Gene symbol with an associated rank. This does not have to be unique
 	and has a many-to-many relationship with a GeneList.
 	"""
 	__tablename__ = 'rankedgenes'
@@ -48,6 +48,7 @@ class RankedGene(Base):
 		return '<RankedGene %r>' % self.id
 
 
+# PURPLE_WIRE: Link this table to diseases.
 class SoftFile(Base):
 	"""List of gene symbols and expression values.
 	"""
@@ -57,25 +58,10 @@ class SoftFile(Base):
 	platform = Column(String(200))
 	# is_geo == False indicates a custom dataset. 
 	is_geo = Column(Boolean)
-	genes = Column(BLOB)
-	# PURPLE_WIRE: Link this table to diseases.
+	link = Column(String(200))
 
 	def __repr__(self):
 		return '<SoftFile %r>' % self.id
-
-
-'''class Sample(Base):
-	"""A selected sample, control or experimental.
-	"""
-	__tablename__ = 'samples'
-	id = Column(Integer, primary_key=True)
-	name = Column(String(200))
-	is_control = Column(Boolean)
-	softfile = relationship('SoftFile', backref=backref('softfiles', order_by=id))
-	softfile_id = Column(Integer, ForeignKey('softfiles.id'))
-
-	def __repr__(self):
-		return '<Sample %r>' % self.id'''
 
 
 class Extraction(Base):

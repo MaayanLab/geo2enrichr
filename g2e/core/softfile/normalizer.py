@@ -12,12 +12,13 @@ import numpy as np
 from numbers import Number
 
 
-def normalize(genes, values):
+def normalize(genes, A, B):
 	"""Normalizes the data, taking the log2 of and quantile normalizing the
 	data if necessary.
 	"""
+	idx = len(A[0])
+	values = concat(A, B)
 	genes = np.array(genes)
-	values = np.array(values)
 
 	# Raise exceptions if the A and B are not valid data sets.
 	_validate(genes, values)
@@ -32,7 +33,17 @@ def normalize(genes, values):
 		values = qnorm(values)
 
 	genes, values = avg_dups(genes, values)
-	return (genes, values)
+
+	A = values[:,:idx].tolist()
+	B = values[:,idx:].tolist()
+
+	return (genes, A, B)
+
+
+def concat(A, B):
+	"""Horizontally concats two matrices.
+	"""
+	return np.concatenate((A, B), axis=1)
 
 
 def log2(values):

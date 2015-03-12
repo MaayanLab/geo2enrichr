@@ -15,8 +15,10 @@ import urllib.request
 import urllib.error
 from io import StringIO
 
+import core.softfile.filemanager as filemanager
 
-def download(accession, downloaded_file_path):
+
+def download(accession):
 	"""Downloads GEO file based on accession number. Side effect is a
 	downloaded SOFT file on disk.
 
@@ -24,6 +26,8 @@ def download(accession, downloaded_file_path):
 		http://stackoverflow.com/a/27053335/1830334
 		http://stackoverflow.com/a/2424549/1830334
 	"""
+
+	downloaded_file_path = filemanager.path(accession)
 
 	CHUNK_SIZE = 1024
 	decompressor = zlib.decompressobj(16+zlib.MAX_WBITS)

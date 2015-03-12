@@ -13,13 +13,17 @@ def extraction_maker(**kwargs):
 	"""
 	if 'id' in kwargs:
 		import pdb; pdb.set_trace()
-
-		args = dao.fetch(kwargs.get('id'))
-		extraction = Extraction(args)
+		extraction_dao = dao.fetch(kwargs['id'])
+		extraction = Extraction.from_dao(extraction_dao).__dict__
 		return extraction
+
+	elif 'filename' in kwargs:
+		pass
+
+	# GEO Dataset
 	else:
 		import pdb; pdb.set_trace()
-		args = kwargs.get('args')
-		extraction = Extraction(args)
+		args = kwargs['args']
+		extraction = Extraction.from_geo(args)
 		ex_id = dao.save(extraction)
 		return ex_id

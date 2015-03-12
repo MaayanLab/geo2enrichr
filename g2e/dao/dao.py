@@ -31,12 +31,12 @@ def save(extraction):
             name     = sf.name,
             platform = sf.platform,
             is_geo   = sf.is_geo,
-            genes    = sf.genes
+            link     = sf.link
         )
 
         ranked_genes = []
         for gene_name,rank in gl.ranked_genes:
-            gene_dao = get_or_create(session, models.Gene, name=gene_name)
+            gene_dao = _get_or_create(session, models.Gene, name=gene_name)
             ranked_gene_dao = models.RankedGene(
                 gene = gene_dao,
                 rank = rank
@@ -46,7 +46,6 @@ def save(extraction):
         genelist_dao = models.GeneList(
             ranked_genes = ranked_genes,
         )
-        import pdb; pdb.set_trace()
         
         extraction_dao = models.Extraction(
             softfile          = softfile_dao,
@@ -69,12 +68,10 @@ def fetch(extraction_id):
         extraction_dao = session.query(models.Extraction).filter_by(id=extraction_id).first()
         softfile_dao = extraction_dao.softfile
         genelist_dao = extraction_dao.genelist
-
         result = copy.deepcopy(extraction_dao.__dict__)
-        result['softfile'] = softfile_dao.name
-        result['platform'] = softfile_dao.platform
+        result['softfile'] = copy.deepcopy(softfile_dao.__dict__)
         result['genelist'] = [(rg.gene.name,rg.rank) for rg in genelist_dao.ranked_genes]
-        return clean_sqlalchemy_dict(result)
+        return _clean_sqlalchemy_dict(result)
 
 
 @contextmanager
@@ -92,7 +89,7 @@ def session_scope():
         session.close()
 
 
-def get_or_create(session, model, **kwargs):
+def _get_or_create(session, model, **kwargs):
     """Returns an instance of the database object, creating one if necessary.
     """
     instance = session.query(model).filter_by(**kwargs).first()
@@ -105,9 +102,8 @@ def get_or_create(session, model, **kwargs):
         return instance
 
 
-def clean_sqlalchemy_dict(obj):
+def _clean_sqlalchemy_dict(obj):
     del obj['_sa_instance_state']
     del obj['genelist_id']
     del obj['softfile_id']
-    del obj['id']
     return obj

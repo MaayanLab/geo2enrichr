@@ -8,8 +8,20 @@ __contact__ = "gregory.gundersen@mssm.edu"
 
 import numpy as np
 
+import core.softfile.filemanager as filemanager
 
-def parse_geo(filename, platform, A_cols, B_cols):
+
+def parse_geo(name, platform, A_cols, B_cols, get_full_path=True):
+	"""
+	"""
+	if get_full_path:
+		full_name = filemanager.path(name)
+		return _parse_geo(full_name, platform, A_cols, B_cols)
+	return _parse_geo(name, platform, A_cols, B_cols)
+
+
+
+def _parse_geo(filename, platform, A_cols, B_cols):
     """Parses SOFT files, discarding bad dataand converting probe IDs to gene
     sybmols.
     """
@@ -32,7 +44,6 @@ def parse_geo(filename, platform, A_cols, B_cols):
     genes = []
     A = []
     B = []
-    expression_values = {}
 
     # For statistics about data quality.
     discarded_lines = 0.0
@@ -109,7 +120,6 @@ def parse_custom(filename):
     genes = []
     A = []
     B = []
-    expression_values = {}
 
     with open(filename) as soft_in:
         samples = next(soft_in).strip().split('\t')
