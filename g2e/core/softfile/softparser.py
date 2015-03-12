@@ -11,23 +11,46 @@ import numpy as np
 import core.softfile.filemanager as filemanager
 
 
-def parse_geo(name, platform, A_cols, B_cols, get_full_path=True):
-	"""
-	"""
-	if get_full_path:
-		full_name = filemanager.path(name)
-		return _parse_geo(full_name, platform, A_cols, B_cols)
-	return _parse_geo(name, platform, A_cols, B_cols)
+def parse(name, is_geo=True, platform=None, A_cols=None, B_cols=None):
+    """Entry point for all file parsing. If the dataset is from GEO, this
+    delegates to a function that makes some basic assumptions about GEO files.
+    """
+    print('Parsing SOFT file.')
+    full_name = filemanager.path(name)
+    if is_geo:
+        return _parse_geo(full_name, platform, A_cols, B_cols)
+    return _parse_file(full_name)
 
+
+def _parse_file(filename):
+    """Parses custom SOFT file, making no assumptions about the data.
+    """
+    genes = []
+    A = []
+    B = []
+    with open(filename, 'r') as inp:
+        # First line should be column names.
+        discard = next(inp)
+        indices = next(inp)
+        
+        # Convert to a string so we can use rindex next.
+        indices = ''.join(indices.strip().split('\t'))
+        # +1 to account for the leftmost gene symbol column.
+        idx = indices.index('1')+1
+        for line in inp:
+            split = line.split('\t')
+            genes.append(split[0])
+            A_row = split[1:idx]
+            B_row = split[idx:]
+            A.append([float(pv) for pv in A_row])
+            B.append([float(pv) for pv in B_row])
+    return (genes, A, B)
 
 
 def _parse_geo(filename, platform, A_cols, B_cols):
-    """Parses SOFT files, discarding bad dataand converting probe IDs to gene
+    """Parses SOFT files, discarding bad data and converting probe IDs to gene
     sybmols.
     """
-
-    print('Parsing SOFT file.')
-
     # COL_OFFSET changes because GDS files are "curated", meaning that they
     # have their gene symbols included. GSE files do not and are 1 column
     # thinner. That said, we do not trust the DGS mapping and do the probe-to-

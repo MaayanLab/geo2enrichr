@@ -25,10 +25,9 @@ SERVER_ROOT = '/Users/gwg/g2e'
 
 
 # http://superuser.com/questions/149329/what-is-the-curl-command-line-syntax-to-do-a-post-request
-# curl --data "geo_dataset=GDS5077" http://localhost:8083/g2e/extract
-# curl --data "geo_dataset=GDS5077&platform=GPL10558&A_cols=GSM1071454,GSM1071455&B_cols=GSM1071457,GSM1071455" http://localhost:8083/g2e/extract
 
 # curl --data "geo_dataset=GDS5077&platform=GPL10558&A_cols=GSM1071454,GSM1071455&B_cols=GSM1071457,GSM1071455" http://localhost:8083/g2e/extract
+# curl --form "file=@tests/data/chdir_input.txt" --form name=Neil http://localhost:8083/g2e/extract
 
 
 @app.route(ENTRY_POINT + '/', methods=['GET'])
@@ -45,14 +44,19 @@ def extract():
 	Delegates to constructors that handle data processing and further
 	delegation to the DAO and ORM.
 	"""
+	response = {}
 	if flask.request.method == 'PUT' or flask.request.method == 'POST':
-		return flask.jsonify({
-			'extraction_id': extraction_maker(args=flask.request.form)
-		})
+		if flask.request.files:
+			response['extraction_id'] = extraction_maker(
+				file = flask.request.files['file'],
+				args = flask.request.form
+			)
+		else:
+			response['extraction_id'] = extraction_maker(args=flask.request.form)
 	elif flask.request.method == 'GET':
-		return flask.jsonify(
-			extraction_maker(id=flask.request.args.get('id'))
-		)
+		response = extraction_maker(id=flask.request.args.get('id'))
+
+	return flask.jsonify(response)
 	
 
 if __name__ == '__main__':

@@ -12,18 +12,17 @@ def extraction_maker(**kwargs):
 	"""Constructs a single instance of an extraction event.
 	"""
 	if 'id' in kwargs:
-		import pdb; pdb.set_trace()
 		extraction_dao = dao.fetch(kwargs['id'])
 		extraction = Extraction.from_dao(extraction_dao).__dict__
 		return extraction
 
-	elif 'filename' in kwargs:
-		pass
-
+	elif 'file' in kwargs:
+		extraction = Extraction.from_file(kwargs['file'], kwargs['args'])
+		ex_id = dao.save(extraction)
+		return ex_id
+	
 	# GEO Dataset
 	else:
-		import pdb; pdb.set_trace()
-		args = kwargs['args']
-		extraction = Extraction.from_geo(args)
+		extraction = Extraction.from_geo(kwargs['args'])
 		ex_id = dao.save(extraction)
 		return ex_id

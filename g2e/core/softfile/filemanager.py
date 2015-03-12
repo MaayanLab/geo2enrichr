@@ -12,9 +12,9 @@ def write(name, genes, A, B):
 	"""
 	AB = normalizer.concat(A, B)
 	gene_values_dict = { k:v for (k,v) in zip(genes, AB) }
-	if not os.path.isfile(path(name, True)):
+	if not os.path.isfile(path(name, 'clean')):
 		print('Writing clean SOFT file.')
-		with open(path(name, True), 'w+') as f:
+		with open(path(name, 'clean'), 'w+') as f:
 			f.write('!datset\t' + name + '\n')
 			#f.write('!platform\t' + self.platform + '\n')
 			#f.write('!unconverted_probes_pct\t' + str(self.stats['unconverted_probes_pct']) + '\n')
@@ -24,7 +24,15 @@ def write(name, genes, A, B):
 			for gene, val in gene_values_dict.items():
 				val_str = '\t'.join(map(str, val))
 				f.write(gene + '\t' + val_str + '\n')
-	return path(name, True)
+	return path(name, 'clean')
+
+
+def save(name, file_obj):
+	"""
+	"""
+	full_path =  path(name)
+	file_obj.save(full_path)
+	return full_path
 
 
 def file_exists(name):
@@ -35,9 +43,8 @@ def file_exists(name):
 	return False
 
 
-def path(name, clean=False):
+def path(name, subdir=None):
 	"""Returns a relative path to the SoftFile on the server.
 	"""
-	if clean:
-		return 'static/softfile/clean/' + name + '.soft'
-	return 'static/softfile/' + name + '.soft'
+	subdir = subdir + '/' if subdir else ''
+	return 'static/softfile/' + subdir + name + '.soft'
