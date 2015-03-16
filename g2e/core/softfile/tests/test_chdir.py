@@ -1,16 +1,16 @@
 import unittest
 import numpy as np
 
-from dataprocessor.chdir import chdir
+from core.genelist.chdir import chdir
 
 
 class TestChdir(unittest.TestCase):
 
 
 	def setUp(self):
-		# Get ordered list of pvalues.
+		# Get ordered list of values.
 		answers = []
-		with open('tests/data/chdir_output.tsv', 'r') as out:
+		with open('core/softfile/tests/data/chdir_output.tsv', 'r') as out:
 			for line in out:
 				answers.append(float(line))
 		self.answers = np.array(answers)
@@ -18,8 +18,9 @@ class TestChdir(unittest.TestCase):
 		genes = []
 		A = []
 		B = []
-		with open('tests/data/chdir_input.txt', 'r') as inp:
+		with open('core/softfile/tests/data/chdir_input.txt', 'r') as inp:
 			discard = next(inp)
+			header = next(inp)
 			for line in inp:
 				split = line.split('\t')
 				genes.append(split[0])
@@ -28,15 +29,15 @@ class TestChdir(unittest.TestCase):
 				A.append([float(pv) for pv in A_row])
 				B.append([float(pv) for pv in B_row])
 
-		self.genes, self.pvalues = chdir(A, B, genes)
+		self.genes, self.values = chdir(A, B, genes)
 
 
 	def testRootSumSquares(self):
-		RMS = np.sqrt(np.sum(self.pvalues**2))
+		RMS = np.sqrt(np.sum( np.square( self.values ) ))
 		delta = abs(RMS - 1.0)
 		self.assertTrue(delta < 0.00000001)
 
 
 	def testChdir(self):
-		in_range = abs(self.answers - self.pvalues < 0.01)
+		in_range = abs(self.answers - self.values < 0.01)
 		self.assertTrue(np.any(in_range))

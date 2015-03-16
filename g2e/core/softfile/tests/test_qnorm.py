@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from softfile.normalizer import qnorm
+from core.softfile.normalizer import qnorm
 
 
 class TestQnorm(unittest.TestCase):

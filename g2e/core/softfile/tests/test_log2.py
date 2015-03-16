@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from softfile.normalizer import log2, _is_log
+from core.softfile.normalizer import log2, _is_log
 
 
 class TestLog2(unittest.TestCase):

@@ -29,7 +29,7 @@ class SoftFile(object):
 
     @classmethod
     def from_geo(cls, args):
-        name = args.get('geo_dataset')
+        name = args['dataset']
         is_geo = True
 
         if not filemanager.file_exists(name):

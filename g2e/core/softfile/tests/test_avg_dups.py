@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from softfile.normalizer import avg_dups
+from core.softfile.normalizer import avg_dups
 
 
 class TestAvgDups(unittest.TestCase):
