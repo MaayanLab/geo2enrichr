@@ -54,7 +54,15 @@ def extract():
         else:
             response['extraction_id'] = extraction_maker(args=flask.request.form)
     elif flask.request.method == 'GET':
-        response = extraction_maker(id=flask.request.args.get('id'))
+        extraction = extraction_maker(id=flask.request.args.get('id'))
+        response = extraction.__dict__
+        response['genelist'] = extraction.genelist.__dict__
+        response['softfile'] = extraction.softfile.__dict__
+        del response['softfile']['A']
+        del response['softfile']['B']
+        del response['softfile']['A_cols']
+        del response['softfile']['B_cols']
+        del response['softfile']['genes']
 
     return flask.jsonify(response)
     

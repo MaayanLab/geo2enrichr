@@ -15,7 +15,7 @@ import urllib.request
 import urllib.error
 from io import StringIO
 
-import core.softfile.filemanager as filemanager
+import core.softfile.softfilemanager as softfilemanager
 
 
 def download(accession):
@@ -27,7 +27,7 @@ def download(accession):
 		http://stackoverflow.com/a/2424549/1830334
 	"""
 
-	downloaded_file_path = filemanager.path(accession)
+	downloaded_file_path = softfilemanager.path(accession)
 
 	CHUNK_SIZE = 1024
 	decompressor = zlib.decompressobj(16+zlib.MAX_WBITS)

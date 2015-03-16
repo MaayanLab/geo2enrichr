@@ -27,11 +27,11 @@ def save(extraction):
     
     with session_scope() as session:
 
-        softfile_dao = models.SoftFile(
-            name     = sf.name,
-            platform = sf.platform,
-            is_geo   = sf.is_geo,
-            link     = sf.link
+        softfile_dao  = models.SoftFile(
+            name      = sf.name,
+            platform  = sf.platform,
+            is_geo    = sf.is_geo,
+            text_file = sf.text_file
         )
 
         ranked_genes = []
@@ -45,6 +45,7 @@ def save(extraction):
 
         genelist_dao = models.GeneList(
             ranked_genes = ranked_genes,
+            text_file = gl.text_file
         )
         
         extraction_dao = models.Extraction(
@@ -53,7 +54,7 @@ def save(extraction):
             method            = extraction.method,
             cutoff            = extraction.cutoff,
             enrichr_link_up   = extraction.enrichr_link_up,
-            enrichr_link_down = extraction.enrichr_link_down
+            enrichr_link_down = extraction.enrichr_link_down,
         )
 
         session.add(extraction_dao)
@@ -65,13 +66,16 @@ def fetch(extraction_id):
     """Single entry point for fetching extractions from database by ID.
     """
     with session_scope() as session:
-        extraction_dao = session.query(models.Extraction).filter_by(id=extraction_id).first()
-        softfile_dao = extraction_dao.softfile
-        genelist_dao = extraction_dao.genelist
-        result = copy.deepcopy(extraction_dao.__dict__)
-        result['softfile'] = copy.deepcopy(softfile_dao.__dict__)
-        result['genelist'] = [(rg.gene.name,rg.rank) for rg in genelist_dao.ranked_genes]
-        return _clean_sqlalchemy_dict(result)
+        ext_dao = session.query(models.Extraction).filter_by(id=extraction_id).first()
+        results = copy.deepcopy(ext_dao.__dict__)
+        softfile = copy.deepcopy(ext_dao.softfile.__dict__)
+        genelist = copy.deepcopy(ext_dao.genelist.__dict__)
+        ranked_genes = ext_dao.genelist.ranked_genes
+
+        results['softfile'] = softfile
+        results['genelist'] = genelist
+        results['genelist']['ranked_genes'] = [(rg.gene.name,rg.rank) for rg in ranked_genes]
+        return results
 
 
 @contextmanager
@@ -106,4 +110,6 @@ def _clean_sqlalchemy_dict(obj):
     del obj['_sa_instance_state']
     del obj['genelist_id']
     del obj['softfile_id']
+    del obj['softfile']['_sa_instance_state']
+    del obj['genelist']['_sa_instance_state']
     return obj

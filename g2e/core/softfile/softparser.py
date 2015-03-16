@@ -8,7 +8,7 @@ __contact__ = "gregory.gundersen@mssm.edu"
 
 import numpy as np
 
-import core.softfile.filemanager as filemanager
+import core.softfile.softfilemanager as softfilemanager
 
 
 def parse(name, is_geo=True, platform=None, A_cols=None, B_cols=None):
@@ -16,7 +16,7 @@ def parse(name, is_geo=True, platform=None, A_cols=None, B_cols=None):
     delegates to a function that makes some basic assumptions about GEO files.
     """
     print('Parsing SOFT file.')
-    full_name = filemanager.path(name)
+    full_name = softfilemanager.path(name)
     if is_geo:
         return _parse_geo(full_name, platform, A_cols, B_cols)
     return _parse_file(full_name)
