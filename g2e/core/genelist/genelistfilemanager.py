@@ -14,5 +14,6 @@ def write(name, ranked_genes):
     """
     full_path = BASE_DIR + name + EXT
     with open(full_path, 'w+') as f:
-        f.write('foo')
+        for gene,rank in ranked_genes:
+            f.write('\t'.join((gene, '%0.6f' % rank)) + '\n')
     return full_path
