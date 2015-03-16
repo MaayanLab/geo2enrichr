@@ -34,6 +34,22 @@ SERVER_ROOT = '/Users/gwg/g2e'
 @crossdomain(origin='*')
 def index():
     directory = SERVER_ROOT + '/g2e/webapp'
+    return flask.send_from_directory(directory, 'webapp.html')
+
+
+@app.route(ENTRY_POINT + '/<path:path>')
+def send_static(path):
+    directory = SERVER_ROOT + '/g2e/webapp'
+    return flask.send_from_directory(directory, path)
+
+
+@app.route(ENTRY_POINT + '/extraction/<extraction_id>', methods=['GET'])
+@crossdomain(origin='*')
+def share(extraction_id=None):
+    directory = SERVER_ROOT + '/g2e/webapp'
+    if not extraction_id:
+        return flask.send_from_directory(directory, 'index.html')
+    ext = extraction_maker(id=extraction_id)
     return flask.send_from_directory(directory, 'index.html')
 
 
@@ -65,7 +81,7 @@ def extract():
         del response['softfile']['genes']
 
     return flask.jsonify(response)
-    
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
