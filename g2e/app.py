@@ -26,7 +26,7 @@ SERVER_ROOT = '/Users/gwg/g2e'
 
 # http://superuser.com/questions/149329/what-is-the-curl-command-line-syntax-to-do-a-post-request
 
-# curl --data "geo_dataset=GDS5077&platform=GPL10558&A_cols=GSM1071454,GSM1071455&B_cols=GSM1071457,GSM1071455" http://localhost:8083/g2e/extract
+# curl --data "dataset=GDS5077&platform=GPL10558&A_cols=GSM1071454,GSM1071455&B_cols=GSM1071457,GSM1071455" http://localhost:8083/g2e/extract
 # curl --form "file=@tests/data/chdir_input.txt" --form name=Neil http://localhost:8083/g2e/extract
 
 

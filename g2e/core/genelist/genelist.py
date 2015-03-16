@@ -15,21 +15,21 @@ from core.genelist.diffexp import diffexp
 
 class GeneList(object):
 
-	# It is critical that this *preserves order*!
-	def __init__(self, A, B, genes, method, cutoff):
-		"""Constructs a gene list.
-		"""
-		genes, values = diffexp(A, B, genes, method, cutoff)
-		self.ranked_genes = [x for x in zip(reversed(genes), reversed(values))]
+    # It is critical that this *preserves order*!
+    def __init__(self, A, B, genes, method, cutoff):
+        """Constructs a gene list.
+        """
+        genes, values = diffexp(A, B, genes, method, cutoff)
+        self.ranked_genes = [x for x in zip(reversed(genes), reversed(values))]
 
-	@classmethod
-	def create(cls, softfile, method, cutoff):
-		return cls(softfile.A, softfile.B, softfile.genes, method, cutoff)
+    @classmethod
+    def create(cls, softfile, method, cutoff):
+        return cls(softfile.A, softfile.B, softfile.genes, method, cutoff)
 
-	def path(self, data):
-		return 'static/genelist/' + self._hash(data) + '.txt'
+    def path(self, data):
+        return 'static/genelist/' + self._hash(data) + '.txt'
 
-	def _hash(self, data):
-		"""Hashes the dict of gene,value pairs.
-		"""
-		return hashlib.sha1(str(data).encode('utf-8')).hexdigest()
+    def _hash(self, data):
+        """Hashes the dict of gene,value pairs.
+        """
+        return hashlib.sha1(str(data).encode('utf-8')).hexdigest()

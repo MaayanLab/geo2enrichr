@@ -25,6 +25,8 @@ class Extraction(object):
 	def create(cls, softfile, args):
 		method   = args['method'] if 'method' in args else 'chdir'
 		cutoff   = args['cutoff'] if 'cutoff' in args else 500
+		if cutoff == 'None':
+			cutoff = None
 		genelist = GeneList.create(softfile, method, cutoff)
 		up       = [(t[0],str(t[1])) for t in reversed(genelist.ranked_genes) if t[1] > 0]
 		down     = [(t[0],str(t[1])) for t in genelist.ranked_genes if t[1] < 0]
