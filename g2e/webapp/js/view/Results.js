@@ -7,6 +7,13 @@ App.View.Results = Backbone.View.extend({
     },
 
     render: function() {
-        debugger;
+        _.each(this.model.get('genelists'), function(gl) {
+            new App.View.GeneList({
+                text_file: gl.text_file,
+                enrichr_link: gl.enrichr_link,
+                direction: gl.direction,
+                parent: this.parent
+            });
+        }, this);
     }
 });

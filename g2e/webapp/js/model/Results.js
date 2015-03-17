@@ -7,8 +7,36 @@ App.Model.Results = Backbone.Model.extend({
     },
 
     defaults: {
-        cutoff: null,
-        enrichr_link_up: null,
-        enrichr_link_down: null
+        genelists: [
+            {
+                direction: null,
+                enrichr_link: null,
+                name: null,
+                text_file: null
+            },
+            {
+                direction: null,
+                enrichr_link: null,
+                name: null,
+                text_file: null
+            },
+            {
+                direction: null,
+                enrichr_link: null,
+                name: null,
+                text_file: null
+            }
+        ],
+        metadata: {
+            cutoff: null,
+            method: null
+        },
+        softfile: {
+            is_geo: null,
+            name: null,
+            platform: null,
+            stats: null,
+            text_file: null
+        }
     }
 });

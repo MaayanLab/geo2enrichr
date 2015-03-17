@@ -1,29 +1,34 @@
 App.View.GeneList = Backbone.View.extend({
 
-    tagName: 'table',
+    tagName: 'div',
 
     template: _.template('' +
         '<h3><%= direction %></h3>' +
         '<ul>' +
-            '<li><a href="<%= App.BASE + "/" + soft %>" target="_blank">Download gene list</a></li>' +
-            '<li><a href="<%= enrichr %>">Enrichr</a></li>' +
+            '<li><a href="<%= text_file %>" target="_blank">Download gene list</a></li>' +
+            '<li><a href="<%= enrichr_link %>">Enrichr</a></li>' +
         '</ul>'
     ),
 
     initialize: function(options) {
-        this.model = options.model;
-        this.$el.addClass(this.model.get('direction'));
-        this.model.on('change', this.update, this);
+        this.parent = options.parent;
+        this.text_file = options.text_file;
+        this.enrichr_link = options.enrichr_link;
+        //this.model = options.model;
+        this.$el.addClass(options.direction);
+        this.$el.append(this.template(options));
+        debugger;
+        this.parent.$el.append(this.$el);
         App.EventAggregator.on('clear:form', this.clear, this);
     },
 
     clear: function() {
-        d3.select(this.el).selectAll('div').remove();
-        this.hide();
+        //d3.select(this.el).selectAll('div').remove();
+        //this.hide();
     },
 
     update: function() {
-        var data = this.model.get('genes');
+        /*var data = this.model.get('genes');
         
         if (!data.length) {
             this.clear();
@@ -52,6 +57,6 @@ App.View.GeneList = Backbone.View.extend({
             .text(function(d, i) {
                 return genes[i] + '\t' + d;
             });
-        this.$el.fadeIn();
+        this.$el.fadeIn();*/
     }
 });

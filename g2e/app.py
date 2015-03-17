@@ -35,23 +35,14 @@ SERVER_ROOT = '/Users/gwg/g2e'
 @crossdomain(origin='*')
 def index():
     directory = SERVER_ROOT + '/g2e/webapp'
-    return flask.send_from_directory(directory, 'webapp.html')
+    return flask.send_from_directory(directory, 'index.html')
 
 
+# PURPLE_WIRE: Apache should serve these files.
 @app.route(ENTRY_POINT + '/<path:path>')
 def send_static(path):
     directory = SERVER_ROOT + '/g2e/webapp'
     return flask.send_from_directory(directory, path)
-
-
-@app.route(ENTRY_POINT + '/extraction/<extraction_id>', methods=['GET'])
-@crossdomain(origin='*')
-def share(extraction_id=None):
-    directory = SERVER_ROOT + '/g2e/webapp'
-    if not extraction_id:
-        return flask.send_from_directory(directory, 'index.html')
-    ext = extraction_maker(id=extraction_id)
-    return flask.send_from_directory(directory, 'index.html')
 
 
 @app.route(ENTRY_POINT + '/extract', methods=['GET', 'PUT', 'POST', 'OPTIONS'])

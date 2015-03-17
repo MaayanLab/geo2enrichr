@@ -41,6 +41,7 @@ $(function() {
     App.Router = Backbone.Router.extend({
         routes: {
             '(soft)': 'index',
+            'results/(:id)': 'results',
             'soft/:mode(/:qs)': 'soft',
             'upload(?*queryString)': 'upload',
             'documentation': 'documentation',
@@ -50,6 +51,18 @@ $(function() {
             qs = _.isNull(qs) ? {} : App.objectFromQs(qs);
             App.contentViews.index.rerender('geo', qs);
             App.show(App.contentViews.index);
+        },
+        results: function(id) {
+            var results = new App.Model.Results({ id: id });
+            results.fetch({
+                success: function() {
+                    var resultsView = new App.View.Results({
+                        parent: page,
+                        model: results
+                    });
+                    resultsView.render();
+                }
+            });
         },
         soft: function(mode, qs) {
             qs = App.objectFromQs(qs);
