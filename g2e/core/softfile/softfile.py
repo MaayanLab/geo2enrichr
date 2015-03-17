@@ -43,14 +43,6 @@ class SoftFile(object):
         return cls(name, A_cols, B_cols, genes=genes, A=A, B=B, text_file=text_file, is_geo=is_geo, platform=platform, stats=stats)
 
     @classmethod
-    def from_dao(cls, sf_dao):
-        name      = sf_dao['name']
-        text_file = sf_dao['text_file']
-        is_geo    = sf_dao['is_geo']
-        platform  = sf_dao['platform']
-        return cls(name, platform=platform, text_file=text_file, is_geo=is_geo)
-
-    @classmethod
     def from_file(cls, file_obj, args):
         name = args['name']
         text_file = softfilemanager.save(name, file_obj)

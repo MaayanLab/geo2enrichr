@@ -71,16 +71,26 @@ def extract():
             response['extraction_id'] = extraction_maker(args=flask.request.form)
     elif flask.request.method == 'GET':
         extraction = extraction_maker(id=flask.request.args.get('id'))
-        response = extraction.__dict__
-        response['genelist'] = extraction.genelist.__dict__
-        response['softfile'] = extraction.softfile.__dict__
-        del response['softfile']['A']
-        del response['softfile']['B']
-        del response['softfile']['A_cols']
-        del response['softfile']['B_cols']
-        del response['softfile']['genes']
+        response = clean_extraction(extraction)
 
     return flask.jsonify(response)
+
+
+def clean_extraction(extraction):
+    response = extraction.__dict__
+    response['softfile'] = extraction.softfile.__dict__
+    response['genelists'] = [gl.__dict__ for gl in extraction.genelists]
+    response['metadata'] = extraction.metadata.__dict__
+    del response['genelists'][0]['ranked_genes']
+    del response['genelists'][1]['ranked_genes']
+    # Leave the combined genes?
+    #del response['genelists'][2]['ranked_genes']
+    del response['softfile']['A']
+    del response['softfile']['A_cols']
+    del response['softfile']['B']
+    del response['softfile']['B_cols']
+    del response['softfile']['genes']
+    return response
 
 
 if __name__ == '__main__':

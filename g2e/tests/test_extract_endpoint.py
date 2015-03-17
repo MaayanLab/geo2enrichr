@@ -8,7 +8,7 @@ unittest.TestCase.maxDiff = None
 
 
 def get_gene_value(genelist, gene):
-    for gv in genelist['ranked_genes']:
+    for gv in genelist:
         if gv[0] == gene:
             return gv[1]
     return None
@@ -36,15 +36,22 @@ class ExtractEndpoint(unittest.TestCase):
         resp = self.app.get('/g2e/extract?id=' + str(extraction_id))
         resp_dict = json.loads(resp.data.decode())
 
-        self.assertTrue(resp_dict['method'] == 'chdir')
-        self.assertTrue(resp_dict['cutoff'] == 500)
-        self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
-        self.assertTrue('enrichr_link_up' in resp_dict)
-        self.assertTrue('enrichr_link_down' in resp_dict)
-        self.assertTrue('text_file' in resp_dict['softfile'])
-        self.assertTrue('genelist' in resp_dict)
+        self.assertTrue(resp_dict['metadata']['method'] == 'chdir')
+        self.assertTrue(resp_dict['metadata']['cutoff'] == 500)
 
-        genelist = resp_dict['genelist']
+        self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
+        self.assertTrue(resp_dict['softfile']['text_file'] == 'static/softfile/clean/GDS5077.soft')
+        self.assertTrue(resp_dict['softfile']['platform'] == 'GPL10558')
+        self.assertTrue(resp_dict['softfile']['is_geo'])
+
+        for gl in resp_dict['genelists']:
+            self.assertTrue('direction' in gl)
+            self.assertTrue('enrichr_link' in gl)
+            self.assertTrue('name' in gl)
+            self.assertTrue('text_file' in gl)
+
+        genelist = resp_dict['genelists'][2]['ranked_genes']
+        import pdb; pdb.set_trace()
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.0886708)
         self.assertTrue(get_gene_value(genelist, 'EOMES') == 0.0868757)
         self.assertTrue(get_gene_value(genelist, 'SRPK1') == -0.0215827)

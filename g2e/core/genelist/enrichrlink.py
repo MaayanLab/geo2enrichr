@@ -11,10 +11,15 @@ import requests
 BASE_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
 
 
-def get_link(genes, description):
+def get_link(genes, description=''):
     """Returns a shareable link to Enrichr for enriched gene list.
     """
     print('Generating links to Enrichr')
+
+    # Enrichr does not care about the sign of the rank; it treats the rank
+    # simply as a membership value for a fuzzy set.
+    genes = [(t[0], str(abs(t[1]))) for t in genes]
+
     genes_str = '\n'.join([t[0] + ',' + t[1] for t in genes]).encode('ascii')
     payload = {
         'list': genes_str,

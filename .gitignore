@@ -5,6 +5,10 @@
 extension/g2e.js
 extension/main.css
 
+# Saved text files
+g2e/static/softfile
+g2e/static/genelist
+
 # Chrome Extension zip file
 *.zip
 

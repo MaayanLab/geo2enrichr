@@ -12,8 +12,7 @@ def extraction_maker(**kwargs):
     """Constructs a single instance of an extraction event.
     """
     if 'id' in kwargs:
-        extraction_dao = dao.fetch(kwargs['id'])
-        return Extraction.from_dao(extraction_dao)
+        return dao.fetch(kwargs['id'])
 
     elif 'file' in kwargs:
         extraction = Extraction.from_file(kwargs['file'], kwargs['args'])

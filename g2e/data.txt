@@ -1,0 +1,30 @@
+extraction
+    id
+    name
+
+    softfile
+        name
+        is_geo
+        platform
+        text_file 
+
+    genelists
+        genelist_up
+            ranked_genes
+            enrichr_link
+            text_file
+
+        genelist_down
+            ranked_genes
+            enrichr_link
+            text_file
+
+        genelist_combined
+            ranked_genes
+            enrichr_link
+            text_file
+
+    metadata
+        method
+        cutoff
+        perturbations

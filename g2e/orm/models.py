@@ -28,8 +28,12 @@ class GeneList(Base):
     """
     __tablename__ = 'genelists'
     id = Column(Integer, primary_key=True)
+    name = Column(String(200))
+    is_up = Column(Boolean)
+    extraction_id = Column(Integer, ForeignKey('extractions.id'))
     ranked_genes = relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=backref('genelists', order_by=id))
     text_file = Column(String(200))
+    enrichr_link = Column(Text)
 
     def __repr__(self):
         return '<GeneList %r>' % self.id
@@ -50,14 +54,17 @@ class RankedGene(Base):
 
 
 # PURPLE_WIRE: Link this table to diseases.
+# PURPLE_WIRE: GEO SoftFiles should be unique, but it's more important that we
+# collect at all.
 class SoftFile(Base):
     """List of gene symbols and expression values.
     """
     __tablename__ = 'softfiles'
     id = Column(Integer, primary_key=True)
+    extraction_id = Column(Integer, ForeignKey('extractions.id'))
     name = Column(String(200))
     platform = Column(String(200))
-    # is_geo == False indicates a custom dataset. 
+    # is_geo == False indicates a custom dataset.
     is_geo = Column(Boolean)
     text_file = Column(String(200))
 
@@ -71,14 +78,10 @@ class Extraction(Base):
     """
     __tablename__ = 'extractions'
     id = Column(Integer, primary_key=True)
-    softfile_id = Column(Integer, ForeignKey('softfiles.id'))
-    genelist_id = Column(Integer, ForeignKey('genelists.id'))
-    softfile = relationship('SoftFile')
-    genelist = relationship('GeneList')
+    softfile = relationship('SoftFile', uselist=False, backref='extractions')
+    genelists = relationship('GeneList', backref=backref('genelists', order_by=id))
     method = Column(String(200))
     cutoff = Column(Integer)
-    enrichr_link_up = Column(Text)
-    enrichr_link_down = Column(Text)
 
     def __repr__(self):
         return '<Extraction %r>' % self.id

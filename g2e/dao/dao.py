@@ -9,6 +9,10 @@ from sqlalchemy.orm import sessionmaker
 
 from orm.commondb import Base, engine
 import orm.models as models
+from core.genelist.genelist import GeneList
+from core.softfile.softfile import SoftFile
+from core.metadata.metadata import Metadata
+from core.extraction.extraction import Extraction
 
 
 Session = sessionmaker()
@@ -23,10 +27,9 @@ def save(extraction):
     the extraction table.
     """
     sf = extraction.softfile
-    gl = extraction.genelist
-    
-    with session_scope() as session:
+    gls = extraction.genelists
 
+    with session_scope() as session:
         softfile_dao  = models.SoftFile(
             name      = sf.name,
             platform  = sf.platform,
@@ -34,27 +37,32 @@ def save(extraction):
             text_file = sf.text_file
         )
 
-        ranked_genes = []
-        for gene_name,rank in gl.ranked_genes:
-            gene_dao = _get_or_create(session, models.Gene, name=gene_name)
-            ranked_gene_dao = models.RankedGene(
-                gene = gene_dao,
-                rank = rank
-            )
-            ranked_genes.append(ranked_gene_dao)
+        genelists_dao = []
+        for gl in gls:
+            ranked_genes = []
+            for gene_name,rank in gl.ranked_genes:
+                gene_dao = _get_or_create(session, models.Gene, name=gene_name)
+                ranked_gene_dao = models.RankedGene(
+                    gene = gene_dao,
+                    rank = rank
+                )
+                ranked_genes.append(ranked_gene_dao)
 
-        genelist_dao = models.GeneList(
-            ranked_genes = ranked_genes,
-            text_file = gl.text_file
-        )
-        
+            genelists_dao.append(
+                models.GeneList(
+                    name = gl.name,
+                    ranked_genes = ranked_genes,
+                    is_up = gl.direction == 'up',
+                    text_file = gl.text_file,
+                    enrichr_link = gl.enrichr_link
+                )
+            )
+
         extraction_dao = models.Extraction(
-            softfile          = softfile_dao,
-            genelist          = genelist_dao,
-            method            = extraction.method,
-            cutoff            = extraction.cutoff,
-            enrichr_link_up   = extraction.enrichr_link_up,
-            enrichr_link_down = extraction.enrichr_link_down,
+            softfile  = softfile_dao,
+            genelists = genelists_dao,
+            method    = extraction.metadata.method,
+            cutoff    = extraction.metadata.cutoff
         )
 
         session.add(extraction_dao)
@@ -67,15 +75,27 @@ def fetch(extraction_id):
     """
     with session_scope() as session:
         ext_dao = session.query(models.Extraction).filter_by(id=extraction_id).first()
-        results = copy.deepcopy(ext_dao.__dict__)
-        softfile = copy.deepcopy(ext_dao.softfile.__dict__)
-        genelist = copy.deepcopy(ext_dao.genelist.__dict__)
-        ranked_genes = ext_dao.genelist.ranked_genes
 
-        results['softfile'] = softfile
-        results['genelist'] = genelist
-        results['genelist']['ranked_genes'] = [(rg.gene.name,rg.rank) for rg in ranked_genes]
-        return results
+        sf_dao = ext_dao.softfile
+        name      = sf_dao.name
+        text_file = sf_dao.text_file
+        is_geo    = sf_dao.is_geo
+        platform  = sf_dao.platform
+        softfile = SoftFile(name, platform=platform, text_file=text_file, is_geo=is_geo)
+
+        genelists = []
+        for gl_dao in ext_dao.genelists:
+            name = gl_dao.name
+            ranked_genes = [(r.gene.name,r.rank) for r in gl_dao.ranked_genes]
+            direction = 'up' if gl_dao.is_up else 'down'
+            text_file = gl_dao.text_file
+            enrichr_link = gl_dao.enrichr_link
+            genelists.append(
+                GeneList(ranked_genes, direction, name, text_file, enrichr_link)
+            )
+
+        metadata = Metadata(ext_dao.method, ext_dao.cutoff)
+        return Extraction(softfile, genelists, metadata)
 
 
 @contextmanager
@@ -104,12 +124,3 @@ def _get_or_create(session, model, **kwargs):
         session.add(instance)
         session.flush()
         return instance
-
-
-def _clean_sqlalchemy_dict(obj):
-    del obj['_sa_instance_state']
-    del obj['genelist_id']
-    del obj['softfile_id']
-    del obj['softfile']['_sa_instance_state']
-    del obj['genelist']['_sa_instance_state']
-    return obj
