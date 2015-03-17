@@ -6,6 +6,7 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
+import time
 import sys
 import flask
 
@@ -70,8 +71,10 @@ def extract():
         else:
             response['extraction_id'] = extraction_maker(args=flask.request.form)
     elif flask.request.method == 'GET':
+        s = time.time()
         extraction = extraction_maker(id=flask.request.args.get('id'))
         response = clean_extraction(extraction)
+        response['time'] = time.time() - s
 
     return flask.jsonify(response)
 

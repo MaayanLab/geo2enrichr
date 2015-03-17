@@ -29,6 +29,9 @@ class ExtractEndpoint(unittest.TestCase):
 
     # This should be multiple unit tests but it is annoyingly slow to run.
     def test_extraction_endpoint(self):
+        import time
+        s = time.time()
+
         self.assertEquals(self.resp.status_code, 200)
         self.assertTrue('extraction_id' in self.resp_dict)
 
@@ -51,8 +54,9 @@ class ExtractEndpoint(unittest.TestCase):
             self.assertTrue('text_file' in gl)
 
         genelist = resp_dict['genelists'][2]['ranked_genes']
-        import pdb; pdb.set_trace()
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.0886708)
         self.assertTrue(get_gene_value(genelist, 'EOMES') == 0.0868757)
         self.assertTrue(get_gene_value(genelist, 'SRPK1') == -0.0215827)
         self.assertTrue(get_gene_value(genelist, 'MYH6') == -0.030176)
+
+        print(time.time() - s)
