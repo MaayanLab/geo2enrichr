@@ -5,6 +5,7 @@ App.View.ResultsPanel = Backbone.View.extend({
     id: 'results',
 
     initialize: function(options) {
+        debugger;
         this.upModel = new App.Model.GeneList({ direction: 'up' });
         this.downModel = new App.Model.GeneList({ direction: 'down' });
         this.upView = new App.View.GeneList({

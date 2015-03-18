@@ -172,6 +172,30 @@ header .highlight {
 .content #form-description p {
   margin: 10px;
 }
+.loader {
+  background-color: rgba(255, 255, 255, 0.75);
+  cursor: wait;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+.loader .modal {
+  color: #009dff;
+  font-family: 'Inconsolata', Consolas, monospace;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 auto;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  right: 0;
+  top: 200px;
+}
+.geneList ul {
+  padding-left: 15px;
+}
 #results div {
   font-size: 13px;
   font-family: 'arial', 'sans-serif';

@@ -54,6 +54,9 @@ $(function() {
         about: new App.View.About({
             parent: page
         }),
+        extraction: new App.View.Extraction({
+            parent: page
+        }),
         hide: function() {
             _.each(this, function(view) {
                 if (view instanceof Backbone.View) {
@@ -87,17 +90,18 @@ $(function() {
             App.contentViews.show(App.contentViews.about);
         },
         results: function(id) {
-            App.contentViews.hide();
-            var extraction = new App.Model.Extraction({ id: id });
-            extraction.fetch({
-                success: function() {
-                    var extractionView = new App.View.Extraction({
-                        parent: page,
-                        model: extraction
-                    });
-                    extractionView.render();
-                }
-            });
+            var view = App.contentViews.extraction,
+                model = new App.Model.Extraction({ id: id });
+            view.startLoad();
+            setTimeout(function() {
+                model.fetch({
+                    success: function() {
+                        debugger;
+                        view.stopLoad();
+                        view.render(model);
+                    }
+                });
+            }, 1000);
         }
     });
 
