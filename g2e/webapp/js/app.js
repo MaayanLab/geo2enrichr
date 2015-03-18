@@ -55,7 +55,8 @@ $(function() {
             parent: page
         }),
         extraction: new App.View.Extraction({
-            parent: page
+            parent: page,
+            model: model = new App.Model.Extraction()
         }),
         hide: function() {
             _.each(this, function(view) {
@@ -90,18 +91,15 @@ $(function() {
             App.contentViews.show(App.contentViews.about);
         },
         results: function(id) {
-            var view = App.contentViews.extraction,
-                model = new App.Model.Extraction({ id: id });
+            var view = App.contentViews.extraction;
+            view.model.set('id', id);
             view.startLoad();
-            setTimeout(function() {
-                model.fetch({
-                    success: function() {
-                        debugger;
-                        view.stopLoad();
-                        view.render(model);
-                    }
-                });
-            }, 1000);
+            model.fetch({
+                success: function() {
+                    view.stopLoad();
+                    view.render(model);
+                }
+            });
         }
     });
 

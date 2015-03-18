@@ -193,20 +193,6 @@ header .highlight {
   right: 0;
   top: 200px;
 }
-.geneList ul {
+#results ul {
   padding-left: 15px;
-}
-#results div {
-  font-size: 13px;
-  font-family: 'arial', 'sans-serif';
-  text-align: right;
-  padding: 3px;
-  margin: 1px;
-  color: white;
-}
-#results table.up div {
-  background-color: #009dff;
-}
-#results table.down div {
-  background-color: red;
 }

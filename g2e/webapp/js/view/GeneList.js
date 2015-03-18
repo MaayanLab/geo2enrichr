@@ -5,7 +5,7 @@ App.View.GeneList = Backbone.View.extend({
     className: 'geneList',
 
     template: _.template('' +
-        '<h3><%= direction %> gene list</h3>' +
+        '<h4><%= direction %> gene list</h4>' +
         '<ul>' +
             '<li>' +
                 '<a href="<%= text_file %>" target="_blank">Download text file</a>' +

@@ -1,5 +1,7 @@
 App.View.Extraction = Backbone.View.extend({
 
+    id: 'results',
+
     tagName: 'div',
 
     className: 'content',
@@ -12,6 +14,14 @@ App.View.Extraction = Backbone.View.extend({
     },
 
     render: function(extraction) {
+        var sf = new App.View.SoftFile({
+            softfile: extraction.get('softfile')
+        });
+        this.$el.append(sf.el);
+
+        // Hack much?
+        this.$el.append('<h2>Gene lists</h2>');
+
         _.each(extraction.get('genelists'), function(gl) {
             var gl = new App.View.GeneList({
                 text_file: gl.text_file,
@@ -20,6 +30,7 @@ App.View.Extraction = Backbone.View.extend({
             });
             this.$el.append(gl.el);
         }, this);
+        
         this.$el.show();
     },
 
