@@ -1,13 +1,14 @@
 App.View.Page = Backbone.View.extend({
 
-    el: '#page',
+    id: 'wrapper',
+
+    tagName: 'div',
 
     initialize: function() {
-        this.nav = new App.View.Nav();
-        this.render();
-    },
-
-    render: function() {
-        this.$el.append(this.nav.$el);
+        var template = App.renderTemplate('page');
+        var footer = App.renderTemplate('footer');
+        this.$el.append(template);
+        $('body').append(this.el);
+        this.$el.after(footer);
     }
 });

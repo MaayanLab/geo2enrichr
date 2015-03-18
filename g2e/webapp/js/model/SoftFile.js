@@ -7,6 +7,7 @@ App.Model.SoftFile = Backbone.Model.extend({
     },
     
     defaults: {
+        filename: '',
         dataset: '',
         platform: '',
         organism: '',

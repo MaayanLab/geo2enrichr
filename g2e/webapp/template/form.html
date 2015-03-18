@@ -1,0 +1,70 @@
+<div id="form-description">
+    <p>GEO2Enrichr is a web application and Google Chrome Extension for extracting gene sets from SOFT files, either via the <a href="http://www.ncbi.nlm.nih.gov/geo/" target="_blank">Gene Expression Omnibus</a> (GEO) or user uploads, and analyzing these lists for common biological functions. Choose between two methods of gene set extraction:
+    </p>
+    <ol>
+        <li>Use the form below to upload a SOFT file. Please see our <a href="#help">Help Page</a> for details on file formatting.</li>
+        <li>Install the <a href="https://chrome.google.com/webstore/detail/geo2enrichr/pcbdeobileclecleblcnadplfcicfjlp">Chrome Extension</a> to use GEO2Enrichr on GEO web pages.</li>
+    </ol>
+    <p>Click <a href="#example">here</a> to use an example SOFT file to see the application's output.</p>
+</div>
+<table class="form">
+    <caption>Please select a file to upload and input required metadata.</caption>
+    <tr>
+        <td>File</td>
+        <td>
+            <input type="file" name="file">
+        </td>
+    </tr>
+    <tr class="table-break">
+        <td>Platform</td>
+        <td>
+            <input name="platform" value="<%= platform %>">
+        </td>
+    </tr>
+    <tr>
+        <td>Organism</td>
+        <td>
+            <input name="organism" value="<%= organism %>">
+        </td>
+    </tr>
+</table>
+<table class="form">
+    <caption>Please select differential expression analysis options.</caption> 
+    <tr>
+        <td>Method</td>
+        <td>
+            <select>
+                <option>Characteristic Direction</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>Cutoff</td>
+        <td>
+            <select>
+                <option>500</option>
+                <option>200</option>
+                <option>None</option>
+            </select>
+        </td>
+    </tr>
+</table>
+<table class="form">
+    <caption>Please input optional metadata.</caption> 
+    <tr>
+        <td>Cell</td>
+        <td><%= cell %></td>
+    </tr>
+    <tr>
+        <td>Perturbation</td>
+        <td><%= perturbation %></td>
+    </tr>
+    <tr>
+        <td>Gene</td>
+        <td><%= gene %></td>
+    </tr>
+    <tr>
+        <td>Disease</td>
+        <td><%= disease %></td>
+    </tr>
+</table>

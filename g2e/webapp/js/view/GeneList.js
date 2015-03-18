@@ -17,7 +17,6 @@ App.View.GeneList = Backbone.View.extend({
         //this.model = options.model;
         this.$el.addClass(options.direction);
         this.$el.append(this.template(options));
-        debugger;
         this.parent.$el.append(this.$el);
         App.EventAggregator.on('clear:form', this.clear, this);
     },

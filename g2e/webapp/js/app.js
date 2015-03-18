@@ -9,30 +9,62 @@ var App = {
 
 $(function() {
 
+    /* This function handles loading templates from .html files. Notice it
+     * needs to be defined *before* the contentViews, which rely upon it.
+     */
+    var templateCache = {};
+    App.renderTemplate = function(name, data) {
+        if (!templateCache[name]) {
+            var dir = '/g2e/template/',
+                url = dir + name + '.html',
+                string;
+            $.ajax({
+                url: url,
+                dataType: 'html',
+                method: 'GET',
+                async: false,
+                success: function(data) {
+                    string = data;
+                }
+            });
+            templateCache[name] = _.template(string);
+        }
+        return templateCache[name](data);
+    };
+
     /* Bootstraps the page to the DOM, creating the header, nav, and footer.
      */
-    var page = new App.View.Page();
+    var page   = new App.View.Page();
 
     /* contentViews are replaceable views in the SAP; other views are static.
-     * The helper function below allows for easy toggling between main views.
+     * The helper functions hide() and show() allow for easy toggling between
+     * main views.
      */
     App.contentViews = {
-        index: new App.View.Index({
+        form: new App.View.Form({
+            model: new App.Model.SoftFile(),
             parent: page
         }),
+        help: new App.View.Help({
+            parent: page
+        }),
+        /*news: new App.View.News({
+            parent: page
+        }),*/
         about: new App.View.About({
             parent: page
         }),
-        documentation: new App.View.Documentation({
-            parent: page
-        })
-    };
-
-    App.show = function(view) {
-        _.each(App.contentViews, function(v) {
-            v.$el.hide();
-        });
-        view.$el.show();
+        hide: function() {
+            _.each(this, function(view) {
+                if (view instanceof Backbone.View) {
+                    view.$el.hide();
+                }
+            });
+        },
+        show: function(view) {
+            this.hide();
+            view.$el.show();
+        }
     };
 
     /* Delegates routes, silencing invalid URLs before delegating to the
@@ -40,65 +72,37 @@ $(function() {
      */
     App.Router = Backbone.Router.extend({
         routes: {
-            '(soft)': 'index',
-            'results/(:id)': 'results',
-            'soft/:mode(/:qs)': 'soft',
-            'upload(?*queryString)': 'upload',
-            'documentation': 'documentation',
-            'about': 'about'
+            '': 'form',
+            'help': 'help',
+            'about': 'about',
+            'results/(:id)': 'results'
         },
-        index: function(qs) {
-            qs = _.isNull(qs) ? {} : App.objectFromQs(qs);
-            App.contentViews.index.rerender('geo', qs);
-            App.show(App.contentViews.index);
+        form: function() {
+            App.contentViews.show(App.contentViews.form);
         },
-        results: function(id) {
-            var results = new App.Model.Results({ id: id });
-            results.fetch({
-                success: function() {
-                    var resultsView = new App.View.Results({
-                        parent: page,
-                        model: results
-                    });
-                    resultsView.render();
-                }
-            });
-        },
-        soft: function(mode, qs) {
-            qs = App.objectFromQs(qs);
-            App.contentViews.index.rerender(mode, qs);
-            App.show(App.contentViews.index);
-        },
-        documentation: function() {
-            App.show(App.contentViews.documentation);
+        help: function() {
+            App.contentViews.show(App.contentViews.help);
         },
         about: function() {
-            App.show(App.contentViews.about);
+            App.contentViews.show(App.contentViews.about);
+        },
+        results: function(id) {
+            App.contentViews.hide();
+            var extraction = new App.Model.Extraction({ id: id });
+            extraction.fetch({
+                success: function() {
+                    var extractionView = new App.View.Extraction({
+                        parent: page,
+                        model: extraction
+                    });
+                    extractionView.render();
+                }
+            });
         }
     });
 
     App.router = new App.Router();
     
-    App.objectFromQs = function(queryString) {
-        if (_.isNull(queryString) || _.isUndefined(queryString))
-            return '';
-        var result = {},
-            queryString = queryString.split('&');
-        _.each(queryString, function(frag) {
-            var key, value;
-            f = frag.split('=');
-            key = f[0];
-            value = f[1];
-            if (value.indexOf(',') > 0) {
-                value = value.split(',');
-            } else if (value.indexOf('+') > 0) {
-                value = value.replace('+', ' ');
-            }
-            result[key] = value;
-        });
-        return result;
-    };
-
     Backbone.history.start({
         root: '/g2e'
     });

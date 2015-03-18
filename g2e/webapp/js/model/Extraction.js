@@ -1,4 +1,4 @@
-App.Model.Results = Backbone.Model.extend({
+App.Model.Extraction = Backbone.Model.extend({
     
     urlRoot: '/g2e/extract?id=',
 
