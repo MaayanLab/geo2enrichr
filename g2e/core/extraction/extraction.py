@@ -19,11 +19,7 @@ class Extraction(object):
 
     @classmethod
     def new(cls, softfile, args):
-        method = args['method'] if 'method' in args else 'chdir'
-        cutoff = args['cutoff'] if 'cutoff' in args else 500
-        if cutoff == 'None':
-            cutoff = None
-        metadata = Metadata(method, cutoff)
+        metadata = Metadata.from_args(args)
         genelists = genelists_maker(softfile, metadata)
         return cls(softfile, genelists, metadata)
 

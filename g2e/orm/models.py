@@ -82,6 +82,10 @@ class Extraction(Base):
     genelists = relationship('GeneList', backref=backref('genelists', order_by=id))
     method = Column(String(200))
     cutoff = Column(Integer)
+    cell = Column(String(200))
+    perturbation = Column(String(200))
+    gene = Column(String(200))
+    disease = Column(String(200))
 
     def __repr__(self):
         return '<Extraction %r>' % self.id

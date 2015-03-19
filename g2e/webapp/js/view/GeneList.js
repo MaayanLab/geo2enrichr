@@ -1,19 +1,17 @@
 App.View.GeneList = Backbone.View.extend({
 
-    tagName: 'div',
+    tagName: 'tr',
 
     className: 'geneList',
 
     template: _.template('' +
-        '<h4><%= direction %> gene list</h4>' +
-        '<ul>' +
-            '<li>' +
-                '<a href="<%= text_file %>" target="_blank">Download text file</a>' +
-            '</li>' +
-            '<li>' +
-                '<a href="<%= enrichr_link %>" target="_blank">View results on Enrichr</a>' +
-            '</li>' +
-        '</ul>'
+        '<td><%= direction %></td>' +
+        '<td>' +
+            '<a href="<%= text_file %>" target="_blank">Download</a>' +
+        '</td>' +
+        '<td>' +
+            '<a href="<%= enrichr_link %>" target="_blank">Open link</a>' +
+        '</td>'
     ),
 
     initialize: function(options) {

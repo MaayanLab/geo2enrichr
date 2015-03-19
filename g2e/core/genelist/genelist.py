@@ -15,14 +15,15 @@ import core.genelist.enrichrlink as enrichrlink
 
 class GeneList(object):
 
-    def __init__(self, ranked_genes, direction, name=None, text_file=None, enrichr_link=None):
+    def __init__(self, ranked_genes, direction, metadata=None, name=None, text_file=None, enrichr_link=None):
         """Constructs a gene list.
         """
         self.ranked_genes = ranked_genes
         self.direction    = direction
         self.name         = name or self._name()
-        self.text_file    = text_file or filemanager.write(self.name, self.ranked_genes)
-        self.enrichr_link = enrichr_link or enrichrlink.get_link(self.ranked_genes)
+        self.text_file    = text_file or filemanager.write(self.name, self.ranked_genes, metadata)
+        description = self._direction(self.direction) + '_' + str(metadata) 
+        self.enrichr_link = enrichr_link or enrichrlink.get_link(self.ranked_genes, description)
 
     # PURPLE_WIRE: This should handle duplicate file names, although they are
     # unlikely.
@@ -30,3 +31,10 @@ class GeneList(object):
         """Hashes the dict of gene,value pairs.
         """
         return hashlib.sha1(str(self.ranked_genes).encode('utf-8')).hexdigest()
+
+    def _direction(self, direction):
+        if direction == 1:
+            return 'Up'
+        if direction == -1:
+            return 'Down'
+        return 'Combined'

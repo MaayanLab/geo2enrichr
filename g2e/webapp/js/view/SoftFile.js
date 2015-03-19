@@ -1,21 +1,26 @@
 App.View.SoftFile = Backbone.View.extend({
 
-    tagName: 'div',
-
-    className: 'softFile',
+    tagName: 'table',
 
     template: _.template('' +
-        '<h2>SOFT file</h2>' +
-        '<ul>' +
-            '<li>Name: <%= name %></li>' +
-            '<li>Platform: <%= platform %></li>' +
-            '<li>' +
-                '<a href="<%= text_file %>" target="_blank">Download cleaned SOFT file</a>' +
-            '</li>' +
-        '</ul>'
+        '<caption>SOFT file</caption>' +
+        '<tr>' +
+            '<td>Name</td>' +
+            '<td><%= name %></td>' +
+        '</tr>' +
+        '<tr>' +
+            '<td>Platform</td>' +
+            '<td><%= platform %></td>' +
+        '</tr>' +
+        '<tr>' +
+            '<td>Cleaned text file</td>' +
+            '<td>' +
+                '<a href="<%= text_file %>" target="_blank">Download</a>' +
+            '</td>' +
+        '</tr>'
     ),
 
-    initialize: function(options) {
-        this.$el.append(this.template(options.softfile));
+    initialize: function(data) {
+        this.$el.append(this.template(data));
     }
 });

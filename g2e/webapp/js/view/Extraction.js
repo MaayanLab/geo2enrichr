@@ -15,23 +15,15 @@ App.View.Extraction = Backbone.View.extend({
         // In case the user tries to reload the results.
         this.$el.empty();
 
-        var sf = new App.View.SoftFile({
-            softfile: extraction.get('softfile')
-        });
+        var sf = new App.View.SoftFile(extraction.get('softfile'));
         this.$el.append(sf.el);
 
-        // Hack much?
-        this.$el.append('<h2>Gene lists</h2>');
+        var md = new App.View.Metadata(extraction.get('metadata'));
+        this.$el.append(md.el);
 
-        _.each(extraction.get('genelists'), function(gl) {
-            var gl = new App.View.GeneList({
-                text_file: gl.text_file,
-                enrichr_link: gl.enrichr_link,
-                direction: gl.direction
-            });
-            this.$el.append(gl.el);
-        }, this);
-        
+        var gls = new App.View.GeneLists(extraction.get('genelists'));
+        this.$el.append(gls.el);
+
         this.$el.show();
     },
 

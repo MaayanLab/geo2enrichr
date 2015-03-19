@@ -28,6 +28,7 @@ def save(extraction):
     """
     sf = extraction.softfile
     gls = extraction.genelists
+    metadata = extraction.metadata
 
     with session_scope() as session:
         softfile_dao  = models.SoftFile(
@@ -61,8 +62,12 @@ def save(extraction):
         extraction_dao = models.Extraction(
             softfile  = softfile_dao,
             genelists = genelists_dao,
-            method    = extraction.metadata.method,
-            cutoff    = extraction.metadata.cutoff
+            method       = metadata.method,
+            cutoff       = metadata.cutoff,
+            cell         = metadata.cell,
+            perturbation = metadata.perturbation,
+            gene         = metadata.gene,
+            disease      = metadata.disease
         )
 
         session.add(extraction_dao)
@@ -76,12 +81,20 @@ def fetch(extraction_id):
     with session_scope() as session:
         ext_dao = session.query(models.Extraction).filter_by(id=extraction_id).first()
 
-        sf_dao = ext_dao.softfile
+        sf_dao    = ext_dao.softfile
         name      = sf_dao.name
         text_file = sf_dao.text_file
         is_geo    = sf_dao.is_geo
         platform  = sf_dao.platform
-        softfile = SoftFile(name, platform=platform, text_file=text_file, is_geo=is_geo)
+        softfile  = SoftFile(name, platform=platform, text_file=text_file, is_geo=is_geo)
+        metadata  = Metadata(
+            ext_dao.method,
+            ext_dao.cutoff,
+            ext_dao.cell,
+            ext_dao.perturbation,
+            ext_dao.gene,
+            ext_dao.disease
+        )
 
         genelists = []
         for gl_dao in ext_dao.genelists:
@@ -91,10 +104,15 @@ def fetch(extraction_id):
             text_file = gl_dao.text_file
             enrichr_link = gl_dao.enrichr_link
             genelists.append(
-                GeneList(ranked_genes, direction, name, text_file, enrichr_link)
+                GeneList(
+                    ranked_genes,
+                    direction,
+                    name=name,
+                    text_file=text_file,
+                    enrichr_link=enrichr_link
+                )
             )
 
-        metadata = Metadata(ext_dao.method, ext_dao.cutoff)
         return Extraction(softfile, genelists, metadata)
 
 

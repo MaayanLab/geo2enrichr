@@ -18,7 +18,16 @@ App.View.Form = Backbone.View.extend({
     },
 
     submit: function() {
-        var formData = new FormData($('form')[0]);
+        var $forms = $('form');
+        var formData = new FormData($forms[0]);
+
+        _.each($forms.find('select'), function(select) {
+            var $select = $(select),
+                key = $select.attr('name'),
+                val = $select.val();
+            formData.append(key, val);
+        });
+            
         $.ajax({
             url: App.SERVER + '/extract',
             type: 'PUT',

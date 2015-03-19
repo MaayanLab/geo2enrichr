@@ -29,8 +29,8 @@ def genelists_maker(softfile, metadata):
     up_genes   = [t for t in ranked_genes if t[1] > 0]
     down_genes = [t for t in ranked_genes if t[1] < 0]
 
-    genelists.append( GeneList(up_genes, 1) )
-    genelists.append( GeneList(down_genes, -1) )
-    genelists.append( GeneList(ranked_genes, 0) )
+    genelists.append( GeneList(up_genes, 1, metadata=metadata) )
+    genelists.append( GeneList(down_genes, -1, metadata=metadata) )
+    genelists.append( GeneList(ranked_genes, 0, metadata=metadata) )
 
     return genelists
