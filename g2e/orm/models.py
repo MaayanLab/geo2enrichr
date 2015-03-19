@@ -29,7 +29,7 @@ class GeneList(Base):
     __tablename__ = 'genelists'
     id = Column(Integer, primary_key=True)
     name = Column(String(200))
-    is_up = Column(Boolean)
+    direction = Column(Integer)
     extraction_id = Column(Integer, ForeignKey('extractions.id'))
     ranked_genes = relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=backref('genelists', order_by=id))
     text_file = Column(String(200))

@@ -92,6 +92,7 @@ $(function() {
         },
         results: function(id) {
             var view = App.contentViews.extraction;
+            App.contentViews.show(view);
             view.model.set('id', id);
             view.startLoad();
             model.fetch({

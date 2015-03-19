@@ -7,8 +7,8 @@ App.View.SoftFile = Backbone.View.extend({
     template: _.template('' +
         '<h2>SOFT file</h2>' +
         '<ul>' +
-            '<li><%= name %></li>' +
-            '<li><%= platform %></li>' +
+            '<li>Name: <%= name %></li>' +
+            '<li>Platform: <%= platform %></li>' +
             '<li>' +
                 '<a href="<%= text_file %>" target="_blank">Download cleaned SOFT file</a>' +
             '</li>' +

@@ -52,7 +52,7 @@ def save(extraction):
                 models.GeneList(
                     name = gl.name,
                     ranked_genes = ranked_genes,
-                    is_up = gl.direction == 'up',
+                    direction = gl.direction,
                     text_file = gl.text_file,
                     enrichr_link = gl.enrichr_link
                 )
@@ -87,7 +87,7 @@ def fetch(extraction_id):
         for gl_dao in ext_dao.genelists:
             name = gl_dao.name
             ranked_genes = [(r.gene.name,r.rank) for r in gl_dao.ranked_genes]
-            direction = 'up' if gl_dao.is_up else 'down'
+            direction = gl_dao.direction
             text_file = gl_dao.text_file
             enrichr_link = gl_dao.enrichr_link
             genelists.append(

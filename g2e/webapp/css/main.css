@@ -164,12 +164,15 @@ header .highlight {
 .content table tr td:last-child {
   word-wrap: break-word;
 }
-.content #form-description {
+form button.submit {
+  font-size: 16px;
+}
+form .description {
   background: #f5f5f5;
   margin-top: 10px;
   padding: 5px;
 }
-.content #form-description p {
+form .description p {
   margin: 10px;
 }
 .loader {
@@ -182,7 +185,7 @@ header .highlight {
   z-index: 9999;
 }
 .loader .modal {
-  color: #009dff;
+  color: #444444;
   font-family: 'Inconsolata', Consolas, monospace;
   font-size: 20px;
   font-weight: bold;
@@ -193,6 +196,6 @@ header .highlight {
   right: 0;
   top: 200px;
 }
-#results ul {
+.results ul {
   padding-left: 15px;
 }

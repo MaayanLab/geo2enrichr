@@ -10,7 +10,7 @@ class TestChdir(unittest.TestCase):
 	def setUp(self):
 		# Get ordered list of values.
 		answers = []
-		with open('core/softfile/tests/data/chdir_output.tsv', 'r') as out:
+		with open('core/genelist/tests/data/chdir_output.tsv', 'r') as out:
 			for line in out:
 				answers.append(float(line))
 		self.answers = np.array(answers)
@@ -18,7 +18,7 @@ class TestChdir(unittest.TestCase):
 		genes = []
 		A = []
 		B = []
-		with open('core/softfile/tests/data/chdir_input.txt', 'r') as inp:
+		with open('core/genelist/tests/data/chdir_input.txt', 'r') as inp:
 			discard = next(inp)
 			header = next(inp)
 			for line in inp:

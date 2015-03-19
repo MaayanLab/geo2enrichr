@@ -1,10 +1,8 @@
 App.View.Extraction = Backbone.View.extend({
 
-    id: 'results',
-
     tagName: 'div',
 
-    className: 'content',
+    className: 'results content',
 
     initialize: function(options) {
         this.parent = options.parent;
@@ -14,6 +12,9 @@ App.View.Extraction = Backbone.View.extend({
     },
 
     render: function(extraction) {
+        // In case the user tries to reload the results.
+        this.$el.empty();
+
         var sf = new App.View.SoftFile({
             softfile: extraction.get('softfile')
         });

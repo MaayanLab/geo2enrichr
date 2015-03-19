@@ -40,8 +40,9 @@ def index():
 
 # PURPLE_WIRE: Apache should serve these files.
 @app.route(ENTRY_POINT + '/<path:path>')
+@crossdomain(origin='*')
 def send_static(path):
-    directory = SERVER_ROOT + '/g2e/webapp'
+    directory = '' if 'static' in path else SERVER_ROOT + '/g2e/webapp'
     return flask.send_from_directory(directory, path)
 
 

@@ -169,7 +169,12 @@ header {
             }
         }
     }
-    #form-description {
+}
+form {
+    button.submit {
+        font-size: 16px;
+    }
+    .description {
         background: @color-lightgray1;
         margin-top: 10px;
         padding: 5px;
@@ -187,7 +192,7 @@ header {
     width: 100%;
     z-index: 9999;
     .modal {
-        color: @color-blue;
+        color: @color-darkgray;
         font-family: 'Inconsolata', Consolas, monospace;
         font-size: 20px;
         font-weight: bold;
@@ -199,8 +204,7 @@ header {
         top: 200px;
     }
 }
-
-#results {
+.results {
     ul {
         padding-left: 15px;
     }

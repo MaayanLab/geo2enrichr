@@ -9,7 +9,7 @@ import core.softfile.normalizer as normalizer
 
 BASE_DIR    = 'static/softfile/'
 CLEANED_DIR = BASE_DIR + 'clean/'
-EXT         = '.soft'
+EXT         = '.txt'
 
 
 def write(name, genes, A, B):
@@ -37,7 +37,7 @@ def write(name, genes, A, B):
 def save(name, file_obj):
     """
     """
-    full_path =  BASE_DIR + name
+    full_path =  BASE_DIR + name + EXT
     file_obj.save(full_path)
     return full_path
 

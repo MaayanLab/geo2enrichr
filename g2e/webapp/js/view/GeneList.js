@@ -17,11 +17,18 @@ App.View.GeneList = Backbone.View.extend({
     ),
 
     initialize: function(options) {
-        options.direction = this.capitalize( options.direction );
+        options.direction = this.getDirection(options.direction);
         this.$el.append(this.template(options));
     },
 
-    capitalize: function(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+    getDirection: function(direction) {
+        if (direction === 1) {
+            return 'Up';
+        } else if (direction === -1) {
+            return 'Down';
+        // Else direction should be 0.
+        } else {
+            return 'Combined';
+        }
     }
 });
