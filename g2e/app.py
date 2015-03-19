@@ -34,7 +34,7 @@ SERVER_ROOT = '/Users/gwg/g2e'
 @app.route(ENTRY_POINT + '/', methods=['GET'])
 @crossdomain(origin='*')
 def index():
-    directory = SERVER_ROOT + '/g2e/webapp'
+    directory = SERVER_ROOT + '/g2e/web'
     return flask.send_from_directory(directory, 'index.html')
 
 
@@ -42,7 +42,7 @@ def index():
 @app.route(ENTRY_POINT + '/<path:path>')
 @crossdomain(origin='*')
 def send_static(path):
-    directory = '' if 'static' in path else SERVER_ROOT + '/g2e/webapp'
+    directory = '' if 'static' in path else SERVER_ROOT + '/g2e/web'
     return flask.send_from_directory(directory, path)
 
 

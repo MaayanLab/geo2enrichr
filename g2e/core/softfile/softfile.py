@@ -35,8 +35,10 @@ class SoftFile(object):
             geodownloader.download(name)
 
         platform = args['platform']
-        A_cols = args['A_cols'].split(',')
-        B_cols = args['B_cols'].split(',')
+        # The "array[]" notation really confused me; see this Stack Overflow
+        # answer for details: http://stackoverflow.com/a/23889195/1830334
+        A_cols = args.getlist('A_cols[]')
+        B_cols = args.getlist('B_cols[]')
         genes, A, B, stats = softparser.parse(name, is_geo, platform, A_cols, B_cols)
         genes, A, B = normalizer.normalize(genes, A, B)
         text_file = softfilemanager.write(name, genes, A, B)
