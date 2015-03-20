@@ -1,7 +1,6 @@
 
 var G2E = (function() {
 
-var SUPPORTED_PLATFORMS = ['GPL8321', 'GPL7091', 'GPL3307', 'GPL8300', 'GPL11383', 'GPL13158', 'GPL4044', 'GPL1426', 'GPL6887', 'GPL3084', 'GPL32', 'GPL16268', 'GPL13692', 'GPL2881', 'GPL15207', 'GPL3697', 'GPL91', 'GPL339', 'GPL96', 'GPL17518', 'GPL15401', 'GPL13712', 'GPL201', 'GPL1261', 'GPL10558', 'GPL6193', 'GPL6244', 'GPL3050', 'GPL6101', 'GPL6885', 'GPL4685', 'GPL6102', 'GPL4200', 'GPL6480', 'GPL6106', 'GPL6845', 'GPL7202', 'GPL4134', 'GPL1708', 'GPL3921', 'GPL85', 'GPL4074', 'GPL2897', 'GPL4133', 'GPL6947', 'GPL1536', 'GPL1355', 'GPL4487', 'GPL81', 'GPL6096', 'GPL8063', 'GPL11202', 'GPL16686', 'GPL15792', 'GPL6246', 'GPL340', 'GPL11180', 'GPL13497', 'GPL571', 'GPL570'];
 // This file is built by deploy.sh in the root directory.
 var EXTENSION_ID = "ggnfmgkbdnedgillmfoakkajnpeakbel";
 var DEBUG = true;
@@ -9,7 +8,7 @@ var SERVER = "http://localhost:8083/g2e/";
 
 var Comm = function(events, notifier, targetApps, SERVER) {
 
-    var fetchGeneList = function() {
+    var fetchGeneList = (function() {
         $.ajax({
             url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
             type: 'GET',
@@ -18,22 +17,21 @@ var Comm = function(events, notifier, targetApps, SERVER) {
                 events.fire('geneListFetched', data);
             }
         });
-    }();
+    })();
 
-    var downloadDiffExp = function(input) {
+    var postSoftFile = function(input) {
         $.post(SERVER + 'extract',
             input,
             function(data) {
-                debugger;
                 var id = data.extraction_id,
                     url = SERVER + '#results/' + id;
-                events.fire('dataReady', url);
+                events.fire('resultsReady', url);
             }
         );
     };
 
     return {
-        downloadDiffExp: downloadDiffExp
+        postSoftFile: postSoftFile
     };
 };
 
@@ -331,7 +329,7 @@ var TargetApps = function(events) {
 
 var Templater = function(EXTENSION_ID, targetApps) {
 
-    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/images/g2e-logo-50x50.png';
+    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/image/g2e-logo-50x50.png';
 
     var targetAppsOptions = function() {
         var options = '';
@@ -346,8 +344,8 @@ var Templater = function(EXTENSION_ID, targetApps) {
         return options;
     };
 
-    var $modal = $('' +
-        '<div id="g2e-container">' +
+    var modal = '' +
+        '<div id="g2e-overlay">' +
             '<div id="g2e-modal">' +
                 '<div id="g2e-title">' +
                     '<a href="http://maayanlab.net/g2e/" target="_blank">' +
@@ -378,23 +376,23 @@ var Templater = function(EXTENSION_ID, targetApps) {
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
-                                '<tr id="g2e-accession">' +
+                                '<tr id="g2e-dataset">' +
                                     '<td class="g2e-title">Accession num.&#42;</td>' +
-                                    '<td class="g2e-value g2e-editable"></td>' +
+                                    '<td class="g2e-value"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-platform">' +
                                     '<td class="g2e-title">Platform</td>' +
-                                    '<td class="g2e-value g2e-editable"></td>' +
+                                    '<td class="g2e-value"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-organism">' +
                                     '<td class="g2e-title">Organism</td>' +
-                                    '<td class="g2e-value g2e-editable"></td>' +
+                                    '<td class="g2e-value"></td>' +
                                 '</tr>' +
-                                '<tr id="g2e-control">' +
+                                '<tr id="g2e-A_cols">' +
                                     '<td class="g2e-title">Control samples&#42;</td>' +
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
-                                '<tr id="g2e-experimental" class="g2e-last">' +
+                                '<tr id="g2e-B_cols" class="g2e-last">' +
                                     '<td class="g2e-title">Treatment or condition samples&#42;</td>' +
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
@@ -437,38 +435,25 @@ var Templater = function(EXTENSION_ID, targetApps) {
                         '</td>' +
                     '</tr>' +
                 '</table>' +
+                '<div id="g2e-extract">' +
+                    '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
+                    '<button id="g2e-results-btn" class="g2e-btn">View your results</button>' +
+                '</div>' +
                 '<div id="g2e-footer">' +
-                    '<table>' +
-                        '<tr>' +
-                            '<td id="g2e-actions" class="g2e-title">' +
-                                '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
-                            '</td>' +
-                        '</tr>' +
-                    '</table>' +
-                    '<table id="g2e-results">' +
-                        '<tr id="g2e-extract-link">' +
-                            '<td class="g2e-title">' +
-                                '<strong>Extracted data:</strong>' +
-                            '</td>' +
-                            '<td>' +
-                                '<a href="" target="_blank">Open link</a>' +
-                            '</td>' +
-                        '</tr>' +
-                    '</table>' +
                     '<p id="g2e-credits">' + 
                         'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                         ' See the <a href="http://maayanlab.net/g2e/" target="_blank">documentation</a> for details.' +
                     '</p>' +
                 '</div>' +
             '</div>' +
-        '</div>');
+        '</div>';
 
     var BUTTON_TEXT = 'Extract knowledge with <strong class="g2e-strong">GEO2Enrichr</strong>';
 
     var EMBED_BTN_ID ="g2e-embedded-button";
 
     var templates = {
-        'modal': $modal,
+        'modal': modal,
         'gds': {
             'btn': $('' +
                 '<tr>' +
@@ -551,13 +536,10 @@ var BaseScraper = function(DEBUG) {
 
     return {
 
-        getData: function($modal) {
+        getScrapedData: function($modal) {
             // getSamples() returns an object rather than mutating sData
             // because the function must be mixed in at runtime.
             var samples = this.getSamples();
-            if ($modal) {
-                this.getOptions($modal);
-            }
 
             sData.A_cols   = samples.A_cols;
             sData.B_cols   = samples.B_cols;
@@ -569,14 +551,7 @@ var BaseScraper = function(DEBUG) {
             return $.extend({}, sData);
         },
 
-        setData: function(key, val) {
-            if (key == 'cell' || key == 'platform') {
-                val = val.replace(/_|-|\./g, '');
-            }
-            sData[key] = val;
-        },
-
-        getOptions: function($modal) {
+        getUserOptions: function($modal) {
             var method = $modal.find('#g2e-diffexp option:selected').val(),
                 cell = $modal.find('#g2e-cell td.g2e-value input').val(),
                 perturbation = $modal.find('#g2e-perturbation td.g2e-value input').val(),
@@ -781,158 +756,55 @@ var GseScraper = function(events) {
 
 var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetApps, templater) {
 
-    var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
-   
-    var dataConfig = {
-        'g2e-accession': {
-            key: 'accession',
-            prompt: 'Please enter an accession number:'
-        },
-        'g2e-platform': {
-            key: 'platform',
-            prompt: 'Please enter a platform:'
-        },
-        'g2e-organism' : {
-            key: 'organism',
-            prompt: 'Please enter an organism:'
-        },
-        'g2e-control': {
-            key: 'A_cols',
-            formatter: function(data) {
-                return data.join(', ');
-            }
-        },
-        'g2e-experimental': {
-            key: 'B_cols',
-            formatter: function(data) {
-                return data.join(', ');
-            }
-        }
-    };
-    
-    var geneList, $overlay, $modal, $results;
-
-    // This is called once at startup. All variables and bindings should be permanent.
-    var init = function() {
-        $modal = templater.get('modal');
-        $overlay = $modal.hide().appendTo('body');
-        $('#g2e-container #g2e-modal').draggable();
-        $results = $results || $('#g2e-results');
-
-        // Allow editing of the values, in case we scraped incorrectly.
-        $('.g2e-editable').click(function(evt) {
-            var id = $(evt.target).parent().attr('id');
-            onEdit(id);
-        });
-
-        // Add event handlers
-        $modal.find('#g2e-target-app-select')
-              .change(changeTargetApp)
-              .end()
-              .find('#g2e-close-btn')
-              .click(resetModalBox)
-              .end()
-              .find('.g2e-confirm-tbl')
-              .eq(1)
-              .end();
-
-        resetSubmitBtn();
-    };
-
-    var changeTargetApp = function(data) {
-        // This is a great example of jQuery spaghetti. It would be much better to
-        // have a model just back this view.
-        targetApps.set( $(data.target).val() );
-        $modal
-            .find('#g2e-target-app-title')
-            .text(targetApps.current().name)
-            .css('color', targetApps.current().color);
-        resetFooter(); 
-    };
+    var geneList, $overlay, $resultsBtn, $submitBtn;
 
     // This function is called every time the "Pipe to Enrichr" button is clicked.
     var openModalBox = function() {
-        var scrapedData;
-        // Show the user the data we have scraped for confirmation.
-        scrapedData = scraper.getData($modal);
+        var scrapedData = scraper.getScrapedData($overlay);
         fillConfirmationTable(scrapedData);
         $overlay.show();
-        $modal.show();
     };
 
-    var setDownloadLinks = function(extractionId) {
-        $results.find('#g2e-extract-link a').attr('href', extractionId);
-        $results.show();
-    };
-
-    var showResults = function(data) {
-        targetApps.current().resultsFormatter(data);
-        $results.show();
+    var showResultsLink = function(extractionId) {
+        $resultsBtn.show().click(function() {
+            window.open(extractionId, "_blank");
+        });
     };
 
     var resetModalBox = function() {
         resetFooter();
         $overlay.hide();
-        $modal.hide();
     };
 
     var resetFooter = function() {
-        // Result any results.
-        $('#g2e-target-app-results').remove();
-        $results.hide()
-                .find('button')
-                .unbind();
-
-        resetSubmitBtn();   
+        $resultsBtn.hide().off();
+        $submitBtn.removeClass('g2e-lock').off().click(postData);
     };
 
-    var resetSubmitBtn = function() {
-        // Reset submit button.
-        $modal.find('#g2e-submit-btn')
-              // This doesn't do anything the first time.
-              .removeClass('g2e-lock')
-              // Remove any event handlers, just to be safe.
-              // This code smells like jQuery spaghetti.
-              .off()
-              .click(function() {
-                  var scrapedData = scraper.getData($modal),
-                      app = targetApps.current();
-                  if (isValidData(scrapedData)) {
-                      $(this).addClass('g2e-lock').off();
-                      comm.downloadDiffExp(scrapedData, app);
-                  } else {
-                      resetFooter();
-                  }
-              })
-              .end();
-    };
-
-    var onEdit = function(id) {
-        var config = dataConfig[id],
-            userInput = notifier.ask(config.prompt, $('#' + id + ' td').eq(1).text()),
-            newData;
-        if (userInput !== null) {
-            scraper.setData(config.key, userInput);
-            newData = scraper.getData();
-            fillConfirmationTable(newData);
+    var postData = function() {
+        var scrapedData = scraper.getScrapedData($overlay),
+            userOptions = scraper.getUserOptions($overlay),
+            data = $.extend({}, scrapedData, userOptions),
+            app = targetApps.current();
+        if (isValidData(scrapedData)) {
+            $(this).addClass('g2e-lock').off();
+            comm.postSoftFile(scrapedData, app);
+        } else {
+            resetFooter();
         }
     };
 
     var fillConfirmationTable = function(scrapedData) {
-        var elem, config, html;
-        for (elem in dataConfig) {
-            config = dataConfig[elem];
-            if (config.formatter) {
-                html = config.formatter(scrapedData[config.key]);
+        var prop, html, elemId;
+        for (prop in scrapedData) {
+            var val = scrapedData[prop];
+            if ($.isArray(val)) {
+                html = val.join(', ');
             } else {
-                html = scrapedData[config.key];
+                html = val;
             }
-            $('#' + elem + ' td').eq(1).html(html);
+            $('#g2e-' + prop + ' td').eq(1).html(html);
         }
-    };
-
-    var downloadUrl = function(url) {
-        $downloadIframe.attr('src', url);
     };
 
     var isValidData = function(data) {
@@ -955,7 +827,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
     };
 
     var setAutocomplete = function(elemName, data) {
-        $modal.find(elemName).autocomplete({
+        $overlay.find(elemName).autocomplete({
             source: function(request, response) {
                 var results = $.ui.autocomplete.filter(data, request.term);
                 response(results.slice(0, 10));
@@ -978,7 +850,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
          * forget.
          */
         if (platform && $.inArray(platform, SUPPORTED_PLATFORMS) === -1) {
-            $g2eLink.html('<strong class="g2e-strong">GEOX:</strong> This platform is not currently supported.');
+            $g2eLink.html('<strong class="g2e-strong">G2E:</strong> This platform is not currently supported.');
         } else {
             $g2eLink.click(openModalBox);
         }
@@ -993,23 +865,23 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
         setAutocomplete('#g2e-geneList', geneList);
     });
 
-    events.on('rareDiseasesFetched', function(diseaseList) {
-        setAutocomplete('#g2e-diseaseList', diseaseList);
-    });
+    events.on('resultsReady', showResultsLink);
 
-    events.on('dataReady', setDownloadLinks);
-
-    events.on('genesEnriched', showResults);
-    
-    init();
-
-    return {
-        openModalBox: openModalBox
-    };
+    var init = (function() {
+        var html = templater.get('modal');
+        $(html).hide().appendTo('body');
+        $('#g2e-modal').draggable();
+        $overlay = $('#g2e-overlay');
+        $resultsBtn = $overlay.find('#g2e-results-btn');
+        $submitBtn = $overlay.find('#g2e-submit-btn').click(postData);
+        $overlay.find('#g2e-close-btn').click(resetModalBox);
+    })();
 };
 
 var main = function() {
 
+    var SUPPORTED_PLATFORMS = ['GPL8321', 'GPL7091', 'GPL3307', 'GPL8300', 'GPL11383', 'GPL13158', 'GPL4044', 'GPL1426', 'GPL6887', 'GPL3084', 'GPL32', 'GPL16268', 'GPL13692', 'GPL2881', 'GPL15207', 'GPL3697', 'GPL91', 'GPL339', 'GPL96', 'GPL17518', 'GPL15401', 'GPL13712', 'GPL201', 'GPL1261', 'GPL10558', 'GPL6193', 'GPL6244', 'GPL3050', 'GPL6101', 'GPL6885', 'GPL4685', 'GPL6102', 'GPL4200', 'GPL6480', 'GPL6106', 'GPL6845', 'GPL7202', 'GPL4134', 'GPL1708', 'GPL3921', 'GPL85', 'GPL4074', 'GPL2897', 'GPL4133', 'GPL6947', 'GPL1536', 'GPL1355', 'GPL4487', 'GPL81', 'GPL6096', 'GPL8063', 'GPL11202', 'GPL16686', 'GPL15792', 'GPL6246', 'GPL340', 'GPL11180', 'GPL13497', 'GPL571', 'GPL570'];
+    
     /* EXTENSION_ID, DEBUG, SERVER, and SUPPORTED_PLATFORMS are set in
      * config.js via deploy.sh.
      */

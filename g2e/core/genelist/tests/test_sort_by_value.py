@@ -1,6 +1,6 @@
 import unittest
 
-from core.genelist.diffexp import _sort_by_value
+from g2e.core.genelist.diffexp import _sort_by_value
 
 
 class TestSortByValue(unittest.TestCase):

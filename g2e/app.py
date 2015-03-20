@@ -10,12 +10,11 @@ import time
 import sys
 import flask
 
-from core.util.crossdomain import crossdomain
-from core.extraction.extractionmaker import extraction_maker
+from g2e.core.util.crossdomain import crossdomain
+from g2e.core.extraction.extractionmaker import extraction_maker
 
 
 app = flask.Flask(__name__, static_url_path='')
-app.debug = True
 
 
 ALLOWED_ORIGINS = '*'
@@ -34,7 +33,7 @@ SERVER_ROOT = '/Users/gwg/g2e'
 @app.route(ENTRY_POINT + '/', methods=['GET'])
 @crossdomain(origin='*')
 def index():
-    directory = SERVER_ROOT + '/g2e/web'
+    directory = SERVER_ROOT + '/g2e/web/site'
     return flask.send_from_directory(directory, 'index.html')
 
 
@@ -42,7 +41,7 @@ def index():
 @app.route(ENTRY_POINT + '/<path:path>')
 @crossdomain(origin='*')
 def send_static(path):
-    directory = '' if 'static' in path else SERVER_ROOT + '/g2e/web'
+    directory = '' if 'static' in path else SERVER_ROOT + '/g2e/web/site'
     return flask.send_from_directory(directory, path)
 
 
@@ -88,14 +87,9 @@ def clean_extraction(extraction):
     return response
 
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        port = int(sys.argv[1])
-    else:
-        # Defined by AMP
-        port = 8083
-    if len(sys.argv) > 2:
-        host = sys.argv[2]
-    else:
-        host = '0.0.0.0'
-    app.run(port=port, host=host)
+#if __name__ == '__main__':
+#    # This is only for local development. For Apache, the application is
+#    # imported and run from another module.
+#    port = 8083
+#    host = '0.0.0.0'
+#    app.run(port=port, host=host)

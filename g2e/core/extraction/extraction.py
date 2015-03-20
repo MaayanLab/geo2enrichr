@@ -2,9 +2,9 @@
 """
 
 
-from core.softfile.softfile import SoftFile
-from core.metadata.metadata import Metadata
-from core.genelist.genelistsmaker import genelists_maker
+from g2e.core.softfile.softfile import SoftFile
+from g2e.core.metadata.metadata import Metadata
+from g2e.core.genelist.genelistsmaker import genelists_maker
 
 
 class Extraction(object):

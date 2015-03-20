@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from core.genelist.diffexp import _apply_cutoff
+from g2e.core.genelist.diffexp import _apply_cutoff
 
 
 class TestApplyCutoff(unittest.TestCase):

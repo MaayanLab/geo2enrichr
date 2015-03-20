@@ -1,0 +1,2 @@
+To run Grunt:
+grunt --gruntfile=/Users/gwg/g2e/scripts/gruntfile.js watch

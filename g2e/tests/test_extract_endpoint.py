@@ -1,7 +1,7 @@
 import json
 import unittest
 
-import app
+import g2e.app
 
 
 unittest.TestCase.maxDiff = None
@@ -17,7 +17,7 @@ def get_gene_value(genelist, gene):
 class ExtractEndpoint(unittest.TestCase):
 
     def setUp(self):
-        self.app = app.app.test_client()
+        self.app = g2e.app.app.test_client()
         self.resp = self.app.post('/g2e/extract', data=dict(
             is_geo = 'True',
             dataset = 'GDS5077',
@@ -43,7 +43,7 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(resp_dict['metadata']['cutoff'] == 500)
 
         self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
-        self.assertTrue(resp_dict['softfile']['text_file'] == 'static/softfile/clean/GDS5077.txt')
+        self.assertTrue(resp_dict['softfile']['text_file'] == 'g2e/static/softfile/clean/GDS5077.txt')
         self.assertTrue(resp_dict['softfile']['platform'] == 'GPL10558')
         self.assertTrue(resp_dict['softfile']['is_geo'])
 

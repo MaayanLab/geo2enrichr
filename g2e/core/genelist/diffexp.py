@@ -8,10 +8,10 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
+import numpy as np
 from scipy import stats
 
-from core.genelist import chdir
-import numpy as np
+from g2e.core.genelist import chdir
 
 
 def diffexp(A, B, genes, method, cutoff):

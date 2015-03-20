@@ -13,7 +13,7 @@ g2e/static/genelist
 *.zip
 
 # JS build files and dependencies
-js/grunt/node_modules/*
+scripts/node_modules/
 
 # directories
 resources/platform scripts/

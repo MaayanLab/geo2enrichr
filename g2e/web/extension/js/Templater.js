@@ -1,7 +1,7 @@
 
 var Templater = function(EXTENSION_ID, targetApps) {
 
-    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/images/g2e-logo-50x50.png';
+    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/image/g2e-logo-50x50.png';
 
     var targetAppsOptions = function() {
         var options = '';
@@ -16,8 +16,8 @@ var Templater = function(EXTENSION_ID, targetApps) {
         return options;
     };
 
-    var $modal = $('' +
-        '<div id="g2e-container">' +
+    var modal = '' +
+        '<div id="g2e-overlay">' +
             '<div id="g2e-modal">' +
                 '<div id="g2e-title">' +
                     '<a href="http://maayanlab.net/g2e/" target="_blank">' +
@@ -48,23 +48,23 @@ var Templater = function(EXTENSION_ID, targetApps) {
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
-                                '<tr id="g2e-accession">' +
+                                '<tr id="g2e-dataset">' +
                                     '<td class="g2e-title">Accession num.&#42;</td>' +
-                                    '<td class="g2e-value g2e-editable"></td>' +
+                                    '<td class="g2e-value"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-platform">' +
                                     '<td class="g2e-title">Platform</td>' +
-                                    '<td class="g2e-value g2e-editable"></td>' +
+                                    '<td class="g2e-value"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-organism">' +
                                     '<td class="g2e-title">Organism</td>' +
-                                    '<td class="g2e-value g2e-editable"></td>' +
+                                    '<td class="g2e-value"></td>' +
                                 '</tr>' +
-                                '<tr id="g2e-control">' +
+                                '<tr id="g2e-A_cols">' +
                                     '<td class="g2e-title">Control samples&#42;</td>' +
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
-                                '<tr id="g2e-experimental" class="g2e-last">' +
+                                '<tr id="g2e-B_cols" class="g2e-last">' +
                                     '<td class="g2e-title">Treatment or condition samples&#42;</td>' +
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
@@ -107,38 +107,25 @@ var Templater = function(EXTENSION_ID, targetApps) {
                         '</td>' +
                     '</tr>' +
                 '</table>' +
+                '<div id="g2e-extract">' +
+                    '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
+                    '<button id="g2e-results-btn" class="g2e-btn">View your results</button>' +
+                '</div>' +
                 '<div id="g2e-footer">' +
-                    '<table>' +
-                        '<tr>' +
-                            '<td id="g2e-actions" class="g2e-title">' +
-                                '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
-                            '</td>' +
-                        '</tr>' +
-                    '</table>' +
-                    '<table id="g2e-results">' +
-                        '<tr id="g2e-extract-link">' +
-                            '<td class="g2e-title">' +
-                                '<strong>Extracted data:</strong>' +
-                            '</td>' +
-                            '<td>' +
-                                '<a href="" target="_blank">Open link</a>' +
-                            '</td>' +
-                        '</tr>' +
-                    '</table>' +
                     '<p id="g2e-credits">' + 
                         'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                         ' See the <a href="http://maayanlab.net/g2e/" target="_blank">documentation</a> for details.' +
                     '</p>' +
                 '</div>' +
             '</div>' +
-        '</div>');
+        '</div>';
 
     var BUTTON_TEXT = 'Extract knowledge with <strong class="g2e-strong">GEO2Enrichr</strong>';
 
     var EMBED_BTN_ID ="g2e-embedded-button";
 
     var templates = {
-        'modal': $modal,
+        'modal': modal,
         'gds': {
             'btn': $('' +
                 '<tr>' +

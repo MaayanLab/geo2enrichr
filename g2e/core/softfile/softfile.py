@@ -3,10 +3,10 @@ fetching SOFT files.
 """
 
 
-import core.softfile.geodownloader as geodownloader
-import core.softfile.softparser as softparser
-import core.softfile.normalizer as normalizer
-import core.softfile.softfilemanager as softfilemanager
+import g2e.core.softfile.geodownloader as geodownloader
+import g2e.core.softfile.softparser as softparser
+import g2e.core.softfile.normalizer as normalizer
+import g2e.core.softfile.softfilemanager as softfilemanager
 
 
 class SoftFile(object):
@@ -37,8 +37,8 @@ class SoftFile(object):
         platform = args['platform']
         # The "array[]" notation really confused me; see this Stack Overflow
         # answer for details: http://stackoverflow.com/a/23889195/1830334
-        A_cols = args.getlist('A_cols[]')
-        B_cols = args.getlist('B_cols[]')
+        A_cols = args.getlist('A_cols[]') or args.getlist('A_cols')
+        B_cols = args.getlist('B_cols[]') or args.getlist('B_cols')
         genes, A, B, stats = softparser.parse(name, is_geo, platform, A_cols, B_cols)
         genes, A, B = normalizer.normalize(genes, A, B)
         text_file = softfilemanager.write(name, genes, A, B)

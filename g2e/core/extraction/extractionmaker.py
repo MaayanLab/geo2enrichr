@@ -4,8 +4,8 @@ them to the DAO and returns a new Extraction.
 """
 
 
-from core.extraction.extraction import Extraction
-from dao import dao
+from g2e.core.extraction.extraction import Extraction
+from g2e.dao import dao
 
 
 def extraction_maker(**kwargs):

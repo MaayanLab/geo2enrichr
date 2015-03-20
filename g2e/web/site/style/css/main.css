@@ -1,0 +1,202 @@
+/*@color-blue: #009dff;*/
+/* Reset
+ * ----- */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  font-family: 'arial', 'sans-serif';
+  font-size: 13px;
+}
+/* Tag selectors 
+ * ------------- */
+input {
+  border: none;
+  font-size: 13px;
+}
+a {
+  color: blue;
+  text-decoration: none;
+}
+a:hover {
+  color: blue;
+  text-decoration: underline;
+}
+/* Page
+ * ---- */
+#wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -75px;
+}
+footer,
+.push {
+  height: 75px;
+}
+footer {
+  border-top: 1px solid #dddddd;
+  background: #eeeeee;
+  color: #444444;
+  padding-top: 10px;
+  width: 100%;
+}
+footer a,
+footer p {
+  font-size: 12px;
+}
+footer a {
+  color: blue;
+  text-decoration: none;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+.content {
+  padding-bottom: 20px;
+  width: 650px;
+}
+.content img {
+  width: 100%;
+}
+.wrapper {
+  margin: 0 auto;
+  width: 600px;
+}
+header {
+  border-bottom: 1px solid #dddddd;
+}
+header #logo {
+  background: #f5f5f5;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5), color-stop(100%, #eeeeee));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, #f5f5f5 0%, #eeeeee 100%);
+  /* W3C */
+  border-bottom: 1px solid #dddddd;
+  padding: 10px 0;
+}
+header #logo a:hover {
+  text-decoration: none;
+}
+header a {
+  border: none;
+  color: black;
+  font-family: 'Open Sans';
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+}
+header a:hover {
+  cursor: pointer;
+  color: black;
+}
+header h1,
+header ul {
+  display: inline;
+}
+header nav {
+  margin: 10px 0;
+}
+header ul {
+  padding-left: 0;
+}
+header ul li {
+  border-right: 1px solid #eeeeee;
+  display: inline;
+  list-style-type: none;
+  padding: 0 10px;
+}
+header ul li a {
+  font-size: 13px;
+}
+header ul li.last {
+  border-right: none;
+}
+header ul li.first {
+  padding-left: 0;
+}
+header img {
+  width: 30px;
+}
+header h1 {
+  margin-left: 10px;
+}
+header h1 a {
+  font-size: 40px;
+}
+header .highlight {
+  color: #d90000;
+}
+.content table {
+  table-layout: fixed;
+  border-spacing: 0;
+  font-size: 13px;
+  padding-bottom: 20px;
+  width: 100%;
+}
+.content table caption {
+  border-bottom: 2px solid #dddddd;
+  font-style: italic;
+  margin-top: 20px;
+  text-align: left;
+}
+.content table tr {
+  height: 25px;
+}
+.content table tr td {
+  border-bottom: 1px solid #dddddd;
+  padding: 5px 0;
+}
+.content table tr td:first-child {
+  font-weight: bold;
+  width: 22%;
+}
+.content table tr td:last-child {
+  word-wrap: break-word;
+}
+form button.submit {
+  font-size: 16px;
+}
+form .description {
+  background: #f5f5f5;
+  margin-top: 10px;
+  padding: 5px;
+}
+form .description p {
+  margin: 10px;
+}
+.loader {
+  background-color: rgba(255, 255, 255, 0.75);
+  cursor: wait;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+.loader .modal {
+  color: #444444;
+  font-family: 'Inconsolata', Consolas, monospace;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 auto;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  right: 0;
+  top: 200px;
+}
+.results ul {
+  padding-left: 15px;
+}

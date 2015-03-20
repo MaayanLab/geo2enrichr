@@ -7,12 +7,12 @@ import copy
 from contextlib import contextmanager
 from sqlalchemy.orm import sessionmaker
 
-from orm.commondb import Base, engine
-import orm.models as models
-from core.genelist.genelist import GeneList
-from core.softfile.softfile import SoftFile
-from core.metadata.metadata import Metadata
-from core.extraction.extraction import Extraction
+from g2e.orm.commondb import Base, engine
+import g2e.orm.models as models
+from g2e.core.genelist.genelist import GeneList
+from g2e.core.softfile.softfile import SoftFile
+from g2e.core.metadata.metadata import Metadata
+from g2e.core.extraction.extraction import Extraction
 
 
 Session = sessionmaker()
@@ -58,6 +58,8 @@ def save(extraction):
                     enrichr_link = gl.enrichr_link
                 )
             )
+
+        import pdb; pdb.set_trace()
 
         extraction_dao = models.Extraction(
             softfile  = softfile_dao,

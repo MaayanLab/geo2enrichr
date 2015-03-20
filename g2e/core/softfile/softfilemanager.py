@@ -4,10 +4,10 @@
 
 import os.path
 
-import core.softfile.normalizer as normalizer
+import g2e.core.softfile.normalizer as normalizer
 
 
-BASE_DIR    = 'static/softfile/'
+BASE_DIR    = 'g2e/static/softfile/'
 CLEANED_DIR = BASE_DIR + 'clean/'
 EXT         = '.txt'
 

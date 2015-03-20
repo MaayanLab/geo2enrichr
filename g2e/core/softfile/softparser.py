@@ -8,7 +8,7 @@ __contact__ = "gregory.gundersen@mssm.edu"
 
 import numpy as np
 
-import core.softfile.softfilemanager as softfilemanager
+import g2e.core.softfile.softfilemanager as softfilemanager
 
 
 def parse(name, is_geo=True, platform=None, A_cols=None, B_cols=None):
@@ -203,4 +203,4 @@ def build_probe_dict(platform_probesetid_genesym_file):
     return platform_dict
 
 
-PROBE2GENE = build_probe_dict('core/softfile/probe2gene.txt')
+PROBE2GENE = build_probe_dict('g2e/core/softfile/probe2gene.txt')

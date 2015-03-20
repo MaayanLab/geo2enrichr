@@ -1,7 +1,7 @@
 
 var Comm = function(events, notifier, targetApps, SERVER) {
 
-    var fetchGeneList = function() {
+    var fetchGeneList = (function() {
         $.ajax({
             url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
             type: 'GET',
@@ -10,21 +10,20 @@ var Comm = function(events, notifier, targetApps, SERVER) {
                 events.fire('geneListFetched', data);
             }
         });
-    }();
+    })();
 
-    var downloadDiffExp = function(input) {
+    var postSoftFile = function(input) {
         $.post(SERVER + 'extract',
             input,
             function(data) {
-                debugger;
                 var id = data.extraction_id,
                     url = SERVER + '#results/' + id;
-                events.fire('dataReady', url);
+                events.fire('resultsReady', url);
             }
         );
     };
 
     return {
-        downloadDiffExp: downloadDiffExp
+        postSoftFile: postSoftFile
     };
 };

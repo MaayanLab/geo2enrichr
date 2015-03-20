@@ -5,7 +5,7 @@
 import os.path
 
 
-BASE_DIR = 'static/genelist/'
+BASE_DIR = 'g2e/static/genelist/'
 EXT = '.txt'
 
 

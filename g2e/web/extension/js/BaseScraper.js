@@ -5,13 +5,10 @@ var BaseScraper = function(DEBUG) {
 
     return {
 
-        getData: function($modal) {
+        getScrapedData: function($modal) {
             // getSamples() returns an object rather than mutating sData
             // because the function must be mixed in at runtime.
             var samples = this.getSamples();
-            if ($modal) {
-                this.getOptions($modal);
-            }
 
             sData.A_cols   = samples.A_cols;
             sData.B_cols   = samples.B_cols;
@@ -23,14 +20,7 @@ var BaseScraper = function(DEBUG) {
             return $.extend({}, sData);
         },
 
-        setData: function(key, val) {
-            if (key == 'cell' || key == 'platform') {
-                val = val.replace(/_|-|\./g, '');
-            }
-            sData[key] = val;
-        },
-
-        getOptions: function($modal) {
+        getUserOptions: function($modal) {
             var method = $modal.find('#g2e-diffexp option:selected').val(),
                 cell = $modal.find('#g2e-cell td.g2e-value input').val(),
                 perturbation = $modal.find('#g2e-perturbation td.g2e-value input').val(),

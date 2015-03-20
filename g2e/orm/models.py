@@ -3,7 +3,7 @@ from sqlalchemy import Table, Column, BLOB, Boolean, Float, Integer, String, Tex
 from sqlalchemy.orm import relationship, backref
 
 # These are references to common instances of SQLAlchemy utilities.
-from orm.commondb import Base, engine
+from g2e.orm.commondb import Base, engine
 
 
 rankedgenes_2_genelists = Table('rankedgene2genelist', Base.metadata,

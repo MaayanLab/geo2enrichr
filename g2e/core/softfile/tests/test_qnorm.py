@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from core.softfile.normalizer import qnorm
+from g2e.core.softfile.normalizer import qnorm
 
 
 class TestQnorm(unittest.TestCase):

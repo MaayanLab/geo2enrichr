@@ -1,158 +1,55 @@
 
 var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetApps, templater) {
 
-    var $downloadIframe = $('<iframe>', { id: 'g2e-dl-iframe' }).hide().appendTo('body');
-   
-    var dataConfig = {
-        'g2e-accession': {
-            key: 'accession',
-            prompt: 'Please enter an accession number:'
-        },
-        'g2e-platform': {
-            key: 'platform',
-            prompt: 'Please enter a platform:'
-        },
-        'g2e-organism' : {
-            key: 'organism',
-            prompt: 'Please enter an organism:'
-        },
-        'g2e-control': {
-            key: 'A_cols',
-            formatter: function(data) {
-                return data.join(', ');
-            }
-        },
-        'g2e-experimental': {
-            key: 'B_cols',
-            formatter: function(data) {
-                return data.join(', ');
-            }
-        }
-    };
-    
-    var geneList, $overlay, $modal, $results;
-
-    // This is called once at startup. All variables and bindings should be permanent.
-    var init = function() {
-        $modal = templater.get('modal');
-        $overlay = $modal.hide().appendTo('body');
-        $('#g2e-container #g2e-modal').draggable();
-        $results = $results || $('#g2e-results');
-
-        // Allow editing of the values, in case we scraped incorrectly.
-        $('.g2e-editable').click(function(evt) {
-            var id = $(evt.target).parent().attr('id');
-            onEdit(id);
-        });
-
-        // Add event handlers
-        $modal.find('#g2e-target-app-select')
-              .change(changeTargetApp)
-              .end()
-              .find('#g2e-close-btn')
-              .click(resetModalBox)
-              .end()
-              .find('.g2e-confirm-tbl')
-              .eq(1)
-              .end();
-
-        resetSubmitBtn();
-    };
-
-    var changeTargetApp = function(data) {
-        // This is a great example of jQuery spaghetti. It would be much better to
-        // have a model just back this view.
-        targetApps.set( $(data.target).val() );
-        $modal
-            .find('#g2e-target-app-title')
-            .text(targetApps.current().name)
-            .css('color', targetApps.current().color);
-        resetFooter(); 
-    };
+    var geneList, $overlay, $resultsBtn, $submitBtn;
 
     // This function is called every time the "Pipe to Enrichr" button is clicked.
     var openModalBox = function() {
-        var scrapedData;
-        // Show the user the data we have scraped for confirmation.
-        scrapedData = scraper.getData($modal);
+        var scrapedData = scraper.getScrapedData($overlay);
         fillConfirmationTable(scrapedData);
         $overlay.show();
-        $modal.show();
     };
 
-    var setDownloadLinks = function(extractionId) {
-        $results.find('#g2e-extract-link a').attr('href', extractionId);
-        $results.show();
-    };
-
-    var showResults = function(data) {
-        targetApps.current().resultsFormatter(data);
-        $results.show();
+    var showResultsLink = function(extractionId) {
+        $resultsBtn.show().click(function() {
+            window.open(extractionId, "_blank");
+        });
     };
 
     var resetModalBox = function() {
         resetFooter();
         $overlay.hide();
-        $modal.hide();
     };
 
     var resetFooter = function() {
-        // Result any results.
-        $('#g2e-target-app-results').remove();
-        $results.hide()
-                .find('button')
-                .unbind();
-
-        resetSubmitBtn();   
+        $resultsBtn.hide().off();
+        $submitBtn.removeClass('g2e-lock').off().click(postData);
     };
 
-    var resetSubmitBtn = function() {
-        // Reset submit button.
-        $modal.find('#g2e-submit-btn')
-              // This doesn't do anything the first time.
-              .removeClass('g2e-lock')
-              // Remove any event handlers, just to be safe.
-              // This code smells like jQuery spaghetti.
-              .off()
-              .click(function() {
-                  var scrapedData = scraper.getData($modal),
-                      app = targetApps.current();
-                  if (isValidData(scrapedData)) {
-                      $(this).addClass('g2e-lock').off();
-                      comm.downloadDiffExp(scrapedData, app);
-                  } else {
-                      resetFooter();
-                  }
-              })
-              .end();
-    };
-
-    var onEdit = function(id) {
-        var config = dataConfig[id],
-            userInput = notifier.ask(config.prompt, $('#' + id + ' td').eq(1).text()),
-            newData;
-        if (userInput !== null) {
-            scraper.setData(config.key, userInput);
-            newData = scraper.getData();
-            fillConfirmationTable(newData);
+    var postData = function() {
+        var scrapedData = scraper.getScrapedData($overlay),
+            userOptions = scraper.getUserOptions($overlay),
+            data = $.extend({}, scrapedData, userOptions),
+            app = targetApps.current();
+        if (isValidData(scrapedData)) {
+            $(this).addClass('g2e-lock').off();
+            comm.postSoftFile(scrapedData, app);
+        } else {
+            resetFooter();
         }
     };
 
     var fillConfirmationTable = function(scrapedData) {
-        var elem, config, html;
-        for (elem in dataConfig) {
-            config = dataConfig[elem];
-            if (config.formatter) {
-                html = config.formatter(scrapedData[config.key]);
+        var prop, html, elemId;
+        for (prop in scrapedData) {
+            var val = scrapedData[prop];
+            if ($.isArray(val)) {
+                html = val.join(', ');
             } else {
-                html = scrapedData[config.key];
+                html = val;
             }
-            $('#' + elem + ' td').eq(1).html(html);
+            $('#g2e-' + prop + ' td').eq(1).html(html);
         }
-    };
-
-    var downloadUrl = function(url) {
-        $downloadIframe.attr('src', url);
     };
 
     var isValidData = function(data) {
@@ -175,7 +72,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
     };
 
     var setAutocomplete = function(elemName, data) {
-        $modal.find(elemName).autocomplete({
+        $overlay.find(elemName).autocomplete({
             source: function(request, response) {
                 var results = $.ui.autocomplete.filter(data, request.term);
                 response(results.slice(0, 10));
@@ -198,7 +95,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
          * forget.
          */
         if (platform && $.inArray(platform, SUPPORTED_PLATFORMS) === -1) {
-            $g2eLink.html('<strong class="g2e-strong">GEOX:</strong> This platform is not currently supported.');
+            $g2eLink.html('<strong class="g2e-strong">G2E:</strong> This platform is not currently supported.');
         } else {
             $g2eLink.click(openModalBox);
         }
@@ -213,17 +110,15 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
         setAutocomplete('#g2e-geneList', geneList);
     });
 
-    events.on('rareDiseasesFetched', function(diseaseList) {
-        setAutocomplete('#g2e-diseaseList', diseaseList);
-    });
+    events.on('resultsReady', showResultsLink);
 
-    events.on('dataReady', setDownloadLinks);
-
-    events.on('genesEnriched', showResults);
-    
-    init();
-
-    return {
-        openModalBox: openModalBox
-    };
+    var init = (function() {
+        var html = templater.get('modal');
+        $(html).hide().appendTo('body');
+        $('#g2e-modal').draggable();
+        $overlay = $('#g2e-overlay');
+        $resultsBtn = $overlay.find('#g2e-results-btn');
+        $submitBtn = $overlay.find('#g2e-submit-btn').click(postData);
+        $overlay.find('#g2e-close-btn').click(resetModalBox);
+    })();
 };

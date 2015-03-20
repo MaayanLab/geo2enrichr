@@ -9,8 +9,8 @@ __contact__ = "avi.maayan@mssm.edu"
 import numpy as np
 import os.path
 
-from core.genelist.diffexp import diffexp
-from core.genelist.genelist import GeneList
+from g2e.core.genelist.diffexp import diffexp
+from g2e.core.genelist.genelist import GeneList
 
 
 def genelists_maker(softfile, metadata):

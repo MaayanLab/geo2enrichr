@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from core.softfile.normalizer import _remove_negatives
+from g2e.core.softfile.normalizer import _remove_negatives
 
 
 class TestRemoveNegatives(unittest.TestCase):

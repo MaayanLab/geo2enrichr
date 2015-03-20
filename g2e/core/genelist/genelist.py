@@ -9,8 +9,8 @@ __contact__ = "avi.maayan@mssm.edu"
 import hashlib
 import requests
 
-import core.genelist.genelistfilemanager as filemanager
-import core.genelist.enrichrlink as enrichrlink
+import g2e.core.genelist.genelistfilemanager as filemanager
+import g2e.core.genelist.enrichrlink as enrichrlink
 
 
 class GeneList(object):
