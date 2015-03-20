@@ -24,9 +24,9 @@ resources/test_data/
 accessionlist_example.txt
 
 # Collected data
-static/soft/*
-static/genes/*
-static/parsed/*
+g2e/static/soft/*
+g2e/static/genes/*
+g2e/static/parsed/*
 
 # Sublime Text
 geo.sublime-project
