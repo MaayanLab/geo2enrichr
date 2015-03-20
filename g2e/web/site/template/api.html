@@ -1,0 +1,49 @@
+<h2>API</h2>
+<p>GEO2Enrichr can be accessed programmatically using APIs.</p>
+<p>All requests should go to the <span class='underline'>http://amp.pharm.mssm.edu/g2e/full</span> endpoint:</p>
+<!-- http://localhost:8083/g2e/full?accession=GDS5077&platform=GPL10558&control=GSM1071454-GSM1071455&experimental=GSM1071457-GSM1071456 -->
+<table>
+    <caption>Required arguments</caption>
+    <tr>
+        <td>accession</td>
+        <td>A valid <a href='http://en.wikipedia.org/wiki/Accession_number_%28bioinformatics%29' target='_blank'>accession number</a> for GEO, e.g. <span class='mono'>accession=GDS5077</span>.</td>
+    </tr>
+    <tr>
+        <td>platform</td>
+        <td>The associated platform for a given accession number, e.g. <span class='mono'>platform=GPL10558</span>.</td>
+    </tr>
+    <tr>
+        <td>control</td>
+        <td>A hyphen-separated list of GSM files, e.g.<span class='mono'>control=GSM1071454-GSM1071455</span></td>
+    </tr>
+    <tr>
+        <td>experimental</td>
+        <td>A hyphen-separated list of GSM files, e.g.<span class='mono'>experimental=GSM1071457-GSM1071456</span></td>
+    </tr>
+</table>
+<table>
+    <caption>Optional arguments</caption>
+    <tr>
+        <td>organism</td>
+        <td>An organism, e.g. <span class='mono'>organism=homo+sapiens</span>.<em> Note that GEO2Enrichr and Enrichr currently only support human and mouse genes</em>.</td>
+    </tr>
+    <tr>
+        <td>cell</td>
+        <td>The cell or tissue type used in the experiment, e.g. <span class='mono'>cell=RUES2</span>.</td>
+    </tr>
+    <tr>
+        <td>perturbation</td>
+        <td>A perturbation, e.g. <span class='mono'>perturbation=depleted+TMEM88</span></td>
+    </tr>
+    <tr>
+        <td>gene</td>
+        <td>If relevant, the manipulated gene.</td>
+    </tr>
+</table>
+<table>
+    <caption>Example</caption>
+    <tr>
+        <td>Valid request</td>
+        <td><span class='mono'>http://amp.pharm.mssm.edu/g2e/full?accession=GDS5077&platform=GPL10558&control=GSM1071454-GSM1071455&experimental=GSM1071457-GSM1071456</span></td>
+    </tr>
+</table>

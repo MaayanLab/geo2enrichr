@@ -159,7 +159,7 @@ header .highlight {
 }
 .content table tr td:first-child {
   font-weight: bold;
-  width: 22%;
+  width: 32%;
 }
 .content table tr td:last-child {
   word-wrap: break-word;

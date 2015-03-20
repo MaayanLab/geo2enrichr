@@ -17,9 +17,9 @@
             </td>
         </tr>
         <tr>
-            <td>Name</td>
+            <td>Description</td>
             <td>
-                <input name="name" value="<%= platform %>">
+                <input name="name" value="<%= dataset %>">
             </td>
         </tr>
         <tr>
@@ -38,7 +38,7 @@
     <table class="form">
         <caption>Please select differential expression analysis options.</caption> 
         <tr>
-            <td>Method</td>
+            <td>Differential expression method</td>
             <td>
                 <select name="method">
                     <option value="chdir">Characteristic Direction</option>
@@ -59,7 +59,7 @@
     <table class="form">
         <caption>Please input optional metadata.</caption> 
         <tr>
-            <td>Cell</td>
+            <td>Cell type or tissue</td>
             <td>
                 <input name="cell" value="<%= cell %>">
             </td>
@@ -71,17 +71,17 @@
             </td>
         </tr>
         <tr>
-            <td>Gene</td>
+            <td>Manipulated gene</td>
             <td>
                 <input name="gene" value="<%= gene %>">
             </td>
         </tr>
         <tr>
-            <td>Disease</td>
+            <td>Relevant disease</td>
             <td>
                 <input name="disease" value="<%= disease %>">
             </td>
         </tr>
     </table>
-    <button class="submit">Submit</button>
+    <button class="submit">Submit for analysis</button>
 </form>

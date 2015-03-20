@@ -45,12 +45,15 @@ $(function() {
             model: new App.Model.SoftFile(),
             parent: page
         }),
-        help: new App.View.Help({
+        api: new App.View.Api({
             parent: page
         }),
-        /*news: new App.View.News({
+        tutorial: new App.View.Tutorial({
             parent: page
-        }),*/
+        }),
+        pipeline: new App.View.Pipeline({
+            parent: page        
+        }),
         about: new App.View.About({
             parent: page
         }),
@@ -77,15 +80,23 @@ $(function() {
     App.Router = Backbone.Router.extend({
         routes: {
             '': 'form',
-            'help': 'help',
+            'api': 'api',
+            'tutorial': 'tutorial',
+            'pipeline': 'pipeline',
             'about': 'about',
             'results/(:id)': 'results'
         },
         form: function() {
             App.contentViews.show(App.contentViews.form);
         },
-        help: function() {
-            App.contentViews.show(App.contentViews.help);
+        api: function() {
+            App.contentViews.show(App.contentViews.api);
+        },
+        tutorial: function() {
+            App.contentViews.show(App.contentViews.tutorial);
+        },
+        pipeline: function() {
+            App.contentViews.show(App.contentViews.pipeline);
         },
         about: function() {
             App.contentViews.show(App.contentViews.about);

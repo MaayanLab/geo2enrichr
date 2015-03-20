@@ -1,8 +1,12 @@
 module.exports = function(grunt) {
 
-    var DIR = '../g2e/web/extension/';
+    var WEB = '../g2e/web/';
 
-    var JS_DIR = DIR + 'js/';
+    var EXTENSION = WEB + 'extension/';
+
+    var SITE = WEB + 'site/';
+
+    var JS_DIR = EXTENSION + 'js/';
 
     var src_files = [
         JS_DIR + 'config.js',
@@ -25,11 +29,7 @@ module.exports = function(grunt) {
 
     var js_files = [JS_DIR + 'open.js'].concat(src_files).concat([JS_DIR + 'close.js']);
 
-    var less_files = [DIR + 'less/*'];
-
-    var main_css = DIR + 'css/main.css';
-
-    var main_less = DIR + 'less/main.less';
+    var less_files = [EXTENSION + 'less/*', SITE + 'style/less/*'];
 
     var full_files = js_files.concat(less_files);
 
@@ -46,13 +46,13 @@ module.exports = function(grunt) {
         concat: {
             dist: {
                 src: js_files,
-                dest: DIR + 'g2e.js',
+                dest: EXTENSION + 'g2e.js',
             }
         },
         less: {
             development: {
                 options: {
-                    paths: [DIR + 'less'],
+                    paths: [EXTENSION + 'less', SITE + 'style/less'],
                     yuicompress: true
                 },
                 files: {

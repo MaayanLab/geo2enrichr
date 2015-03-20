@@ -39,10 +39,10 @@ def write(name, genes, A, B):
 
 
 def save(name, file_obj):
-    """
+    """Saves a SOFT file in the correct directory.
     """
     full_path =  BASE_DIR + name + EXT
-    file_obj.save(full_path)
+    file_obj.save(full_path[4:])
     return full_path
 
 

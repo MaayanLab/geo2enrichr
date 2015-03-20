@@ -1,0 +1,14 @@
+<section>
+    <h2>Data processing</h2>
+    <p>Given sample selection accession numbers, GEO2Enrichr analyzes these samples by performing the following operations:</p>
+    <ol id="g2e-process">
+        <li>Downloads the associated SOFT file from GEO.</li>
+        <li>Discards data with missing values or one-to-many probe-to-gene mappings.</li>
+        <li>log2 transforms the data if necessary.</li>
+        <li><a href='http://en.wikipedia.org/wiki/Quantile_normalization' target='_blank'>Quantile normalizes</a> the data if necessary.</li>
+        <li>Averages multiple probes to single genes.</li>
+        <li>Identifies differentially expressed genes with the selected method. The default method is the <a href='http://maayanlab.net/CD/' target='_blank'>characteristic direction</a> method, developed by the Ma'ayan Laboratory and shown to outperform all other popular methods.</li>
+        <li>Writes the top and bottom differentially expressed genes into text.</li>
+        <li>Pipes the gene lists to <a href='http://amp.pharm.mssm.edu/Enrichr/' target='_blank'>Enrichr</a> for further analysis.</li>
+    </ol>
+</section>
