@@ -35,7 +35,6 @@ def write(name, genes, A, B):
     # slice the root directory ("g2e") because that is the same name as the
     # server endpoint; the resultant URL would be "g2e/g2e", which would be
     # incorrect.
-    import pdb; pdb.set_trace()
     return full_path[4:]
 
 

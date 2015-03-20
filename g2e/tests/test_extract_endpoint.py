@@ -54,9 +54,9 @@ class ExtractEndpoint(unittest.TestCase):
             self.assertTrue('text_file' in gl)
 
         genelist = resp_dict['genelists'][2]['ranked_genes']
-        self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.0886708)
-        self.assertTrue(get_gene_value(genelist, 'EOMES') == 0.0868757)
-        self.assertTrue(get_gene_value(genelist, 'SRPK1') == -0.0215827)
-        self.assertTrue(get_gene_value(genelist, 'MYH6') == -0.030176)
+        self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.0939582)
+        self.assertTrue(get_gene_value(genelist, 'EOMES') == 0.0866544)
+        self.assertTrue(get_gene_value(genelist, 'SRPK1') == -0.0222528)
+        self.assertTrue(get_gene_value(genelist, 'MYH6') == -0.0327115)
 
         print(time.time() - s)
