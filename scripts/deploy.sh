@@ -27,7 +27,7 @@ fi
 # Then build with grunt
 # -----------------------------------------------------------------------------
 printf '%s\n' 'Building JavaScript'
-grunt --gruntfile gruntfile.js build > /dev/null
+grunt --gruntfile=scripts/gruntfile.js build > /dev/null
 
 # Run unit tests
 # -----------------------------------------------------------------------------

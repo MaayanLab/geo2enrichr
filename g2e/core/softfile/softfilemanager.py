@@ -31,7 +31,12 @@ def write(name, genes, A, B):
         for gene, val in gene_values_dict.items():
             val_str = '\t'.join(map(str, val))
             f.write(gene + '\t' + val_str + '\n')
-    return full_path
+
+    # slice the root directory ("g2e") because that is the same name as the
+    # server endpoint; the resultant URL would be "g2e/g2e", which would be
+    # incorrect.
+    import pdb; pdb.set_trace()
+    return full_path[4:]
 
 
 def save(name, file_obj):

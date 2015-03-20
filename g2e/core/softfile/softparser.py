@@ -89,7 +89,7 @@ def _parse_geo(filename, platform, A_cols, B_cols):
             # Find column indices.
             A_incides = [header.index(gsm) for gsm in A_cols]
             B_incides = [header.index(gsm) for gsm in B_cols]
-    
+
             for line in soft_in:
                 split_line = line.rstrip('\r\n').split('\t')
                 if split_line[0] == EOF or split_line[1] == '--Control':
@@ -107,7 +107,7 @@ def _parse_geo(filename, platform, A_cols, B_cols):
                     len(values) is not line_length or
                     # Three forward slashes, \\\, denotes multiple genes.
                     '\\\\\\' in probe):
-    
+
                     discarded_lines += 1
                     continue
                 
@@ -158,7 +158,7 @@ def parse_custom(filename):
             B_row = [float(values[i]) for i in B_indices]
             A.append(A_row)
             B.append(B_row)
-    
+
     return genes, samples, header, A, B
 
 

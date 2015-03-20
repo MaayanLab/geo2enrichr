@@ -14,6 +14,7 @@ from g2e.core.genelist.genelist import GeneList
 
 
 def genelists_maker(softfile, metadata):
+    import pdb; pdb.set_trace()
     genes, values = diffexp(
         softfile.A,
         softfile.B,

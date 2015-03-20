@@ -56,7 +56,8 @@ module.exports = function(grunt) {
                     yuicompress: true
                 },
                 files: {
-                    main_css: main_less
+                    '../g2e/web/extension/css/main.css': '../g2e/web/extension/less/main.less',
+                    '../g2e/web/site/style/css/main.css' : '../g2e/web/site/style/less/main.less'
                 }
             }
         },

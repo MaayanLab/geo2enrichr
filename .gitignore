@@ -2,12 +2,12 @@
 *.DS_Store
 
 # Automatically generated files
-extension/g2e.js
-extension/main.css
+g2e/extension/g2e.js
+*.css
 
 # Saved text files
-g2e/static/softfile
-g2e/static/genelist
+g2e/static/softfile/*
+g2e/static/genelist/*
 
 # Chrome Extension zip file
 *.zip
@@ -23,25 +23,10 @@ resources/test_data/
 # Misc
 accessionlist_example.txt
 
-# Collected data
-g2e/static/soft/*
-g2e/static/genes/*
-g2e/static/parsed/*
-
-# Sublime Text
-geo.sublime-project
-geo.sublime-workspace
-
 # Python
 *.pyc
 venv/
 
-# Hopefully temporary
-probe2gene.py
-
 # VIM
 *.swp
 *.swo
-
-# Database (We want to manually update this)
-*.db

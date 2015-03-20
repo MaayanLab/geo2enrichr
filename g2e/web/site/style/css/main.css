@@ -1,4 +1,3 @@
-/*@color-blue: #009dff;*/
 /* Reset
  * ----- */
 html,
@@ -17,11 +16,11 @@ input {
   font-size: 13px;
 }
 a {
-  color: blue;
+  color: #009dff;
   text-decoration: none;
 }
 a:hover {
-  color: blue;
+  color: #009dff;
   text-decoration: underline;
 }
 /* Page
@@ -48,7 +47,7 @@ footer p {
   font-size: 12px;
 }
 footer a {
-  color: blue;
+  color: #009dff;
   text-decoration: none;
 }
 footer a:hover {

@@ -43,7 +43,7 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(resp_dict['metadata']['cutoff'] == 500)
 
         self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
-        self.assertTrue(resp_dict['softfile']['text_file'] == 'g2e/static/softfile/clean/GDS5077.txt')
+        self.assertTrue(resp_dict['softfile']['text_file'] == 'static/softfile/clean/GDS5077.txt')
         self.assertTrue(resp_dict['softfile']['platform'] == 'GPL10558')
         self.assertTrue(resp_dict['softfile']['is_geo'])
 

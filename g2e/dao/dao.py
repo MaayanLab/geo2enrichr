@@ -59,8 +59,6 @@ def save(extraction):
                 )
             )
 
-        import pdb; pdb.set_trace()
-
         extraction_dao = models.Extraction(
             softfile  = softfile_dao,
             genelists = genelists_dao,

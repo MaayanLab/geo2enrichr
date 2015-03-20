@@ -6,6 +6,7 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
+import os
 import time
 import sys
 import flask
@@ -19,9 +20,7 @@ app = flask.Flask(__name__, static_url_path='')
 
 ALLOWED_ORIGINS = '*'
 ENTRY_POINT = '/g2e'
-# PURPLE_WIRE: If we want to be able to spin up multiple instances of g2e,
-# this needs to be either configurable or automatically generated.
-SERVER_ROOT = '/Users/gwg/g2e'
+SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 
 
 # http://superuser.com/questions/149329/what-is-the-curl-command-line-syntax-to-do-a-post-request
@@ -33,7 +32,7 @@ SERVER_ROOT = '/Users/gwg/g2e'
 @app.route(ENTRY_POINT + '/', methods=['GET'])
 @crossdomain(origin='*')
 def index():
-    directory = SERVER_ROOT + '/g2e/web/site'
+    directory = SERVER_ROOT + '/web/site'
     return flask.send_from_directory(directory, 'index.html')
 
 
@@ -41,7 +40,8 @@ def index():
 @app.route(ENTRY_POINT + '/<path:path>')
 @crossdomain(origin='*')
 def send_static(path):
-    directory = '' if 'static' in path else SERVER_ROOT + '/g2e/web/site'
+    subdir = '' if 'static' in path else '/web/site'
+    directory = SERVER_ROOT + subdir
     return flask.send_from_directory(directory, path)
 
 

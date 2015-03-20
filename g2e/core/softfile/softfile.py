@@ -37,6 +37,7 @@ class SoftFile(object):
         platform = args['platform']
         # The "array[]" notation really confused me; see this Stack Overflow
         # answer for details: http://stackoverflow.com/a/23889195/1830334
+        import pdb; pdb.set_trace()
         A_cols = args.getlist('A_cols[]') or args.getlist('A_cols')
         B_cols = args.getlist('B_cols[]') or args.getlist('B_cols')
         genes, A, B, stats = softparser.parse(name, is_geo, platform, A_cols, B_cols)

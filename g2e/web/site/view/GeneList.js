@@ -15,6 +15,7 @@ App.View.GeneList = Backbone.View.extend({
     ),
 
     initialize: function(options) {
+        debugger;
         options.direction = this.getDirection(options.direction);
         this.$el.append(this.template(options));
     },
