@@ -18,7 +18,7 @@ class ExtractEndpoint(unittest.TestCase):
 
     def setUp(self):
         self.app = g2e.app.app.test_client()
-        self.resp = self.app.post('/g2e/extract', data=dict(
+        self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
             is_geo = 'True',
             dataset = 'GDS5077',
             platform = 'GPL10558',
@@ -36,7 +36,7 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue('extraction_id' in self.resp_dict)
 
         extraction_id = self.resp_dict['extraction_id']
-        resp = self.app.get('/g2e/extract?id=' + str(extraction_id))
+        resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
         resp_dict = json.loads(resp.data.decode())
 
         self.assertTrue(resp_dict['metadata']['method'] == 'chdir')

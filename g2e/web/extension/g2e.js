@@ -20,9 +20,12 @@ var Comm = function(events, notifier, targetApps, SERVER) {
     })();
 
     var postSoftFile = function(input) {
-        $.post(SERVER + 'extract',
+        var $loader = $('<div class="g2e-loader-container"><div class="g2e-loader-modal">Loading...</div></div>');
+        $('body').append($loader);
+        $.post(SERVER + 'api/extract/geo',
             input,
             function(data) {
+                $loader.remove();
                 var id = data.extraction_id,
                     url = SERVER + '#results/' + id;
                 events.fire('resultsReady', url);

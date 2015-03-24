@@ -23,6 +23,14 @@ a:hover {
   color: #009dff;
   text-decoration: underline;
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Open Sans';
+}
 /* Page
  * ---- */
 #wrapper {
@@ -52,13 +60,6 @@ footer a {
 }
 footer a:hover {
   text-decoration: underline;
-}
-.content {
-  padding-bottom: 20px;
-  width: 650px;
-}
-.content img {
-  width: 100%;
 }
 .wrapper {
   margin: 0 auto;
@@ -107,22 +108,29 @@ header ul {
 header nav {
   margin: 10px 0;
 }
-header ul {
+header nav .selected {
+  border-bottom: 2px solid #444444;
+}
+header nav ul {
   padding-left: 0;
 }
-header ul li {
+header nav ul li {
   border-right: 1px solid #eeeeee;
   display: inline;
   list-style-type: none;
   padding: 0 10px;
 }
-header ul li a {
+header nav ul li a {
   font-size: 13px;
 }
-header ul li.last {
+header nav ul li a:hover {
+  border-bottom: 2px solid #aaaaaa;
+  text-decoration: none;
+}
+header nav ul li.last {
   border-right: none;
 }
-header ul li.first {
+header nav ul li.first {
   padding-left: 0;
 }
 header img {
@@ -136,6 +144,13 @@ header h1 a {
 }
 header .highlight {
   color: #d90000;
+}
+.content {
+  padding-bottom: 20px;
+  width: 650px;
+}
+.content img {
+  width: 100%;
 }
 .content table {
   table-layout: fixed;
@@ -164,8 +179,29 @@ header .highlight {
 .content table tr td:last-child {
   word-wrap: break-word;
 }
+.content table tr td input {
+  width: 100%;
+}
+.content.api table td {
+  border: none;
+}
+.content.api section {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #dddddd;
+}
+.content.api section.last {
+  border: none;
+}
+.content.api pre,
+.content.api .code {
+  background: #eeeeee;
+  padding: 10px;
+  font-family: monospace;
+  /* Example links overflow the pre tag if the text is too large. */
+  font-size: 12px;
+}
 form button.submit {
-  font-size: 16px;
+  font-size: 14px;
 }
 form .description {
   background: #f5f5f5;
@@ -179,15 +215,17 @@ form .description p {
   background-color: rgba(255, 255, 255, 0.75);
   cursor: wait;
   height: 100%;
+  left: 0;
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 9999;
 }
 .loader .modal {
+  background: #fffac7;
+  border: 1px solid #fff169;
   color: #444444;
-  font-family: 'Inconsolata', Consolas, monospace;
-  font-size: 20px;
+  font-size: 12px;
   font-weight: bold;
   margin: 0 auto;
   position: absolute;
@@ -195,7 +233,11 @@ form .description p {
   text-align: center;
   right: 0;
   top: 200px;
+  width: 75px;
 }
 .results ul {
   padding-left: 15px;
+}
+.mono {
+  font-family: monospace;
 }

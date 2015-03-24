@@ -30,6 +30,14 @@ a {
         text-decoration: underline;
     }
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: @font-family-accent;
+}
 
 /* Page
  * ---- */
@@ -59,13 +67,6 @@ footer {
         &:hover {
             text-decoration: underline;
         }
-    }
-}
-.content {
-    padding-bottom: 20px;
-    width: 650px;
-    img {
-        width: 100%;
     }
 }
 .wrapper {
@@ -108,22 +109,29 @@ header {
     }
     nav {
         margin: 10px 0;
-    }
-    ul {
-        padding-left: 0;
-        li {
-            a {
-                font-size: 13px;
-            }
-            border-right: 1px solid @color-lightgray2;
-            display: inline;
-            list-style-type: none;
-            padding: 0 10px;
-            &.last {
-                border-right: none;
-            }
-            &.first {
-                padding-left: 0;
+        .selected {
+            border-bottom: 2px solid @color-darkgray;
+        }
+        ul {
+            padding-left: 0;
+            li {
+                a {
+                    font-size: 13px;
+                    &:hover {
+                        border-bottom: 2px solid @color-gray;
+                        text-decoration: none;
+                    }
+                }
+                border-right: 1px solid @color-lightgray2;
+                display: inline;
+                list-style-type: none;
+                padding: 0 10px;
+                &.last {
+                    border-right: none;
+                }
+                &.first {
+                    padding-left: 0;
+                }
             }
         }
     }
@@ -144,13 +152,18 @@ header {
     }
 }
 .content {
+    padding-bottom: 20px;
+    width: 650px;
+    img {
+        width: 100%;
+    }
     table {
         table-layout: fixed;
         border-spacing: 0;
         font-size: 13px;
         padding-bottom: 20px;
         width: 100%;
-        caption{
+        caption {
             border-bottom: 2px solid @color-lightgray3;
             font-style: italic;
             margin-top: 20px;
@@ -168,13 +181,38 @@ header {
                 &:last-child {
                     word-wrap: break-word;
                 }
+                input {
+                    width: 100%;
+                }
             }
+        }
+    }
+    &.api {
+        table {
+            td {
+                border: none;
+            }
+        }
+        section {
+            margin-bottom: 20px;
+            border-bottom: 1px solid @color-lightgray3;
+            &.last {
+                border: none;
+            }
+        }
+        pre,
+        .code {
+            background: @color-lightgray2;
+            padding: 10px;
+            font-family: monospace;
+            /* Example links overflow the pre tag if the text is too large. */
+            font-size: 12px;
         }
     }
 }
 form {
     button.submit {
-        font-size: 16px;
+        font-size: 14px;
     }
     .description {
         background: @color-lightgray1;
@@ -189,14 +227,16 @@ form {
     background-color:rgba(255,255,255,0.75);
     cursor: wait;
     height: 100%;
+    left: 0;
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 9999;
     .modal {
+        background: #fffac7;
+        border: 1px solid #fff169;
         color: @color-darkgray;
-        font-family: 'Inconsolata', Consolas, monospace;
-        font-size: 20px;
+        font-size: 12px;
         font-weight: bold;
         margin: 0 auto;
         position: absolute;
@@ -204,10 +244,14 @@ form {
         text-align: center;
         right: 0;
         top: 200px;
+        width: 75px;
     }
 }
 .results {
     ul {
         padding-left: 15px;
     }
+}
+.mono {
+    font-family: monospace;
 }

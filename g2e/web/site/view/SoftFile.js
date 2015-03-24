@@ -5,7 +5,7 @@ App.View.SoftFile = Backbone.View.extend({
     template: _.template('' +
         '<caption>SOFT file</caption>' +
         '<tr>' +
-            '<td>Name</td>' +
+            '<td><%= nameTitle %></td>' +
             '<td><%= name %></td>' +
         '</tr>' +
         '<tr>' +
@@ -21,6 +21,11 @@ App.View.SoftFile = Backbone.View.extend({
     ),
 
     initialize: function(data) {
+        if (data.is_geo) {
+            data.nameTitle = 'GEO accession number';
+        } else {
+            data.nameTitle = 'Description';
+        }
         this.$el.append(this.template(data));
     }
 });

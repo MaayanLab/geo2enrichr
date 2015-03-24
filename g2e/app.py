@@ -7,7 +7,6 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import os
-import time
 import sys
 import flask
 
@@ -45,27 +44,29 @@ def send_static(path):
     return flask.send_from_directory(directory, path)
 
 
-@app.route(ENTRY_POINT + '/extract', methods=['GET', 'PUT', 'POST', 'OPTIONS'])
+@app.route(ENTRY_POINT + '/api/extract/<path>', methods=['GET', 'PUT', 'POST', 'OPTIONS'])
 @crossdomain(origin=ALLOWED_ORIGINS, headers=['Content-Type'])
-def extract():
+def extract(path):
     """Single entry point for extracting a gene list from a SOFT file.
     Delegates to constructors that handle data processing and further
     delegation to the DAO and ORM.
     """
     response = {}
     if flask.request.method == 'PUT' or flask.request.method == 'POST':
-        if flask.request.files:
+        if path == 'upload':
             response['extraction_id'] = extraction_maker(
                 file = flask.request.files['file'],
                 args = flask.request.form
             )
-        else:
+        elif path == 'geo':
             response['extraction_id'] = extraction_maker(args=flask.request.form)
+        else:
+            flask.jsonify({
+                'error': 'Invalid API endpoint'    
+            })
     elif flask.request.method == 'GET':
-        s = time.time()
-        extraction = extraction_maker(id=flask.request.args.get('id'))
+        extraction = extraction_maker(id=path)
         response = clean_extraction(extraction)
-        response['time'] = time.time() - s
 
     return flask.jsonify(response)
 

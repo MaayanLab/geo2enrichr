@@ -18,8 +18,11 @@ App.View.Form = Backbone.View.extend({
     },
 
     submit: function() {
-        var $forms = $('form');
-        var formData = new FormData($forms[0]);
+        var loader = new App.View.LoadingScreen({
+                parent: this
+            }),
+            $forms = $('form'),
+            formData = new FormData($forms[0]);
 
         _.each($forms.find('select'), function(select) {
             var $select = $(select),
@@ -27,9 +30,9 @@ App.View.Form = Backbone.View.extend({
                 val = $select.val();
             formData.append(key, val);
         });
-            
+
         $.ajax({
-            url: App.SERVER + '/extract',
+            url: App.SERVER + '/api/extract/upload',
             type: 'PUT',
             data: formData,
             // Tell jQuery not to process data or worry about content-type.
@@ -37,6 +40,8 @@ App.View.Form = Backbone.View.extend({
             contentType: false,
             processData: false,
             success: function(data) {
+                debugger;
+                loader.stop();
                 App.router.navigate(
                     'results/' + data.extraction_id,
                     { trigger: true }
@@ -46,5 +51,12 @@ App.View.Form = Backbone.View.extend({
                 debugger;
             }
         });
+    },
+
+    loadExample: function() {
+        App.router.navigate(
+            'results/1',
+            { trigger: true }
+        );
     }
 });

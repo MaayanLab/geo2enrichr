@@ -7,13 +7,15 @@ App.View.Extraction = Backbone.View.extend({
     initialize: function(options) {
         this.parent = options.parent;
         this.parent.$el.find('#content').append(this.el);
-        this.$loader = $('<div class="loader"><pre class="modal">Loading   </pre></div>').hide();
-        $('body').append(this.$loader);
     },
 
     render: function(extraction) {
         // In case the user tries to reload the results.
         this.$el.empty();
+        this.$el.append('<h2>Results</h2>');
+
+        var sb = new App.View.ShareButton();
+        this.$el.append(sb.el);
 
         var sf = new App.View.SoftFile(extraction.get('softfile'));
         this.$el.append(sf.el);
@@ -25,21 +27,5 @@ App.View.Extraction = Backbone.View.extend({
         this.$el.append(gls.el);
 
         this.$el.show();
-    },
-
-    startLoad: function() {
-        var $modal = this.$loader.find('.modal'),
-            i = 0,
-            MAX = 4;
-        this.$loader.fadeIn();
-        this.loadingId = setInterval(function() {
-            i = ++i % MAX;
-            $modal.html('Loading' + Array(i+1).join('.') + Array(MAX-i).join(' '));
-        }, 400);
-    },
-
-    stopLoad: function() {
-        clearInterval(this.loadingId);
-        this.$loader.fadeOut();
     }
 });

@@ -34,8 +34,7 @@ def ttest(A, B, genes):
     values = []
     for i in range(len(A)):
         ttest_results = stats.ttest_ind(A[i], B[i])
-        # TODO: Ask Andrew if I should use `all()` or `any()`.
-        signed_pvalue = ttest_results[1] if (ttest_results[0] > 0).all() else (ttest_results[1] * -1)
+        signed_pvalue = ttest_results[1] if (ttest_results[0] > 0) else (ttest_results[1] * -1)
         values.append((genes[i], signed_pvalue))
 
     l = list(zip(*values))

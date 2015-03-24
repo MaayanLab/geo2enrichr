@@ -5,21 +5,13 @@ primary class, GeneList and SoftFile, and saves them accordingly.
 
 import copy
 from contextlib import contextmanager
-from sqlalchemy.orm import sessionmaker
 
-from g2e.orm.commondb import Base, engine
+from g2e.orm.commondb import Session
 import g2e.orm.models as models
 from g2e.core.genelist.genelist import GeneList
 from g2e.core.softfile.softfile import SoftFile
 from g2e.core.metadata.metadata import Metadata
 from g2e.core.extraction.extraction import Extraction
-
-
-Session = sessionmaker()
-Session.configure(bind=engine)
-
-# Does this need to run every time?
-Base.metadata.create_all(engine)
 
 
 def save(extraction):

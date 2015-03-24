@@ -1,49 +1,101 @@
-<h2>API</h2>
-<p>GEO2Enrichr can be accessed programmatically using APIs.</p>
-<p>All requests should go to the <span class='underline'>http://amp.pharm.mssm.edu/g2e/full</span> endpoint:</p>
-<!-- http://localhost:8083/g2e/full?accession=GDS5077&platform=GPL10558&control=GSM1071454-GSM1071455&experimental=GSM1071457-GSM1071456 -->
-<table>
-    <caption>Required arguments</caption>
-    <tr>
-        <td>accession</td>
-        <td>A valid <a href='http://en.wikipedia.org/wiki/Accession_number_%28bioinformatics%29' target='_blank'>accession number</a> for GEO, e.g. <span class='mono'>accession=GDS5077</span>.</td>
-    </tr>
-    <tr>
-        <td>platform</td>
-        <td>The associated platform for a given accession number, e.g. <span class='mono'>platform=GPL10558</span>.</td>
-    </tr>
-    <tr>
-        <td>control</td>
-        <td>A hyphen-separated list of GSM files, e.g.<span class='mono'>control=GSM1071454-GSM1071455</span></td>
-    </tr>
-    <tr>
-        <td>experimental</td>
-        <td>A hyphen-separated list of GSM files, e.g.<span class='mono'>experimental=GSM1071457-GSM1071456</span></td>
-    </tr>
-</table>
-<table>
-    <caption>Optional arguments</caption>
-    <tr>
-        <td>organism</td>
-        <td>An organism, e.g. <span class='mono'>organism=homo+sapiens</span>.<em> Note that GEO2Enrichr and Enrichr currently only support human and mouse genes</em>.</td>
-    </tr>
-    <tr>
-        <td>cell</td>
-        <td>The cell or tissue type used in the experiment, e.g. <span class='mono'>cell=RUES2</span>.</td>
-    </tr>
-    <tr>
-        <td>perturbation</td>
-        <td>A perturbation, e.g. <span class='mono'>perturbation=depleted+TMEM88</span></td>
-    </tr>
-    <tr>
-        <td>gene</td>
-        <td>If relevant, the manipulated gene.</td>
-    </tr>
-</table>
-<table>
-    <caption>Example</caption>
-    <tr>
-        <td>Valid request</td>
-        <td><span class='mono'>http://amp.pharm.mssm.edu/g2e/full?accession=GDS5077&platform=GPL10558&control=GSM1071454-GSM1071455&experimental=GSM1071457-GSM1071456</span></td>
-    </tr>
-</table>
+<section>
+    <h1>REST APIs</h1>
+    <p>
+        These REST APIs provide programmatic access to read and write data to GEO2Enrichr. You may analyze a GEO or custom SOFT file or fetch results from a previous analysis. Requests are made to the base URL:</p>
+    <p class='code'>
+        http://amp.pharm.mssm.edu/g2e/api
+    </p>
+    <p>
+        Responses are in JSON.
+    </p>
+</section>
+<section>
+    <h1>GET api/extract/:extraction_id</h1>
+    <p>
+        Returns a JSON blob of data associated with a single user extraction, using a single <span class='mono'>extraction_id</span> parameter. The returned data has stable links to the SOFT file; up, down, and combined gene lists; and metadata from both the experiment and analysis.
+    </p>
+    <h3>Resource URL</h3>
+    <p class='code'>
+        http://amp.pharm.mssm.edu/g2e/api/extract
+    </p>
+    <h3>Parameters</h3>
+    <table>
+        <tr>
+            <td>
+                <span class='mono'>extraction_id</span>
+            </td>
+            <td>
+                The ID of the extraction for which to return results.<br>
+            </td>
+        </tr>
+    </table>
+    <h3>Example request</h3>
+    <p class='code'>
+        http://amp.pharm.mssm.edu/g2e/api/extract/1
+    </p>
+    <h3>Example response</h3>
+    <pre>
+{
+  "genelists": [
+    {
+      "direction": 1,
+      "enrichr_link": "http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=a61",
+      "text_file": "static/genelist/94035cf3c2e018705e310243a1b12bca87d66663.txt"
+    },
+    {
+      "direction": -1,
+      "enrichr_link": "http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=r0p",
+      "text_file": "static/genelist/817286622c4403eab0a222e707c1a6d98afd068d.txt"
+    },
+    {
+      "direction": 0,
+      "enrichr_link": "http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=z9h",
+      "text_file": "static/genelist/971ac562ef4501dcbd5f5ece5f0a014061ccee1b.txt"
+    }
+  ],
+  "metadata": {
+    "cell": null,
+    "cutoff": 500,
+    "disease": null,
+    "gene": null,
+    "method": "chdir",
+    "perturbation": null
+  },
+  "softfile": {
+    "is_geo": true,
+    "name": "GDS5077",
+    "platform": "GPL10558",
+    "stats": null,
+    "text_file": "static/softfile/clean/GDS5077.txt"
+  }
+}    
+    </pre>
+</section>
+<section>
+    <h1>POST api/extract/geo</h1>
+    <p>
+        Performs differential expression analysis on a GEO SOFT file based on GEO accession number.
+    </p>
+    <h3>Resource URL</h3>
+    <p class='code'>
+        http://amp.pharm.mssm.edu/g2e/api/extract/geo
+    </p>
+    <h3>Example response</h3>
+    <pre>
+{
+    extraction_id: 1
+}
+    </pre>
+</section>
+<section class='last'>
+    <h1>POST api/extract/custom</h1>
+    <p>
+        Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
+    </p>
+    <h3>Example response</h3>
+    <pre>
+{
+    extraction_id: 1
+}
+    </pre>
+</section>

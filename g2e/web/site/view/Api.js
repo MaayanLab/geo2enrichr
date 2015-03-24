@@ -2,7 +2,7 @@ App.View.Api = Backbone.View.extend({
 
     tagName: 'div',
 
-    className: 'content',
+    className: 'content api',
 
     initialize: function(options) {
         this.$el.hide();

@@ -1,9 +1,9 @@
 App.Model.Extraction = Backbone.Model.extend({
     
-    urlRoot: '/g2e/extract?id=',
+    urlRoot: '/g2e/api/extract',
 
     url: function() {
-        return this.urlRoot + this.id;
+        return this.urlRoot + '/' + this.id;
     },
 
     defaults: {

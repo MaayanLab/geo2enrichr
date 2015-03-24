@@ -271,6 +271,30 @@
   float: right;
   width: 32px;
 }
+.g2e-loader-container {
+  background-color: rgba(255, 255, 255, 0.75);
+  cursor: wait;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+.g2e-loader-container .g2e-loader-modal {
+  background: #fffac7;
+  border: 1px solid #fff169;
+  color: #444444;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0 auto;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  right: 0;
+  top: 200px;
+  width: 75px;
+}
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content {
   background: white;
   color: gray;
