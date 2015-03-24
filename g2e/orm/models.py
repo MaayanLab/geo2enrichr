@@ -3,7 +3,7 @@ from sqlalchemy import Table, Column, BLOB, Boolean, Float, Integer, String, Tex
 from sqlalchemy.orm import relationship, backref
 
 # These are references to common instances of SQLAlchemy utilities.
-from g2e.orm.commondb import Base
+from g2e.orm.commondb import Base, engine
 
 
 rankedgenes_2_genelists = Table('rankedgene2genelist', Base.metadata,
@@ -45,7 +45,8 @@ class RankedGene(Base):
     """
     __tablename__ = 'rankedgenes'
     id = Column(Integer, primary_key=True)
-    rank = Column(Float)
+    value = Column(Float)
+    value_type = Column(String(200))
     gene = relationship('Gene', backref=backref('rankedgenes', order_by=id))
     gene_id = Column(Integer, ForeignKey('genes.id'))
 
@@ -89,3 +90,7 @@ class Extraction(Base):
 
     def __repr__(self):
         return '<Extraction %r>' % self.id
+
+
+# This is what rebuilds the database or adds tables as necessary.
+Base.metadata.create_all(engine)

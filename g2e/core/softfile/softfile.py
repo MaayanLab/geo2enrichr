@@ -37,8 +37,7 @@ class SoftFile(object):
         platform = args['platform']
         # The "array[]" notation really confused me; see this Stack Overflow
         # answer for details: http://stackoverflow.com/a/23889195/1830334
-        A_cols = args.getlist('A_cols[]') or args.getlist('A_cols')
-        B_cols = args.getlist('B_cols[]') or args.getlist('B_cols')
+        A_cols, B_cols = get_cols(args)
         genes, A, B, stats = softparser.parse(name, is_geo, platform, A_cols, B_cols)
         genes, A, B = normalizer.normalize(genes, A, B)
         text_file = softfilemanager.write(name, genes, A, B)
@@ -50,3 +49,17 @@ class SoftFile(object):
         text_file = softfilemanager.save(name, file_obj)
         genes, A, B = softparser.parse(name, is_geo=False)
         return cls(name, genes=genes, A=A, B=B, text_file=text_file)
+
+
+def get_cols(args):
+	if 'A_cols[]' in args:
+		A_cols = args.getlist('A_cols[]')
+		B_cols = args.getlist('B_cols[]')
+	elif 'A_cols' in args:
+		A_cols = [x for x in args.get('A_cols').split(',')]
+		B_cols = [x for x in args.get('B_cols').split(',')]
+
+	print('Columns selected:')
+	print(A_cols)
+	print(B_cols)
+	return A_cols, B_cols

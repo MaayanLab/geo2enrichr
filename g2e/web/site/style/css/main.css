@@ -165,6 +165,9 @@ header .highlight {
   margin-top: 20px;
   text-align: left;
 }
+.content table caption.top {
+  margin-top: 0;
+}
 .content table tr {
   height: 25px;
 }
@@ -199,6 +202,18 @@ header .highlight {
   font-family: monospace;
   /* Example links overflow the pre tag if the text is too large. */
   font-size: 12px;
+}
+.content.api pre {
+  white-space: pre-wrap;
+  /* CSS 3 */
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;
+  /* Opera 4-6 */
+  white-space: -o-pre-wrap;
+  /* Opera 7 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
 }
 form button.submit {
   font-size: 14px;

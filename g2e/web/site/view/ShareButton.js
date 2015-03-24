@@ -3,7 +3,7 @@ App.View.ShareButton = Backbone.View.extend({
     tagName: 'table',
 
     template: _.template('' +
-        '<caption>Share</caption>' +
+        '<caption class="top">Share</caption>' +
         '<tr>' +
             '<td>Permanent link to these results</td>' +
             '<td><%= link %></td>' +

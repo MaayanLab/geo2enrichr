@@ -5,6 +5,7 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
+import json
 import requests
 
 
@@ -14,7 +15,6 @@ BASE_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
 def get_link(genes, description):
     """Returns a shareable link to Enrichr for enriched gene list.
     """
-    print('Generating links to Enrichr')
 
     # Enrichr does not care about the sign of the rank; it treats the rank
     # simply as a membership value for a fuzzy set.
@@ -33,5 +33,10 @@ def get_link(genes, description):
     # 2. GET our link via the "share" endpoint. The requests module (and
     # Enrichr handle cookies for us.
     resp = sess.get(BASE_URL + 'share')
-    link_id = resp.text.split('"')[3]
-    return BASE_URL + 'enrich?dataset=' + link_id
+    if resp.status_code == 200:
+        link_id = json.loads(resp.text)['link_id']
+        print('Link to enrichr: ' + link_id)
+        return BASE_URL + 'enrich?dataset=' + link_id
+    else:
+        print('Error with Enrichr')
+        return None

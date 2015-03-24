@@ -12,6 +12,7 @@ import flask
 
 from g2e.core.util.crossdomain import crossdomain
 from g2e.core.extraction.extractionmaker import extraction_maker
+from g2e.core.softfile.softparser import PROBE2GENE
 
 
 app = flask.Flask(__name__, static_url_path='')
@@ -24,8 +25,8 @@ SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 
 # http://superuser.com/questions/149329/what-is-the-curl-command-line-syntax-to-do-a-post-request
 
-# curl --data "dataset=GDS5077&platform=GPL10558&A_cols=GSM1071454,GSM1071455&B_cols=GSM1071457,GSM1071455" http://localhost:8083/g2e/extract
-# curl --form "file=@tests/data/chdir_input.txt" --form name=Neil http://localhost:8083/g2e/extract
+# curl --data "dataset=GDS5077&platform=GPL10558&A_cols=GSM1071454,GSM1071455&B_cols=GSM1071457,GSM1071455" http://localhost:8083/g2e/api/extract/geo
+# curl --form "file=@tests/data/chdir_input.txt" --form name=Neil http://localhost:8083/g2e/api/extract/upload
 
 
 @app.route(ENTRY_POINT + '/', methods=['GET'])
@@ -59,38 +60,15 @@ def extract(path):
                 args = flask.request.form
             )
         elif path == 'geo':
-            response['extraction_id'] = extraction_maker(args=flask.request.form)
+            if flask.request.form.get('platform') not in PROBE2GENE:
+                response['error'] = 'Platform not supported.'
+            else:
+                response['extraction_id'] = extraction_maker(args=flask.request.form)
         else:
             flask.jsonify({
-                'error': 'Invalid API endpoint'    
+                'error': 'Invalid API endpoint'
             })
     elif flask.request.method == 'GET':
-        extraction = extraction_maker(id=path)
-        response = clean_extraction(extraction)
+        response = extraction_maker(id=path)
 
     return flask.jsonify(response)
-
-
-def clean_extraction(extraction):
-    response = extraction.__dict__
-    response['softfile'] = extraction.softfile.__dict__
-    response['genelists'] = [gl.__dict__ for gl in extraction.genelists]
-    response['metadata'] = extraction.metadata.__dict__
-    del response['genelists'][0]['ranked_genes']
-    del response['genelists'][1]['ranked_genes']
-    # Leave the combined genes?
-    #del response['genelists'][2]['ranked_genes']
-    del response['softfile']['A']
-    del response['softfile']['A_cols']
-    del response['softfile']['B']
-    del response['softfile']['B_cols']
-    del response['softfile']['genes']
-    return response
-
-
-#if __name__ == '__main__':
-#    # This is only for local development. For Apache, the application is
-#    # imported and run from another module.
-#    port = 8083
-#    host = '0.0.0.0'
-#    app.run(port=port, host=host)

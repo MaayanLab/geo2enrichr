@@ -22,7 +22,7 @@ class GeneList(object):
         self.direction    = direction
         self.name         = name or self._name()
         self.text_file    = text_file or filemanager.write(self.name, self.ranked_genes, metadata)
-        description = self._direction(self.direction) + '_' + str(metadata) 
+        description       = self._direction(self.direction) + '_' + str(metadata) 
         self.enrichr_link = enrichr_link or enrichrlink.get_link(self.ranked_genes, description)
 
     # PURPLE_WIRE: This should handle duplicate file names, although they are

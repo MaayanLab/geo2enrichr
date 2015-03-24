@@ -33,11 +33,11 @@ def save(extraction):
         genelists_dao = []
         for gl in gls:
             ranked_genes = []
-            for gene_name,rank in gl.ranked_genes:
+            for gene_name,value in gl.ranked_genes:
                 gene_dao = _get_or_create(session, models.Gene, name=gene_name)
                 ranked_gene_dao = models.RankedGene(
-                    gene = gene_dao,
-                    rank = rank
+                    gene  = gene_dao,
+                    value = value
                 )
                 ranked_genes.append(ranked_gene_dao)
 
@@ -52,8 +52,8 @@ def save(extraction):
             )
 
         extraction_dao = models.Extraction(
-            softfile  = softfile_dao,
-            genelists = genelists_dao,
+            softfile     = softfile_dao,
+            genelists    = genelists_dao,
             method       = metadata.method,
             cutoff       = metadata.cutoff,
             cell         = metadata.cell,
@@ -91,7 +91,7 @@ def fetch(extraction_id):
         genelists = []
         for gl_dao in ext_dao.genelists:
             name = gl_dao.name
-            ranked_genes = [(r.gene.name,r.rank) for r in gl_dao.ranked_genes]
+            ranked_genes = [(r.gene.name,r.value) for r in gl_dao.ranked_genes]
             direction = gl_dao.direction
             text_file = gl_dao.text_file
             enrichr_link = gl_dao.enrichr_link
