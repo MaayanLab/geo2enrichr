@@ -2,7 +2,7 @@ App.View.Tutorial = Backbone.View.extend({
 
     tagName: 'div',
 
-    className: 'content',
+    className: 'tutorial content',
 
     initialize: function(options) {
         this.$el.hide();

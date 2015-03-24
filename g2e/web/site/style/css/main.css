@@ -185,25 +185,31 @@ header .highlight {
 .content table tr td input {
   width: 100%;
 }
-.content.api table td {
+.content.api table td,
+.content.tutorial table td {
   border: none;
 }
-.content.api section {
+.content.api section,
+.content.tutorial section {
   margin-bottom: 20px;
   border-bottom: 1px solid #dddddd;
 }
-.content.api section.last {
+.content.api section.last,
+.content.tutorial section.last {
   border: none;
 }
 .content.api pre,
-.content.api .code {
+.content.tutorial pre,
+.content.api .code,
+.content.tutorial .code {
   background: #eeeeee;
   padding: 10px;
   font-family: monospace;
   /* Example links overflow the pre tag if the text is too large. */
   font-size: 12px;
 }
-.content.api pre {
+.content.api pre,
+.content.tutorial pre {
   white-space: pre-wrap;
   /* CSS 3 */
   white-space: -moz-pre-wrap;
