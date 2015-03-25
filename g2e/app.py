@@ -34,17 +34,14 @@ SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 @app.route(ENTRY_POINT + '/', methods=['GET'])
 @crossdomain(origin='*')
 def index():
-    directory = SERVER_ROOT + '/web/site'
-    return flask.send_from_directory(directory, 'index.html')
+    return flask.send_from_directory(SERVER_ROOT + '/web/site', 'index.html')
 
 
 # PURPLE_WIRE: Apache should serve these files.
-#@app.route(ENTRY_POINT + '/<path:path>')
-#@crossdomain(origin='*')
-#def send_static(path):
-#    subdir = '' if 'static' in path else '/web/site'
-#    directory = SERVER_ROOT + subdir
-#    return flask.send_from_directory(directory, path)
+@app.route(ENTRY_POINT + '/<path:path>')
+@crossdomain(origin='*')
+def send_static(path):
+    return flask.send_from_directory(SERVER_ROOT, path)
 
 
 @app.route(ENTRY_POINT + '/api/extract/<path>', methods=['GET', 'PUT', 'POST', 'OPTIONS'])
