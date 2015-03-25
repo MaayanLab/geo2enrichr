@@ -21,7 +21,7 @@ def diffexp(A, B, genes, method, cutoff):
     if method == 'ttest':
         genes, values = ttest(A, B, genes)
     else:
-        print('Calculating the characteristic direction.')
+        print 'Calculating the characteristic direction.'
         genes, values = chdir.chdir(A, B, genes)
     genes, values = _sort_by_value(genes, values)
     genes, values = _apply_cutoff(genes, values, cutoff)

@@ -35,8 +35,8 @@ def get_link(genes, description):
     resp = sess.get(BASE_URL + 'share')
     if resp.status_code == 200:
         link_id = json.loads(resp.text)['link_id']
-        print('Link to enrichr: ' + link_id)
+        print 'Link to enrichr: ' + link_id
         return BASE_URL + 'enrich?dataset=' + link_id
     else:
-        print('Error with Enrichr')
+        print 'Error with Enrichr'
         return None

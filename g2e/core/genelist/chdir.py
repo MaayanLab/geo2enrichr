@@ -148,7 +148,7 @@ def nipals(X,a,it=100,tol=1e-4):
 				ende = True
 			if it <= nr:
 				ende = True
-				print('Iteration stops without convergence')
+				print 'Iteration stops without convergence'
 
 		Xh = Xh - np.dot(th,ph.T)
 		T[:,h] = th[:,0]

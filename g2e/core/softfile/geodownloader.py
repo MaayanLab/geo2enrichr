@@ -50,16 +50,16 @@ def _get_file_by_url(url, attempts=5):
     """Attempts to get the file from URL. Tries 5 times before giving up.
     """
     
-    print('Downloading GEO SOFT file from: ' + url)
+    print 'Downloading GEO SOFT file from: ' + url
     while attempts > 0:
         try:
             response = urlopen(url)
         except URLError as e:
             # See: https://docs.python.org/3/howto/urllib2.html.
             if hasattr(e, 'reason'):
-                print('Failed to reach a server because' + str(e.reason))
+                print 'Failed to reach a server because' + str(e.reason)
             elif hasattr(e, 'code'):
-                print('The server couldn\'t fulfill the request; status code ' + str(e.code))
+                print 'The server couldn\'t fulfill the request; status code ' + str(e.code)
         if response is not None:
             break
         else:

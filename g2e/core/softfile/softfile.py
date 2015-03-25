@@ -59,7 +59,7 @@ def get_cols(args):
 		A_cols = [x for x in args.get('A_cols').split(',')]
 		B_cols = [x for x in args.get('B_cols').split(',')]
 
-	print('Columns selected:')
-	print(A_cols)
-	print(B_cols)
+	print 'Columns selected:'
+	print A_cols
+	print B_cols
 	return A_cols, B_cols

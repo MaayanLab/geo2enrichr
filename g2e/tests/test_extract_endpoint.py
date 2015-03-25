@@ -59,4 +59,4 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(get_gene_value(genelist, 'SRPK1') == -0.0222528)
         self.assertTrue(get_gene_value(genelist, 'MYH6') == -0.0327115)
 
-        print(time.time() - s)
+        print time.time() - s

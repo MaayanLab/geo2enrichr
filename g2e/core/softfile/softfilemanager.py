@@ -19,7 +19,7 @@ def write(name, genes, A, B):
     gene_values_dict = { k:v for (k,v) in zip(genes, AB) }
 
     # PURPLE_WIRE: We need to not overwrite existing SoftFiles!
-    print('Writing clean SOFT file.')
+    print 'Writing clean SOFT file.'
     full_path = CLEANED_DIR + name + EXT
     with open(full_path, 'w+') as f:
         f.write('!datset\t' + name + '\n')
