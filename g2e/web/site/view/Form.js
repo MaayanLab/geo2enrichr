@@ -17,7 +17,8 @@ App.View.Form = Backbone.View.extend({
         App.EventAggregator.on('clear:form', this.clear, this);
     },
 
-    submit: function() {
+    submit: function(evt) {
+        evt.preventDefault();
         var loader = new App.View.LoadingScreen({
                 parent: this
             }),
@@ -40,12 +41,12 @@ App.View.Form = Backbone.View.extend({
             contentType: false,
             processData: false,
             success: function(data) {
-                debugger;
                 loader.stop();
                 App.router.navigate(
                     'results/' + data.extraction_id,
                     { trigger: true }
                 );
+                return false
             },
             error: function(data) {
                 debugger;
