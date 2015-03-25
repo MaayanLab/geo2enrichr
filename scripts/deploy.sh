@@ -13,7 +13,7 @@ JS_CONFIG='g2e/web/extension/js/config.js'
 if [ "$1" = "dev" ]; then
     echo '--------------------- dev ---------------------'
     printf '%s\n' '// This file is built by deploy.sh in the root directory.' >> $JS_CONFIG
-    printf '%s\n' 'var EXTENSION_ID = "ggnfmgkbdnedgillmfoakkajnpeakbel";' >> $JS_CONFIG
+    printf '%s\n' 'var EXTENSION_ID = "jpeoebiembhmjeibpnfdnhbncnbfnhhe";' >> $JS_CONFIG
     printf '%s\n' 'var DEBUG = true;' >> $JS_CONFIG
     printf '%s'   'var SERVER = "http://localhost:8083/g2e/";' >> $JS_CONFIG
 else
@@ -32,7 +32,7 @@ grunt --gruntfile=scripts/gruntfile.js build > /dev/null
 # Run unit tests
 # -----------------------------------------------------------------------------
 printf '%s\n' 'Running Python unit tests'
-#nosetests g2e/ --quiet > /dev/null
+nosetests --exe --nocapture
 
 # All files should be in extension/ now.
 # -----------------------------------------------------------------------------

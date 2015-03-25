@@ -88,32 +88,25 @@ $(function() {
             'results/(:id)': 'results'
         },
         form: function() {
-            debugger;
             App.contentViews.show(App.contentViews.form);
         },
         example: function() {
-                        debugger;
             App.contentViews.show(App.contentViews.form);
             App.contentViews.form.loadExample();
         },
         api: function() {
-                        debugger;
             App.contentViews.show(App.contentViews.api);
         },
         tutorial: function() {
-                        debugger;
             App.contentViews.show(App.contentViews.tutorial);
         },
         pipeline: function() {
-                        debugger;
             App.contentViews.show(App.contentViews.pipeline);
         },
         about: function() {
-                        debugger;
             App.contentViews.show(App.contentViews.about);
         },
         results: function(id) {
-                        debugger;
             var view = App.contentViews.extraction,
                 loader = new App.View.LoadingScreen({
                     parent: view

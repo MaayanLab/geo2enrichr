@@ -13,7 +13,7 @@ App.View.SoftFile = Backbone.View.extend({
             '<td><%= platform %></td>' +
         '</tr>' +
         '<tr>' +
-            '<td>Cleaned text file</td>' +
+            '<td>Cleaned data file</td>' +
             '<td>' +
                 '<a href="<%= text_file %>" target="_blank">Download</a>' +
             '</td>' +

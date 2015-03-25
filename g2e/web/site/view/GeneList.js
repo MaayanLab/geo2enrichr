@@ -10,7 +10,7 @@ App.View.GeneList = Backbone.View.extend({
             '<a href="<%= text_file %>" target="_blank">Download</a>' +
         '</td>' +
         '<td>' +
-            '<a href="<%= enrichr_link %>" target="_blank">Open link</a>' +
+            '<a href="<%= enrichr_link %>" target="_blank">Open Enrichr link</a>' +
         '</td>'
     ),
 

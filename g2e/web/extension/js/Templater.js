@@ -1,7 +1,7 @@
 
 var Templater = function(EXTENSION_ID, targetApps) {
 
-    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/image/g2e-logo-50x50.png';
+    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/image/logo-50x50.png';
 
     var targetAppsOptions = function() {
         var options = '';
@@ -109,7 +109,8 @@ var Templater = function(EXTENSION_ID, targetApps) {
                 '</table>' +
                 '<div id="g2e-extract">' +
                     '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
-                    '<button id="g2e-results-btn" class="g2e-btn">View your results</button>' +
+                    '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
+                    '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
                 '</div>' +
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 

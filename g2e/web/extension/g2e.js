@@ -2,8 +2,8 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var EXTENSION_ID = "ggnfmgkbdnedgillmfoakkajnpeakbel";
-var DEBUG = true;
+var EXTENSION_ID = "pcbdeobileclecleblcnadplfcicfjlp";
+var DEBUG = false;
 var SERVER = "http://amp.pharm.mssm.edu/g2e/";
 
 var Comm = function(events, notifier, targetApps, SERVER) {
@@ -25,12 +25,16 @@ var Comm = function(events, notifier, targetApps, SERVER) {
         $.post(SERVER + 'api/extract/geo',
             input,
             function(data) {
-                $loader.remove();
                 var id = data.extraction_id,
                     url = SERVER + '#results/' + id;
                 events.fire('resultsReady', url);
-            }
-        );
+            })
+            .fail(function() {
+                events.fire('resultsError');
+            })
+            .always(function() {
+                $loader.remove();
+            });
     };
 
     return {
@@ -332,7 +336,7 @@ var TargetApps = function(events) {
 
 var Templater = function(EXTENSION_ID, targetApps) {
 
-    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/image/g2e-logo-50x50.png';
+    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/image/logo-50x50.png';
 
     var targetAppsOptions = function() {
         var options = '';
@@ -440,7 +444,8 @@ var Templater = function(EXTENSION_ID, targetApps) {
                 '</table>' +
                 '<div id="g2e-extract">' +
                     '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
-                    '<button id="g2e-results-btn" class="g2e-btn">View your results</button>' +
+                    '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
+                    '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
                 '</div>' +
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 
@@ -759,7 +764,7 @@ var GseScraper = function(events) {
 
 var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetApps, templater) {
 
-    var geneList, $overlay, $resultsBtn, $submitBtn;
+    var geneList, $overlay, $resultsBtn, $submitBtn, $errorMessage;
 
     // This function is called every time the "Pipe to Enrichr" button is clicked.
     var openModalBox = function() {
@@ -782,6 +787,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
     var resetFooter = function() {
         $resultsBtn.hide().off();
         $submitBtn.removeClass('g2e-lock').off().click(postData);
+        $errorMessage.hide();
     };
 
     var postData = function() {
@@ -870,12 +876,17 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
 
     events.on('resultsReady', showResultsLink);
 
+    events.on('resultsError', function() {
+        $errorMessage.show();
+    });
+
     var init = (function() {
         var html = templater.get('modal');
         $(html).hide().appendTo('body');
         $('#g2e-modal').draggable();
         $overlay = $('#g2e-overlay');
         $resultsBtn = $overlay.find('#g2e-results-btn');
+        $errorMessage = $overlay.find('#g2e-error-message').hide();
         $submitBtn = $overlay.find('#g2e-submit-btn').click(postData);
         $overlay.find('#g2e-close-btn').click(resetModalBox);
     })();

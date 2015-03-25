@@ -3,12 +3,12 @@ App.View.GeneLists = Backbone.View.extend({
     tagName: 'table',
 
     template: '' +
-        '<caption>Gene lists</caption>' +
+        '<caption>External Links and Downloads</caption>' +
         '<thead>' +
             '<tr>' +
                 '<td>Direction</td>' +
-                '<td>Text file</td>' +
-                '<td>Link to Enrichr</td>' +
+                '<td>Gene lists</td>' +
+                '<td>Links to Enrichr</td>' +
             '</tr>' +
         '</thead>',
 

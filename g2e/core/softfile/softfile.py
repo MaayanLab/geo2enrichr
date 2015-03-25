@@ -52,14 +52,17 @@ class SoftFile(object):
 
 
 def get_cols(args):
-	if 'A_cols[]' in args:
-		A_cols = args.getlist('A_cols[]')
-		B_cols = args.getlist('B_cols[]')
-	elif 'A_cols' in args:
-		A_cols = [x for x in args.get('A_cols').split(',')]
-		B_cols = [x for x in args.get('B_cols').split(',')]
+    if 'A_cols[]' in args:
+        A_cols = args.getlist('A_cols[]')
+        B_cols = args.getlist('B_cols[]')
+    elif len(args.getlist('A_cols')) > 0:
+        A_cols = args.getlist('A_cols')
+        B_cols = args.getlist('B_cols')
+    elif 'A_cols' in args:
+        A_cols = [x for x in args.get('A_cols').split(',')]
+        B_cols = [x for x in args.get('B_cols').split(',')]
 
-	print 'Columns selected:'
-	print A_cols
-	print B_cols
-	return A_cols, B_cols
+    print 'Columns selected:'
+    print A_cols
+    print B_cols
+    return A_cols, B_cols

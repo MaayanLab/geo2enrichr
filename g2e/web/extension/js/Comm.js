@@ -18,12 +18,16 @@ var Comm = function(events, notifier, targetApps, SERVER) {
         $.post(SERVER + 'api/extract/geo',
             input,
             function(data) {
-                $loader.remove();
                 var id = data.extraction_id,
                     url = SERVER + '#results/' + id;
                 events.fire('resultsReady', url);
-            }
-        );
+            })
+            .fail(function() {
+                events.fire('resultsError');
+            })
+            .always(function() {
+                $loader.remove();
+            });
     };
 
     return {

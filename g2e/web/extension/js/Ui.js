@@ -1,7 +1,7 @@
 
 var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetApps, templater) {
 
-    var geneList, $overlay, $resultsBtn, $submitBtn;
+    var geneList, $overlay, $resultsBtn, $submitBtn, $errorMessage;
 
     // This function is called every time the "Pipe to Enrichr" button is clicked.
     var openModalBox = function() {
@@ -24,6 +24,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
     var resetFooter = function() {
         $resultsBtn.hide().off();
         $submitBtn.removeClass('g2e-lock').off().click(postData);
+        $errorMessage.hide();
     };
 
     var postData = function() {
@@ -112,12 +113,17 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
 
     events.on('resultsReady', showResultsLink);
 
+    events.on('resultsError', function() {
+        $errorMessage.show();
+    });
+
     var init = (function() {
         var html = templater.get('modal');
         $(html).hide().appendTo('body');
         $('#g2e-modal').draggable();
         $overlay = $('#g2e-overlay');
         $resultsBtn = $overlay.find('#g2e-results-btn');
+        $errorMessage = $overlay.find('#g2e-error-message').hide();
         $submitBtn = $overlay.find('#g2e-submit-btn').click(postData);
         $overlay.find('#g2e-close-btn').click(resetModalBox);
     })();
