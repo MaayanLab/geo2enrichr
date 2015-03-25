@@ -51,6 +51,7 @@ def extract(path):
     Delegates to constructors that handle data processing and further
     delegation to the DAO and ORM.
     """
+    import pdb; pdb.set_trace()
     response = {}
     if flask.request.method == 'PUT' or flask.request.method == 'POST':
         if path == 'upload':

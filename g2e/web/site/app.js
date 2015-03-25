@@ -2,9 +2,7 @@ var App = {
     Collection: {},
     Model: {},
     View: {},
-    EventAggregator: _.extend({}, Backbone.Events),
-    BASE: 'http://amp.pharm.mssm.edu/',
-    SERVER: 'http://amp.pharm.mssm.edu/g2e'
+    EventAggregator: _.extend({}, Backbone.Events)
 };
 
 $(function() {
