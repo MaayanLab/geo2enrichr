@@ -33,7 +33,7 @@ App.View.Form = Backbone.View.extend({
 
         $.ajax({
             url: '/g2e/api/extract/upload',
-            type: 'PUT',
+            type: 'POST',
             data: formData,
             // Tell jQuery not to process data or worry about content-type.
             cache: false,
