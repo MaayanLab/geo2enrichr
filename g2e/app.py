@@ -9,6 +9,8 @@ __contact__ = "avi.maayan@mssm.edu"
 import os
 import sys
 import flask
+import logging
+logging.basicConfig(stream=sys.stderr)
 
 from g2e.core.util.crossdomain import crossdomain
 from g2e.core.extraction.extractionmaker import extraction_maker
@@ -37,12 +39,12 @@ def index():
 
 
 # PURPLE_WIRE: Apache should serve these files.
-@app.route(ENTRY_POINT + '/<path:path>')
-@crossdomain(origin='*')
-def send_static(path):
-    subdir = '' if 'static' in path else '/web/site'
-    directory = SERVER_ROOT + subdir
-    return flask.send_from_directory(directory, path)
+#@app.route(ENTRY_POINT + '/<path:path>')
+#@crossdomain(origin='*')
+#def send_static(path):
+#    subdir = '' if 'static' in path else '/web/site'
+#    directory = SERVER_ROOT + subdir
+#    return flask.send_from_directory(directory, path)
 
 
 @app.route(ENTRY_POINT + '/api/extract/<path>', methods=['GET', 'PUT', 'POST', 'OPTIONS'])
