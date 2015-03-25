@@ -3,8 +3,8 @@ var App = {
     Model: {},
     View: {},
     EventAggregator: _.extend({}, Backbone.Events),
-    BASE: 'http://localhost:8083',
-    SERVER: 'http://localhost:8083/g2e'
+    BASE: 'http://amp.pharm.mssm.edu/',
+    SERVER: 'http://amp.pharm.mssm.edu/g2e'
 };
 
 $(function() {
@@ -15,7 +15,7 @@ $(function() {
     var templateCache = {};
     App.renderTemplate = function(name, data) {
         if (!templateCache[name]) {
-            var dir = '/g2e/template/',
+            var dir = '/g2e/web/site/template/',
                 url = dir + name + '.html',
                 string;
             $.ajax({
