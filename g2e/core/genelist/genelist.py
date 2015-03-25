@@ -7,7 +7,6 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import hashlib
-import requests
 
 import g2e.core.genelist.genelistfilemanager as filemanager
 import g2e.core.genelist.enrichrlink as enrichrlink

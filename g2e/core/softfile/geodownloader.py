@@ -11,9 +11,8 @@ __contact__ = "avi.maayan@mssm.edu"
 import os.path
 from gzip import GzipFile
 import zlib
-import urllib.request
-import urllib.error
-from io import StringIO
+from urllib2 import urlopen, URLError
+from StringIO import StringIO
 
 import g2e.core.softfile.softfilemanager as softfilemanager
 
@@ -40,11 +39,11 @@ def download(accession):
     
     with open(downloaded_file_path, 'w+') as f:
         while True:
-            bin_chunk = response.read(CHUNK_SIZE)
-            if not bin_chunk:
-                break
-            string = decompressor.decompress(bin_chunk).decode('utf-8')
-            f.write(string)
+			bin_chunk = response.read(CHUNK_SIZE)
+			if not bin_chunk:
+				break
+			string = decompressor.decompress(bin_chunk)
+			f.write(string)
 
 
 def _get_file_by_url(url, attempts=5):
@@ -54,7 +53,7 @@ def _get_file_by_url(url, attempts=5):
     print('Downloading GEO SOFT file from: ' + url)
     while attempts > 0:
         try:
-            response = urllib.request.urlopen(url)
+            response = urlopen(url)
         except URLError as e:
             # See: https://docs.python.org/3/howto/urllib2.html.
             if hasattr(e, 'reason'):
