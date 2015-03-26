@@ -2,36 +2,37 @@ module.exports = function(grunt) {
 
     var WEB = '../g2e/web/';
 
-    var EXTENSION = WEB + 'extension/';
+    var COMMON = WEB + 'extension/common/';
+
+    var CHROME = WEB + 'extension/chrome/';
+
+    var FIREFOX = WEB + 'extension/firefox/data/';
 
     var SITE = WEB + 'site/';
 
-    var JS_DIR = EXTENSION + 'js/';
-
     var src_files = [
-        JS_DIR + 'config.js',
-        JS_DIR + 'Comm.js',
-        JS_DIR + 'Bootstrapper.js',
-        JS_DIR + 'GdsBootstrapper.js',
-        JS_DIR + 'GseBootstrapper.js',
-        JS_DIR + 'G2EComm.js',
-        JS_DIR + 'LssrComm.js',
-        JS_DIR + 'Events.js',
-        JS_DIR + 'TargetApp.js',
-        JS_DIR + 'Templater.js',
-        JS_DIR + 'Notifier.js',
-        JS_DIR + 'BaseScraper.js',
-        JS_DIR + 'GdsScraper.js',
-        JS_DIR + 'GseScraper.js',
-        JS_DIR + 'Ui.js',
-        JS_DIR + 'main.js'
+        COMMON + 'js/Comm.js',
+        COMMON + 'js/Bootstrapper.js',
+        COMMON + 'js/GdsBootstrapper.js',
+        COMMON + 'js/GseBootstrapper.js',
+        COMMON + 'js/G2EComm.js',
+        COMMON + 'js/LssrComm.js',
+        COMMON + 'js/Events.js',
+        COMMON + 'js/TargetApp.js',
+        COMMON + 'js/Templater.js',
+        COMMON + 'js/Notifier.js',
+        COMMON + 'js/BaseScraper.js',
+        COMMON + 'js/GdsScraper.js',
+        COMMON + 'js/GseScraper.js',
+        COMMON + 'js/Ui.js',
+        COMMON + 'js/main.js'
     ];
 
-    var js_files = [JS_DIR + 'open.js'].concat(src_files).concat([JS_DIR + 'close.js']);
+    var chrome_js_files  = [COMMON + 'js/open.js', COMMON + 'js/config-chrome.js'].concat(src_files).concat([COMMON + 'js/close-chrome.js']);
 
-    var less_files = [EXTENSION + 'less/*', SITE + 'style/less/*'];
+    var firefox_js_files = [COMMON + 'js/open.js', COMMON + 'js/config-firefox.js'].concat(src_files).concat([COMMON + 'js/close-firefox.js']);
 
-    var full_files = js_files.concat(less_files);
+    var less_files = [COMMON + 'less/*', SITE + 'style/less/*'];
 
     grunt.initConfig({
         jshint: {
@@ -44,25 +45,30 @@ module.exports = function(grunt) {
             }
         },
         concat: {
-            dist: {
-                src: js_files,
-                dest: EXTENSION + 'g2e.js',
+            chrome: {
+                src: chrome_js_files,
+                dest: CHROME + 'g2e.js'
+            },
+            firefox: {
+                src: firefox_js_files,
+                dest: FIREFOX + 'g2e.js'
             }
         },
         less: {
             development: {
                 options: {
-                    paths: [EXTENSION + 'less', SITE + 'style/less'],
+                    paths: [COMMON + 'less', SITE + 'style/less'],
                     yuicompress: true
                 },
                 files: {
-                    '../g2e/web/extension/css/main.css': '../g2e/web/extension/less/main.less',
-                    '../g2e/web/site/style/css/main.css' : '../g2e/web/site/style/less/main.less'
+                    '../g2e/web/extension/chrome/main.css' : '../g2e/web/extension/common/less/main.less',
+                    '../g2e/web/extension/firefox/data/main.css': '../g2e/web/extension/common/less/main.less',
+                    '../g2e/web/site/style/css/main.css'   : '../g2e/web/site/style/less/main.less'
                 }
             }
         },
         watch: {
-            files: full_files,
+            files: chrome_js_files.concat(firefox_js_files).concat(less_files),
             tasks: ['build']
         }
     });

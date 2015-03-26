@@ -4,7 +4,7 @@
     "version": "2.1",
     "description": "Ma'ayan Lab",
     "icons": {
-        "128": "image/logo-128x128.png"
+        "128": "logo-128x128.png"
     },
     "permissions": [
         "downloads",
@@ -16,12 +16,12 @@
                 "http://www.ncbi.nlm.nih.gov/sites/*",
                 "http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi*"
             ],
-            "css": ["css/open-sans.css", "css/main.css", "lib/jquery-ui.min.css"],
-            "js": ["lib/jquery-1.11.1.min.js", "lib/jquery-ui.min.js", "g2e.js"]
+            "css": ["open-sans.css", "main.css", "jquery-ui.min.css"],
+            "js": ["jquery-1.11.1.min.js", "jquery-ui.min.js", "g2e.js"]
         }
     ],
     "web_accessible_resources": [
-        "image/*"
+        "/*"
     ],
     "manifest_version": 2,
     "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"

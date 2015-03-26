@@ -1,5 +1,5 @@
 
-var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetApps, templater) {
+var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater) {
 
     var geneList, $overlay, $resultsBtn, $submitBtn, $errorMessage;
 

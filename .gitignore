@@ -1,3 +1,6 @@
+# DB connection config. Do *NOT* version control this.
+*.conf
+
 # OSX
 *.DS_Store
 

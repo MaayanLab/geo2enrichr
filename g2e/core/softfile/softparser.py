@@ -59,10 +59,16 @@ def _parse_geo(filename, platform, A_cols, B_cols):
         BOF = '!dataset_table_begin'
         EOF = '!dataset_table_end'
         COL_OFFSET = 2
+        A_cols = [x.upper() for x in A_cols]
+        B_cols = [x.upper() for x in B_cols]
     else:
         BOF = '!series_matrix_table_begin'
         EOF = '!series_matrix_table_end'
         COL_OFFSET = 1
+        # The strings are formatted like so: '"GSM..."'. This formatting
+        # strips inner quotation marks.
+        A_cols = ['"{}"'.format(x.upper()) for x in A_cols]
+        B_cols = ['"{}"'.format(x.upper()) for x in B_cols]
 
     genes = []
     A = []

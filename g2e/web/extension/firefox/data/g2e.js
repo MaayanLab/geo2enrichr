@@ -2,11 +2,11 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var EXTENSION_ID = "jpeoebiembhmjeibpnfdnhbncnbfnhhe";
 var DEBUG = true;
 var SERVER = "http://localhost:8083/g2e/";
+var IMAGE_PATH = self.options.logoUrl;
 
-var Comm = function(events, notifier, targetApps, SERVER) {
+var Comm = function(events, notifier, SERVER) {
 
     var fetchGeneList = (function() {
         $.ajax({
@@ -20,7 +20,8 @@ var Comm = function(events, notifier, targetApps, SERVER) {
     })();
 
     var postSoftFile = function(input) {
-        var $loader = $('<div class="g2e-loader-container"><div class="g2e-loader-modal">Loading...</div></div>');
+        console.log("POSTING");
+        var $loader = $('<div class="g2e-loader-container"><div class="g2e-loader-modal">Processing data. This may take a minute.</div></div>');
         $('body').append($loader);
         $.post(SERVER + 'api/extract/geo',
             input,
@@ -29,7 +30,9 @@ var Comm = function(events, notifier, targetApps, SERVER) {
                     url = SERVER + '#results/' + id;
                 events.fire('resultsReady', url);
             })
-            .fail(function() {
+            .fail(function(data) {
+                console.log("FAILED:");
+                console.log(data);
                 events.fire('resultsError');
             })
             .always(function() {
@@ -207,160 +210,18 @@ var Events = function() {
 };
 
 
-var TargetApps = function(events) {
+var Templater = function(IMAGE_PATH) {
 
-    /* Set default. */
-    var currentApp = 'enrichr';
-
-    var $resultsTitle, $resultsValue;
-
-    setTimeout(function() {
-        $resultsTitle = $('#g2e-results-title');
-        $resultsValue = $('#g2e-results-value');
-    }, 1000);
-
-    var apps = {
-        enrichr: {
-            name: 'Enrichr',
-            selectValue: 'enrichr',
-            color: '#d90000',
-            endpoint: 'enrichr',
-            resultsFormatter: function(geneLists) {
-                $resultsTitle.html('<strong>Enriched genes:</strong>');
-                if (geneLists.up === '' ||
-                    geneLists.down === '' ||
-                    geneLists.combined === '') {
-                    $resultsValue.html('' +
-                        '<span class="g2e-error">Timeout using Enrichr. Please try again later.</span>'
-                    );
-                } else {
-                    $resultsValue.html('' +
-                        '<button id="g2e-enrichr-up">Up</button>' +
-                        '<button id="g2e-enrichr-down">Down</button>' +
-                        '<button id="g2e-enrichr-combined">All</button>');
-
-                    $('#g2e-enrichr-up').click(function() {
-                        window.open(geneLists.up, '_blank');
-                    });
-                    
-                    $('#g2e-enrichr-down').click(function() {
-                        window.open(geneLists.down, '_blank');
-                    });
-
-                    $('#g2e-enrichr-combined').click(function() {
-                        window.open(geneLists.combined, '_blank');
-                    });
-                }
-            }
-        },  
-        l1000cds: {
-            name: 'L1000CDS',
-            selectValue: 'l1000cds',
-            color: '#6CAB6D',
-            endpoint: 'stringify',
-            resultsFormatter: function(geneLists) {
-                $resultsTitle.html('<strong>Perturbagens:</strong>');
-                $resultsValue.html('<button id="g2e-l1000">Go to L1000CDS</button>');
-
-                $('#g2e-l1000').click(function(data) {
-                    var $form = $('form'),
-                        params = {
-                            upGenes: JSON.stringify(geneLists.up.split('-')),
-                            dnGenes: JSON.stringify(geneLists.down.split('-'))
-                        };
-
-                    $form.attr({
-                        'action': 'http://amp.pharm.mssm.edu/L1000CDS/input',
-                        'method': 'POST'
-                    });
-
-                    $.each(params, function(name, val) {
-                        $form.append(
-                            $('input').attr({
-                                'type': 'hidden',
-                                'name': name,
-                                'value': val
-                            })
-                        );
-                    });
-
-                    $('body').append($form);
-                    $form.submit();
-                });
-            },
-        }
-    };
-
-    return {
-        set: function(newApp) {
-            currentApp = newApp;
-        },
-        current: function() {
-            return apps[currentApp];
-        },
-        all: function() {
-            return apps;
-        }
-    };
-};
-
-/*$('#g2e-l1000').click(function(data) {
-    var //$form = $('form'),
-        method = 'post',
-        path = 'http://amp.pharm.mssm.edu/L1000CDS/input',
-        params = {
-            upGenes: JSON.stringify(geneLists.up.split('-')),
-            dnGenes: JSON.stringify(geneLists.down.split('-'))
-        };
-
-    var form = document.createElement("form");
-    form.setAttribute("method", method);
-    form.setAttribute("action", path);
-
-    for(var key in params) {
-        if(params.hasOwnProperty(key)) {
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-            hiddenField.setAttribute("value", params[key]);
-
-            form.appendChild(hiddenField);
-        }
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-});*/
-
-
-var Templater = function(EXTENSION_ID, targetApps) {
-
-    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/image/logo-50x50.png';
-
-    var targetAppsOptions = function() {
-        var options = '';
-        $.each(targetApps.all(), function(i, app) {
-            options += '<option value="' + app.selectValue + '"';
-            if (app == targetApps.current()) {
-                 options += 'selected="selected"';
-            }
-            options += '>' + app.name;
-            options += '</option>';
-        });
-        return options;
-    };
+    console.log(IMAGE_PATH);
 
     var modal = '' +
         '<div id="g2e-overlay">' +
             '<div id="g2e-modal">' +
                 '<div id="g2e-title">' +
-                    '<a href="http://maayanlab.net/g2e/" target="_blank">' +
-                        '<img src="' + LOGO50X50 + '">' +
+                    '<a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">' +
+                        '<img src="' + IMAGE_PATH + '">' +
                         '<span>GEO2</span>' +
-                        '<span id="g2e-target-app-title" style="color:' + targetApps.current().color + ';">' +
-                            targetApps.current().name +
-                        '</span>' +
+                        '<span id="g2e-target-app">Enrichr</span>' +
                     '</a>' +
                 '</div>' +
                 '<div id="g2e-nav">' +
@@ -469,7 +330,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
                     '<td class="azline" id="' + EMBED_BTN_ID + '">' +
                         '<b>Step 4: </b>' +
                         '<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
-                        '<img src="' + LOGO50X50 + '">' +
+                        '<img src="' + IMAGE_PATH + '">' +
                     '</td>' +
                 '</tr>')
         },
@@ -478,7 +339,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
                 '<tr>' +
                     '<td id="' + EMBED_BTN_ID + '">' +
                         '<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
-                        '<img src="' + LOGO50X50 + '">' +
+                        '<img src="' + IMAGE_PATH + '">' +
                     '</td>' +
                 '</tr>'),
             'thead': $('' +
@@ -522,17 +383,12 @@ var Notifier = function(DEBUG) {
 		}
 	};
 
-	var ask = function(msg, deflt) {
-		return prompt(msg, deflt);
-	};
-
 	var warn = function(msg) {
 		alert(msg);
 	};
 
 	return {
 		log: log,
-		ask: ask,
 		warn: warn
 	};
 };
@@ -762,7 +618,7 @@ var GseScraper = function(events) {
 };
 
 
-var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetApps, templater) {
+var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater) {
 
     var geneList, $overlay, $resultsBtn, $submitBtn, $errorMessage;
 
@@ -898,8 +754,7 @@ var main = function() {
      */
     var events = Events(),
         notifier = Notifier(DEBUG),
-        targetApps = TargetApps(events),
-        templater = Templater(EXTENSION_ID, targetApps),
+        templater = Templater(IMAGE_PATH),
         baseScraper = BaseScraper(DEBUG),
         bootstrapper = Bootstrapper(events, notifier, templater),
         scraper,
@@ -913,14 +768,15 @@ var main = function() {
     }
 
     scraper = $.extend(modeScraper, baseScraper);
-    comm = Comm(events, notifier, targetApps, SERVER);
-    ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetApps, templater);
+    comm = Comm(events, notifier, SERVER);
+    ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater);
     
     bootstrapper.init();
     notifier.log('g2e loaded.');
 };
 
 
-	window.onload = main();
+	// The Firefox plugin bootstrapper manages when the plugin loads.
+    main();
 
 })(jQuery);

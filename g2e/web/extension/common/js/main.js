@@ -7,8 +7,7 @@ var main = function() {
      */
     var events = Events(),
         notifier = Notifier(DEBUG),
-        targetApps = TargetApps(events),
-        templater = Templater(EXTENSION_ID, targetApps),
+        templater = Templater(IMAGE_PATH),
         baseScraper = BaseScraper(DEBUG),
         bootstrapper = Bootstrapper(events, notifier, templater),
         scraper,
@@ -22,8 +21,8 @@ var main = function() {
     }
 
     scraper = $.extend(modeScraper, baseScraper);
-    comm = Comm(events, notifier, targetApps, SERVER);
-    ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetApps, templater);
+    comm = Comm(events, notifier, SERVER);
+    ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater);
     
     bootstrapper.init();
     notifier.log('g2e loaded.');

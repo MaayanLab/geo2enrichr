@@ -1,5 +1,5 @@
 
-var Comm = function(events, notifier, targetApps, SERVER) {
+var Comm = function(events, notifier, SERVER) {
 
     var fetchGeneList = (function() {
         $.ajax({
@@ -13,7 +13,8 @@ var Comm = function(events, notifier, targetApps, SERVER) {
     })();
 
     var postSoftFile = function(input) {
-        var $loader = $('<div class="g2e-loader-container"><div class="g2e-loader-modal">Loading...</div></div>');
+        console.log("POSTING");
+        var $loader = $('<div class="g2e-loader-container"><div class="g2e-loader-modal">Processing data. This may take a minute.</div></div>');
         $('body').append($loader);
         $.post(SERVER + 'api/extract/geo',
             input,
@@ -22,7 +23,9 @@ var Comm = function(events, notifier, targetApps, SERVER) {
                     url = SERVER + '#results/' + id;
                 events.fire('resultsReady', url);
             })
-            .fail(function() {
+            .fail(function(data) {
+                console.log("FAILED:");
+                console.log(data);
                 events.fire('resultsError');
             })
             .always(function() {

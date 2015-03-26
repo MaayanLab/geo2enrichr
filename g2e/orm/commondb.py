@@ -3,7 +3,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://greg:euclid@master:3306/euclid?charset=utf8'
+# This is a little hacky but it works. *Don't* version control db.conf.
+# PURPLE_WIRE: One day, this should probably read from an XML file or
+# something more semantically rich.
+f = open('g2e/orm/db.conf')
+SQLALCHEMY_DATABASE_URI = f.read().strip()
+f.close()
 
 engine = create_engine(SQLALCHEMY_DATABASE_URI, convert_unicode=True, echo=True)
 
@@ -12,6 +17,3 @@ Base = declarative_base()
 
 Session = sessionmaker()
 Session.configure(bind=engine)
-
-# Does this need to run every time?
-#Base.metadata.create_all(engine)

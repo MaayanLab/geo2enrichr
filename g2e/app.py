@@ -9,6 +9,7 @@ __contact__ = "avi.maayan@mssm.edu"
 import os
 import sys
 import flask
+# Allows for logging data to Apache's logs.
 import logging
 logging.basicConfig(stream=sys.stderr)
 

@@ -1,31 +1,16 @@
 
-var Templater = function(EXTENSION_ID, targetApps) {
+var Templater = function(IMAGE_PATH) {
 
-    var LOGO50X50 = 'chrome-extension://' + EXTENSION_ID + '/image/logo-50x50.png';
-
-    var targetAppsOptions = function() {
-        var options = '';
-        $.each(targetApps.all(), function(i, app) {
-            options += '<option value="' + app.selectValue + '"';
-            if (app == targetApps.current()) {
-                 options += 'selected="selected"';
-            }
-            options += '>' + app.name;
-            options += '</option>';
-        });
-        return options;
-    };
+    console.log(IMAGE_PATH);
 
     var modal = '' +
         '<div id="g2e-overlay">' +
             '<div id="g2e-modal">' +
                 '<div id="g2e-title">' +
-                    '<a href="http://maayanlab.net/g2e/" target="_blank">' +
-                        '<img src="' + LOGO50X50 + '">' +
+                    '<a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">' +
+                        '<img src="' + IMAGE_PATH + '">' +
                         '<span>GEO2</span>' +
-                        '<span id="g2e-target-app-title" style="color:' + targetApps.current().color + ';">' +
-                            targetApps.current().name +
-                        '</span>' +
+                        '<span id="g2e-target-app">Enrichr</span>' +
                     '</a>' +
                 '</div>' +
                 '<div id="g2e-nav">' +
@@ -134,7 +119,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
                     '<td class="azline" id="' + EMBED_BTN_ID + '">' +
                         '<b>Step 4: </b>' +
                         '<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
-                        '<img src="' + LOGO50X50 + '">' +
+                        '<img src="' + IMAGE_PATH + '">' +
                     '</td>' +
                 '</tr>')
         },
@@ -143,7 +128,7 @@ var Templater = function(EXTENSION_ID, targetApps) {
                 '<tr>' +
                     '<td id="' + EMBED_BTN_ID + '">' +
                         '<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
-                        '<img src="' + LOGO50X50 + '">' +
+                        '<img src="' + IMAGE_PATH + '">' +
                     '</td>' +
                 '</tr>'),
             'thead': $('' +
