@@ -16,11 +16,6 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
         });
     };
 
-    var resetModalBox = function() {
-        resetFooter();
-        $overlay.hide();
-    };
-
     var resetFooter = function() {
         $resultsBtn.hide().off();
         $submitBtn.removeClass('g2e-lock').off().click(postData);
@@ -30,11 +25,10 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
     var postData = function() {
         var scrapedData = scraper.getScrapedData($overlay),
             userOptions = scraper.getUserOptions($overlay),
-            data = $.extend({}, scrapedData, userOptions),
-            app = targetApps.current();
+            allData = $.extend({}, scrapedData, userOptions);
         if (isValidData(scrapedData)) {
             $(this).addClass('g2e-lock').off();
-            comm.postSoftFile(scrapedData, app);
+            comm.postSoftFile(allData);
         } else {
             resetFooter();
         }
@@ -125,6 +119,9 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
         $resultsBtn = $overlay.find('#g2e-results-btn');
         $errorMessage = $overlay.find('#g2e-error-message').hide();
         $submitBtn = $overlay.find('#g2e-submit-btn').click(postData);
-        $overlay.find('#g2e-close-btn').click(resetModalBox);
+        $overlay.find('#g2e-close-btn').click(function() {
+            resetFooter();
+            $overlay.hide();
+        });
     })();
 };

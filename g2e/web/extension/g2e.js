@@ -2,9 +2,9 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var EXTENSION_ID = "pcbdeobileclecleblcnadplfcicfjlp";
-var DEBUG = false;
-var SERVER = "http://amp.pharm.mssm.edu/g2e/";
+var EXTENSION_ID = "jpeoebiembhmjeibpnfdnhbncnbfnhhe";
+var DEBUG = true;
+var SERVER = "http://localhost:8083/g2e/";
 
 var Comm = function(events, notifier, targetApps, SERVER) {
 
@@ -540,47 +540,47 @@ var Notifier = function(DEBUG) {
 
 var BaseScraper = function(DEBUG) {
 
-    var sData = {};
-
     return {
 
         getScrapedData: function($modal) {
-            // getSamples() returns an object rather than mutating sData
-            // because the function must be mixed in at runtime.
-            var samples = this.getSamples();
+            var data = {},
+                samples = this.getSamples();
 
-            sData.A_cols   = samples.A_cols;
-            sData.B_cols   = samples.B_cols;
+            data.A_cols   = samples.A_cols;
+            data.B_cols   = samples.B_cols;
             // Short circuit select saved data; this represents user input.
-            sData.dataset  = sData.dataset  || this.getDataset();
-            sData.organism = sData.organism || this.getOrganism();
-            sData.platform = sData.platform || this.getPlatform();
+            data.dataset  = this.getDataset();
+            data.organism = this.getOrganism();
+            data.platform = this.getPlatform();
 
-            return $.extend({}, sData);
+            return data;
         },
 
         getUserOptions: function($modal) {
-            var method = $modal.find('#g2e-diffexp option:selected').val(),
-                cell = $modal.find('#g2e-cell td.g2e-value input').val(),
-                perturbation = $modal.find('#g2e-perturbation td.g2e-value input').val(),
+            var data = {},
+                method = $modal.find('#g2e-diffexp option:selected').val(),
+                cell = $modal.find('#g2e-cell .g2e-value input').val(),
+                perturbation = $modal.find('#g2e-perturbation .g2e-value input').val(),
                 gene = $modal.find('#g2e-gene #g2e-geneList').val();
                 disease = $modal.find('#g2e-disease #g2e-diseaseList').val();
             
             if (method) {
-                sData.method = method;
+                data.method = method;
             }
             if (cell) {
-                sData.cell = cell.replace(/_|\.|-/, '');
+                data.cell = cell.replace(/_|\.|-/, '');
             }
             if (perturbation) {
-                sData.perturbation = perturbation.replace(/_|\.|-/, '');    
+                data.perturbation = perturbation.replace(/_|\.|-/, '');    
             }
             if (gene) {
-                sData.gene = gene;
+                data.gene = gene;
             }
             if (disease) {
-                sData.disease = disease;
+                data.disease = disease;
             }
+
+            return data;
         },
 
         textFromHtml: function($el) {
@@ -779,11 +779,6 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
         });
     };
 
-    var resetModalBox = function() {
-        resetFooter();
-        $overlay.hide();
-    };
-
     var resetFooter = function() {
         $resultsBtn.hide().off();
         $submitBtn.removeClass('g2e-lock').off().click(postData);
@@ -793,11 +788,10 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
     var postData = function() {
         var scrapedData = scraper.getScrapedData($overlay),
             userOptions = scraper.getUserOptions($overlay),
-            data = $.extend({}, scrapedData, userOptions),
-            app = targetApps.current();
+            allData = $.extend({}, scrapedData, userOptions);
         if (isValidData(scrapedData)) {
             $(this).addClass('g2e-lock').off();
-            comm.postSoftFile(scrapedData, app);
+            comm.postSoftFile(allData);
         } else {
             resetFooter();
         }
@@ -888,7 +882,10 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, targetAp
         $resultsBtn = $overlay.find('#g2e-results-btn');
         $errorMessage = $overlay.find('#g2e-error-message').hide();
         $submitBtn = $overlay.find('#g2e-submit-btn').click(postData);
-        $overlay.find('#g2e-close-btn').click(resetModalBox);
+        $overlay.find('#g2e-close-btn').click(function() {
+            resetFooter();
+            $overlay.hide();
+        });
     })();
 };
 
