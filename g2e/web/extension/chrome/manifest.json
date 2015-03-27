@@ -1,7 +1,7 @@
 {
     "name": "GEO2Enrichr",
     "short_name": "g2e",
-    "version": "2.1",
+    "version": "2.2",
     "description": "Ma'ayan Lab",
     "icons": {
         "128": "logo-128x128.png"

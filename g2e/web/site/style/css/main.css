@@ -152,6 +152,9 @@ header h1 a {
 .content img.browser-logo {
   width: 50px;
 }
+.content .caption {
+  font-style: italic;
+}
 .content table {
   table-layout: fixed;
   border-spacing: 0;

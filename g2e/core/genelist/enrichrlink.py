@@ -30,6 +30,9 @@ def get_link(genes, description):
     # 1. POST the data to the server. We do not need the response.
     sess.post(BASE_URL + 'enrich', files={ 'list': (None, genes_str), 'description': (None, description) })
     
+    # I've noticed that sometimes the GET errors out and wonder if it is a
+    # race condition of some sort. This throttles the back-to-back requests
+    # and seems to resolve the issue on our end.
     time.sleep(0.5)
 
     # 2. GET our link via the "share" endpoint. The requests module (and
