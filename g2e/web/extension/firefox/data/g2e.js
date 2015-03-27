@@ -234,7 +234,7 @@ var Templater = function(IMAGE_PATH) {
                 '<table id="g2e-main-tbl">' +
                     '<tr>' +
                         '<td id="g2e-confirm">' +
-                            '<div class="g2e-lowlight g2e-bottom">Please verify that your data is correct, *required.</div>' +
+                            '<div class="g2e-lowlight g2e-bottom">Please verify that your data is correct.</div>' +
                             '<table class="g2e-confirm-tbl">' +
                                 '<tr id="g2e-diffexp">' +
                                     '<td class="g2e-title">' +
@@ -268,7 +268,7 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
                             '</table>' +
-                            '<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations, **if relevant.</div>' +
+                            '<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
                             '<table class="g2e-confirm-tbl">' +
                                 '<tr id="g2e-cell">' +
                                     '<td class="g2e-title">' +
@@ -288,7 +288,7 @@ var Templater = function(IMAGE_PATH) {
                                 '</tr>' +
                                 '<tr id="g2e-gene" class="ui-widget">' +
                                     '<td class="g2e-title">' +
-                                        '<label for="g2e-geneList">Manipulated gene**</label>' +
+                                        '<label for="g2e-geneList">Manipulated gene</label>' +
                                     '</td>' +
                                     '<td class="g2e-value">' +
                                         '<input id="g2e-geneList" placeholder="No data">' +
@@ -296,7 +296,7 @@ var Templater = function(IMAGE_PATH) {
                                 '</tr>' +
                                 '<tr id="g2e-disease" class="ui-widget g2e-last">' +
                                     '<td class="g2e-title">' +
-                                        '<label for="g2e-diseaseList">Disease**</label>' +
+                                        '<label for="g2e-diseaseList">Relevant disease</label>' +
                                     '</td>' +
                                     '<td class="g2e-value g2e-last">' +
                                         '<input id="g2e-diseaseList" placeholder="No data">' +
@@ -314,7 +314,7 @@ var Templater = function(IMAGE_PATH) {
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 
                         'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
-                        ' See the <a href="http://maayanlab.net/g2e/" target="_blank">documentation</a> for details.' +
+                        ' See the <a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">website</a> for details.' +
                     '</p>' +
                 '</div>' +
             '</div>' +

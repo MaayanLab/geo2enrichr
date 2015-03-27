@@ -52,26 +52,27 @@ def save(extraction):
             )
 
         extraction_dao = models.Extraction(
-            softfile     = softfile_dao,
-            genelists    = genelists_dao,
-            method       = metadata.method,
-            cutoff       = metadata.cutoff,
-            cell         = metadata.cell,
-            perturbation = metadata.perturbation,
-            gene         = metadata.gene,
-            disease      = metadata.disease
+        	extraction_id = extraction.extraction_id,
+            softfile      = softfile_dao,
+            genelists     = genelists_dao,
+            method        = metadata.method,
+            cutoff        = metadata.cutoff,
+            cell          = metadata.cell,
+            perturbation  = metadata.perturbation,
+            gene          = metadata.gene,
+            disease       = metadata.disease
         )
 
         session.add(extraction_dao)
         session.flush()
-        return extraction_dao.id
+        return extraction_dao.extraction_id
 
 
 def fetch(extraction_id):
     """Single entry point for fetching extractions from database by ID.
     """
     with session_scope() as session:
-        ext_dao = session.query(models.Extraction).filter_by(id=extraction_id).first()
+        ext_dao = session.query(models.Extraction).filter_by(extraction_id=extraction_id).first()
 
         sf_dao    = ext_dao.softfile
         name      = sf_dao.name

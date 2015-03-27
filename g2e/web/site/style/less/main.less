@@ -211,6 +211,7 @@ header {
     &.api,
     &.tutorial {
         table {
+            padding-bottom: 0;
             td {
                 border: none;
             }
@@ -236,6 +237,18 @@ header {
             white-space: -pre-wrap;     /* Opera 4-6 */
             white-space: -o-pre-wrap;   /* Opera 7 */
             word-wrap: break-word;      /* Internet Explorer 5.5+ */
+        }
+    }
+    &.api {
+        table {
+            td:first-child {
+                width: 12%;
+            }
+            td {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
         }
     }
 }

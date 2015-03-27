@@ -10,7 +10,7 @@
     </p>
 </section>
 <section>
-    <h1>GET api/extract/:id</h1>
+    <h1>GET /g2e/api/extract/:id</h1>
     <p>
         Returns a JSON blob of data associated with a single user extraction, based on the <span class='mono'>id</span> parameter. The returned data has stable links to the SOFT file; up, down, and combined gene lists; and metadata from both the experiment and analysis.
     </p>
@@ -21,12 +21,8 @@
     <h3>Parameters</h3>
     <table>
         <tr>
-            <td>
-                <span class='mono'>id</span>
-            </td>
-            <td>
-                The ID of the extraction for which to return results.<br>
-            </td>
+            <td><span class='mono'>id</span></td>
+            <td>The ID of the extraction for which to return results.</td>
         </tr>
     </table>
     <h3>Example request</h3>
@@ -71,7 +67,7 @@
 }</pre>
 </section>
 <section>
-    <h1>POST api/extract/geo</h1>
+    <h1>POST /g2e/api/extract/geo</h1>
     <p>
         Performs differential expression analysis on a GEO SOFT file based on the GEO accession number, platform, and selected samples.
     </p>
@@ -79,6 +75,25 @@
     <p class='code'>
         http://amp.pharm.mssm.edu/g2e/api/extract/geo
     </p>
+    <h3>Parameters</h3>
+    <table>
+        <tr>
+            <td><span class='mono'>dataset</span></td>
+            <td>A valid GEO accession number identifying the dataset.</td>
+        </tr>
+        <tr>
+            <td><span class='mono'>platform</span></td>
+            <td>The GPL number (platform) associated with the GEO accession number.</td>
+        </tr>
+        <tr>
+            <td><span class='mono'>A_cols</span></td>
+            <td>An array of GSM numbers to be used as in the control group.</td>
+        </tr>
+        <tr>
+            <td><span class='mono'>B_cols</span></td>
+            <td>An array of GSM numbers to be used as in the treatment or condition group.<td>
+        </tr>
+    </table>
     <h3>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h3>
     <pre>
 curl -v http://amp.pharm.mssm.edu/g2e/api/extract/geo --data \
@@ -102,10 +117,21 @@ B_cols[]=GSM1071457&B_cols[]=GSM1071455"
 </section>
 
 <section class='last'>
-    <h1>POST api/extract/custom</h1>
+    <h1>POST /g2e/api/extract/custom</h1>
     <p>
         Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
     </p>
+    <h3>Parameters</h3>
+    <table>
+        <tr>
+            <td><span class='mono'>file</span></td>
+            <td>The file to be processed.</td>
+        </tr>
+        <tr>
+            <td><span class='mono'>name</span></td>
+            <td>A description of your data.</td>
+        </tr>
+    </table>
     <h3>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h3>
     <pre>
 $ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload \

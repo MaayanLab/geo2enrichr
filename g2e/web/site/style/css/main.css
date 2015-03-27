@@ -201,6 +201,10 @@ header h1 a {
 .content table.extensions td p {
   margin: 0;
 }
+.content.api table,
+.content.tutorial table {
+  padding-bottom: 0;
+}
 .content.api table td,
 .content.tutorial table td {
   border: none;
@@ -236,6 +240,14 @@ header h1 a {
   /* Opera 7 */
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
+}
+.content.api table td:first-child {
+  width: 12%;
+}
+.content.api table td {
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 form button.submit {
   font-size: 14px;

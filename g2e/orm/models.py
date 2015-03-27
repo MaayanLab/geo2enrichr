@@ -79,6 +79,10 @@ class Extraction(Base):
     """
     __tablename__ = 'extractions'
     id = Column(Integer, primary_key=True)
+    # This is a hexadecimal hash of the time that the extraction occured. This
+    # is how the front-end identifies the dataset, so that we do not display
+    # the actual database ID to the users.
+    extraction_id = Column(String(10))
     softfile = relationship('SoftFile', uselist=False, backref='extractions')
     genelists = relationship('GeneList', backref=backref('genelists', order_by=id))
     method = Column(String(200))
