@@ -2,8 +2,8 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var DEBUG = true;
-var SERVER = "http://localhost:8083/g2e/";
+var DEBUG = false;
+var SERVER = "http://amp.pharm.mssm.edu/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
 
 var Comm = function(events, notifier, SERVER) {
@@ -26,13 +26,16 @@ var Comm = function(events, notifier, SERVER) {
         $.post(SERVER + 'api/extract/geo',
             input,
             function(data) {
-                var id = data.extraction_id,
-                    url = SERVER + '#results/' + id;
-                events.fire('resultsReady', url);
+                if (!!data.error) {
+                    events.fire('resultsError');
+                } else {
+                    var id = data.extraction_id,
+                        url = SERVER + '#results/' + id;
+                    events.fire('resultsReady', url);
+                }
             })
-            .fail(function(data) {
+            .fail(function(xhr, status, error) {
                 console.log("FAILED:");
-                console.log(data);
                 events.fire('resultsError');
             })
             .always(function() {
@@ -709,7 +712,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
          * forget.
          */
         if (platform && $.inArray(platform, SUPPORTED_PLATFORMS) === -1) {
-            $g2eLink.html('<strong class="g2e-strong">G2E:</strong> This platform is not currently supported.');
+            $g2eLink.html('<strong class="g2e-strong">This platform is not currently supported.');
         } else {
             $g2eLink.click(openModalBox);
         }
@@ -747,7 +750,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
 
 var main = function() {
 
-    var SUPPORTED_PLATFORMS = ['GPL8321', 'GPL7091', 'GPL3307', 'GPL8300', 'GPL11383', 'GPL13158', 'GPL4044', 'GPL1426', 'GPL6887', 'GPL3084', 'GPL32', 'GPL16268', 'GPL13692', 'GPL2881', 'GPL15207', 'GPL3697', 'GPL91', 'GPL339', 'GPL96', 'GPL17518', 'GPL15401', 'GPL13712', 'GPL201', 'GPL1261', 'GPL10558', 'GPL6193', 'GPL6244', 'GPL3050', 'GPL6101', 'GPL6885', 'GPL4685', 'GPL6102', 'GPL4200', 'GPL6480', 'GPL6106', 'GPL6845', 'GPL7202', 'GPL4134', 'GPL1708', 'GPL3921', 'GPL85', 'GPL4074', 'GPL2897', 'GPL4133', 'GPL6947', 'GPL1536', 'GPL1355', 'GPL4487', 'GPL81', 'GPL6096', 'GPL8063', 'GPL11202', 'GPL16686', 'GPL15792', 'GPL6246', 'GPL340', 'GPL11180', 'GPL13497', 'GPL571', 'GPL570'];
+    var SUPPORTED_PLATFORMS = ['GPL8321', 'GPL7091', 'GPL11383', 'GPL4044', 'GPL6887', 'GPL3084', 'GPL16268', 'GPL13692', 'GPL2881', 'GPL15207', 'GPL3697', 'GPL339', 'GPL17518', 'GPL15401', 'GPL13712', 'GPL201', 'GPL1261', 'GPL10558', 'GPL6193', 'GPL6244', 'GPL3050', 'GPL6101', 'GPL6885', 'GPL4685', 'GPL6102', 'GPL4200', 'GPL6480', 'GPL6106', 'GPL7202', 'GPL4134', 'GPL1708', 'GPL3921', 'GPL85', 'GPL4074', 'GPL2897', 'GPL4133', 'GPL6947', 'GPL1536', 'GPL1355', 'GPL4487', 'GPL81', 'GPL6096', 'GPL8063', 'GPL11202', 'GPL16686', 'GPL15792', 'GPL6246', 'GPL340', 'GPL11180', 'GPL13497', 'GPL571', 'GPL570'];
     
     /* EXTENSION_ID, DEBUG, SERVER, and SUPPORTED_PLATFORMS are set in
      * config.js via deploy.sh.

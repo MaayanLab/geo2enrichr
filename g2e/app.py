@@ -61,7 +61,7 @@ def extract(path):
             )
         elif path == 'geo':
             if flask.request.form.get('platform') not in PROBE2GENE:
-                response['error'] = 'Platform not supported.'
+                flask.abort(400)
             else:
                 response['extraction_id'] = extraction_maker(args=flask.request.form)
         else:

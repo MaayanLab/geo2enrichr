@@ -90,7 +90,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
          * forget.
          */
         if (platform && $.inArray(platform, SUPPORTED_PLATFORMS) === -1) {
-            $g2eLink.html('<strong class="g2e-strong">G2E:</strong> This platform is not currently supported.');
+            $g2eLink.html('<strong class="g2e-strong">This platform is not currently supported.');
         } else {
             $g2eLink.click(openModalBox);
         }

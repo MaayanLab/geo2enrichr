@@ -142,15 +142,15 @@ header h1 {
 header h1 a {
   font-size: 40px;
 }
-header .highlight {
-  color: #d90000;
-}
 .content {
   padding-bottom: 20px;
   width: 650px;
 }
 .content img {
   width: 100%;
+}
+.content img.browser-logo {
+  width: 50px;
 }
 .content table {
   table-layout: fixed;
@@ -184,6 +184,19 @@ header .highlight {
 }
 .content table tr td input {
   width: 100%;
+}
+.content table.extensions tr:first-child {
+  padding-bottom: 10px;
+}
+.content table.extensions td:first-child {
+  width: 10%;
+}
+.content table.extensions td {
+  height: 100px;
+  vertical-align: top;
+}
+.content table.extensions td p {
+  margin: 0;
 }
 .content.api table td,
 .content.tutorial table td {
@@ -261,4 +274,10 @@ form .description p {
 }
 .mono {
   font-family: monospace;
+}
+.left {
+  float: left;
+}
+.highlight {
+  color: #d90000;
 }

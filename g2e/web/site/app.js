@@ -115,8 +115,13 @@ $(function() {
             view.model.set('id', id);
             model.fetch({
                 success: function() {
-                    loader.stop();
                     view.render(model);
+                },
+                error: function(data) {
+                    view.error(data);
+                },
+                complete: function() {
+                    loader.stop();
                 }
             });
         }

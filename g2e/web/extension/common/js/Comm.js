@@ -19,13 +19,16 @@ var Comm = function(events, notifier, SERVER) {
         $.post(SERVER + 'api/extract/geo',
             input,
             function(data) {
-                var id = data.extraction_id,
-                    url = SERVER + '#results/' + id;
-                events.fire('resultsReady', url);
+                if (!!data.error) {
+                    events.fire('resultsError');
+                } else {
+                    var id = data.extraction_id,
+                        url = SERVER + '#results/' + id;
+                    events.fire('resultsReady', url);
+                }
             })
-            .fail(function(data) {
+            .fail(function(xhr, status, error) {
                 console.log("FAILED:");
-                console.log(data);
                 events.fire('resultsError');
             })
             .always(function() {

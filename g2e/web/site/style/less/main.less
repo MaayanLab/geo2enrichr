@@ -147,15 +147,15 @@ header {
             }
         }
     }
-    .highlight {
-        color: @color-red;
-    }
 }
 .content {
     padding-bottom: 20px;
     width: 650px;
     img {
         width: 100%;
+        &.browser-logo {
+            width: 50px;
+        }
     }
     table {
         table-layout: fixed;
@@ -186,6 +186,21 @@ header {
                 }
                 input {
                     width: 100%;
+                }
+            }
+        }
+        &.extensions {
+            tr:first-child {
+                padding-bottom: 10px;
+            }
+            td:first-child {
+                width: 10%;
+            }
+            td {
+                height: 100px;
+                vertical-align: top;
+                p {
+                    margin: 0;
                 }
             }
         }
@@ -265,4 +280,10 @@ form {
 }
 .mono {
     font-family: monospace;
+}
+.left {
+    float: left;
+}
+.highlight {
+    color: @color-red;
 }

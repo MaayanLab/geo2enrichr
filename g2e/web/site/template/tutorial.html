@@ -26,17 +26,49 @@ RHEB	12.4814	12.047	12.5944	12.1776
 </pre>
 </section>
 
-<!-- Chrome Extension -->
-
 <section>
-    <h2>Browser Extension</h2>
+    <h2>Use a browser extensions</h2>
 
+    <p>
+        GEO2Enrichr can be used in either Chrome or Firefox. Please click the appropriate link below for links
+    </p>
     <h4>Installation</h4>
-    <p>Click <a href='https://chrome.google.com/webstore/detail/geo2enrichr/pcbdeobileclecleblcnadplfcicfjlp' target='_blank'>here</a> to install GEO2Enrichr as an extension in your Chrome browser.</p>
-    <p>Clicking the <strong>+FREE</strong> button will install and activate the application. The Chrome Web Store will ask you to accept GEO2Enrichr's permission settings. The GEO2Enrichr application needs permission to make HTTP requests to our server for processing the dataset you will select when interacting with entries listed on the GEO site.</p>
-    
+    <table class="extensions">
+        <tr>
+            <td>
+                <a href="https://chrome.google.com/webstore/detail/geo2enrichr/pcbdeobileclecleblcnadplfcicfjlp" target="_blank">
+                    <img src="web/site/image/chrome.png" class="browser-logo" />
+                </a>
+            </td>
+            <td>
+                <p>Click <a href='https://chrome.google.com/webstore/detail/geo2enrichr/pcbdeobileclecleblcnadplfcicfjlp' target='_blank'>here</a> to install GEO2Enrichr as an extension in your Chrome browser.</p>
+                <p>Clicking the <strong>+FREE</strong> button will install and activate the application. The Chrome Web Store will ask you to accept GEO2Enrichr's permission settings. The GEO2Enrichr application needs permission to make HTTP requests to our server for processing the dataset you will select when interacting with entries listed on the GEO site.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="" target="_blank">
+                    <img src="web/site/image/firefox.png" class="browser-logo" />
+                </a>
+            </td>
+            <td>
+                <p>The FireFox Add-on is in the process of <a href="https://developer.mozilla.org/en-US/Add-ons/AMO/Policy/Reviews" target="_blank">being reviewed</a> but is ready for use via a manual installation. To manually install the add-on, follow these instructions:
+                </p>
+                <ol>
+                    <li>Download <a href="static/geo2enrichr.xpi">this .xpi file</a>.</li>
+                    <li>Open Firefox.</li>
+                    <li>Click the top-right menu (with three horizontal bars).</li>
+                    <li>Click "Add-ons".</li>
+                    <li>Click "Install Add-on From File".</li>
+                    <li>Navigate to the .xpi file and upload it.</li>
+                </ol>
+                <p>Now the extension should be installed. Follow the tutorial below to get started.</p>
+            </td>
+        </tr>
+    </table>
     <h4>Tutorial</h4>
-    <p>GEO2Enrichr works by embedding additional functionality into relevant GEO pages that you visit. For example, after installing the Chrome Extension, visiting the page <a href='http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS5077' target='_blank'>GDS5077</a> and clicking "Compare 2 sets of samples", you should see a new hypertext that says <strong>"Pipe to Enrichr"</strong> (Fig. 1).</p>
+    <p>GEO2Enrichr functions the same in both Chrome and Firefox; this tutorial is for both.</p>
+    <p>Each extension works by embedding additional functionality into relevant GEO pages that you visit. For example, after installing an extension, visiting the page <a href='http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS5077' target='_blank'>GDS5077</a> and clicking "Compare 2 sets of samples", you should see a new hypertext that says <strong>"Pipe to Enrichr"</strong> (Fig. 1).</p>
     <img src='web/site/image/screenshot-embedded.png'/>
     <p class='caption'>Fig. 1 Screenshot that shows how GEO2Enrichr adds an additional step to the GEO datasets pipeline.</p>
     <p>If you immediately click that hypertext, you will receive a warning: "Please select 2 or more control samples." This warning occurs because GEO2Enrichr needs you to specify the datasets that you would like to download, process, and analyze. Click <strong>"Select which Samples to put in Group A and Group B"</strong> and select two groups of samples: control samples on the left and treatment/condition samples on the right. In this example, GSM1071454 and GSM1071455 are the control samples and GSM1071457 and GSM1071457 are the treatment or condition samples (Fig. 2). It is important that the control samples are selected on the left and treatment samples are selected on the right because this information is used to determine the up-regulated and down-regulated genes direction.</p>

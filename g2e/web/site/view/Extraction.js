@@ -27,5 +27,9 @@ App.View.Extraction = Backbone.View.extend({
         this.$el.append(gls.el);
 
         this.$el.show();
+    },
+
+    error: function(data) {
+        this.$el.append('<p class="highlight">Unknown server side error. Please try to refresh the page.</p>');
     }
 });
