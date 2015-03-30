@@ -30,8 +30,8 @@ def clean_extraction(extraction):
     response['softfile'] = extraction.softfile.__dict__
     response['genelists'] = [gl.__dict__ for gl in extraction.genelists]
     response['metadata'] = extraction.metadata.__dict__
-    del response['genelists'][0]['ranked_genes']
-    del response['genelists'][1]['ranked_genes']
+    # del response['genelists'][0]['ranked_genes']
+    # del response['genelists'][1]['ranked_genes']
     # Leave the combined genes?
     #del response['genelists'][2]['ranked_genes']
     del response['softfile']['A']

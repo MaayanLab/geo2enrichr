@@ -52,7 +52,7 @@ def save(extraction):
             )
 
         extraction_dao = models.Extraction(
-        	extraction_id = extraction.extraction_id,
+            extraction_id = extraction.extraction_id,
             softfile      = softfile_dao,
             genelists     = genelists_dao,
             method        = metadata.method,
@@ -100,6 +100,7 @@ def fetch(extraction_id):
                 GeneList(
                     ranked_genes,
                     direction,
+                    metadata,
                     name=name,
                     text_file=text_file,
                     enrichr_link=enrichr_link

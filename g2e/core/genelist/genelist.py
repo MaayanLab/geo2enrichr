@@ -14,7 +14,7 @@ import g2e.core.genelist.enrichrlink as enrichrlink
 
 class GeneList(object):
 
-    def __init__(self, ranked_genes, direction, metadata=None, name=None, text_file=None, enrichr_link=None):
+    def __init__(self, ranked_genes, direction, metadata, name=None, text_file=None, enrichr_link=None):
         """Constructs a gene list.
         """
         self.ranked_genes = ranked_genes
@@ -22,7 +22,12 @@ class GeneList(object):
         self.name         = name or self._name()
         self.text_file    = text_file or filemanager.write(self.name, self.ranked_genes, metadata)
         description       = self._direction(self.direction) + '_' + str(metadata) 
-        self.enrichr_link = enrichr_link or enrichrlink.get_link(self.ranked_genes, description)
+        # If there is no cutoff, do not send data to Enrichr. The lists will
+        # be too big.
+        if metadata.cutoff:
+            self.enrichr_link = enrichr_link or enrichrlink.get_link(self.ranked_genes, description)
+        else:
+            self.enrichr_link = ''
 
     # PURPLE_WIRE: This should handle duplicate file names, although they are
     # unlikely.

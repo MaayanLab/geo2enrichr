@@ -8,10 +8,8 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-import numpy as np
-from scipy import stats
-
 from g2e.core.genelist import chdir
+from g2e.core.genelist import ttest
 
 
 def diffexp(A, B, genes, method, cutoff):
@@ -19,43 +17,14 @@ def diffexp(A, B, genes, method, cutoff):
     helper function based on client or default configuration.
     """
     if method == 'ttest':
-        genes, values = ttest(A, B, genes)
+        genes, values = ttest.ttest(A, B, genes)
     else:
-        print 'Calculating the characteristic direction.'
-        genes, values = chdir.chdir(A, B, genes)
-    genes, values = _sort_by_value(genes, values)
+    	genes, values = chdir.chdir(A, B, genes)
+
     genes, values = _apply_cutoff(genes, values, cutoff)
     return genes, values
 
 
-def ttest(A, B, genes):
-    """Performs a standard T-test.
-    """
-    values = []
-    for i in range(len(A)):
-        ttest_results = stats.ttest_ind(A[i], B[i])
-        signed_pvalue = ttest_results[1] if (ttest_results[0] > 0) else (ttest_results[1] * -1)
-        values.append((genes[i], signed_pvalue))
-
-    l = list(zip(*values))
-    return l[0], l[1]
-
-
-def _sort_by_value(genes, values):
-    """Sorts two lists, one of genes and another of values, by the absolute
-    value of the values.
-    """
-    genes = np.array(genes)
-    values = np.array(values)
-    ind = np.argsort( np.absolute(values) )
-    genes = genes[ind]
-    genes = [str(x) for x in genes]
-    values = values[ind]
-    return genes, values.tolist()
-
-
-# http://amp.pharm.mssm.edu/jira/browse/GE-33
-# http://amp.pharm.mssm.edu/jira/browse/GE-34
 def _apply_cutoff(genes, values, cutoff):
     """Applies a cutoff to both lists.
     """

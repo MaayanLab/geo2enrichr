@@ -20,6 +20,7 @@ var BaseScraper = function(DEBUG) {
         getUserOptions: function($modal) {
             var data = {},
                 method = $modal.find('#g2e-diffexp option:selected').val(),
+                cutoff = $modal.find('#g2e-cutoff option:selected').val(),
                 cell = $modal.find('#g2e-cell .g2e-value input').val(),
                 perturbation = $modal.find('#g2e-perturbation .g2e-value input').val(),
                 gene = $modal.find('#g2e-gene #g2e-geneList').val();
@@ -27,6 +28,9 @@ var BaseScraper = function(DEBUG) {
             
             if (method) {
                 data.method = method;
+            }
+            if (cutoff) {
+                data.cutoff = cutoff;
             }
             if (cell) {
                 data.cell = cell.replace(/_|\.|-/, '');

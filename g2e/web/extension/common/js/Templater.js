@@ -20,19 +20,9 @@ var Templater = function(IMAGE_PATH) {
                 '<table id="g2e-main-tbl">' +
                     '<tr>' +
                         '<td id="g2e-confirm">' +
+
                             '<div class="g2e-lowlight g2e-bottom">Please verify that your data is correct.</div>' +
                             '<table class="g2e-confirm-tbl">' +
-                                '<tr id="g2e-diffexp">' +
-                                    '<td class="g2e-title">' +
-                                        '<label>Differential expression method</label>' +
-                                    '</td>' +
-                                    '<td class="g2e-value">' +
-                                        '<select>' +
-                                            '<option value="chdir">Characteristic direction</option>' +
-                                            '<option value="ttest">T-test</option>' +
-                                        '</select>' +
-                                    '</td>' +
-                                '</tr>' +
                                 '<tr id="g2e-dataset">' +
                                     '<td class="g2e-title">Accession num.&#42;</td>' +
                                     '<td class="g2e-value"></td>' +
@@ -54,6 +44,34 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
                             '</table>' +
+
+                            '<div class="g2e-lowlight g2e-bottom">Please select differential expression analysis options.</div>' +
+                            '<table class="g2e-confirm-tbl">' +
+                                '<tr id="g2e-diffexp">' +
+                                    '<td class="g2e-title">' +
+                                        '<label>Differential expression method</label>' +
+                                    '</td>' +
+                                    '<td class="g2e-value">' +
+                                        '<select>' +
+                                            '<option value="chdir">Characteristic direction</option>' +
+                                            '<option value="ttest">T-test</option>' +
+                                        '</select>' +
+                                    '</td>' +
+                                '</tr>' +
+                                '<tr id="g2e-cutoff">' +
+                                    '<td class="g2e-title">' +
+                                        '<label>Cutoff</label>' +
+                                    '</td>' +
+                                    '<td class="g2e-value">' +
+                                        '<select>' +
+                                            '<option value="500">500</option>' +
+                                            '<option value="200">200</option>' +
+                                            '<option value="None">None</option>' +
+                                        '</select>' +
+                                    '</td>' +
+                                '</tr>' +
+                            '</table>' +
+
                             '<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
                             '<table class="g2e-confirm-tbl">' +
                                 '<tr id="g2e-cell">' +
