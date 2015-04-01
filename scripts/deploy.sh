@@ -32,7 +32,7 @@ else
     exId="pcbdeobileclecleblcnadplfcicfjlp";
 fi
 
-printf 'var IMAGE_PATH = "chrome-extension://%s/logo-50x50.png";' $extId >> $CHROME_JS_CONFIG
+printf 'var IMAGE_PATH = "chrome-extension://'$extId'/logo-50x50.png";' >> $CHROME_JS_CONFIG
 # In a Firefox plugin, self refers to JS object in the bootstrapping file.
 # http://stackoverflow.com/a/16848890/1830334
 printf 'var IMAGE_PATH = self.options.logoUrl;' >> $FIREFOX_JS_CONFIG

@@ -9,13 +9,17 @@ BASE_DIR = 'g2e/static/genelist/'
 EXT = '.txt'
 
 
-def write(name, ranked_genes, metadata):
+def write(name, direction, ranked_genes, metadata):
     """Writes the contents of a GeneList to disk and returns a relative path.
     """
     full_path = BASE_DIR + name + EXT
     with open(full_path, 'w+') as f:
-        f.write( _line('method', metadata.method) )
+    	f.write( _line('direction', direction) )
+    	f.write( _line('num_genes', len(ranked_genes)) )
+        f.write( _line('diffexp_method', metadata.diffexp_method) )
         f.write( _line('cutoff', metadata.cutoff) )
+        f.write( _line('correction_method', metadata.correction_method) )
+        f.write( _line('threshold', metadata.threshold) )
         f.write( _line('cell', metadata.cell) )
         f.write( _line('perturbation', metadata.perturbation) )
         f.write( _line('gene', metadata.gene) )

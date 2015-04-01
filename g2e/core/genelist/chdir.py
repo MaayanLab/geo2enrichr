@@ -13,14 +13,15 @@ import warnings
 import numbers
 
 
-def chdir(A, B, genes):
+def chdir(A, B, genes, cutoff):
     """Wraps original Characteristic Direction method, handling sorting by
     highest coefficients.
     """
     print 'Calculating the characteristic direction.'
-    genes, values = _chdir(A, B, genes)
-    genes, values = _sort_by_coefficients(genes, values)
-    return genes, values
+    genes, coefficients = _chdir(A, B, genes)
+    genes, coefficients = _sort_by_coefficients(genes, coefficients)
+    genes, coefficients = _apply_cutoff(genes, coefficients, cutoff)
+    return genes, coefficients
 
 
 # A and B are matricies where A[i][j] is the ith gene and jth sample in A.
@@ -182,3 +183,11 @@ def _sort_by_coefficients(genes, values):
     genes = [str(x) for x in genes]
     values = values[ind]
     return genes, values.tolist()
+
+
+def _apply_cutoff(genes, values, cutoff):
+    """Applies a cutoff to both lists.
+    """
+    if cutoff is None:
+        return genes, values
+    return genes[-cutoff:], values[-cutoff:]

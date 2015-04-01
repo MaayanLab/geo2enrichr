@@ -17,6 +17,9 @@ g2e/static/genelist/*
 
 # JS build files and dependencies
 scripts/node_modules/
+scripts/platforms/downloaded/
+scripts/platforms/cleaned/
+scripts/platforms/symbols/
 
 # directories
 resources/platform scripts/

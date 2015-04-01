@@ -65,8 +65,34 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="g2e-value">' +
                                         '<select>' +
                                             '<option value="500">500</option>' +
+                                            '<option value="1000">1000</option>' +
                                             '<option value="200">200</option>' +
                                             '<option value="None">None</option>' +
+                                        '</select>' +
+                                    '</td>' +
+                                '</tr>' +
+
+                                '<tr id="g2e-correction-method" class="g2e-ttest">'+
+                                    '<td class="g2e-title">' +
+                                        'Correction method' +
+                                    '</td>' +
+                                    '<td>' +
+                                        '<select>' +
+                                            '<option value="BH">Benjamini-Hochberg</option>' +
+                                            '<option value="bonferroni">Bonferroni</option>' +
+                                            '<option value="none">None</option>' +
+                                        '</select>' +
+                                    '</td>' +
+                                '</tr>' +
+                                '<tr id="g2e-threshold" class="g2e-ttest">' +
+                                    '<td class="g2e-title">' +
+                                        'Threshold' +
+                                    '</td>' +
+                                    '<td>' +
+                                        '<select name="threshold">' +
+                                            '<option value="0.1">0.1</option>' +
+                                            '<option value="0.5">0.5</option>' +
+                                            '<option value="none">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
@@ -76,7 +102,7 @@ var Templater = function(IMAGE_PATH) {
                             '<table class="g2e-confirm-tbl">' +
                                 '<tr id="g2e-cell">' +
                                     '<td class="g2e-title">' +
-                                        '<label>Cell type or tissue</label>' +
+                                        'Cell type or tissue' +
                                     '</td>' +
                                     '<td class="g2e-value">' +
                                         '<input placeholder="No data">' +
@@ -84,7 +110,7 @@ var Templater = function(IMAGE_PATH) {
                                 '</tr>' +
                                 '<tr id="g2e-perturbation">' +
                                     '<td class="g2e-title">' +
-                                        '<label>Perturbation</label>' +
+                                        'Perturbation' +
                                     '</td>' +
                                     '<td class="g2e-value">' +
                                         '<input placeholder="No data">' +

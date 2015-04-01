@@ -52,15 +52,17 @@ def save(extraction):
             )
 
         extraction_dao = models.Extraction(
-            extraction_id = extraction.extraction_id,
-            softfile      = softfile_dao,
-            genelists     = genelists_dao,
-            method        = metadata.method,
-            cutoff        = metadata.cutoff,
-            cell          = metadata.cell,
-            perturbation  = metadata.perturbation,
-            gene          = metadata.gene,
-            disease       = metadata.disease
+            extraction_id     = extraction.extraction_id,
+            softfile          = softfile_dao,
+            genelists         = genelists_dao,
+            diffexp_method    = metadata.diffexp_method,
+            cutoff            = metadata.cutoff,
+            correction_method = metadata.correction_method,
+            threshold         = metadata.threshold,
+            cell              = metadata.cell,
+            perturbation      = metadata.perturbation,
+            gene              = metadata.gene,
+            disease           = metadata.disease
         )
 
         session.add(extraction_dao)
@@ -72,6 +74,7 @@ def fetch(extraction_id):
     """Single entry point for fetching extractions from database by ID.
     """
     with session_scope() as session:
+
         ext_dao = session.query(models.Extraction).filter_by(extraction_id=extraction_id).first()
 
         sf_dao    = ext_dao.softfile
@@ -81,8 +84,10 @@ def fetch(extraction_id):
         platform  = sf_dao.platform
         softfile  = SoftFile(name, platform=platform, text_file=text_file, is_geo=is_geo)
         metadata  = Metadata(
-            ext_dao.method,
+            ext_dao.diffexp_method,
             ext_dao.cutoff,
+            ext_dao.correction_method,
+            ext_dao.threshold,
             ext_dao.cell,
             ext_dao.perturbation,
             ext_dao.gene,
@@ -119,7 +124,9 @@ def session_scope():
     try:
         yield session
         session.commit()
-    except:
+    except Exception, e:
+    	print 'Rolling back database'
+    	print e
         session.rollback()
     finally:
         session.close()

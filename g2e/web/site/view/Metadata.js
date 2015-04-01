@@ -8,11 +8,19 @@ App.View.Metadata = Backbone.View.extend({
         '<caption>Metadata</caption>' +
         '<tr>' +
             '<td>Differential expression method</td>' +
-            '<td><%= method %></td>' +
+            '<td><%= diffexp_method %></td>' +
         '</tr>' +
         '<tr>' +
             '<td>Cutoff</td>' +
             '<td><%= cutoff %></td>' +
+        '</tr>' +
+        '<tr>' +
+            '<td>Correction method</td>' +
+            '<td><%= correction_method %></td>' +
+        '</tr>' +
+        '<tr>' +
+            '<td>Threshold</td>' +
+            '<td><%= threshold %></td>' +
         '</tr>' +
         '<tr>' +
             '<td>Cell type or tissue</td>' +

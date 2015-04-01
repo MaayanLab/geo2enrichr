@@ -20,8 +20,13 @@ class GeneList(object):
         self.ranked_genes = ranked_genes
         self.direction    = direction
         self.name         = name or self._name()
-        self.text_file    = text_file or filemanager.write(self.name, self.ranked_genes, metadata)
-        description       = self._direction(self.direction) + '_' + str(metadata) 
+        self.text_file    = text_file or filemanager.write(
+        	self.name, 
+        	self.direction,
+        	self.ranked_genes,
+        	metadata
+        )
+        description = self._direction(self.direction) + '_' + str(metadata) 
         # If there is no cutoff, do not send data to Enrichr. The lists will
         # be too big.
         if metadata.cutoff:

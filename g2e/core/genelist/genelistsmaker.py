@@ -18,9 +18,9 @@ def genelists_maker(softfile, metadata):
         softfile.A,
         softfile.B,
         softfile.genes,
-        metadata.method,
-        metadata.cutoff
+        metadata
     )
+
     # numpy sorts the data from left-to-right, but we render the results
     # "top-to-bottom", meaning we need to reverse the lists.
     ranked_genes = list(zip(reversed(genes), reversed(values)))

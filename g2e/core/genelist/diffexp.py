@@ -12,22 +12,23 @@ from g2e.core.genelist import chdir
 from g2e.core.genelist import ttest
 
 
-def diffexp(A, B, genes, method, cutoff):
+def diffexp(A, B, genes, metadata):
     """Identifies differentially expressed genes, delegating to the correct
     helper function based on client or default configuration.
     """
-    if method == 'ttest':
-        genes, values = ttest.ttest(A, B, genes)
+    if metadata.diffexp_method == 'ttest':
+        genes, values = ttest.ttest(
+            A,
+            B,
+            genes,
+            metadata.correction_method,
+            metadata.threshold
+        )
     else:
-    	genes, values = chdir.chdir(A, B, genes)
-
-    genes, values = _apply_cutoff(genes, values, cutoff)
+        genes, values = chdir.chdir(
+            A,
+            B,
+            genes,
+            metadata.cutoff
+        )
     return genes, values
-
-
-def _apply_cutoff(genes, values, cutoff):
-    """Applies a cutoff to both lists.
-    """
-    if cutoff is None:
-        return genes, values
-    return genes[-cutoff:], values[-cutoff:]

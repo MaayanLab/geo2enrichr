@@ -6,15 +6,48 @@ App.View.Form = Backbone.View.extend({
 
     events: {
         'click button': 'submit',
+        'change select#diffexp_method': 'methodChange',
+        'change select#correction_method' : 'correctionChange'
     },
 
     initialize: function(options) {
+        // This view's visibility is handled in app.js.
         this.$el.hide();
-        var template = App.renderTemplate('form', this.model.toJSON());
+
+        this.$form = $('<form></form>');
+        this.$el.append(this.$form);
+
+        var templateData = this.model.toJSON();
+        this.$form.append( App.renderTemplate('form-required', templateData) );
+        this.$options = $('<div id="options"></div>');
+        this.$options.append( App.renderTemplate('form-options-chdir', templateData) );
+        this.$form.append( this.$options );
+        this.$form.append( App.renderTemplate('form-metadata', templateData) );
+        this.$form.append('<button>Extract gene lists</button>');
+
         options.parent.$el.find('#content').append(this.el);
-        this.$el.append(template);
         this.model.on('change', this.render, this);
         App.EventAggregator.on('clear:form', this.clear, this);
+    },
+
+    methodChange: function(evt) {
+        var diffexp_method = $(evt.target).val(),
+            template = this.model.toJSON();
+        this.$options.empty();
+        if (diffexp_method === 'ttest') {
+            this.$options.append( App.renderTemplate('form-options-ttest', template) );
+        } else {
+            this.$options.append( App.renderTemplate('form-options-chdir', template) );
+        }
+    },
+
+    correctionChange: function(evt) {
+        var correction_method = $(evt.target).val();
+        if (correction_method === 'none') {
+            $('#threshold_row').hide();
+        } else {
+            $('#threshold_row').show();
+        }
     },
 
     submit: function(evt) {
@@ -49,7 +82,8 @@ App.View.Form = Backbone.View.extend({
                 return false
             },
             error: function(data) {
-                debugger;
+                loader.stop();
+                console.log(data);
             }
         });
     },

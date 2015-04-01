@@ -123,5 +123,30 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
             resetFooter();
             $overlay.hide();
         });
+
+
+        $ttest = $('.g2e-ttest');
+        $cutoff = $('#g2e-cutoff');
+        $threshold = $('#g2e-threshold');
+        $ttest.hide();
+        $('#g2e-diffexp').change(function(evt) {
+            var method = $(evt.target).val();
+            if (method === 'chdir') {
+                $cutoff.show();
+                $ttest.hide();
+            } else {
+                $cutoff.hide();
+                $ttest.show();
+            }
+        });
+
+        $('#g2e-correction-method').change(function(evt) {
+            var val = $(evt.target).val();
+            if (val === 'none') {
+                $threshold.hide();
+            } else {
+                $threshold.show();
+            }
+        });
     })();
 };

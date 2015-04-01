@@ -18,6 +18,12 @@ class ExtractEndpoint(unittest.TestCase):
 
     def setUp(self):
         self.app = g2e.app.app.test_client()
+
+    # This should be multiple unit tests but it is annoyingly slow to run.
+    def test_extraction_endpoint_chdir(self):
+        import time
+        s = time.time()
+
         self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
             is_geo = 'True',
             dataset = 'GDS5077',
@@ -26,22 +32,15 @@ class ExtractEndpoint(unittest.TestCase):
             B_cols = ['GSM1071457', 'GSM1071456']
         ))
         self.resp_dict = json.loads(self.resp.data.decode())
-
-    # This should be multiple unit tests but it is annoyingly slow to run.
-    def test_extraction_endpoint(self):
-        import time
-        s = time.time()
-
         self.assertEquals(self.resp.status_code, 200)
         self.assertTrue('extraction_id' in self.resp_dict)
-
         extraction_id = self.resp_dict['extraction_id']
         resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
         resp_dict = json.loads(resp.data.decode())
 
-        self.assertTrue(resp_dict['metadata']['method'] == 'chdir')
+        # Test response from round-trip.
+        self.assertTrue(resp_dict['metadata']['diffexp_method'] == 'chdir')
         self.assertTrue(resp_dict['metadata']['cutoff'] == 500)
-
         self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
         self.assertTrue(resp_dict['softfile']['text_file'] == 'static/softfile/clean/GDS5077.txt')
         self.assertTrue(resp_dict['softfile']['platform'] == 'GPL10558')
@@ -59,4 +58,49 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(get_gene_value(genelist, 'SRPK1') == -0.0222528)
         self.assertTrue(get_gene_value(genelist, 'MYH6') == -0.0327115)
 
+        print time.time() - s
+
+
+    # This should be multiple unit tests but it is annoyingly slow to run.
+    def test_extraction_endpoint_ttest(self):
+        import time
+        s = time.time()
+
+        self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
+            is_geo = 'True',
+            dataset = 'GDS5077',
+            diffexp_method = 'ttest',
+            correction_method = 'BH',
+            threshold = 0.05,
+            platform = 'GPL10558',
+            A_cols = ['GSM1071454', 'GSM1071455'],
+            B_cols = ['GSM1071457', 'GSM1071456']
+        ))
+        self.resp_dict = json.loads(self.resp.data.decode())
+        self.assertEquals(self.resp.status_code, 200)
+        self.assertTrue('extraction_id' in self.resp_dict)
+        extraction_id = self.resp_dict['extraction_id']
+        resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
+        resp_dict = json.loads(resp.data.decode())
+
+        self.assertTrue(resp_dict['metadata']['diffexp_method'] == 'ttest')
+        self.assertTrue(resp_dict['metadata']['correction_method'] == 'BH')
+        self.assertTrue(resp_dict['metadata']['threshold'] == 0.05)
+
+        self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
+        self.assertTrue(resp_dict['softfile']['text_file'] == 'static/softfile/clean/GDS5077.txt')
+        self.assertTrue(resp_dict['softfile']['platform'] == 'GPL10558')
+        self.assertTrue(resp_dict['softfile']['is_geo'])
+
+        for gl in resp_dict['genelists']:
+            self.assertTrue('direction' in gl)
+            self.assertTrue('enrichr_link' in gl)
+            self.assertTrue('name' in gl)
+            self.assertTrue('text_file' in gl)
+
+        genelist = resp_dict['genelists'][2]['ranked_genes']
+        self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.00469161)
+        self.assertTrue(get_gene_value(genelist, 'PTPRN2') == 0.00486001)
+        self.assertTrue(get_gene_value(genelist, 'GNG11') == -0.04072)
+        self.assertTrue(get_gene_value(genelist, 'PDZRN3') == -0.0375523)
         print time.time() - s

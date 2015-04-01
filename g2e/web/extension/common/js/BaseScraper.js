@@ -27,7 +27,7 @@ var BaseScraper = function(DEBUG) {
                 disease = $modal.find('#g2e-disease #g2e-diseaseList').val();
             
             if (method) {
-                data.method = method;
+                data.diffexp_method = method;
             }
             if (cutoff) {
                 data.cutoff = cutoff;
