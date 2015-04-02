@@ -3,6 +3,7 @@
 
 
 import os.path
+import time
 
 import g2e.core.softfile.normalizer as normalizer
 
@@ -41,9 +42,11 @@ def write(name, genes, A, B):
 def save(name, file_obj):
     """Saves a SOFT file in the correct directory.
     """
-    full_path =  BASE_DIR + name + EXT
+    if name == '':
+        name = str(time.time())
+    full_path = BASE_DIR + name + EXT
     file_obj.save(full_path)
-    return full_path
+    return full_path[4:]
 
 
 def file_exists(name):
