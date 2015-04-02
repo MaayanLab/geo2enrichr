@@ -29,7 +29,7 @@ else
     printf '%s\n' 'var SERVER = "http://amp.pharm.mssm.edu/g2e/";' >> $CHROME_JS_CONFIG
     printf '%s\n' 'var DEBUG = false;' >> $FIREFOX_JS_CONFIG
     printf '%s\n' 'var SERVER = "http://amp.pharm.mssm.edu/g2e/";' >> $FIREFOX_JS_CONFIG
-    exId="pcbdeobileclecleblcnadplfcicfjlp";
+    extId="pcbdeobileclecleblcnadplfcicfjlp";
 fi
 
 printf 'var IMAGE_PATH = "chrome-extension://'$extId'/logo-50x50.png";' >> $CHROME_JS_CONFIG

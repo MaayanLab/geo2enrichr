@@ -2,9 +2,15 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var DEBUG = true;
-var SERVER = "http://localhost:8083/g2e/";
+var DEBUG = false;
+var SERVER = "http://amp.pharm.mssm.edu/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
+// This file is built when new platforms are added.
+//// We use an array rather than hitting an API endpoint because this is much
+// faster. If the server is too slow, we will not notify the user that the
+// platform is not supported in a timely fashion.
+var SUPPORTED_PLATFORMS = ["GPL8321","GPL7091","GPL11383","GPL2902","GPL4044","GPL2700","GPL6887","GPL3084","GPL16268","GPL13692","GPL2881","GPL2011","GPL94","GPL15207","GPL3697","GPL2006","GPL93","GPL92","GPL339","GPL284","GPL6883","GPL17518","GPL887","GPL15401","GPL13712","GPL201","GPL1261","GPL10558","GPL6193","GPL6244","GPL3050","GPL7430","GPL6101","GPL6885","GPL95","GPL4685","GPL2507","GPL3408","GPL44","GPL6102","GPL4200","GPL6480","GPL6106","GPL7202","GPL4134","GPL1708","GPL3921","GPL85","GPL4074","GPL2897","GPL4133","GPL6947","GPL10666","GPL1536","GPL1355","GPL11532","GPL4487","GPL80","GPL81","GPL6096","GPL8063","GPL737","GPL11202","GPL16686","GPL15792","GPL6246","GPL340","GPL2895","GPL11180","GPL97","GPL13497","GPL571","GPL570"];
+
 
 var Comm = function(events, notifier, SERVER) {
 
@@ -823,8 +829,6 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
 
 var main = function() {
 
-    var SUPPORTED_PLATFORMS = ['GPL8321', 'GPL7091', 'GPL11383', 'GPL4044', 'GPL6887', 'GPL3084', 'GPL16268', 'GPL13692', 'GPL2881', 'GPL15207', 'GPL3697', 'GPL339', 'GPL17518', 'GPL15401', 'GPL13712', 'GPL201', 'GPL1261', 'GPL10558', 'GPL6193', 'GPL6244', 'GPL3050', 'GPL6101', 'GPL6885', 'GPL4685', 'GPL6102', 'GPL4200', 'GPL6480', 'GPL6106', 'GPL7202', 'GPL4134', 'GPL1708', 'GPL3921', 'GPL85', 'GPL4074', 'GPL2897', 'GPL4133', 'GPL6947', 'GPL1536', 'GPL1355', 'GPL4487', 'GPL81', 'GPL6096', 'GPL8063', 'GPL11202', 'GPL16686', 'GPL15792', 'GPL6246', 'GPL340', 'GPL11180', 'GPL13497', 'GPL571', 'GPL570'];
-    
     /* EXTENSION_ID, DEBUG, SERVER, and SUPPORTED_PLATFORMS are set in
      * config.js via deploy.sh.
      */

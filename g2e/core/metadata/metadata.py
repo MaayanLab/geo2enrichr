@@ -51,5 +51,6 @@ class Metadata(object):
     def __str__(self):
         result = []
         for key,val in self.__dict__.items():
-            result.append(str(val))
+            if val:
+                result.append(str(val))
         return '-'.join(result)

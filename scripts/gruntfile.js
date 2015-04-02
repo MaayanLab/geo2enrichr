@@ -11,6 +11,7 @@ module.exports = function(grunt) {
     var SITE = WEB + 'site/';
 
     var src_files = [
+        COMMON + 'js/platforms.js',
         COMMON + 'js/Comm.js',
         COMMON + 'js/Bootstrapper.js',
         COMMON + 'js/GdsBootstrapper.js',
