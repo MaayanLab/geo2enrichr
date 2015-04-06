@@ -1,3 +1,5 @@
+# docker -it -v ~/g2e:/app <image>
+
 FROM debian:stable
 
 RUN apt-get update
@@ -10,7 +12,6 @@ RUN apt-get -y install python-setuptools
 RUN apt-get -y install apache2
 RUN apt-get -y install apache2-prefork-dev
 RUN pip install mod_wsgi
-
 
 RUN pip install -Iv Flask==0.10.1
 RUN pip install -Iv SQLAlchemy==0.9.9
@@ -26,8 +27,5 @@ RUN pip install -Iv wsgiref==0.1.2
 RUN apt-get -y install r-base r-base-dev
 RUN apt-get -y install python-rpy2
 
-
-#CMD /etc/app/apachectl start
-# docker -it -v ~/g2e:/app <image>
-
-# mod_wsgi-express start-server wsgi.py --port=80 --user www-data --group www-data --server-root=/etc/app
+RUN mod_wsgi-express start-server wsgi.py --port=80 --user www-data --group www-data --server-root=/etc/app
+RUN /etc/app/apachectl start
