@@ -1,1 +1,2 @@
+Error : <type 'exceptions.StopIteration'>
 Error GPL11154: <type 'exceptions.StopIteration'>

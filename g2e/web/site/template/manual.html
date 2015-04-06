@@ -96,4 +96,30 @@ RHEB	12.4814	12.047	12.5944	12.1776
     <p>In Fig 5 we show the results of the GEO TF benchmarking test for each for the five analysis methods. Fig 5(a) shows the distribution of the prioritization of the genes corresponding to the perturbed TF; we see that all the methods prioritize these genes. Fig 5(b) shows the distribution of the genes corresponding to the proteins interacting with the perturbed TF in the Human Protein Protein Interaction (PPI) network; here we see that the characteristic direction prioritizes the PPI interactors significantly more than the other methods.  Fig 5(c-d) show the distribution for the ChIP-Seq candidate genes, and here we see the clearest signal, and again the characteristic direction prioritizes the candidate genes significantly higher based on both the ChEA and the Encode ChIP-Seq libraries.</p>
     <p>Finally, we performed a similar benchmarking approach using 130 drug perturbation experiments from GEO, with candidate gene sets composed of the known drug targets. We see the same order of performance in this setting.</p>
     <p>These results lead us to conclude that the characteristic direction approach to differential expression is the highest performing method of those we tested across a large number of GEO data sets.</p>
+    
+    <h4>A short description of the characteristic direction</h4>
+    <p>The Characteristic Direction uses the Linear Discriminant Analysis (LDA) classifier, in which the probability that a microarray sample $x$ derives from each of the classes $G$ is modeled with the Bayes rule:
+
+    $$
+    Pr(G = k|X = x) = \frac{f_k(x)\pi_k}{\sum_{l=1}^{K} f_l(x)\pi_l}
+    $$
+    
+    Where $f_k(x)$ is the class-conditional density, and $\pi_k$ is the prior probability of class $k$. By making the assumption that the class-conditional density is a multivariate Gaussian:
+
+    $$
+    f_k(x) = \frac{1}{(2\pi)^{\frac{p}{2}}|\sum_{k}|\frac{1}{2}} e^{-\frac{1}{2}(x-u_k)^{T}\sum_{k}^{-1}(x-u_k)}
+    $$
+        
+    Making the additional assumption that the covariance matrix for each class is the same $\sum_{k}=\sum \forall k$, the class boundary is a hyperplane with normal vector,
+    
+    $$
+    b = \sum_{}^{-1}(u_k-u_l)
+    $$
+    </p>
+    <p>This vector defines the orientation of the classification boundary hyperplane and the characteristic direction approach uses this vector to characterize the differential expression between the two classes.</p>
+    <p>Additionally, this can be regularized by shrinking the covariance matrix to the scalar variance $\sigma^2$
+    
+    $$\hat{\sum}(\gamma) = \gamma\hat{\sum}+(1+\gamma)\sigma^2I_{p'}$$
+    
+    with $\gamma \in [0,1]$ and where $\gamma$ is the regularization parameter.</p>
 </section>

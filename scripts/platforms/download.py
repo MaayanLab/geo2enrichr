@@ -57,11 +57,12 @@ def _construct_GPL_url(accession):
         folder = accession[:4] + "nnn"
     else:
         folder = accession[:5] + "nnn"
-    url = '/'.join(["ftp://ftp.ncbi.nlm.nih.gov/geo/platforms", 
-                    folder,
-                    accession,
-                    "annot",
-                    accession + ".annot.gz"])
+    #url = '/'.join(["ftp://ftp.ncbi.nlm.nih.gov/geo/platforms", 
+    #                folder,
+    #                accession,
+    #                "annot",
+    #                accession + ".annot.gz"])
+    url = 'ftp://ftp.ncbi.nlm.nih.gov/geo/platforms/GPL11nnn/GPL11154/soft/'
     return url
 
 
