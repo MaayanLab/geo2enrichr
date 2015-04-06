@@ -48,7 +48,7 @@ $(function() {
         api: new App.View.Api({
             parent: page
         }),
-        tutorial: new App.View.Tutorial({
+        manual: new App.View.Manual({
             parent: page
         }),
         pipeline: new App.View.Pipeline({
@@ -82,7 +82,7 @@ $(function() {
             '': 'form',
             'example': 'example',
             'api': 'api',
-            'tutorial': 'tutorial',
+            'manual': 'manual',
             'pipeline': 'pipeline',
             'about': 'about',
             'results/(:id)': 'results'
@@ -97,8 +97,8 @@ $(function() {
         api: function() {
             App.contentViews.show(App.contentViews.api);
         },
-        tutorial: function() {
-            App.contentViews.show(App.contentViews.tutorial);
+        manual: function() {
+            App.contentViews.show(App.contentViews.manual);
         },
         pipeline: function() {
             App.contentViews.show(App.contentViews.pipeline);

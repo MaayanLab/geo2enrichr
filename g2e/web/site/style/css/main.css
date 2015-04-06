@@ -202,26 +202,26 @@ header h1 a {
   margin: 0;
 }
 .content.api table,
-.content.tutorial table {
+.content.manual table {
   padding-bottom: 0;
 }
 .content.api table td,
-.content.tutorial table td {
+.content.manual table td {
   border: none;
 }
 .content.api section,
-.content.tutorial section {
+.content.manual section {
   margin-bottom: 20px;
   border-bottom: 1px solid #dddddd;
 }
 .content.api section.last,
-.content.tutorial section.last {
+.content.manual section.last {
   border: none;
 }
 .content.api pre,
-.content.tutorial pre,
+.content.manual pre,
 .content.api .code,
-.content.tutorial .code {
+.content.manual .code {
   background: #eeeeee;
   padding: 10px;
   font-family: monospace;
@@ -229,7 +229,7 @@ header h1 a {
   font-size: 12px;
 }
 .content.api pre,
-.content.tutorial pre {
+.content.manual pre {
   white-space: pre-wrap;
   /* CSS 3 */
   white-space: -moz-pre-wrap;
