@@ -90,8 +90,8 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                     '<td>' +
                                         '<select name="threshold">' +
-                                            '<option value="0.1">0.1</option>' +
-                                            '<option value="0.5">0.5</option>' +
+                                            '<option value="0.01">0.01</option>' +
+                                            '<option value="0.05">0.05</option>' +
                                             '<option value="none">None</option>' +
                                         '</select>' +
                                     '</td>' +
