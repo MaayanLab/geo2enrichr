@@ -22,7 +22,7 @@
         
         where $D$ is the vector of medians of every row of data, and $S$ is the vector of standard deviations of every row of data. If either equation is true, GEO2Enrichr decides that the data was likely not normalized and thus the program quantile normalizes the data.</p>
 
-        <p>Broadly, quantile normalization is a four step algorithm to make two distributions statistically similar. First, the algorithm ranks the values values in each column. Next it averages the rows. Finally, it reorders the columns, shifting each value back to its original location. The end result is that each distributions statistical properties are identical. Below is a visualization:</p>
+        <p>Broadly, quantile normalization is a four step algorithm to make two distributions statistically similar. First, the algorithm ranks the values in each column. Next it averages the rows. Finally, it reorders the columns, shifting each value back to its original location. The end result is that each distributions statistical properties are identical. Below is a visualization:</p>
 <pre>
          Original    Ranked    Averaged    Reordered
          A   B       A   B     A   B       A   B
