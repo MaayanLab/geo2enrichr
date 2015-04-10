@@ -202,26 +202,32 @@ header h1 a {
   margin: 0;
 }
 .content.api table,
-.content.manual table {
+.content.manual table,
+.content.pipeline table {
   padding-bottom: 0;
 }
 .content.api table td,
-.content.manual table td {
+.content.manual table td,
+.content.pipeline table td {
   border: none;
 }
 .content.api section,
-.content.manual section {
+.content.manual section,
+.content.pipeline section {
   margin-bottom: 20px;
   border-bottom: 1px solid #dddddd;
 }
 .content.api section.last,
-.content.manual section.last {
+.content.manual section.last,
+.content.pipeline section.last {
   border: none;
 }
 .content.api pre,
 .content.manual pre,
+.content.pipeline pre,
 .content.api .code,
-.content.manual .code {
+.content.manual .code,
+.content.pipeline .code {
   background: #eeeeee;
   padding: 10px;
   font-family: monospace;
@@ -229,7 +235,8 @@ header h1 a {
   font-size: 12px;
 }
 .content.api pre,
-.content.manual pre {
+.content.manual pre,
+.content.pipeline pre {
   white-space: pre-wrap;
   /* CSS 3 */
   white-space: -moz-pre-wrap;
