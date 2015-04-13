@@ -21,6 +21,7 @@ var BaseScraper = function(DEBUG) {
             var data = {},
                 method = $modal.find('#g2e-diffexp option:selected').val(),
                 cutoff = $modal.find('#g2e-cutoff option:selected').val(),
+                normalize = $modal.find('#g2e-normalize option:selected').val(),
                 cell = $modal.find('#g2e-cell .g2e-value input').val(),
                 perturbation = $modal.find('#g2e-perturbation .g2e-value input').val(),
                 gene = $modal.find('#g2e-gene #g2e-geneList').val();
@@ -31,6 +32,9 @@ var BaseScraper = function(DEBUG) {
             }
             if (cutoff) {
                 data.cutoff = cutoff;
+            }
+            if (normalize) {
+                data.normalize = normalize;
             }
             if (cell) {
                 data.cell = cell.replace(/_|\.|-/, '');

@@ -6,10 +6,10 @@ App.View.GeneList = Backbone.View.extend({
 
     template: _.template('' +
         '<td><%= direction %></td>' +
-        '<td>' +
+        '<td title="Text file containing a gene list resulting from differential expression analysis.">' +
             '<a href="<%= text_file %>" target="_blank">Download</a>' +
         '</td>' +
-        '<td>' +
+        '<td title="Link to enriched data on Enrichr, a gene set enrichment analysis tool.">' +
             '<a href="<%= enrichr_link %>" target="_blank">Open Enrichr link</a>' +
         '</td>'
     ),

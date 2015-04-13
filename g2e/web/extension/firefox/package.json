@@ -3,9 +3,9 @@
   "title": "geo2enrichr",
   "id": "jid1-RkBW4OgrnYWq4g",
   "description": "Firefox add-on for GEO2Enrichr",
-  "author": "Yan Kou, Ma'ayan Lab",
+  "author": "Gregory Gundersen, Ma'ayan Lab",
   "license": "MPL 2.0",
-  "version": "2.6",
+  "version": "2.7",
   "permissions": {
   "cross-domain-content": ["http://amp.pharm.mssm.edu/*", "http://fonts.gstatic.com/*"]
 	}

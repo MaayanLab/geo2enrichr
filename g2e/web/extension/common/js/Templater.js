@@ -24,7 +24,7 @@ var Templater = function(IMAGE_PATH) {
                             '<div class="g2e-lowlight g2e-bottom">Please verify that your data is correct.</div>' +
                             '<table class="g2e-confirm-tbl">' +
                                 '<tr id="g2e-dataset">' +
-                                    '<td class="g2e-title">Accession num.&#42;</td>' +
+                                    '<td class="g2e-title">Accession num.</td>' +
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-platform">' +
@@ -36,11 +36,11 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-A_cols">' +
-                                    '<td class="g2e-title">Control samples&#42;</td>' +
+                                    '<td class="g2e-title">Control samples</td>' +
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-B_cols" class="g2e-last">' +
-                                    '<td class="g2e-title">Treatment or condition samples&#42;</td>' +
+                                    '<td class="g2e-title">Treatment or condition samples</td>' +
                                     '<td class="g2e-value"></td>' +
                                 '</tr>' +
                             '</table>' +
@@ -49,20 +49,31 @@ var Templater = function(IMAGE_PATH) {
                             '<table class="g2e-confirm-tbl">' +
                                 '<tr id="g2e-diffexp">' +
                                     '<td class="g2e-title">' +
-                                        '<label>Differential expression method</label>' +
+                                        'Differential expression method' +
                                     '</td>' +
-                                    '<td class="g2e-value">' +
+                                    '<td class="g2e-value g2e-select">' +
                                         '<select>' +
                                             '<option value="chdir">Characteristic direction</option>' +
                                             '<option value="ttest">T-test</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
+                                '<tr id="g2e-normalize">' +
+                                    '<td class="g2e-title">' +
+                                        'Log-transform and quantile normalize if necessary&#42;' +
+                                    '</td>' +
+                                    '<td class="g2e-value g2e-select">' +
+                                        '<select>' +
+                                            '<option value="True">Yes</option>' +
+                                            '<option value="False">No</option>' +
+                                        '</select>' +
+                                    '</td>' +
+                                '</tr>' +
                                 '<tr id="g2e-cutoff">' +
                                     '<td class="g2e-title">' +
-                                        '<label>Cutoff</label>' +
+                                        'Cutoff' +
                                     '</td>' +
-                                    '<td class="g2e-value">' +
+                                    '<td class="g2e-value g2e-select">' +
                                         '<select>' +
                                             '<option value="500">500</option>' +
                                             '<option value="1000">1000</option>' +
@@ -143,8 +154,8 @@ var Templater = function(IMAGE_PATH) {
                 '</div>' +
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 
+                        '&#42;See the <a href="http://amp.pharm.mssm.edu/g2e/#pipeline" target="_blank">website</a> for details.<br>' +
                         'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
-                        ' See the <a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">website</a> for details.' +
                     '</p>' +
                 '</div>' +
             '</div>' +

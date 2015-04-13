@@ -276,8 +276,8 @@ form {
     width: 100%;
     z-index: 9999;
     .modal {
-        background: #fffac7;
-        border: 1px solid #fff169;
+        background: @color-lightyellow;
+        border: 1px solid @color-yellow;
         color: @color-darkgray;
         font-size: 12px;
         font-weight: bold;
@@ -303,4 +303,17 @@ form {
 }
 .highlight {
     color: @color-red;
+}
+.ui-tooltip {
+    background: @color-lightyellow;
+    border: 1px solid @color-yellow;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+	box-shadow: none;
+    color: @color-darkgray;
+    font-family: @font-family-base;
+    font-size: 12px;
+    /*font-weight: bold;*/
+    radius: 0;
+    padding: 5px;
 }

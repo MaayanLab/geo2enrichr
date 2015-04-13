@@ -67,6 +67,7 @@ class SoftFile(Base):
     platform = Column(String(200))
     # is_geo == False indicates a custom dataset.
     is_geo = Column(Boolean)
+    normalize = Column(Boolean)
     text_file = Column(String(200))
 
     def __repr__(self):

@@ -27,6 +27,7 @@ def save(extraction):
             name      = sf.name,
             platform  = sf.platform,
             is_geo    = sf.is_geo,
+            normalize = sf.normalize,
             text_file = sf.text_file
         )
 
@@ -81,9 +82,15 @@ def fetch(extraction_id):
         name      = sf_dao.name
         text_file = sf_dao.text_file
         is_geo    = sf_dao.is_geo
+        normalize = sf_dao.normalize
         platform  = sf_dao.platform
-        softfile  = SoftFile(name, platform=platform, text_file=text_file, is_geo=is_geo)
-        metadata  = Metadata(
+        softfile  = SoftFile(name,
+            platform  = platform,
+            text_file = text_file,
+            is_geo    = is_geo,
+            normalize = normalize
+        )
+        metadata   = Metadata(
             ext_dao.diffexp_method,
             ext_dao.cutoff,
             ext_dao.correction_method,
@@ -125,8 +132,8 @@ def session_scope():
         yield session
         session.commit()
     except Exception, e:
-    	print 'Rolling back database'
-    	print e
+        print 'Rolling back database'
+        print e
         session.rollback()
     finally:
         session.close()

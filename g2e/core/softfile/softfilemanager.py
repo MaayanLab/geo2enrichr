@@ -13,22 +13,28 @@ CLEANED_DIR = BASE_DIR + 'clean/'
 EXT         = '.txt'
 
 
-def write(name, genes, A, B):
+def write(name, platform, normalize, genes, A, B, gsms, selections, stats):
     """Writes the contents of a SoftFile to disk and returns a relative path.
     """
+    print 'Writing clean SOFT file.'
+
     AB = normalizer.concat(A, B)
     gene_values_dict = { k:v for (k,v) in zip(genes, AB) }
 
-    # PURPLE_WIRE: We need to not overwrite existing SoftFiles!
-    print 'Writing clean SOFT file.'
-    full_path = CLEANED_DIR + name + EXT
+    # We add the time to the cleaned SOFT file name because not all SOFT files
+    # of the same GEO accession ID will have the same *cleaned* content. Users
+    # may select a variety of samples.
+    entropy = str(time.time())[:10]
+    full_path = CLEANED_DIR + name + '_' + entropy + EXT
     with open(full_path, 'w+') as f:
-        f.write('!datset\t' + name + '\n')
-        #f.write('!platform\t' + self.platform + '\n')
-        #f.write('!unconverted_probes_pct\t' + str(self.stats['unconverted_probes_pct']) + '\n')
-        #f.write('!discarded_lines_pct\t' + str(self.stats['discarded_lines_pct']) + '\n')
+        f.write('!dataset\t' + name + '\n')
+        f.write('!platform\t' + platform + '\n')
+        f.write('!normalize\t' + str(normalize) + '\n')
+        f.write('!unconverted_probes\t' + str(stats['unconverted_probes_pct']) + '%\n')
+        f.write('!discarded_lines\t' + str(stats['discarded_lines_pct']) + '%\n')
         f.write('!end_metadata\n')
-        #f.write('GENE SYMBOL\t' + '\t'.join(self.gsms) + '\n')
+        f.write(' \t' + '\t'.join(_build_selections(selections)) + '\n')
+        f.write(' \t' + '\t'.join(gsms) + '\n')
         for gene, val in gene_values_dict.items():
             val_str = '\t'.join(map(str, val))
             f.write(gene + '\t' + val_str + '\n')
@@ -61,3 +67,16 @@ def path(name):
     """Returns a relative path to the SoftFile on the server.
     """
     return BASE_DIR + name + EXT
+
+
+def _build_selections(selections):
+    """
+    """
+    A_indices = selections['A_indices']
+    B_indices = selections['B_indices']
+    result_list = list(range(len(A_indices) + len(B_indices)))
+    for i in A_indices:
+        result_list[i] = 'A'
+    for i in B_indices:
+        result_list[i] = 'B'
+    return result_list

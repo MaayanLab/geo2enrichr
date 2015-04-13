@@ -51,11 +51,6 @@ else
     nosetests --exe --nocapture
 fi
 
-# All files should be in extension/ now.
-# -----------------------------------------------------------------------------
-printf '%s\n' 'Zipping extension'
-zip -r extension.zip web/extension/chrome > /dev/null
-
 # Done!
 # -----------------------------------------------------------------------------
 printf '%s\n' 'Done!'

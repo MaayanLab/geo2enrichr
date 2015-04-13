@@ -16,6 +16,8 @@ def normalize(genes, A, B):
     """Normalizes the data, taking the log2 of and quantile normalizing the
     data if necessary.
     """
+    print 'Normalizing if necessary'
+
     idx = len(A[0])
     values = concat(A, B)
     genes = np.array(genes)

@@ -73,6 +73,7 @@ def _parse_geo(filename, platform, A_cols, B_cols):
     genes = []
     A = []
     B = []
+    selections = {}
 
     # For statistics about data quality.
     discarded_lines = 0.0
@@ -93,8 +94,10 @@ def _parse_geo(filename, platform, A_cols, B_cols):
             line_length = len(header)
 
             # Find column indices.
-            A_incides = [header.index(gsm) for gsm in A_cols]
-            B_incides = [header.index(gsm) for gsm in B_cols]
+            A_indices = [header.index(gsm) for gsm in A_cols]
+            B_indices = [header.index(gsm) for gsm in B_cols]
+            selections['A_indices'] = A_indices
+            selections['B_indices'] = B_indices
 
             for line in soft_in:
                 split_line = line.rstrip('\r\n').split('\t')
@@ -111,12 +114,12 @@ def _parse_geo(filename, platform, A_cols, B_cols):
                     'null' in values or
                     'NULL' in values or
                     len(values) is not line_length or
-                    # Three forward slashes, \\\, denotes multiple genes.
-                    '\\\\\\' in probe):
+                    # Slashes denote multiple genes.
+                    '\\' in probe):
 
                     discarded_lines += 1
                     continue
-                
+
                 # GSD files already contain a column with gene symbols but we
                 # do not trust that mapping.
                 probe_count += 1
@@ -125,8 +128,8 @@ def _parse_geo(filename, platform, A_cols, B_cols):
                     unconverted_probes += 1
                     continue
 
-                A_row = [float(values[i]) for i in A_incides]
-                B_row = [float(values[i]) for i in B_incides]
+                A_row = [float(values[i]) for i in A_indices]
+                B_row = [float(values[i]) for i in B_indices]
                 A.append(A_row)
                 B.append(B_row)
                 genes.append(gene)
@@ -140,7 +143,7 @@ def _parse_geo(filename, platform, A_cols, B_cols):
     except IOError:
         raise IOError('Could not read SOFT file from local server.')
 
-    return (genes, A, B, stats)
+    return (genes, A, B, selections, stats)
 
 
 def parse_custom(filename):

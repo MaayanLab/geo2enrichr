@@ -303,3 +303,16 @@ form .description p {
 .highlight {
   color: #d90000;
 }
+.ui-tooltip {
+  background: #fffac7;
+  border: 1px solid #fff169;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #444444;
+  font-family: arial, sans-serif;
+  font-size: 12px;
+  /*font-weight: bold;*/
+  radius: 0;
+  padding: 5px;
+}

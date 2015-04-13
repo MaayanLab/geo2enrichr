@@ -41,6 +41,11 @@ App.View.Metadata = Backbone.View.extend({
     ),
 
     initialize: function(data) {
+        if (data.diffexp_method === 'chdir') {
+            data.diffexp_method = 'Characteristic Direction';
+        } else if (data.diffexp_method === 'ttest') {
+            data.diffexp_method = 'T-test';
+        }
         this.$el.append(this.template(data));
     }
 });

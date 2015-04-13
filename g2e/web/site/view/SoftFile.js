@@ -13,7 +13,11 @@ App.View.SoftFile = Backbone.View.extend({
             '<td><%= platform %></td>' +
         '</tr>' +
         '<tr>' +
-            '<td>Cleaned data file</td>' +
+            '<td>Normalized</td>' +
+            '<td><%= normalize %></td>' +
+        '</tr>' +
+        '<tr title="Parsed and cleaned SOFT file, with GEO metadata removed and only the control and samples listed.">' +
+            '<td>Parsed SOFT file</td>' +
             '<td>' +
                 '<a href="<%= text_file %>" target="_blank">Download</a>' +
             '</td>' +
@@ -21,6 +25,11 @@ App.View.SoftFile = Backbone.View.extend({
     ),
 
     initialize: function(data) {
+        if (data.normalize === 'true') {
+            data.normalize = 'True';
+        } else {
+            data.normalize = 'False';
+        }
         if (data.is_geo) {
             data.nameTitle = 'GEO accession number';
         } else {

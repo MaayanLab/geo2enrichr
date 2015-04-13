@@ -25,9 +25,10 @@ class ExtractEndpoint(unittest.TestCase):
         s = time.time()
 
         self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
-            is_geo = 'True',
+            is_geo = True,
             dataset = 'GDS5077',
             platform = 'GPL10558',
+            normalize = True,
             A_cols = ['GSM1071454', 'GSM1071455'],
             B_cols = ['GSM1071457', 'GSM1071456']
         ))
@@ -42,8 +43,9 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(resp_dict['metadata']['diffexp_method'] == 'chdir')
         self.assertTrue(resp_dict['metadata']['cutoff'] == 500)
         self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
-        self.assertTrue(resp_dict['softfile']['text_file'] == 'static/softfile/clean/GDS5077.txt')
+        self.assertTrue('static/softfile/clean/GDS5077_' in resp_dict['softfile']['text_file'])
         self.assertTrue(resp_dict['softfile']['platform'] == 'GPL10558')
+        self.assertTrue(resp_dict['softfile']['normalize'] == True)
         self.assertTrue(resp_dict['softfile']['is_geo'])
 
         for gl in resp_dict['genelists']:
@@ -72,6 +74,7 @@ class ExtractEndpoint(unittest.TestCase):
             diffexp_method = 'ttest',
             correction_method = 'BH',
             threshold = 0.05,
+            normalize = True,
             platform = 'GPL10558',
             A_cols = ['GSM1071454', 'GSM1071455'],
             B_cols = ['GSM1071457', 'GSM1071456']
@@ -88,7 +91,7 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(resp_dict['metadata']['threshold'] == 0.05)
 
         self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
-        self.assertTrue(resp_dict['softfile']['text_file'] == 'static/softfile/clean/GDS5077.txt')
+        self.assertTrue('static/softfile/clean/GDS5077_' in resp_dict['softfile']['text_file'])
         self.assertTrue(resp_dict['softfile']['platform'] == 'GPL10558')
         self.assertTrue(resp_dict['softfile']['is_geo'])
 

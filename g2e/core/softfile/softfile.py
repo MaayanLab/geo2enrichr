@@ -11,7 +11,7 @@ import g2e.core.softfile.softfilemanager as softfilemanager
 
 class SoftFile(object):
 
-    def __init__(self, name, A_cols=None, B_cols=None, genes=None, A=None, B=None, text_file=None, is_geo=False, platform=None, stats=None):
+    def __init__(self, name, A_cols=None, B_cols=None, genes=None, A=None, B=None, text_file=None, is_geo=False, platform=None, stats=None, normalize=None):
         """Constructs a SOFT file. This should only be called via the class
         methods.
         """
@@ -24,6 +24,7 @@ class SoftFile(object):
         self.is_geo = is_geo
         self.platform = platform
         self.stats = stats
+        self.normalize = normalize
         self.text_file = text_file
 
     @classmethod
@@ -35,13 +36,16 @@ class SoftFile(object):
             geodownloader.download(name)
 
         platform = args['platform']
-        # The "array[]" notation really confused me; see this Stack Overflow
-        # answer for details: http://stackoverflow.com/a/23889195/1830334
         A_cols, B_cols = get_cols(args)
-        genes, A, B, stats = softparser.parse(name, is_geo, platform, A_cols, B_cols)
-        genes, A, B = normalizer.normalize(genes, A, B)
-        text_file = softfilemanager.write(name, genes, A, B)
-        return cls(name, A_cols, B_cols, genes=genes, A=A, B=B, text_file=text_file, is_geo=is_geo, platform=platform, stats=stats)
+        genes, A, B, selections, stats = softparser.parse(name, is_geo, platform, A_cols, B_cols)
+
+        normalize = True if ('normalize' not in args or args['normalize'] == 'True') else False
+        if normalize:
+            genes, A, B = normalizer.normalize(genes, A, B)
+
+        gsms = A_cols + B_cols
+        text_file = softfilemanager.write(name, platform, normalize, genes, A, B, gsms, selections, stats)
+        return cls(name, A_cols, B_cols, genes=genes, A=A, B=B, text_file=text_file, is_geo=is_geo, platform=platform, stats=stats, normalize=normalize)
 
     @classmethod
     def from_file(cls, file_obj, args):
@@ -52,6 +56,10 @@ class SoftFile(object):
 
 
 def get_cols(args):
+    """Handles getting the samples depending on the way the request was made.
+    """
+    # The "array[]" notation really confused me; see this Stack Overflow
+    # answer for details: http://stackoverflow.com/a/23889195/1830334
     if 'A_cols[]' in args:
         A_cols = args.getlist('A_cols[]')
         B_cols = args.getlist('B_cols[]')
