@@ -25,7 +25,7 @@ App.View.SoftFile = Backbone.View.extend({
     ),
 
     initialize: function(data) {
-        if (data.normalize === 'true') {
+        if (data.normalize) {
             data.normalize = 'True';
         } else {
             data.normalize = 'False';
