@@ -1,7 +1,7 @@
 {
     "name": "GEO2Enrichr",
     "short_name": "g2e",
-    "version": "2.7",
+    "version": "2.8",
     "description": "Ma'ayan Lab",
     "icons": {
         "128": "logo-128x128.png"
@@ -17,7 +17,7 @@
                 "http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi*"
             ],
             "css": ["open-sans.css", "main.css", "jquery-ui.min.css"],
-            "js": ["jquery-1.11.1.min.js", "jquery-ui.min.js", "g2e.js"]
+            "js": ["jquery-1.11.2.min.js", "jquery-ui.min.js", "g2e.js"]
         }
     ],
     "web_accessible_resources": [

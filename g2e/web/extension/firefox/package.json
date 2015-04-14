@@ -5,7 +5,7 @@
   "description": "Firefox add-on for GEO2Enrichr",
   "author": "Gregory Gundersen, Ma'ayan Lab",
   "license": "MPL 2.0",
-  "version": "2.7",
+  "version": "2.8",
   "permissions": {
   "cross-domain-content": ["http://amp.pharm.mssm.edu/*", "http://fonts.gstatic.com/*"]
 	}
