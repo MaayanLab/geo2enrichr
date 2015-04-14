@@ -1,5 +1,3 @@
-# docker -it -v ~/g2e:/app <image>
-
 FROM debian:stable
 
 RUN apt-get update
@@ -27,5 +25,4 @@ RUN pip install -Iv wsgiref==0.1.2
 RUN apt-get -y install r-base r-base-dev
 RUN apt-get -y install python-rpy2
 
-#RUN mod_wsgi-express start-server wsgi.py --port=80 --user www-data --group www-data --server-root=/etc/app
-#RUN /etc/app/apachectl start
+EXPOSE 80
