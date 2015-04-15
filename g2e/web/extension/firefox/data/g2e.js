@@ -62,10 +62,11 @@ var Bootstrapper = function(events, notifier, templater) {
         if (window.location.pathname !== '/') {
             path = window.location.pathname.split('/')[1];
             if (path === 'sites') {
-                return true;
+                return 1;
             } else if (path === 'geo') {
-                return false;
+                return -1;
             }
+            return 0;
         }
     };
 
@@ -83,11 +84,13 @@ var Bootstrapper = function(events, notifier, templater) {
             return;
         }
 
-        if (isGds()) {
+        var isGdsFl = isGds();
+        if (isGdsFl === 1) {
             GdsBootstrapper(events, templater).init();
-        } else {
+        } else if (isGdsFl === -1) {
             GseBootstrapper(events, templater).init();
         }
+        // Else do nothing.
     };
 
     return {
@@ -815,7 +818,6 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
             $overlay.hide();
         });
 
-
         $ttest = $('.g2e-ttest');
         $cutoff = $('#g2e-cutoff');
         $threshold = $('#g2e-threshold');
@@ -867,7 +869,6 @@ var main = function() {
     ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater);
     
     bootstrapper.init();
-    notifier.log('g2e loaded.');
 };
 
 

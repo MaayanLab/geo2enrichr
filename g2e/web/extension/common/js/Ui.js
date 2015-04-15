@@ -124,7 +124,6 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
             $overlay.hide();
         });
 
-
         $ttest = $('.g2e-ttest');
         $cutoff = $('#g2e-cutoff');
         $threshold = $('#g2e-threshold');

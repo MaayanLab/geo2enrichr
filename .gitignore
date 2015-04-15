@@ -6,7 +6,6 @@
 
 # Automatically generated files
 g2e/extension/g2e.js
-*.css
 
 # Saved text files
 g2e/static/softfile/*

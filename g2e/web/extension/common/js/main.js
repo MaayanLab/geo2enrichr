@@ -23,5 +23,4 @@ var main = function() {
     ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater);
     
     bootstrapper.init();
-    notifier.log('g2e loaded.');
 };
