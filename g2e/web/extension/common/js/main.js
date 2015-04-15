@@ -12,9 +12,10 @@ var main = function() {
         ui,
         comm;
 
-    if (bootstrapper.isGds()) {
+    var isGdsFl = bootstrapper.isGds();
+    if (isGdsFl === 1) {
         modeScraper = GdsScraper(events);
-    } else {
+    } else if (isGdsFl === -1) {
         modeScraper = GseScraper(events, templater);
     }
 

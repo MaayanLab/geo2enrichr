@@ -74,9 +74,9 @@ def _build_selections(selections):
     """
     A_indices = selections['A_indices']
     B_indices = selections['B_indices']
-    result_list = list(range(len(A_indices) + len(B_indices)))
+    result_list = range(max(A_indices + B_indices)+1)
     for i in A_indices:
         result_list[i] = 'A'
     for i in B_indices:
         result_list[i] = 'B'
-    return result_list
+    return filter(lambda x: x == 'A' or x == 'B', result_list)
