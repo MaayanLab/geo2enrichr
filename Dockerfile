@@ -2,6 +2,8 @@ FROM debian:stable
 
 RUN apt-get update
 
+RUN apt-get -y install vim
+
 RUN apt-get -y install python
 RUN apt-get -y install python-dev
 RUN apt-get -y install python-pip
@@ -26,3 +28,7 @@ RUN apt-get -y install r-base r-base-dev
 RUN apt-get -y install python-rpy2
 
 EXPOSE 80
+
+ADD . /g2e
+
+CMD /g2e/boot.sh

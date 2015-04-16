@@ -10,7 +10,7 @@ f = open('g2e/orm/db.conf')
 SQLALCHEMY_DATABASE_URI = f.read().strip()
 f.close()
 
-engine = create_engine(SQLALCHEMY_DATABASE_URI, convert_unicode=True, echo=True)
+engine = create_engine(SQLALCHEMY_DATABASE_URI, convert_unicode=True)#, echo=True)
 
 # We should only use one instance of this class in a commonly imported module (this one).
 Base = declarative_base()

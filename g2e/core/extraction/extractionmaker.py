@@ -18,11 +18,14 @@ def extraction_maker(**kwargs):
     elif 'file' in kwargs:
         extraction = Extraction.from_file(kwargs['file'], kwargs['args'])
         return dao.save(extraction)
-    
+
     # GEO Dataset
     else:
         extraction = Extraction.from_geo(kwargs['args'])
-        return dao.save(extraction)
+        print 'extraction created'
+        ext_id = dao.save(extraction)
+        print 'extraction saved'
+        return ext_id
 
 
 def clean_extraction(extraction):

@@ -112,10 +112,7 @@ def _chdir(A, B, genes, r=1):
 # The LDA formula.
 # np.dot(np.dot(loadings,shrunkMats),loadings.T) transforms the covariance 
 # matrix from the subspace to full space.
-    b = np.dot(np.dot(np.dot(loadings,shrunkMats),loadings.T),meanvec)
-
-# PURPLE_WIRE: Verify that this new line from Zichen works.
-    #b = np.dot(loadings, np.dot(np.dot(loadings.T, meanvec), shrunkMats))
+    b = np.dot(loadings,np.dot(shrunkMats,np.dot(loadings.T,meanvec)))
 
 # normlize b to unit vector
     b /= np.linalg.norm(b)
@@ -126,6 +123,7 @@ def _chdir(A, B, genes, r=1):
 # 
 # ! CHANGED!
 # Return values as Python list for consistent user interface.
+    print 'Done chdir'
     return (genes, b.tolist())
 
 

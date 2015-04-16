@@ -22,6 +22,8 @@ def save(extraction):
     gls = extraction.genelists
     metadata = extraction.metadata
 
+    print 'saving extraction'
+
     with session_scope() as session:
         softfile_dao  = models.SoftFile(
             name      = sf.name,
@@ -30,6 +32,8 @@ def save(extraction):
             normalize = sf.normalize,
             text_file = sf.text_file
         )
+
+        print 'softfile DAO created'
 
         genelists_dao = []
         for gl in gls:
@@ -51,6 +55,10 @@ def save(extraction):
                     enrichr_link = gl.enrichr_link
                 )
             )
+
+            print 'gene list DAO created'
+
+        print 'all gene list DAOs created'
 
         extraction_dao = models.Extraction(
             extraction_id     = extraction.extraction_id,
