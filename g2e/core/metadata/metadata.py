@@ -26,19 +26,19 @@ class Metadata(object):
             cutoff = args['cutoff'] if 'cutoff' in args else 500
             correction_method = 'NA'
             threshold = None
-            if cutoff == 'none':
+            if cutoff == 'none' or cutoff == 'None':
                 cutoff = None
             else:
                 cutoff = int(cutoff)
         else:
             cutoff = None
             correction_method = args['correction_method'] if 'correction_method' in args else 'BH'
-            if correction_method == 'none':
+            if correction_method == 'none' or correction_method == 'None':
                 correction_method = None
                 threshold = None
             else:
                 threshold = args['threshold'] if 'threshold' in args else 0.5
-                if threshold == 'none':
+                if threshold == 'none' or threshold == 'None':
                     threshold = None
                 else:
                     threshold = float(threshold)
