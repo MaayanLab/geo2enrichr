@@ -19,6 +19,10 @@ App.View.Metadata = Backbone.View.extend({
             '<td><%= correction_method %></td>' +
         '</tr>' +
         '<tr>' +
+            '<td>Organism</td>' +
+            '<td><%= organism %></td>' +
+        '</tr>' +
+        '<tr>' +
             '<td>Threshold</td>' +
             '<td><%= threshold %></td>' +
         '</tr>' +

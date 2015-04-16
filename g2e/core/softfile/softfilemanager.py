@@ -48,8 +48,6 @@ def write(name, platform, normalize, genes, A, B, gsms, selections, stats):
 def save(name, file_obj):
     """Saves a SOFT file in the correct directory.
     """
-    if name == '':
-        name = str(time.time())
     full_path = BASE_DIR + name + EXT
     file_obj.save(full_path)
     return full_path[4:]
@@ -70,7 +68,7 @@ def path(name):
 
 
 def _build_selections(selections):
-    """
+    """Handles the ordering of the columns based on control vs. sample.
     """
     A_indices = selections['A_indices']
     B_indices = selections['B_indices']

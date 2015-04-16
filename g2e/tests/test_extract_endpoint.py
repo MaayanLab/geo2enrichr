@@ -1,5 +1,7 @@
 import json
+from StringIO import StringIO
 import unittest
+import numpy as np
 
 import g2e.app
 
@@ -25,6 +27,7 @@ class ExtractEndpoint(unittest.TestCase):
     def setUp(self):
         self.app = g2e.app.app.test_client()
 
+
     # This should be multiple unit tests but it is annoyingly slow to run.
     def test_extraction_endpoint_chdir(self):
         import time
@@ -34,6 +37,7 @@ class ExtractEndpoint(unittest.TestCase):
             is_geo = True,
             dataset = 'GDS5077',
             platform = 'GPL10558',
+            organism = 'Homo sapiens',
             normalize = True,
             A_cols = ['GSM1071454', 'GSM1071455'],
             B_cols = ['GSM1071457', 'GSM1071456']
@@ -51,6 +55,7 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
         self.assertTrue('static/softfile/clean/GDS5077_' in resp_dict['softfile']['text_file'])
         self.assertTrue(resp_dict['softfile']['platform'] == 'GPL10558')
+        self.assertTrue(resp_dict['metadata']['organism'] == 'Homo sapiens')
         self.assertTrue(resp_dict['softfile']['normalize'] == True)
         self.assertTrue(resp_dict['softfile']['is_geo'])
 
@@ -65,7 +70,6 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(get_gene_value(genelist, 'EOMES') == 0.0866544)
         self.assertTrue(get_gene_value(genelist, 'SRPK1') == -0.0222528)
         self.assertTrue(get_gene_value(genelist, 'MYH6') == -0.0327115)
-
         print time.time() - s
 
 
@@ -77,6 +81,7 @@ class ExtractEndpoint(unittest.TestCase):
         self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
             is_geo = 'True',
             dataset = 'GDS5077',
+            organism = 'Mus musculus',
             diffexp_method = 'ttest',
             correction_method = 'BH',
             threshold = 0.05,
@@ -99,6 +104,7 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
         self.assertTrue('static/softfile/clean/GDS5077_' in resp_dict['softfile']['text_file'])
         self.assertTrue(resp_dict['softfile']['platform'] == 'GPL10558')
+        self.assertTrue(resp_dict['metadata']['organism'] == 'Mus musculus')
         self.assertTrue(resp_dict['softfile']['is_geo'])
 
         for gl in resp_dict['genelists']:
@@ -113,3 +119,23 @@ class ExtractEndpoint(unittest.TestCase):
         self.assertTrue(get_gene_value(genelist, 'GNG11') == -0.04072)
         self.assertTrue(get_gene_value(genelist, 'PDZRN3') == -0.0375523)
         print time.time() - s
+
+
+    def test_file_upload(self):
+        self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
+            file = (file('g2e/core/genelist/tests/data/example_input.txt'), 'test.txt'),
+            name = 'ExampleData',
+            cutoff = 'none'
+        ))
+        self.resp_dict = json.loads(self.resp.data.decode())
+        self.assertEquals(self.resp.status_code, 200)
+        self.assertTrue('extraction_id' in self.resp_dict)
+        extraction_id = self.resp_dict['extraction_id']
+        resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
+        resp_dict = json.loads(resp.data.decode())
+        genelist = resp_dict['genelists'][2]['ranked_genes']
+
+        self.assertTrue(get_gene_value(genelist, 'MBTPS1') == -0.0185085)
+        self.assertTrue(get_gene_value(genelist, 'SPRED2') == 0.0537715)
+        self.assertTrue(get_gene_value(genelist, 'ZNF274') == -0.00367804)
+        self.assertTrue(get_gene_value(genelist, 'CLIC4') == 0.00194543)

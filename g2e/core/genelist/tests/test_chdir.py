@@ -40,8 +40,8 @@ class TestChdir(unittest.TestCase):
 
 
     def testChdir(self):
-    	delta = (self.answers - self.values) / self.answers
-    	close_enough = np.any(np.absolute(delta) < 0.0025)
+        delta = (self.answers - self.values) / self.answers
+        close_enough = np.any(np.absolute(delta) < 0.0025)
         self.assertTrue(close_enough)
 
 

@@ -6,5 +6,7 @@
 6. Update the Chrome web store.
 7. Push the updated repo with `RCX` in the commit message, where `X` is the date.
 8. `ssh` into Loretta.
-9. Navigate to `/home/maayan/g2e/` and pull the latest changes.
-10. Run `sudo /etc/g2e/apachectl restart`.
+9. Run `cd /g2d/`
+10. Run `git pull` (you may have to specify the remote)
+11. Run `docker ps` to get the running containers; find GEO2Enrichr's ("g2e")
+12. Run `docker restart <container ID>` to restart the docker container

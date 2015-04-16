@@ -31,6 +31,7 @@ SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 def index():
     return flask.send_from_directory(SERVER_ROOT + '/web/site', 'index.html')
 
+
 # PURPLE_WIRE: Apache should serve these files.
 @app.route(ENTRY_POINT + '/<path:path>')
 @crossdomain(origin='*')

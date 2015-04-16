@@ -5,11 +5,12 @@ user inputs.
 
 class Metadata(object):
 
-    def __init__(self, diffexp_method, cutoff, correction_method, threshold, cell, perturbation, gene, disease):
+    def __init__(self, diffexp_method, cutoff, correction_method, threshold, organism, cell, perturbation, gene, disease):
         self.diffexp_method    = diffexp_method
         self.correction_method = correction_method
         self.cutoff            = cutoff
         self.threshold         = threshold
+        self.organism          = organism
         self.cell              = cell
         self.perturbation      = perturbation
         self.gene              = gene
@@ -42,11 +43,12 @@ class Metadata(object):
                 else:
                     threshold = float(threshold)
         
+        organism     = args['organism']     if 'organism'     in args else None
         cell         = args['cell']         if 'cell'         in args else None
         perturbation = args['perturbation'] if 'perturbation' in args else None
         gene         = args['gene']         if 'gene'         in args else None
         disease      = args['disease']      if 'disease'      in args else None
-        return cls(diffexp_method, cutoff, correction_method, threshold, cell, perturbation, gene, disease)
+        return cls(diffexp_method, cutoff, correction_method, threshold, organism, cell, perturbation, gene, disease)
 
     def __str__(self):
         result = []

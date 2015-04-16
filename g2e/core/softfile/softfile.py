@@ -2,6 +2,7 @@
 fetching SOFT files. 
 """
 
+import time
 
 import g2e.core.softfile.geodownloader as geodownloader
 import g2e.core.softfile.softparser as softparser
@@ -49,10 +50,11 @@ class SoftFile(object):
 
     @classmethod
     def from_file(cls, file_obj, args):
-        name = args['name']
+        name = args['name'] if 'name' in args else str(time.time())[:10]
         text_file = softfilemanager.save(name, file_obj)
         genes, A, B = softparser.parse(name, is_geo=False)
-        return cls(name, genes=genes, A=A, B=B, text_file=text_file)
+        platform = args['platform'] if 'platform' in args else None
+        return cls(name, genes=genes, A=A, B=B, platform=platform, text_file=text_file)
 
 
 def get_cols(args):

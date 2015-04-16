@@ -90,6 +90,7 @@ class Extraction(Base):
     cutoff = Column(Integer)
     correction_method = Column(String(200))
     threshold = Column(Float)
+    organism = Column(String(200)) 
     cell = Column(String(200))
     perturbation = Column(String(200))
     gene = Column(String(200))
