@@ -10,3 +10,5 @@
 10. Run `git pull` (you may have to specify the remote)
 11. Run `docker ps` to get the running containers; find GEO2Enrichr's ("g2e")
 12. Run `docker restart <container ID>` to restart the docker container
+
+docker run -it -p 8084:80 -v /home/maayanlab/g2e/g2e/static:/g2e/g2e/static g2e:latest

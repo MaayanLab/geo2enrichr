@@ -50,7 +50,10 @@ class SoftFile(object):
 
     @classmethod
     def from_file(cls, file_obj, args):
-        name = args['name'] if 'name' in args else str(time.time())[:10]
+        if 'name' in args and args['name'] != '':
+            name = args['name']
+        else:
+            name = str(time.time())[:10]
         text_file = softfilemanager.save(name, file_obj)
         genes, A, B = softparser.parse(name, is_geo=False)
         platform = args['platform'] if 'platform' in args else None
