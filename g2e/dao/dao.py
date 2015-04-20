@@ -40,6 +40,7 @@ def save(extraction):
             ranked_genes = []
             for gene_name,value in gl.ranked_genes:
                 gene_dao = _get_or_create(session, models.Gene, name=gene_name)
+                #gene_dao = models.Gene(name=gene_name)
                 ranked_gene_dao = models.RankedGene(
                     gene  = gene_dao,
                     value = value
