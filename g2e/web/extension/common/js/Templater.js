@@ -78,7 +78,7 @@ var Templater = function(IMAGE_PATH) {
                                             '<option value="500">500</option>' +
                                             '<option value="1000">1000</option>' +
                                             '<option value="200">200</option>' +
-                                            '<option value="None">None</option>' +
+                                            //'<option value="None">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
@@ -87,11 +87,11 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="g2e-title">' +
                                         'Correction method' +
                                     '</td>' +
-                                    '<td>' +
+                                    '<td class="g2e-value g2e-select">' +
                                         '<select>' +
                                             '<option value="BH">Benjamini-Hochberg</option>' +
                                             '<option value="bonferroni">Bonferroni</option>' +
-                                            '<option value="none">None</option>' +
+                                            //'<option value="none">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
@@ -99,11 +99,11 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="g2e-title">' +
                                         'Threshold' +
                                     '</td>' +
-                                    '<td>' +
+                                    '<td class="g2e-value g2e-select">' +
                                         '<select name="threshold">' +
                                             '<option value="0.01">0.01</option>' +
                                             '<option value="0.05">0.05</option>' +
-                                            '<option value="none">None</option>' +
+                                            //'<option value="none">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +

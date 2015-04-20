@@ -44,8 +44,7 @@ def _get_pvalues(A, B, genes):
     """
     pvalues = []
     for i in range(len(A)):
-    	# equal_var=False specifies to use Welch's t-test.
-    	#import pdb; pdb.set_trace()
+        # equal_var=False specifies to use Welch's t-test.
         ttest_results = scipy.stats.ttest_ind(A[i], B[i], equal_var=False)
 
         # According to SciPy's source code...

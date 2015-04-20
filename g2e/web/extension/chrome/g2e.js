@@ -301,7 +301,7 @@ var Templater = function(IMAGE_PATH) {
                                             '<option value="500">500</option>' +
                                             '<option value="1000">1000</option>' +
                                             '<option value="200">200</option>' +
-                                            '<option value="None">None</option>' +
+                                            //'<option value="None">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
@@ -310,11 +310,11 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="g2e-title">' +
                                         'Correction method' +
                                     '</td>' +
-                                    '<td>' +
+                                    '<td class="g2e-value g2e-select">' +
                                         '<select>' +
                                             '<option value="BH">Benjamini-Hochberg</option>' +
                                             '<option value="bonferroni">Bonferroni</option>' +
-                                            '<option value="none">None</option>' +
+                                            //'<option value="none">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
@@ -322,11 +322,11 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="g2e-title">' +
                                         'Threshold' +
                                     '</td>' +
-                                    '<td>' +
+                                    '<td class="g2e-value g2e-select">' +
                                         '<select name="threshold">' +
                                             '<option value="0.01">0.01</option>' +
                                             '<option value="0.05">0.05</option>' +
-                                            '<option value="none">None</option>' +
+                                            //'<option value="none">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
@@ -486,9 +486,10 @@ var BaseScraper = function(DEBUG) {
                 normalize = $modal.find('#g2e-normalize option:selected').val(),
                 cell = $modal.find('#g2e-cell .g2e-value input').val(),
                 perturbation = $modal.find('#g2e-perturbation .g2e-value input').val(),
-                gene = $modal.find('#g2e-gene #g2e-geneList').val();
-                disease = $modal.find('#g2e-disease #g2e-diseaseList').val();
-            
+                gene = $modal.find('#g2e-gene #g2e-geneList').val(),
+                disease = $modal.find('#g2e-disease #g2e-diseaseList').val(),
+                threshold = $modal.find('#g2e-threshold option:selected').val();
+
             if (method) {
                 data.diffexp_method = method;
             }
@@ -502,13 +503,16 @@ var BaseScraper = function(DEBUG) {
                 data.cell = cell.replace(/_|\.|-/, '');
             }
             if (perturbation) {
-                data.perturbation = perturbation.replace(/_|\.|-/, '');    
+                data.perturbation = perturbation.replace(/_|\.|-/, '');
             }
             if (gene) {
                 data.gene = gene;
             }
             if (disease) {
                 data.disease = disease;
+            }
+            if (threshold) {
+                data.threshold = threshold;
             }
 
             return data;

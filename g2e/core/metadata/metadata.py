@@ -37,12 +37,12 @@ class Metadata(object):
                 correction_method = None
                 threshold = None
             else:
-                threshold = args['threshold'] if 'threshold' in args else 0.5
+                threshold = args['threshold'] if 'threshold' in args else 0.01
                 if threshold == 'none' or threshold == 'None':
                     threshold = None
                 else:
                     threshold = float(threshold)
-        
+
         organism     = args['organism']     if 'organism'     in args else None
         cell         = args['cell']         if 'cell'         in args else None
         perturbation = args['perturbation'] if 'perturbation' in args else None

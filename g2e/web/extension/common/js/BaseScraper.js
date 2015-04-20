@@ -24,9 +24,10 @@ var BaseScraper = function(DEBUG) {
                 normalize = $modal.find('#g2e-normalize option:selected').val(),
                 cell = $modal.find('#g2e-cell .g2e-value input').val(),
                 perturbation = $modal.find('#g2e-perturbation .g2e-value input').val(),
-                gene = $modal.find('#g2e-gene #g2e-geneList').val();
-                disease = $modal.find('#g2e-disease #g2e-diseaseList').val();
-            
+                gene = $modal.find('#g2e-gene #g2e-geneList').val(),
+                disease = $modal.find('#g2e-disease #g2e-diseaseList').val(),
+                threshold = $modal.find('#g2e-threshold option:selected').val();
+
             if (method) {
                 data.diffexp_method = method;
             }
@@ -40,13 +41,16 @@ var BaseScraper = function(DEBUG) {
                 data.cell = cell.replace(/_|\.|-/, '');
             }
             if (perturbation) {
-                data.perturbation = perturbation.replace(/_|\.|-/, '');    
+                data.perturbation = perturbation.replace(/_|\.|-/, '');
             }
             if (gene) {
                 data.gene = gene;
             }
             if (disease) {
                 data.disease = disease;
+            }
+            if (threshold) {
+                data.threshold = threshold;
             }
 
             return data;
