@@ -19,17 +19,17 @@ def get_link(genes, description):
     # Enrichr does not care about the sign of the rank; it treats the rank
     # simply as a membership value for a fuzzy set.
     genes = [(t[0], str(abs(t[1]))) for t in genes]
-    
+
     genes_str = '\n'.join([t[0] + ',' + t[1] for t in genes]).encode('ascii')
     payload = {
         'list': genes_str,
         'description': description
     }
     sess = requests.session()
-    
+
     # 1. POST the data to the server. We do not need the response.
     sess.post(BASE_URL + 'enrich', files={ 'list': (None, genes_str), 'description': (None, description) })
-    
+
     # I've noticed that sometimes the GET errors out and wonder if it is a
     # race condition of some sort. This throttles the back-to-back requests
     # and seems to resolve the issue on our end.

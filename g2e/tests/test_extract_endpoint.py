@@ -61,9 +61,14 @@ class ExtractEndpoint(unittest.TestCase):
 
         for gl in resp_dict['genelists']:
             self.assertTrue('direction' in gl)
-            self.assertTrue('enrichr_link' in gl)
             self.assertTrue('name' in gl)
             self.assertTrue('text_file' in gl)
+            self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['enrichr_link'])
+            print gl['direction']
+            if gl['direction'] == 0:
+                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2/' in gl['l1000cds2_link'])
+            else:
+                self.assertTrue(gl['l1000cds2_link'] == '')
 
         genelist = resp_dict['genelists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.0939582)
@@ -109,9 +114,13 @@ class ExtractEndpoint(unittest.TestCase):
 
         for gl in resp_dict['genelists']:
             self.assertTrue('direction' in gl)
-            self.assertTrue('enrichr_link' in gl)
             self.assertTrue('name' in gl)
             self.assertTrue('text_file' in gl)
+            self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['enrichr_link'])
+            if gl['direction'] == 0:
+                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2/' in gl['l1000cds2_link'])
+            else:
+                self.assertTrue(gl['l1000cds2_link'] == '')
 
         genelist = resp_dict['genelists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.00469161)

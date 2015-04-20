@@ -9,6 +9,7 @@ App.View.GeneLists = Backbone.View.extend({
                 '<td>Direction</td>' +
                 '<td>Gene lists</td>' +
                 '<td>Links to Enrichr</td>' +
+                '<td>Link to L1000CDS2</td>' +
             '</tr>' +
         '</thead>',
 
@@ -18,6 +19,7 @@ App.View.GeneLists = Backbone.View.extend({
             var gl = new App.View.GeneList({
                 text_file: gl.text_file,
                 enrichr_link: gl.enrichr_link,
+                l1000cds2_link: gl.l1000cds2_link,
                 direction: gl.direction
             });
             this.$el.append(gl.el);
