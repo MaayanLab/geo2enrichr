@@ -6,6 +6,7 @@ __contact__ = "gregory.gundersen@mssm.edu"
 """
 
 
+import csv
 import numpy as np
 
 import g2e.core.softfile.softfilemanager as softfilemanager
@@ -28,20 +29,21 @@ def _parse_file(filename):
     genes = []
     A = []
     B = []
-    with open(filename, 'r') as inp:
+    with open(filename, 'rU') as csvfile:
+        reader = csv.reader(csvfile, delimiter='\t')
         # First line should be column names.
-        discard = next(inp)
-        indices = next(inp)
-        
+        discard = next(csvfile)
+        indices = next(csvfile)
+
         # Convert to a string so we can use rindex next.
         indices = ''.join(indices.strip().split('\t'))
         # +1 to account for the leftmost gene symbol column.
         idx = indices.index('1')+1
-        for line in inp:
-            split = line.split('\t')
-            genes.append(split[0])
-            A_row = split[1:idx]
-            B_row = split[idx:]
+
+        for line in reader:
+            genes.append(line[0])
+            A_row = line[1:idx]
+            B_row = line[idx:]
             A.append([float(pv) for pv in A_row])
             B.append([float(pv) for pv in B_row])
     return (genes, A, B)
