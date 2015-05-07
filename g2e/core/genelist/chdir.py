@@ -18,6 +18,10 @@ def chdir(A, B, genes, cutoff):
     highest coefficients.
     """
     print 'Calculating the characteristic direction.'
+    A = np.array(A)
+    B = np.array(B)
+    genes = np.array(genes)
+    A, B, genes = _throw_away_rows_without_variance(A, B, genes)
     genes, coefficients = _chdir(A, B, genes)
     genes, coefficients = _sort_by_coefficients(genes, coefficients)
     genes, coefficients = _apply_cutoff(genes, coefficients, cutoff)
@@ -64,9 +68,6 @@ def _chdir(A, B, genes, r=1):
 # get the number of samples (colCount), namely, the total number of replicates in   
 # control and experiment. Also get the number of genes (rowCount)
     (rowCount,colCount) = np.shape(X)
-
-# centralize the matrix by the mean of each row, which is a requirement of PCA.
-    X = X - np.tile(np.mean(X,axis=0),(rowCount,1))
 
 #  the number of output components desired from PCA. We only want to calculate
 #  the chdir in a subspace that capture most variance in order to save computation 
@@ -189,3 +190,9 @@ def _apply_cutoff(genes, values, cutoff):
     if cutoff is None:
         return genes, values
     return genes[-cutoff:], values[-cutoff:]
+
+
+def _throw_away_rows_without_variance(A, B, genes):
+    X = np.concatenate((A,B), axis=1)
+    keep_rows = np.std(X, axis=1).nonzero()[0]
+    return A[keep_rows,], B[keep_rows,], genes[keep_rows]

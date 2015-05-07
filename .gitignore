@@ -26,6 +26,7 @@ resources/PlatformInfoForGreg/
 resources/test_data/
 
 # Misc
+misc/
 accessionlist_example.txt
 
 # Python
