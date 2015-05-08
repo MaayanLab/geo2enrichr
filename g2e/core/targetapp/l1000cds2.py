@@ -25,7 +25,7 @@ def get_link(genes):
             'genes': genes,
             'vals': [float('{0:.6f}'.format(x)) for x in values]
         },
-        'aggravate': True,
+        'aggravate': False,
         'searchMethod': 'CD'
     }
     sess = requests.session()

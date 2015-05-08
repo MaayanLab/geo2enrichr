@@ -294,6 +294,21 @@ form .description p {
 .results ul {
   padding-left: 15px;
 }
+.results #geneLists {
+  /* This over-selects but we don't care since the table is filled with images. */
+}
+.results #geneLists img {
+  width: 20px;
+}
+.results #geneLists img:hover {
+  opacity: .5;
+}
+.results #geneLists td {
+  height: 20px;
+}
+.results #geneLists tr {
+  font-weight: bold;
+}
 .mono {
   font-family: monospace;
 }

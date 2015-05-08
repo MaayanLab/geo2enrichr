@@ -53,7 +53,8 @@ def save(extraction):
                     direction = gl.direction,
                     text_file = gl.text_file,
                     enrichr_link = gl.enrichr_link,
-                    l1000cds2_link = gl.l1000cds2_link
+                    l1000cds2_link = gl.l1000cds2_link,
+                    paea_link = gl.paea_link
                 )
             )
 
@@ -120,6 +121,7 @@ def fetch(extraction_id):
             text_file = gl_dao.text_file
             enrichr_link = gl_dao.enrichr_link
             l1000cds2_link = gl_dao.l1000cds2_link
+            paea_link = gl_dao.paea_link
             genelists.append(
                 GeneList(
                     ranked_genes,
@@ -128,7 +130,8 @@ def fetch(extraction_id):
                     name=name,
                     text_file=text_file,
                     enrichr_link=enrichr_link,
-                    l1000cds2_link=l1000cds2_link
+                    l1000cds2_link=l1000cds2_link,
+                    paea_link=paea_link
                 )
             )
 

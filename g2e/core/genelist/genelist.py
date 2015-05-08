@@ -11,11 +11,12 @@ import hashlib
 import g2e.core.genelist.genelistfilemanager as filemanager
 import g2e.core.targetapp.enrichr as enrichr
 import g2e.core.targetapp.l1000cds2 as l1000cds2
+import g2e.core.targetapp.paea as paea
 
 
 class GeneList(object):
 
-    def __init__(self, ranked_genes, direction, metadata, name=None, text_file=None, enrichr_link=None, l1000cds2_link=None):
+    def __init__(self, ranked_genes, direction, metadata, name=None, text_file=None, enrichr_link=None, l1000cds2_link=None, paea_link=None):
         """Constructs a gene list.
         """
         self.ranked_genes = ranked_genes
@@ -38,11 +39,14 @@ class GeneList(object):
             # combined gene list.
             if direction == 0:
                 self.l1000cds2_link = l1000cds2_link or l1000cds2.get_link(self.ranked_genes)
+                self.paea_link = paea_link or paea.get_link(self.ranked_genes, description)
             else:
                 self.l1000cds2_link = ''
+                self.paea_link = ''
         else:
             self.enrichr_link = ''
             self.l1000cds2_link = ''
+            self.paea_link = ''
 
     # PURPLE_WIRE: This should handle duplicate file names, although they are
     # unlikely.

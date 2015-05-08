@@ -35,6 +35,7 @@ class GeneList(Base):
     text_file = Column(String(200))
     enrichr_link = Column(Text)
     l1000cds2_link = Column(Text)
+    paea_link = Column(Text)
 
     def __repr__(self):
         return '<GeneList %r>' % self.id
