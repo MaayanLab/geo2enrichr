@@ -10,9 +10,9 @@ App.View.GeneLists = Backbone.View.extend({
             '<tr>' +
                 '<td></td>' +
                 '<td title="Text file containing a gene list resulting from differential expression analysis.">Gene lists</td>' +
-                '<td title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Links to Enrichr</td>' +
-                '<td title="Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.">Link to L1000CDS2</td>' +
-                '<td title="Perform principle angle enrichment analysis against over 70 gene set libraries.">Link to PAEA</td>' +
+                '<td title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Enrichr</td>' +
+                '<td title="Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.">L1000CDS2</td>' +
+                '<td title="Perform principle angle enrichment analysis against over 70 gene set libraries.">PAEA</td>' +
             '</tr>' +
         '</thead>',
 
@@ -20,11 +20,11 @@ App.View.GeneLists = Backbone.View.extend({
         this.$el.append(this.template);
         _.each(genelists, function(gl) {
             var gl = new App.View.GeneList({
-                text_file: gl.text_file,
-                enrichr_link: gl.enrichr_link,
-                l1000cds2_link: gl.l1000cds2_link,
-                paea_link: gl.paea_link,
-                direction: gl.direction
+                text_file     : gl.text_file,
+                enrichr_link  : gl.target_apps.enrichr,
+                l1000cds2_link: gl.target_apps.l1000cds2,
+                paea_link     : gl.target_apps.paea,
+                direction     : gl.direction
             });
             this.$el.append(gl.el);
         }, this);

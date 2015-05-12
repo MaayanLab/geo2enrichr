@@ -48,13 +48,13 @@ def save(extraction):
 
             genelists_dao.append(
                 models.GeneList(
-                    name = gl.name,
-                    ranked_genes = ranked_genes,
-                    direction = gl.direction,
-                    text_file = gl.text_file,
-                    enrichr_link = gl.enrichr_link,
-                    l1000cds2_link = gl.l1000cds2_link,
-                    paea_link = gl.paea_link
+                    name           = gl.name,
+                    ranked_genes   = ranked_genes,
+                    direction      = gl.direction,
+                    text_file      = gl.text_file,
+                    enrichr_link   = gl.target_apps['enrichr'],
+                    l1000cds2_link = gl.target_apps['l1000cds2'],
+                    paea_link      = gl.target_apps['paea']
                 )
             )
 
@@ -119,19 +119,19 @@ def fetch(extraction_id):
             ranked_genes = [(r.gene.name,r.value) for r in gl_dao.ranked_genes]
             direction = gl_dao.direction
             text_file = gl_dao.text_file
-            enrichr_link = gl_dao.enrichr_link
-            l1000cds2_link = gl_dao.l1000cds2_link
-            paea_link = gl_dao.paea_link
+            target_apps = {
+                'enrichr'  : gl_dao.enrichr_link,
+                'l1000cds2': gl_dao.l1000cds2_link,
+                'paea'     : gl_dao.paea_link
+            }
             genelists.append(
                 GeneList(
                     ranked_genes,
                     direction,
                     metadata,
+                    target_apps,
                     name=name,
-                    text_file=text_file,
-                    enrichr_link=enrichr_link,
-                    l1000cds2_link=l1000cds2_link,
-                    paea_link=paea_link
+                    text_file=text_file
                 )
             )
 

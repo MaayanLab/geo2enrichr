@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.core.genelist.chdir import _apply_cutoff
+from g2e.core.genelist.genelistsmaker import _apply_cutoff
 
 
 class TestApplyCutoff(unittest.TestCase):

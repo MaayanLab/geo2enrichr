@@ -24,6 +24,7 @@ def get_gene_value(genelist, gene):
 
 class ExtractEndpoint(unittest.TestCase):
 
+
     def setUp(self):
         self.app = g2e.app.app.test_client()
 
@@ -63,12 +64,13 @@ class ExtractEndpoint(unittest.TestCase):
             self.assertTrue('direction' in gl)
             self.assertTrue('name' in gl)
             self.assertTrue('text_file' in gl)
-            self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['enrichr_link'])
-            print gl['direction']
+            self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
             if gl['direction'] == 0:
-                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2/' in gl['l1000cds2_link'])
+                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
+                self.assertTrue('http://amp.pharm.mssm.edu/PAEA' in gl['target_apps']['paea'])
             else:
-                self.assertTrue(gl['l1000cds2_link'] == '')
+                self.assertTrue(gl['target_apps']['l1000cds2'] == '')
+                self.assertTrue(gl['target_apps']['paea'] == '')
 
         genelist = resp_dict['genelists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.0939582)
@@ -116,11 +118,13 @@ class ExtractEndpoint(unittest.TestCase):
             self.assertTrue('direction' in gl)
             self.assertTrue('name' in gl)
             self.assertTrue('text_file' in gl)
-            self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['enrichr_link'])
+            self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
             if gl['direction'] == 0:
-                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2/' in gl['l1000cds2_link'])
+                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
+                self.assertTrue(gl['target_apps']['paea'] == '')
             else:
-                self.assertTrue(gl['l1000cds2_link'] == '')
+                self.assertTrue(gl['target_apps']['l1000cds2'] == '')
+                self.assertTrue(gl['target_apps']['paea'] == '')
 
         genelist = resp_dict['genelists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.00469161)

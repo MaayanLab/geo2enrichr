@@ -1,7 +1,7 @@
 @import '../../../extension/common/less/common.less';
 
 
-@footer-height: 75px;
+@footer-height: 150px;
 
 
 /* Reset
@@ -55,7 +55,6 @@ footer {
     border-top: 1px solid @color-lightgray3;
     background: @color-lightgray2;
     color: @color-darkgray;
-    padding-top: 10px;
     width: 100%;
     a,
     p {
@@ -66,6 +65,18 @@ footer {
         text-decoration: none;
         &:hover {
             text-decoration: underline;
+        }
+    }
+    #share {
+        padding-top: 10px;
+        .company {
+            img {
+                margin-left: 2px;
+                width: 25px;
+                &:hover {
+                    opacity: 0.75;
+                }
+            }
         }
     }
 }

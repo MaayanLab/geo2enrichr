@@ -13,7 +13,7 @@ import warnings
 import numbers
 
 
-def chdir(A, B, genes, cutoff):
+def chdir(A, B, genes):
     """Wraps original Characteristic Direction method, handling sorting by
     highest coefficients.
     """
@@ -24,7 +24,6 @@ def chdir(A, B, genes, cutoff):
     A, B, genes = _throw_away_rows_without_variance(A, B, genes)
     genes, coefficients = _chdir(A, B, genes)
     genes, coefficients = _sort_by_coefficients(genes, coefficients)
-    genes, coefficients = _apply_cutoff(genes, coefficients, cutoff)
     return genes, coefficients
 
 
@@ -182,14 +181,6 @@ def _sort_by_coefficients(genes, values):
     genes = [str(x) for x in genes]
     values = values[ind]
     return genes, values.tolist()
-
-
-def _apply_cutoff(genes, values, cutoff):
-    """Applies a cutoff to both lists.
-    """
-    if cutoff is None:
-        return genes, values
-    return genes[-cutoff:], values[-cutoff:]
 
 
 def _throw_away_rows_without_variance(A, B, genes):

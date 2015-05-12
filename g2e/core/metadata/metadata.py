@@ -5,7 +5,7 @@ user inputs.
 
 class Metadata(object):
 
-    def __init__(self, diffexp_method, cutoff, correction_method, threshold, organism, cell, perturbation, gene, disease):
+    def __init__(self, diffexp_method, cutoff, correction_method, threshold, organism, cell, perturbation, gene, disease, platform=None, normalize=None):
         self.diffexp_method    = diffexp_method
         self.correction_method = correction_method
         self.cutoff            = cutoff
@@ -15,6 +15,8 @@ class Metadata(object):
         self.perturbation      = perturbation
         self.gene              = gene
         self.disease           = disease
+        self.platform          = platform
+        self.normalize         = normalize
 
     @classmethod
     def from_args(cls, args):
@@ -48,7 +50,13 @@ class Metadata(object):
         perturbation = args['perturbation'] if 'perturbation' in args else None
         gene         = args['gene']         if 'gene'         in args else None
         disease      = args['disease']      if 'disease'      in args else None
-        return cls(diffexp_method, cutoff, correction_method, threshold, organism, cell, perturbation, gene, disease)
+
+        # This metadata is actually in the SoftFile instance as well, but
+        # adding it here makes it easier to add to the description passed to
+        # the target applications.
+        platform     = args['platform']     if 'platform'     in args else None
+        normalize    = True if ('normalize' not in args or args['normalize'] == 'True') else False
+        return cls(diffexp_method, cutoff, correction_method, threshold, organism, cell, perturbation, gene, disease, platform, normalize)
 
     def __str__(self):
         result = []

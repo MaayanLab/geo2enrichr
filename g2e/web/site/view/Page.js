@@ -15,6 +15,9 @@ App.View.Page = Backbone.View.extend({
         $('body').append(this.el);
         this.$el.after(footer);
         this.$nav = this.$el.find('nav');
+        new App.View.Footer({
+            model: new App.Model.Share()
+        });
     },
 
     click: function(evt) {

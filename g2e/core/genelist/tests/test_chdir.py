@@ -30,7 +30,7 @@ class TestChdir(unittest.TestCase):
                 A.append([float(pv) for pv in A_row])
                 B.append([float(pv) for pv in B_row])
 
-        self.genes, self.values = chdir(A, B, genes, None)
+        self.genes, self.values = chdir(A, B, genes)
 
 
     def testSumSquares(self):

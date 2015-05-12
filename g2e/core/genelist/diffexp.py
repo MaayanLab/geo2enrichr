@@ -28,7 +28,6 @@ def diffexp(A, B, genes, metadata):
         genes, values = chdir.chdir(
             A,
             B,
-            genes,
-            metadata.cutoff
+            genes
         )
     return genes, values

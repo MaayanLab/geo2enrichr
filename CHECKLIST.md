@@ -5,7 +5,7 @@
 5. Move the compiled `xpi` file into `g2e/static`.
 6. Update the Chrome web store.
 7. Push the updated repo with `RCX` in the commit message, where `X` is the date.
-8. `ssh` into Loretta.
+8. `ssh` into amp.pharm.mssm.edu.
 9. Run `cd /g2d/`
 10. Run `git pull` (you may have to specify the remote)
 11. Run `docker ps` to get the running containers; find GEO2Enrichr's ("g2e")
