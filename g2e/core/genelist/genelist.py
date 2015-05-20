@@ -1,4 +1,5 @@
-"""This class creates a gene list.
+"""Represents a gene list, with references to the list's saved text file and
+links to target applications.
 
 __authors__ = "Gregory Gundersen"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"

@@ -1,7 +1,7 @@
 """This module contains functions for parsing SOFT files.
 
 __authors__ = "Gregory Gundersen, Andrew Rouillard, Axel Feldmann, Kevin Hu"
-__credits__ = "Yan Kou, Avi Ma'ayan"
+__credits__ = "Avi Ma'ayan"
 __contact__ = "gregory.gundersen@mssm.edu"
 """
 
@@ -174,6 +174,9 @@ def parse_custom(filename):
 
 
 def platform_supported(platform):
+	"""Returns True if the platform is supported, False otherwise.
+	"""
+	# TODO: Can this not just be: `return platform in PROBE2GENE`?
     if platform not in PROBE2GENE:
         return False
     return True
@@ -214,4 +217,5 @@ def build_probe_dict(platform_probesetid_genesym_file):
     return platform_dict
 
 
+# Loads a dictionary into memory for the duration of the application.
 PROBE2GENE = build_probe_dict('g2e/core/softfile/probe2gene.txt')

@@ -1,4 +1,4 @@
-"""This module calculates the t-test.
+"""Calculates the t-test.
 
 __authors__ = "Gregory Gundersen, Axel Feldman"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
@@ -61,8 +61,14 @@ def _get_pvalues(A, B, genes):
 
 
 def _correct_pvalues(pvalues, ttest_correction_method):
+    """Corrects for multiple comparisons.
     """
-    """
+    # The multiple comparisons problem arises when a test increases the
+    # the likelihood that an event occurs by testing for it many times. In our
+    # case, the t-test is bound to find some differential expression since the
+    # test is performed in a univariate fashion; this correction method
+    # accounts for that. See here for more information:
+	# http://en.wikipedia.org/wiki/Multiple_comparisons_problem
     return r_stats.p_adjust(
         FloatVector(pvalues),
         method = ttest_correction_method

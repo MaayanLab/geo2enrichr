@@ -1,5 +1,5 @@
-"""This code calculates the characteristic direction with regulization. This
-code differs from the published code in small ways in order to be more
+"""Calculates the characteristic direction with regulization. This code
+differs from the published code in small ways in order to be more
 modular. The notation "! CHANGED !" is used to denote any differences.
 
 __authors__ = "Qiaonan Duan, Edward Chen, Gregory Gundersen"
@@ -184,6 +184,8 @@ def _sort_by_coefficients(genes, values):
 
 
 def _throw_away_rows_without_variance(A, B, genes):
+	"""Discards rows without variance. 
+	"""
     X = np.concatenate((A,B), axis=1)
     keep_rows = np.std(X, axis=1).nonzero()[0]
     return A[keep_rows,], B[keep_rows,], genes[keep_rows]

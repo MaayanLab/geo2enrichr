@@ -1,3 +1,11 @@
+"""ORM models of all primary data structures and their relationships.
+
+__authors__ = "Gregory Gundersen, Michael McDermott"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
+__contact__ = "avi.maayan@mssm.edu"
+"""
+
+
 from sqlalchemy import ForeignKey
 from sqlalchemy import Table, Column, BLOB, Boolean, Float, Integer, String, Text
 from sqlalchemy.orm import relationship, backref

@@ -1,4 +1,8 @@
-"""This module handles reading and writing GeneLists to disk.
+"""Handles reading and writing GeneLists to disk.
+
+__authors__ = "Gregory Gundersen"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
+__contact__ = "avi.maayan@mssm.edu"
 """
 
 
@@ -35,4 +39,6 @@ def write(name, direction, ranked_genes, metadata):
 
 
 def _line(key, val):
+	"""Handles line formatting.
+	"""
     return '!' + key + ':\t' + str(val) + '\n'

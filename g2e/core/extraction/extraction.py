@@ -1,4 +1,9 @@
-"""This module creates an Extraction instance.
+"""Creates an Extraction, which represents a single instance of a user's
+processed data, with links to the SOFT file, gene lists, and metadata.
+
+__authors__ = "Gregory Gundersen"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
+__contact__ = "avi.maayan@mssm.edu"
 """
 
 
@@ -25,17 +30,24 @@ class Extraction(object):
 
     @classmethod
     def new(cls, softfile, args):
+    	"""Creates a new extraction, as opposed to an extraction from the
+    	database.
+    	"""
         metadata = Metadata.from_args(args)
         genelists = genelists_maker(softfile, metadata)
         return cls(softfile, genelists, metadata)
 
     @classmethod
     def from_geo(cls, args):
+    	"""Creates an extraction from GEO data.
+    	"""
         softfile = SoftFile.from_geo(args)
         return cls.new(softfile, args)
 
     @classmethod
     def from_file(cls, file_obj, args):
+    	"""Creates an extraction from a custom, uploaded SOFT file.
+    	"""
         # PURPLE_WIRE: Users *will* upload bad data and parsing their files
         # *will* throw an error. Catch and handle appropriately.
         softfile = SoftFile.from_file(file_obj, args)

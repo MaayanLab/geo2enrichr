@@ -1,6 +1,10 @@
 """This module returns an Extraction instance. If given an id, it returns the
 extraction from the DAO. Otherwise, it builds a SoftFile and GeneList, saves
 them to the DAO and returns a new Extraction.
+
+__authors__ = "Gregory Gundersen"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
+__contact__ = "avi.maayan@mssm.edu"
 """
 
 
@@ -29,6 +33,9 @@ def extraction_maker(**kwargs):
 
 
 def clean_extraction(extraction):
+	"""Removes unnecessary attributes from extraction before returning data to
+	the user.
+	"""
     response = extraction.__dict__
     response['softfile'] = extraction.softfile.__dict__
     response['genelists'] = [gl.__dict__ for gl in extraction.genelists]

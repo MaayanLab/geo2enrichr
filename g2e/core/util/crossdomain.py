@@ -1,3 +1,12 @@
+"""Decorator for cross-domain HTTP requests. See:
+http://flask.pocoo.org/snippets/56/.
+
+__authors__ = "Gregory Gundersen, Armin Ronacher"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
+__contact__ = "avi.maayan@mssm.edu"
+"""
+
+
 from datetime import timedelta
 from flask import make_response, request, current_app
 from functools import update_wrapper

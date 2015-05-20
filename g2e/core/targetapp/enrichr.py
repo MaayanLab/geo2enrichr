@@ -1,4 +1,4 @@
-"""Handles the Enrichr API.
+"""Handles Enrichr's API.
 
 __authors__ = "Gregory Gundersen, Qiaonan Duan"
 __contact__ = "avi.maayan@mssm.edu"
@@ -14,7 +14,7 @@ BASE_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
 
 
 def get_link(genes, description):
-    """Returns a shareable link to Enrichr for enriched gene list.
+    """Returns a shareable link to Enrichr.
     """
     # Enrichr does not care about the sign of the rank; it treats the rank
     # simply as a membership value for a fuzzy set.

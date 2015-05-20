@@ -1,5 +1,9 @@
-"""This module presents a single entry point, SoftFile, for creating and
-fetching SOFT files. 
+"""Represents a SoftFile, either from GEO or a user upload, with a link to
+the cleaned file and associated metadata.
+
+__authors__ = "Gregory Gundersen"
+__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
+__contact__ = "avi.maayan@mssm.edu"
 """
 
 import time
@@ -13,9 +17,9 @@ import g2e.core.softfile.softfilemanager as softfilemanager
 class SoftFile(object):
 
     def __init__(self, name, A_cols=None, B_cols=None, genes=None, A=None, B=None, text_file=None, is_geo=False, platform=None, stats=None, normalize=None):
-        """Constructs a SOFT file. This should only be called via the class
-        methods.
+        """Constructs a SoftFile instance.
         """
+        # This should only be called via the class methods.
         self.name = name
         self.A_cols = A_cols
         self.B_cols = B_cols
@@ -30,6 +34,8 @@ class SoftFile(object):
 
     @classmethod
     def from_geo(cls, args):
+    	"""Constructs a SoftFile
+    	"""
         name = args['dataset']
         is_geo = True
 
@@ -50,6 +56,8 @@ class SoftFile(object):
 
     @classmethod
     def from_file(cls, file_obj, args):
+    	"""Constructs a SoftFile from a user uploaded file.
+    	"""
         if 'name' in args and args['name'] != '':
             name = args['name']
         else:
@@ -61,7 +69,8 @@ class SoftFile(object):
 
 
 def get_cols(args):
-    """Handles getting the samples depending on the way the request was made.
+    """Handles getting the samples depending on the way the HTTP request was
+    made.
     """
     # The "array[]" notation really confused me; see this Stack Overflow
     # answer for details: http://stackoverflow.com/a/23889195/1830334

@@ -1,8 +1,6 @@
-"""This module identifies differentially expressed genes. It delegates to the
-appropriate method depending on user options and defaults to the
-characteristic direction.
+"""Normalizes, log2 transforms and quantile normalizes, the data as necessary.
 
-__authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
+__authors__ = "Gregory Gundersen"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
@@ -164,7 +162,6 @@ def _validate(genes, values):
     each column, i.e. the user selected an equal number of control and
     experimental samples.
     """
-
     # Both of these exceptions should only be raised in truly exceptional
     # scenarios, such as a parsing error or a problem with the data itself.
     if len(values) != len(genes):

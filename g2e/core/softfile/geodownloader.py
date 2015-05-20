@@ -49,7 +49,6 @@ def download(accession):
 def _get_file_by_url(url, attempts=5):
     """Attempts to get the file from URL. Tries 5 times before giving up.
     """
-    
     print 'Downloading GEO SOFT file from: ' + url
     while attempts > 0:
         try:
@@ -72,7 +71,6 @@ def _get_file_by_url(url, attempts=5):
 def _unzip(compressed_string):
     """Unzips the file without allowing it to touch the disk.
     """
-
     f = StringIO(compressed_string)
     decompressed = GzipFile(fileobj=f)
     return decompressed.read()
@@ -82,7 +80,6 @@ def _construct_GDS_url(accession):
     """Example URL:
         ftp://ftp.ncbi.nlm.nih.gov/geo/datasets/GDS4nnn/GDS4999/soft/GDS4999.soft.gz
     """
-
     number_digits = len(accession) - 3  # 'GDS' is of length 3.
     if number_digits > 3:
         folder = accession[:4] + "nnn"
@@ -100,7 +97,6 @@ def _construct_GSE_url(accession):
     """Example URL:
         ftp://ftp.ncbi.nlm.nih.gov/geo/platforms/GSE4nnn/GSE4999/matrix/GSE4999.txt.gz
     """
-
     number_digits = len(accession) - 3  # 'GSE' is of length 3.
     if number_digits < 4:
         folder = accession[:3] + 'nnn'  # e.g. GSEnnn.

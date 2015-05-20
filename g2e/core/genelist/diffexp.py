@@ -1,8 +1,7 @@
-"""This module identifies differentially expressed genes. It delegates to the
-appropriate method depending on user options and defaults to the
-characteristic direction.
+"""Identifies differentially expressed genes. It delegates to the appropriate
+method depending on user options and defaults to the characteristic direction.
 
-__authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
+__authors__ = "Gregory Gundersen"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
@@ -13,8 +12,8 @@ from g2e.core.genelist import ttest
 
 
 def diffexp(A, B, genes, metadata):
-    """Identifies differentially expressed genes, delegating to the correct
-    helper function based on client or default configuration.
+    """Delegates to the correct helper function based on client or default
+    configuration.
     """
     if metadata.diffexp_method == 'ttest':
         genes, values = ttest.ttest(
