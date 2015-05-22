@@ -9,7 +9,7 @@ App.Model.Share = Backbone.Model.extend({
             image: 'web/site/image/share/facebook.png'
         },
         {
-            link: 'https://plus.google.com/share?url=http://www.maayanlab.net/harmoziome',
+            link: 'https://plus.google.com/share?url=http://amp.pharm.mssm.edu/g2e/',
             image: 'web/site/image/share/google-plus.png'
         },
         {

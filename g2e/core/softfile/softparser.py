@@ -174,9 +174,9 @@ def parse_custom(filename):
 
 
 def platform_supported(platform):
-	"""Returns True if the platform is supported, False otherwise.
-	"""
-	# TODO: Can this not just be: `return platform in PROBE2GENE`?
+    """Returns True if the platform is supported, False otherwise.
+    """
+    # TODO: Can this not just be: `return platform in PROBE2GENE`?
     if platform not in PROBE2GENE:
         return False
     return True

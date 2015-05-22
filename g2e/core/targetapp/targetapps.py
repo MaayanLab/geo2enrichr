@@ -46,15 +46,15 @@ def target_all_apps(ranked_genes, direction, metadata):
 
 
 def _description(direction, metadata):
-	"""Convert the direction and metadata to a human readable string.
-	"""
+    """Convert the direction and metadata to a human readable string.
+    """
     return _direction(direction) + '_' + str(metadata)
 
 
 def _direction(direction):
-	"""Converts an internal representation of 'direction' to a human readable
-	one.
-	"""
+    """Converts an internal representation of 'direction' to a human readable
+    one.
+    """
     if direction == 1:
         return 'Up'
     if direction == -1:

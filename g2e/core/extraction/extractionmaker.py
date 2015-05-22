@@ -33,9 +33,9 @@ def extraction_maker(**kwargs):
 
 
 def clean_extraction(extraction):
-	"""Removes unnecessary attributes from extraction before returning data to
-	the user.
-	"""
+    """Removes unnecessary attributes from extraction before returning data to
+    the user.
+    """
     response = extraction.__dict__
     response['softfile'] = extraction.softfile.__dict__
     response['genelists'] = [gl.__dict__ for gl in extraction.genelists]

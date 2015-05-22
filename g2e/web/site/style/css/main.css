@@ -37,11 +37,11 @@ h6 {
   min-height: 100%;
   height: auto !important;
   height: 100%;
-  margin: 0 auto -150px;
+  margin: 0 auto -170px;
 }
 footer,
 .push {
-  height: 150px;
+  height: 170px;
 }
 footer {
   border-top: 1px solid #dddddd;

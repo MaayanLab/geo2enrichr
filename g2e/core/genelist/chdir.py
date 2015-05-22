@@ -184,8 +184,8 @@ def _sort_by_coefficients(genes, values):
 
 
 def _throw_away_rows_without_variance(A, B, genes):
-	"""Discards rows without variance. 
-	"""
+    """Discards rows without variance. 
+    """
     X = np.concatenate((A,B), axis=1)
     keep_rows = np.std(X, axis=1).nonzero()[0]
     return A[keep_rows,], B[keep_rows,], genes[keep_rows]

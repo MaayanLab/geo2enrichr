@@ -18,8 +18,8 @@ def write(name, direction, ranked_genes, metadata):
     """
     full_path = BASE_DIR + name + EXT
     with open(full_path, 'w+') as f:
-    	f.write( _line('direction', direction) )
-    	f.write( _line('num_genes', len(ranked_genes)) )
+        f.write( _line('direction', direction) )
+        f.write( _line('num_genes', len(ranked_genes)) )
         f.write( _line('diffexp_method', metadata.diffexp_method) )
         f.write( _line('cutoff', metadata.cutoff) )
         f.write( _line('correction_method', metadata.correction_method) )
@@ -39,6 +39,6 @@ def write(name, direction, ranked_genes, metadata):
 
 
 def _line(key, val):
-	"""Handles line formatting.
-	"""
+    """Handles line formatting.
+    """
     return '!' + key + ':\t' + str(val) + '\n'

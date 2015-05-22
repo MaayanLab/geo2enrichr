@@ -5,7 +5,9 @@
 *.DS_Store
 
 # Automatically generated files
-g2e/extension/g2e.js
+g2e/extension/chrome/g2e.js
+g2e/extension/firefox/g2e.js
+g2e/extension/firefox/geo2enrichr.xpi
 
 # Saved text files
 g2e/static/softfile/*
@@ -15,19 +17,9 @@ g2e/static/genelist/*
 *.zip
 
 # JS build files and dependencies
+resources/
 scripts/node_modules/
-scripts/platforms/downloaded/
-scripts/platforms/cleaned/
-scripts/platforms/symbols/
-
-# directories
-resources/platform scripts/
-resources/PlatformInfoForGreg/
-resources/test_data/
-
-# Misc
 misc/
-accessionlist_example.txt
 
 # Python
 *.pyc
