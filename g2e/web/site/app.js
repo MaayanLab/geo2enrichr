@@ -120,7 +120,7 @@ $(function() {
                 error: function(data) {
                     view.error(data);
                 },
-             complete: function() {
+                complete: function() {
                     loader.stop();
                 }
             });

@@ -30,6 +30,6 @@ App.View.Extraction = Backbone.View.extend({
     },
 
     error: function(data) {
-        this.$el.append('<p class="highlight">Unknown server side error. Please try to refresh the page.</p>');
+        this.$el.append('<p class="highlight">Connection dropped. Please try again.</p>');
     }
 });
