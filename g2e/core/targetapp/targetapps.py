@@ -38,7 +38,7 @@ def target_all_apps(ranked_genes, direction, metadata):
     if direction == 0:
         # This is a hard cutoff and is also independent of user selection.
         l1000cds2_genes = _apply_cutoff(ranked_genes, L1000CDS2_CUTOFF)
-        result['l1000cds2'] = l1000cds2.get_link(l1000cds2_genes)
+        result['l1000cds2'] = l1000cds2.get_link(l1000cds2_genes, metadata)
         if metadata.diffexp_method == 'chdir':
             paea_genes = _apply_cutoff(ranked_genes, PAEA_CUTOFF)
             result['paea'] = paea.get_link(paea_genes, description)

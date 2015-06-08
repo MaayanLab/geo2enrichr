@@ -9,8 +9,8 @@ __contact__ = "avi.maayan@mssm.edu"
 class Metadata(object):
 
     def __init__(self, diffexp_method, cutoff, correction_method, threshold, organism, cell, perturbation, gene, disease, platform=None, normalize=None):
-    	"""Constructs a Metadata instance.
-    	"""
+        """Constructs a Metadata instance.
+        """
         self.diffexp_method    = diffexp_method
         self.correction_method = correction_method
         self.cutoff            = cutoff
@@ -25,9 +25,9 @@ class Metadata(object):
 
     @classmethod
     def from_args(cls, args):
-    	"""Constructs a metadata instance from arguments as opposed to the
-    	database.
-    	"""
+        """Constructs a metadata instance from arguments as opposed to the
+        database.
+        """
         diffexp_method = args['diffexp_method'] if 'diffexp_method' in args else 'chdir'
         
         # This if-else-iness smells, but I'm not sure what else to do right
@@ -67,12 +67,21 @@ class Metadata(object):
         return cls(diffexp_method, cutoff, correction_method, threshold, organism, cell, perturbation, gene, disease, platform, normalize)
 
     def __str__(self):
-    	"""Stringifies the metadata instance.
-    	"""
-    	# This is used primarily for sending a description to third-party
-    	# target applications.
+        """Stringifies the metadata instance.
+        """
+        # This is used primarily for sending a description to third-party
+        # target applications.
         result = []
         for key,val in self.__dict__.items():
             if val:
                 result.append(str(val))
         return '-'.join(result)
+
+    def to_L1000CDS2_data_format(self):
+        result = []
+        for key,val in self.__dict__.items():
+            result.append({
+                'key': key,
+                'value': val
+            })
+        return result

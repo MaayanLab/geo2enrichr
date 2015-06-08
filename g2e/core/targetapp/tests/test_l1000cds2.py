@@ -1,18 +1,20 @@
 import unittest
 
 import g2e.core.targetapp.l1000cds2 as l1000cds2
+from g2e.core.metadata.metadata import Metadata
 
 
 class TestL1000CDS2(unittest.TestCase):
 
     def testL1000CDS2Link(self):
+        md = Metadata(None, None, None, None, None, None, None, None, None)
         genes = [
-            ('USP18', -0.10536861617612463),
-            ('H19', 0.0979803999370785),
-            ('COL3A1', 0.09012118037674563),
-            ('MYL9', 0.09001543082469686),
-            ('CTGF', 0.08922812355076926),
-            ('TAGLN', 0.0823789311253236)
+            ('DDIT4', 9.97),
+            ('HIG2', 10.16),
+            ('FLT1', 7.66),
+            ('ADM', 17.8),
+            ('SLC2A3', 20.29),
+            ('ZNF331', 15.22)
         ]
-        link = l1000cds2.get_link(genes)
+        link = l1000cds2.get_link(genes, md)
         self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2/' in link)
