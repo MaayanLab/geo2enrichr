@@ -36,6 +36,7 @@ class ExtractEndpoint(unittest.TestCase):
 
         self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
             is_geo = True,
+            skip_target_apps = True,
             dataset = 'GDS5077',
             platform = 'GPL10558',
             organism = 'Homo sapiens',

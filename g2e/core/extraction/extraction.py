@@ -30,24 +30,25 @@ class Extraction(object):
 
     @classmethod
     def new(cls, softfile, args):
-    	"""Creates a new extraction, as opposed to an extraction from the
-    	database.
-    	"""
+        """Creates a new extraction, as opposed to an extraction from the
+        database.
+        """
         metadata = Metadata.from_args(args)
-        genelists = genelists_maker(softfile, metadata)
+        skip_target_apps = True if 'skip_targets_apps' in args else False
+        genelists = genelists_maker(softfile, metadata, skip_target_apps)
         return cls(softfile, genelists, metadata)
 
     @classmethod
     def from_geo(cls, args):
-    	"""Creates an extraction from GEO data.
-    	"""
+        """Creates an extraction from GEO data.
+        """
         softfile = SoftFile.from_geo(args)
         return cls.new(softfile, args)
 
     @classmethod
     def from_file(cls, file_obj, args):
-    	"""Creates an extraction from a custom, uploaded SOFT file.
-    	"""
+        """Creates an extraction from a custom, uploaded SOFT file.
+        """
         # PURPLE_WIRE: Users *will* upload bad data and parsing their files
         # *will* throw an error. Catch and handle appropriately.
         softfile = SoftFile.from_file(file_obj, args)

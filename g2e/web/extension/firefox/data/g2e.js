@@ -851,7 +851,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
 var main = function() {
 
     /* EXTENSION_ID, DEBUG, SERVER, and SUPPORTED_PLATFORMS are set in
-     * config.js via deploy.sh.
+     * config.js via build.sh.
      */
     var events = Events(),
         notifier = Notifier(DEBUG),

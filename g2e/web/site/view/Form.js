@@ -84,6 +84,7 @@ App.View.Form = Backbone.View.extend({
             error: function(data) {
                 loader.stop();
                 console.log(data);
+                alert('Unknown error uploading data. Please contact the Ma\'ayan lab if this persists.');
             }
         });
     },

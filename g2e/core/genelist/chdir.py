@@ -10,7 +10,6 @@ __contact__ = "avi.maayan@mssm.edu"
 
 import numpy as np
 import warnings
-import numbers
 
 
 def chdir(A, B, genes):
@@ -130,10 +129,11 @@ def _chdir(A, B, genes, r=1):
 def nipals(X,a,it=100,tol=1e-4):
     # Nipals algorithm for Principal Component Analysis
     # This function is written largely based on nipals function from R chemometrics package.
-    
+
     X = np.array(X)
     (obsCount,varCount) = np.shape(X)
     Xh = X - np.tile(np.mean(X,axis=0),(obsCount,1))
+
     T = np.zeros((obsCount,a))
     P = np.zeros((varCount,a))
     pcvar = np.zeros(varCount)

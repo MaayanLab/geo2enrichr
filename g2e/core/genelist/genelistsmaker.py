@@ -14,7 +14,7 @@ from g2e.core.genelist.genelist import GeneList
 from g2e.core.targetapp.targetapps import target_all_apps 
 
 
-def genelists_maker(softfile, metadata):
+def genelists_maker(softfile, metadata, skip_target_apps):
     """Wrapper method for creating one of each "kind" of gene list: up, down,
     and combined.
     """
@@ -34,9 +34,9 @@ def genelists_maker(softfile, metadata):
     f_up_genes     = [t for t in f_ranked_genes if t[1] > 0]
     f_down_genes   = [t for t in f_ranked_genes if t[1] < 0]
 
-    target_apps_up       = target_all_apps(f_up_genes,     1, metadata)
-    target_apps_down     = target_all_apps(f_down_genes,  -1, metadata)
-    target_apps_combined = target_all_apps(f_ranked_genes, 0, metadata)
+    target_apps_up       = {} if skip_target_apps else target_all_apps(f_up_genes,     1, metadata)
+    target_apps_down     = {} if skip_target_apps else target_all_apps(f_down_genes,  -1, metadata)
+    target_apps_combined = {} if skip_target_apps else target_all_apps(f_ranked_genes, 0, metadata)
 
     # 3. Apply cutoff if the differential expression method is the
     #    Characteristic Direction. We don't apply it earlier because PAEA
