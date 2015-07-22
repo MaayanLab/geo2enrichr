@@ -1,6 +1,9 @@
 # DB connection config. Do *NOT* version control this.
 *.conf
 
+# IntelliJ
+.idea
+
 # OSX
 *.DS_Store
 

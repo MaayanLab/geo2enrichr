@@ -1,7 +1,11 @@
-DOCKER_IMAGE='146.203.54.165:5000/g2e:latest'
+# DOCKER_IMAGE='146.203.54.165:5000/g2e:latest'
 
-docker push $DOCKER_IMAGE
+# We use an insecure, private registry. Tell Docker to go ahead anyway.
+# boot2docker sshcurl post t "echo $'EXTRA_ARGS=\"--insecure-registry 146.203.54.165:5000\"' | sudo tee -a /var/lib/boot2docker/profile && sudo /etc/init.d/docker restart"
 
+# docker push $DOCKER_IMAGE
+
+# JSON for Marathon
 data='{
     "instances": 1,
     "cpus": 1,
@@ -38,6 +42,6 @@ data='{
 }'
 
 curl -i \
--H "Accept: application/json" \
--H "Content-Type:application/json" \
--X POST --data '$data' maayanlab:systemsbiology@elizabeth:8080/v2/apps/g2e
+    -H "Accept: application/json" \
+    -H "Content-Type:application/json" \
+    -X POST --data '$data' maayanlab:systemsbiology@elizabeth:8080/v2/apps/g2e
