@@ -70,5 +70,9 @@ boot2docker up
 boot2docker shellinit
 
 PRIVATE_DOCKER_REPO_IP='146.203.54.165:5000'
-echo {$PRIVATE_DOCKER_REPO_IP}
 docker build -t $PRIVATE_DOCKER_REPO_IP/g2e:latest .
+
+# Critical step! We need to reset the DB credentials so we can keep developing locally.
+reset=$(head -n 1 db-dev.conf)
+printf 'reseting credentials to:\n%s\n' $reset
+echo $reset > $dbconf
