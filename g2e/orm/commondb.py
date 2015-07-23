@@ -23,5 +23,7 @@ engine = create_engine(SQLALCHEMY_DATABASE_URI, pool_size=3, pool_recycle=3600, 
 # We should only use one instance of this class in a commonly imported module (this one).
 Base = declarative_base()
 
-Session = sessionmaker()
+# Allow objects to persist after the session ends.
+Session = sessionmaker(expire_on_commit=False)
+
 Session.configure(bind=engine)

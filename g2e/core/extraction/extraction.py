@@ -6,11 +6,10 @@ __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
 
-
 import hashlib
 import time
 
-from g2e.core.softfile.softfile import SoftFile
+from g2e.model.softfile import SoftFile
 from g2e.core.metadata.metadata import Metadata
 from g2e.core.genelist.genelistsmaker import genelists_maker
 

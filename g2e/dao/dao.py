@@ -6,15 +6,13 @@ __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
 
-
-import sqlalchemy
-
 from contextlib import contextmanager
 
+import sqlalchemy
 from g2e.orm.commondb import Session
 import g2e.orm.models as models
 from g2e.core.genelist.genelist import GeneList
-from g2e.core.softfile.softfile import SoftFile
+from g2e.model.softfile import SoftFile
 from g2e.core.metadata.metadata import Metadata
 from g2e.core.extraction.extraction import Extraction
 
@@ -47,20 +45,13 @@ def __save(extraction):
     """Saves the SoftFile and GeneList to the database and returns the ID from
     the extraction table.
     """
-    sf = extraction.softfile
+    softfile_dao = extraction.softfile
     gls = extraction.genelists
     metadata = extraction.metadata
 
     print 'saving extraction'
 
     with session_scope() as session:
-        softfile_dao  = models.SoftFile(
-            name      = sf.name,
-            platform  = sf.platform,
-            is_geo    = sf.is_geo,
-            normalize = sf.normalize,
-            text_file = sf.text_file
-        )
 
         print 'softfile DAO created'
 
@@ -113,10 +104,15 @@ def __save(extraction):
             extraction = extraction_dao
         )
 
-        session.add(diff_exp_method_dao)
-        session.add(ttest_correction_method_dao)
-        session.add(extraction_dao)
-        session.flush()
+        session.add_all([
+            softfile_dao,
+            diff_exp_method_dao,
+            ttest_correction_method_dao,
+            extraction_dao
+        ])
+
+        session.commit()
+        print softfile_dao
         return extraction_dao.extraction_id
 
 
@@ -127,18 +123,15 @@ def __fetch(extraction_id):
 
         ext_dao = session.query(models.Extraction).filter_by(extraction_id=extraction_id).first()
 
-        sf_dao    = ext_dao.softfile
-        name      = sf_dao.name
-        text_file = sf_dao.text_file
-        is_geo    = sf_dao.is_geo
-        normalize = sf_dao.normalize
-        platform  = sf_dao.platform
-        softfile  = SoftFile(name,
-            platform  = platform,
-            text_file = text_file,
-            is_geo    = is_geo,
-            normalize = normalize
-        )
+        softfile  = ext_dao.softfile
+
+        #name      = sf_dao.name
+        #text_file = sf_dao.text_file
+        #is_geo    = sf_dao.is_geo
+        #normalize = sf_dao.normalize
+        #platform  = sf_dao.platform
+        #softfile  = SoftFile.from_db(name, platform, text_file, is_geo, normalize)
+
         metadata   = Metadata(
             ext_dao.diff_exp_method.name,
             ext_dao.cutoff,
@@ -173,6 +166,7 @@ def __fetch(extraction_id):
                 )
             )
 
+        session.commit()
         return Extraction(softfile, genelists, metadata)
 
 

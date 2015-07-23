@@ -7,10 +7,8 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from sqlalchemy import ForeignKey
-from sqlalchemy import Table, Column, BLOB, Boolean, Float, Integer, String, Text
+from sqlalchemy import Table, Column, Float, Integer, String, Text
 from sqlalchemy.orm import relationship, backref
-
-# These are references to common instances of SQLAlchemy utilities.
 from g2e.orm.commondb import Base, engine
 
 
@@ -62,26 +60,6 @@ class RankedGene(Base):
 
     def __repr__(self):
         return '<RankedGene %r>' % self.id
-
-
-# PURPLE_WIRE: Link this table to diseases.
-# PURPLE_WIRE: GEO SoftFiles should be unique, but it's more important that we
-# collect at all.
-class SoftFile(Base):
-    """List of gene symbols and expression values.
-    """
-    __tablename__ = 'softfiles'
-    id = Column(Integer, primary_key=True)
-    extraction_id = Column(Integer, ForeignKey('extractions.id'))
-    name = Column(String(200))
-    platform = Column(String(200))
-    # is_geo == False indicates a custom dataset.
-    is_geo = Column(Boolean)
-    normalize = Column(Boolean)
-    text_file = Column(String(255))
-
-    def __repr__(self):
-        return '<SoftFile %r>' % self.id
 
 
 class Extraction(Base):

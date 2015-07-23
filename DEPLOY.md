@@ -13,7 +13,8 @@ To deploy the extensions
 
 To deploy the web application
 =
-2. Run `build.sh` with the first argument 'prod' for production, 'dev' for development
-   and an optional second argument 'skip' to skip tests. This will automatically configure
-   the connection to the correct database as well.
-3. Run `deploy.sh`
+2. Run `build.sh`
+   $1 - 'prod' for production, 'dev' for development
+   $2 - 'skip' to skip tests, 'test' to run tests
+   $3 - 'push' to push to private Docker repo (optional)
+3. Restart G2E on Marathon.
