@@ -78,7 +78,7 @@ class SoftFile(Base):
     # is_geo == False indicates a custom dataset.
     is_geo = Column(Boolean)
     normalize = Column(Boolean)
-    text_file = Column(String(200))
+    text_file = Column(String(255))
 
     def __repr__(self):
         return '<SoftFile %r>' % self.id
@@ -96,18 +96,38 @@ class Extraction(Base):
     extraction_id = Column(String(10))
     softfile = relationship('SoftFile', uselist=False, backref='extractions')
     genelists = relationship('GeneList', backref=backref('genelists', order_by=id))
-    diffexp_method = Column(String(200))
+
+    diff_exp_method_fk = Column(Integer, ForeignKey('diff_exp_method.id'))
+    ttest_correction_method_fk = Column(Integer, ForeignKey('ttest_correction_method.id'))
+
     cutoff = Column(Integer)
-    correction_method = Column(String(200))
     threshold = Column(Float)
-    organism = Column(String(200)) 
-    cell = Column(String(200))
-    perturbation = Column(String(200))
-    gene = Column(String(200))
-    disease = Column(String(200))
+    organism = Column(String(255))
+    cell = Column(String(255))
+    perturbation = Column(String(255))
+    gene = Column(String(255))
+    disease = Column(String(255))
 
     def __repr__(self):
         return '<Extraction %r>' % self.id
+
+
+class DiffExpMethod(Base):
+    """Supported differential expression analysis methods.
+    """
+    __tablename__ = 'diff_exp_method'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255))
+    extraction = relationship('Extraction', uselist=False, backref='diff_exp_method')
+
+
+class TtestCorrectionMethod(Base):
+    """Supported t-test correction methods.
+    """
+    __tablename__ = 'ttest_correction_method'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255))
+    extraction = relationship('Extraction', uselist=False, backref='ttest_correction_method')
 
 
 # This is what rebuilds the database or adds tables as necessary.

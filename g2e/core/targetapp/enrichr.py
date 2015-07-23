@@ -33,7 +33,7 @@ def get_link(genes, description):
     # I've noticed that sometimes the GET errors out and wonder if it is a
     # race condition of some sort. This throttles the back-to-back requests
     # and seems to resolve the issue on our end.
-    time.sleep(0.5)
+    time.sleep(1)
 
     # 2. GET our link via the "share" endpoint. The requests module (and
     # Enrichr handle cookies for us.

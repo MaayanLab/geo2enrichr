@@ -70,9 +70,7 @@ def save(extraction):
             extraction_id     = extraction.extraction_id,
             softfile          = softfile_dao,
             genelists         = genelists_dao,
-            diffexp_method    = metadata.diffexp_method,
             cutoff            = metadata.cutoff,
-            correction_method = metadata.correction_method,
             threshold         = metadata.threshold,
             organism          = metadata.organism,
             cell              = metadata.cell,
@@ -81,6 +79,17 @@ def save(extraction):
             disease           = metadata.disease
         )
 
+        diff_exp_method_dao = models.DiffExpMethod(
+            name = metadata.diffexp_method,
+            extraction = extraction_dao
+        )
+        ttest_correction_method_dao = models.TtestCorrectionMethod(
+            name = metadata.correction_method,
+            extraction = extraction_dao
+        )
+
+        session.add(diff_exp_method_dao)
+        session.add(ttest_correction_method_dao)
         session.add(extraction_dao)
         session.flush()
         return extraction_dao.extraction_id
@@ -106,9 +115,9 @@ def fetch(extraction_id):
             normalize = normalize
         )
         metadata   = Metadata(
-            ext_dao.diffexp_method,
+            ext_dao.diff_exp_method.name,
             ext_dao.cutoff,
-            ext_dao.correction_method,
+            ext_dao.ttest_correction_method.name,
             ext_dao.threshold,
             ext_dao.organism,
             ext_dao.cell,
