@@ -13,8 +13,7 @@ To deploy the extensions
 
 To deploy the web application
 =
-2. Configure application to use production database
-   ** Never revision control this change or the config files! **
-   In g2e/orm/commondb.py, change prod file from 'db-dev.conf' to 'db-prod.conf'
-3. Run `build.sh`
-4. Run `deploy.sh`
+2. Run `build.sh` with the first argument 'prod' for production, 'dev' for development
+   and an optional second argument 'skip' to skip tests. This will automatically configure
+   the connection to the correct database as well.
+3. Run `deploy.sh`

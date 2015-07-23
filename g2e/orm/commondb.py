@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker
 # This is a little hacky but it works. *Don't* version control db-dev.conf.
 # PURPLE_WIRE: One day, this should probably read from an XML file or
 # something more semantically rich.
-f = open('g2e/orm/db-dev.conf')
+f = open('g2e/orm/db.conf')
 SQLALCHEMY_DATABASE_URI = f.read().strip()
 f.close()
 

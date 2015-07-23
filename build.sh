@@ -21,6 +21,7 @@ FIREFOX_JS_CONFIG='g2e/web/extension/common/js/config-firefox.js'
 printf '%s\n' '// This file is built by deploy.sh in the root directory.' >> $CHROME_JS_CONFIG
 printf '%s\n' '// This file is built by deploy.sh in the root directory.' >> $FIREFOX_JS_CONFIG
 
+dbconf="g2e/orm/db.conf"
 if [ "$1" = "dev" ]; then
     echo '--------------------- dev ---------------------'
     printf '%s\n' 'var DEBUG = true;' >> $CHROME_JS_CONFIG
@@ -28,6 +29,9 @@ if [ "$1" = "dev" ]; then
     printf '%s\n' 'var DEBUG = true;' >> $FIREFOX_JS_CONFIG
     printf '%s\n' 'var SERVER = "http://localhost:8083/g2e/";' >> $FIREFOX_JS_CONFIG
     extId="khihlgenlacbajndipgglejkmomonocn";
+
+    credentials=$(head -n 1 db-dev.conf)
+    echo $credentials > $dbconf
 else
     echo '--------------------- prod ---------------------'
     printf '%s\n' 'var DEBUG = false;' >> $CHROME_JS_CONFIG
@@ -35,6 +39,9 @@ else
     printf '%s\n' 'var DEBUG = false;' >> $FIREFOX_JS_CONFIG
     printf '%s\n' 'var SERVER = "http://amp.pharm.mssm.edu/g2e/";' >> $FIREFOX_JS_CONFIG
     extId="pcbdeobileclecleblcnadplfcicfjlp";
+
+    credentials=$(head -n 1 db-prod.conf)
+    echo $credentials > $dbconf
 fi
 
 printf 'var IMAGE_PATH = "chrome-extension://'$extId'/logo-50x50.png";' >> $CHROME_JS_CONFIG
