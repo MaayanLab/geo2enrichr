@@ -115,7 +115,7 @@ def _parse_geo(filename, platform, A_cols, B_cols):
                 if ('' in values or
                     'null' in values or
                     'NULL' in values or
-                    len(values) is not line_length or
+                    len(values) != line_length or
                     # Slashes denote multiple genes.
                     '\\' in probe):
 

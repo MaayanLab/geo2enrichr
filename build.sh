@@ -21,7 +21,7 @@ FIREFOX_JS_CONFIG='g2e/web/extension/common/js/config-firefox.js'
 printf '%s\n' '// This file is built by deploy.sh in the root directory.' >> $CHROME_JS_CONFIG
 printf '%s\n' '// This file is built by deploy.sh in the root directory.' >> $FIREFOX_JS_CONFIG
 
-if [ $1 = 'dev' ]; then
+if [[ $1 = 'dev' ]]; then
     echo '--------------------- dev ---------------------'
     printf '%s\n' 'var DEBUG = true;' >> $CHROME_JS_CONFIG
     printf '%s\n' 'var SERVER = "http://localhost:8083/g2e/";' >> $CHROME_JS_CONFIG
@@ -49,7 +49,7 @@ grunt --gruntfile=scripts/gruntfile.js build > /dev/null
 
 # Run unit tests
 # -----------------------------------------------------------------------------
-if [ $2 = 'skip' ]; then
+if [[ $2 = 'skip' ]]; then
     printf '%s\n' 'Skipping Python unit tests'
 else
     printf '%s\n' 'Running Python unit tests'
@@ -59,33 +59,34 @@ fi
 # Configure DB. Do this *after* running the unit tests, so tests don't get
 # logged in production.
 # -----------------------------------------------------------------------------
-printf '%s' 'Configuring the database.'
+printf '%s\n' 'Configuring the database.'
 dbconf='g2e/orm/db.conf'
-if [ $1 = 'dev' ]; then
-    credentials=$(head -n 1 db-dev.conf)
+if [[ $1 = 'dev' ]]; then
+    credentials=$(head -n 1 g2e/orm/db-dev.conf)
     echo $credentials > $dbconf
 else
-    credentials=$(head -n 1 db-prod.conf)
+    credentials=$(head -n 1 g2e/orm/db-prod.conf)
     echo $credentials > $dbconf
 fi
 
 # Run Docker
 # -----------------------------------------------------------------------------
-boot2docker init
-boot2docker up
-boot2docker shellinit
-
 DOCKER_IMAGE='146.203.54.165:5000/g2e:latest'
-docker build -t $DOCKER_IMAGE .
+if [[ $1 = 'prod' ]]; then
+    boot2docker init
+    boot2docker up
+    boot2docker shellinit
+    docker build -t $DOCKER_IMAGE .
+fi
 
 # Critical step! We need to reset the DB credentials so we can keep developing locally.
-reset=$(head -n 1 db-dev.conf)
+reset=$(head -n 1 g2e/orm/db-dev.conf)
 printf 'reseting credentials to:\n%s\n' $reset
 echo $reset > $dbconf
 
 # Push to private docker repo if asked
 # -----------------------------------------------------------------------------
-if [ $3 = 'push' ]; then
+if [[ $3 = 'push' ]]; then
     # We use an insecure, private registry. If this script errors, run the
     # following command to tell Docker to go ahead anyway.
     #
