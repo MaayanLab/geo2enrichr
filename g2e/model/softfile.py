@@ -8,27 +8,24 @@ __contact__ = "avi.maayan@mssm.edu"
 
 import time
 
-from sqlalchemy import ForeignKey
-from sqlalchemy import Boolean, Column, Integer, String
-from g2e.orm.commondb import Base
-
+from g2e.app import db
 import g2e.core.softfile.geodownloader as geodownloader
 import g2e.core.softfile.softparser as softparser
 import g2e.core.softfile.normalizer as normalizer
 import g2e.core.softfile.softfilemanager as softfilemanager
 
 
-class SoftFile(Base):
+class SoftFile(db.Model):
     """List of gene symbols and expression values.
     """
     __tablename__ = 'softfiles'
-    id = Column(Integer, primary_key=True)
-    extraction_fk = Column(Integer, ForeignKey('extractions.id'))
-    name = Column(String(200))
-    platform = Column(String(200))
-    is_geo = Column(Boolean)
-    normalize = Column(Boolean)
-    text_file = Column(String(255))
+    id = db.Column(db.Integer, primary_key=True)
+    extraction_fk = db.Column(db.Integer, db.ForeignKey('extractions.id'))
+    name = db.Column(db.String(200))
+    platform = db.Column(db.String(200))
+    is_geo = db.Column(db.Boolean)
+    normalize = db.Column(db.Boolean)
+    text_file = db.Column(db.String(255))
 
     def __init__(self, name, A_cols=None, B_cols=None, genes=None, A=None, B=None, text_file=None, is_geo=False, platform=None, stats=None, normalize=None):
         """Constructs a SoftFile instance.

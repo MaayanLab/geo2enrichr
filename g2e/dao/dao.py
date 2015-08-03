@@ -8,40 +8,14 @@ __contact__ = "avi.maayan@mssm.edu"
 
 from contextlib import contextmanager
 
-import sqlalchemy
-from g2e.orm.commondb import Session
+from g2e.app import db
 import g2e.orm.models as models
 from g2e.core.genelist.genelist import GeneList
-from g2e.model.softfile import SoftFile
 from g2e.core.metadata.metadata import Metadata
 from g2e.core.extraction.extraction import Extraction
 
 
-# Sometimes, a connection to the database is just dropped. The exact error is:
-# "MySQL Connection not available." Upon refresh, the database connection
-# always works. This utility function tries to connect twice.
-def run_query(query_fn, args, retry=2):
-    """Critical utility method for handling SQLAlchemy disconnects when the
-    connection pool goes stale or some other error.
-    """
-    while retry:
-        retry -= 1
-        try:
-            return query_fn(args)
-        except sqlalchemy.exc.DBAPIError as exc:
-            if not retry or not exc.connection_invalidated:
-                raise
-
-
 def save(extraction):
-    return run_query(__save, extraction)
-
-
-def fetch(extraction_id):
-    return run_query(__fetch, extraction_id)
-
-
-def __save(extraction):
     """Saves the SoftFile and GeneList to the database and returns the ID from
     the extraction table.
     """
@@ -112,11 +86,10 @@ def __save(extraction):
         ])
 
         session.commit()
-        print softfile_dao
         return extraction_dao.extraction_id
 
 
-def __fetch(extraction_id):
+def fetch(extraction_id):
     """Single entry point for fetching extractions from database by ID.
     """
     with session_scope() as session:
@@ -175,16 +148,13 @@ def session_scope():
     """Provides a transactional scope around a series of operations. Credit:
     http://docs.sqlalchemy.org/en/rel_0_9/orm/session_basics.html.
     """
-    session = Session()
     try:
-        yield session
-        session.commit()
-    except Exception, e:
+        yield db.session
+        db.session.commit()
+    except Exception as e:
         print 'Rolling back database'
         print e
-        session.rollback()
-    finally:
-        session.close()
+        db.session.rollback()
 
 
 def _get_or_create(session, model, **kwargs):

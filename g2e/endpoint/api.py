@@ -16,8 +16,8 @@ from g2e.app.config import BASE_URL
 api = Blueprint('api', __name__, url_prefix=BASE_URL + '/api')
 
 
-@api.route('/extract/<path>', methods=['GET', 'PUT', 'POST', 'OPTIONS'])
 @crossdomain(origin='*', headers=['Content-Type'])
+@api.route('/extract/<path>', methods=['GET', 'PUT', 'POST', 'OPTIONS'])
 def api_endpoint(path):
     """Single entry point for extracting a gene list from a SOFT file.
     Delegates to constructors that handle data processing and further
@@ -34,7 +34,7 @@ def api_endpoint(path):
             if request.form.get('platform') not in PROBE2GENE:
                 abort(400)
             else:
-                response['extraction_id'] = extraction_maker(args=flask.request.form)
+                response['extraction_id'] = extraction_maker(args=request.form)
         else:
             jsonify({
                 'error': 'Invalid API endpoint'
