@@ -11,6 +11,7 @@ import sys
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.cors import CORS
 
 from g2e.app.config import DEBUG, SQLALCHEMY_DATABASE_URI
 
@@ -19,6 +20,7 @@ logging.basicConfig(stream=sys.stderr)
 app = Flask(__name__, static_url_path='')
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
+cors = CORS(app)
 
 # Import these after connecting to the DB.
 from g2e.endpoint.index import index

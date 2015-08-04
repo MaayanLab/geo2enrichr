@@ -6,9 +6,8 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-from flask import Blueprint, request, abort, jsonify
-from g2e.core.util.crossdomain import crossdomain
-from g2e.core.softfile.softparser import PROBE2GENE
+from flask import Blueprint, request, jsonify
+from flask.ext.cors import cross_origin
 from g2e.app.config import BASE_URL
 from g2e.dao import dao
 from g2e.model.extraction import Extraction
@@ -19,7 +18,7 @@ api = Blueprint('api', __name__, url_prefix=BASE_URL + '/api')
 
 # TODO: Break this into multiple endpoints, rather than using conditionals.
 @api.route('/extract/<path>', methods=['GET', 'PUT', 'POST', 'OPTIONS'])
-@crossdomain(origin='*', headers=['Content-Type'])
+@cross_origin()
 def api_endpoint(path):
     """Single entry point for extracting a gene list from a SOFT file.
     """
