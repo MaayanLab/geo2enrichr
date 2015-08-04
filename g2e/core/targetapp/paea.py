@@ -20,8 +20,8 @@ def get_link(genes, description):
     print 'Calculating principle angle enrichment analysis'
 
     gene_list = ''
-    for gene, coeff in genes:
-        gene_list += '%s,%s\n' % (gene, coeff)
+    for rg in genes:
+        gene_list += '%s,%s\n' % (rg.gene.name, rg.value)
     
     payload = {
         'list': gene_list,

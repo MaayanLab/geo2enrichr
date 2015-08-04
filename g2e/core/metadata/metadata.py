@@ -66,6 +66,31 @@ class Metadata(object):
         normalize    = True if ('normalize' not in args or args['normalize'] == 'True') else False
         return cls(diffexp_method, cutoff, correction_method, threshold, organism, cell, perturbation, gene, disease, platform, normalize)
 
+    @classmethod
+    def from_extraction(cls, extraction):
+
+        if extraction.diff_exp_method:
+            diff_exp_method = extraction.diff_exp_method.name
+        else:
+            diff_exp_method = None
+
+        if (extraction.ttest_correction_method):
+            ttest_correction_method = extraction.ttest_correction_method.name
+        else:
+            ttest_correction_method = None
+
+        return cls(
+            diff_exp_method,
+            extraction.cutoff,
+            ttest_correction_method,
+            extraction.threshold,
+            extraction.organism,
+            extraction.cell,
+            extraction.perturbation,
+            extraction.gene,
+            extraction.disease
+        )
+
     def __str__(self):
         """Stringifies the metadata instance.
         """

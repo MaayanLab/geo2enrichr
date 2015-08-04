@@ -9,6 +9,9 @@ __contact__ = "avi.maayan@mssm.edu"
 
 from g2e.core.genelist import chdir
 from g2e.core.genelist import ttest
+from g2e.model.gene import Gene
+from g2e.model.rankedgene import RankedGene
+from g2e.dao.util import get_or_create
 
 
 def diffexp(A, B, genes, metadata):
@@ -29,4 +32,7 @@ def diffexp(A, B, genes, metadata):
             B,
             genes
         )
-    return genes, values
+
+    genes = [get_or_create(Gene, name=name) for name in genes]
+    ranked_genes = [RankedGene(pair[0], pair[1]) for pair in zip(genes, values)]
+    return ranked_genes

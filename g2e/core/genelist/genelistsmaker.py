@@ -6,12 +6,10 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-import numpy as np
-import os.path
-
+from g2e.app import db
 from g2e.core.genelist.diffexp import diffexp
-from g2e.core.genelist.genelist import GeneList
-from g2e.core.targetapp.targetapps import target_all_apps 
+from g2e.core.targetapp.targetapps import target_all_apps
+from g2e.model.genelist import GeneList
 
 
 def genelists_maker(softfile, metadata, skip_target_apps):
@@ -21,7 +19,7 @@ def genelists_maker(softfile, metadata, skip_target_apps):
     # 1. Perform differential expression analysis with no cutoff. We do
     #    perform the thresholding for the t-test since that is part of
     #    the analysis.
-    genes, values = diffexp(
+    ranked_genes = diffexp(
         softfile.A,
         softfile.B,
         softfile.genes,
@@ -30,28 +28,28 @@ def genelists_maker(softfile, metadata, skip_target_apps):
 
     # 2. Analyze the full gene list on target applications.
     #    "f_" prefix stands for "full".
-    f_ranked_genes = zip(genes, values)
-    f_up_genes     = [t for t in f_ranked_genes if t[1] > 0]
-    f_down_genes   = [t for t in f_ranked_genes if t[1] < 0]
+    up_genes     = [t for t in ranked_genes if t.value > 0]
+    down_genes   = [t for t in ranked_genes if t.value < 0]
 
-    target_apps_up       = {} if skip_target_apps else target_all_apps(f_up_genes,     1, metadata)
-    target_apps_down     = {} if skip_target_apps else target_all_apps(f_down_genes,  -1, metadata)
-    target_apps_combined = {} if skip_target_apps else target_all_apps(f_ranked_genes, 0, metadata)
+    target_apps_up       = {} if skip_target_apps else target_all_apps(up_genes,     1, metadata)
+    target_apps_down     = {} if skip_target_apps else target_all_apps(down_genes,  -1, metadata)
+    target_apps_combined = {} if skip_target_apps else target_all_apps(ranked_genes, 0, metadata)
 
     # 3. Apply cutoff if the differential expression method is the
     #    Characteristic Direction. We don't apply it earlier because PAEA
     #    requires the full signature.
     if metadata.diffexp_method == 'chdir':
         print 'Applying cutoff to the Characteristic Direction'
-        genes, values = _apply_cutoff(genes, values, metadata.cutoff)
+        ranked_genes = _apply_cutoff(ranked_genes, metadata.cutoff)
 
     # 4. Build gene lists that we will store.
 
     # numpy sorts the data from left-to-right, but we render the results
     # "top-to-bottom", meaning we need to reverse the lists.
-    ranked_genes = list(zip(reversed(genes), reversed(values)))
-    up_genes     = [t for t in ranked_genes if t[1] > 0]
-    down_genes   = [t for t in ranked_genes if t[1] < 0]
+    ranked_genes = [rg for rg in reversed(ranked_genes)]
+    up_genes     = [t for t in ranked_genes if t.value > 0]
+    down_genes   = [t for t in ranked_genes if t.value < 0]
+
     genelists = [
         GeneList(up_genes,     1, metadata, target_apps_up),
         GeneList(down_genes,  -1, metadata, target_apps_down),
@@ -61,10 +59,10 @@ def genelists_maker(softfile, metadata, skip_target_apps):
     return genelists
 
 
-def _apply_cutoff(genes, values, cutoff):
+def _apply_cutoff(ranked_genes, cutoff):
     """Applies a cutoff to both lists, assuming left-to-right
     least-to-greatest.
     """
     if cutoff is None:
-        return genes, values
-    return genes[-cutoff:], values[-cutoff:]
+        return ranked_genes
+    return ranked_genes[-cutoff:]

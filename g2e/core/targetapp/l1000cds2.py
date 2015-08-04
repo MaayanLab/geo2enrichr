@@ -18,13 +18,12 @@ def get_link(genes, metadata):
     """
     print 'Calculating cosine distance'
 
-    genes, values = zip(*genes)
     url = BASE_URL + 'query'
     headers = { 'content-type': 'application/json' }
     payload = {
         'data': {
-            'genes': genes,
-            'vals': [float('{0:.6f}'.format(x)) for x in values]
+            'genes': [rg.gene.name for rg in genes],
+            'vals': [float('{0:.6f}'.format(rg.value)) for rg in genes]
         },
         'config': {
             'aggravate': False,

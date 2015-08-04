@@ -6,7 +6,10 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
+import hashlib
+
 from g2e.app import db
+import g2e.core.genelist.genelistfilemanager as filemanager
 
 
 rankedgenes_2_genelists = db.Table('rankedgene2genelist', db.metadata,
@@ -27,5 +30,42 @@ class GeneList(db.Model):
     l1000cds2_link = db.Column(db.Text)
     paea_link = db.Column(db.Text)
 
+    def __init__(self, ranked_genes, direction, metadata, target_apps, name=None, text_file=None):
+        """Constructs a gene list.
+        """
+        self.ranked_genes = ranked_genes
+        self.direction    = direction
+        self.name         = name or self._name()
+        self.target_apps  = target_apps
+        self.text_file    = text_file or filemanager.write(
+            self.name,
+            self.direction,
+            self.ranked_genes,
+            metadata
+        )
+
     def __repr__(self):
         return '<GeneList %r>' % self.id
+
+    # PURPLE_WIRE: This should handle duplicate file names, although they are
+    # unlikely.
+    def _name(self):
+        """Hashes the dict of gene,value pairs.
+        """
+        return hashlib.sha1(str(self.ranked_genes).encode('utf-8')).hexdigest()
+
+    @property
+    def serialize(self):
+        """Return serialized object.
+        """
+        return {
+            'name': self.name,
+            'direction': self.direction,
+            'ranked_genes': [rg.serialize for rg in self.ranked_genes],
+            'target_apps': {
+                'enrichr_link': self.enrichr_link,
+                'l1000cds2_link': self.l1000cds2_link,
+                'paea_link': self.paea_link,
+            },
+            'text_file': self.text_file
+        }

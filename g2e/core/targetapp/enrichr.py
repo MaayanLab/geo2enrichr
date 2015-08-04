@@ -18,9 +18,9 @@ def get_link(genes, description):
     """
     # Enrichr does not care about the sign of the rank; it treats the rank
     # simply as a membership value for a fuzzy set.
-    genes = [(t[0], str(abs(t[1]))) for t in genes]
+    genes = [(rg.gene.name, str(abs(rg.value))) for rg in genes]
 
-    genes_str = '\n'.join([t[0] + ',' + t[1] for t in genes]).encode('ascii')
+    genes_str = '\n'.join([rg.gene.name + ',' + str(rg.value) for t in genes]).encode('ascii')
     payload = {
         'list': genes_str,
         'description': description

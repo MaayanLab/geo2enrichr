@@ -99,6 +99,7 @@ class ExtractEndpoint(unittest.TestCase):
             B_cols = ['GSM1071457', 'GSM1071456']
         ))
         self.resp_dict = json.loads(self.resp.data.decode())
+        import pdb; pdb.set_trace()
         self.assertEquals(self.resp.status_code, 200)
         self.assertTrue('extraction_id' in self.resp_dict)
         extraction_id = self.resp_dict['extraction_id']

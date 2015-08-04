@@ -29,8 +29,10 @@ def write(name, direction, ranked_genes, metadata):
         f.write( _line('gene', metadata.gene) )
         f.write( _line('disease', metadata.disease) )
         f.write('!end_metadata\n')
-        for gene,rank in ranked_genes:
-            f.write('\t'.join((gene, '%0.6f' % rank)) + '\n')
+        for rg in ranked_genes:
+            value_string = '%0.6f' % rg.value
+            gene_string = rg.gene.name + '\t' + value_string + '\n'
+            f.write(gene_string)
 
     # slice the root directory ("g2e") because that is the same name as the
     # server endpoint; the resultant URL would be "g2e/g2e", which would be
