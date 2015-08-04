@@ -60,12 +60,12 @@ fi
 # logged in production.
 # -----------------------------------------------------------------------------
 printf '%s\n' 'Configuring the database.'
-dbconf='g2e/orm/db.conf'
+dbconf='g2e/app/db.conf'
 if [[ $1 = 'dev' ]]; then
-    credentials=$(head -n 1 g2e/orm/db-dev.conf)
+    credentials=$(head -n 1 g2e/app/db-dev.conf)
     echo $credentials > $dbconf
 else
-    credentials=$(head -n 1 g2e/orm/db-prod.conf)
+    credentials=$(head -n 1 g2e/app/db-prod.conf)
     echo $credentials > $dbconf
 fi
 
@@ -80,7 +80,7 @@ if [[ $1 = 'prod' ]]; then
 fi
 
 # Critical step! We need to reset the DB credentials so we can keep developing locally.
-reset=$(head -n 1 g2e/orm/db-dev.conf)
+reset=$(head -n 1 g2e/app/db-dev.conf)
 printf 'reseting credentials to:\n%s\n' $reset
 echo $reset > $dbconf
 

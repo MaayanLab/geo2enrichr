@@ -9,10 +9,15 @@ __contact__ = "avi.maayan@mssm.edu"
 from contextlib import contextmanager
 
 from g2e.app import db
-import g2e.orm.models as models
-from g2e.core.genelist.genelist import GeneList
+from g2e.model.gene import Gene
+from g2e.model.genelist import GeneList
+from g2e.core.genelist.genelist import GeneList as core_GeneList
 from g2e.core.metadata.metadata import Metadata
-from g2e.core.extraction.extraction import Extraction
+from g2e.model.extraction import Extraction
+from g2e.core.extraction.extraction import Extraction as core_Extraction
+from g2e.model.rankedgene import RankedGene
+from g2e.model.diffexpmethod import DiffExpMethod
+from g2e.model.ttestcorrectionmethod import TtestCorrectionMethod
 
 
 def save(extraction):
@@ -33,15 +38,15 @@ def save(extraction):
         for gl in gls:
             ranked_genes = []
             for gene_name,value in gl.ranked_genes:
-                gene_dao = _get_or_create(session, models.Gene, name=gene_name)
-                ranked_gene_dao = models.RankedGene(
+                gene_dao = _get_or_create(session, Gene, name=gene_name)
+                ranked_gene_dao = RankedGene(
                     gene  = gene_dao,
                     value = value
                 )
                 ranked_genes.append(ranked_gene_dao)
 
             genelists_dao.append(
-                models.GeneList(
+                GeneList(
                     name           = gl.name,
                     ranked_genes   = ranked_genes,
                     direction      = gl.direction,
@@ -56,7 +61,7 @@ def save(extraction):
 
         print 'all gene list DAOs created'
 
-        extraction_dao = models.Extraction(
+        extraction_dao = Extraction(
             extraction_id     = extraction.extraction_id,
             softfile          = softfile_dao,
             genelists         = genelists_dao,
@@ -69,11 +74,11 @@ def save(extraction):
             disease           = metadata.disease
         )
 
-        diff_exp_method_dao = models.DiffExpMethod(
+        diff_exp_method_dao = DiffExpMethod(
             name = metadata.diffexp_method,
             extraction = extraction_dao
         )
-        ttest_correction_method_dao = models.TtestCorrectionMethod(
+        ttest_correction_method_dao = TtestCorrectionMethod(
             name = metadata.correction_method,
             extraction = extraction_dao
         )
@@ -94,7 +99,7 @@ def fetch(extraction_id):
     """
     with session_scope() as session:
 
-        ext_dao = session.query(models.Extraction).filter_by(extraction_id=extraction_id).first()
+        ext_dao = session.query(Extraction).filter_by(extraction_id=extraction_id).first()
 
         softfile  = ext_dao.softfile
 
@@ -129,7 +134,7 @@ def fetch(extraction_id):
                 'paea'     : gl_dao.paea_link
             }
             genelists.append(
-                GeneList(
+                core_GeneList(
                     ranked_genes,
                     direction,
                     metadata,
@@ -140,7 +145,7 @@ def fetch(extraction_id):
             )
 
         session.commit()
-        return Extraction(softfile, genelists, metadata)
+        return core_Extraction(softfile, genelists, metadata)
 
 
 @contextmanager

@@ -20,7 +20,7 @@ app = Flask(__name__, static_url_path='')
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 
-# Import these after connection to the DB.
+# Import these after connecting to the DB.
 from g2e.endpoint.index import index
 from g2e.endpoint.static import static
 from g2e.endpoint.api import api
