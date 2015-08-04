@@ -27,7 +27,4 @@ class RankedGene(db.Model):
     def serialize(self):
        """Return serialized object.
        """
-       return {
-           'name': self.gene.name,
-           'value': self.value
-       }
+       return [self.gene.name, self.value]

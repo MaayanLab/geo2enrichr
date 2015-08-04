@@ -33,11 +33,13 @@ class GeneList(db.Model):
     def __init__(self, ranked_genes, direction, metadata, target_apps, name=None, text_file=None):
         """Constructs a gene list.
         """
-        self.ranked_genes = ranked_genes
-        self.direction    = direction
-        self.name         = name or self._name()
-        self.target_apps  = target_apps
-        self.text_file    = text_file or filemanager.write(
+        self.ranked_genes   = ranked_genes
+        self.direction      = direction
+        self.name           = name or self._name()
+        self.enrichr_link   = target_apps['enrichr']
+        self.l1000cds2_link = target_apps['l1000cds2']
+        self.paea_link      = target_apps['paea']
+        self.text_file      = text_file or filemanager.write(
             self.name,
             self.direction,
             self.ranked_genes,
@@ -63,9 +65,9 @@ class GeneList(db.Model):
             'direction': self.direction,
             'ranked_genes': [rg.serialize for rg in self.ranked_genes],
             'target_apps': {
-                'enrichr_link': self.enrichr_link,
-                'l1000cds2_link': self.l1000cds2_link,
-                'paea_link': self.paea_link,
+                'enrichr': self.enrichr_link,
+                'l1000cds2': self.l1000cds2_link,
+                'paea': self.paea_link,
             },
             'text_file': self.text_file
         }

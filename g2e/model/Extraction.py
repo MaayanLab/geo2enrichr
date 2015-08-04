@@ -51,7 +51,7 @@ class Extraction(db.Model):
     gene = db.Column(db.String(255))
     disease = db.Column(db.String(255))
 
-    def __init__(self, softfile, genelists, metadata):
+    def __init__(self, softfile, genelists, exp_metadata):
         """Construct an Extraction instance. This is called only by class
         methods.
         """
@@ -60,11 +60,20 @@ class Extraction(db.Model):
         self.extraction_id = hashlib.sha1(str(time.time())).hexdigest()[:10]
         self.softfile  = softfile
         self.genelists = genelists
-        if metadata.diffexp_method:
-            self.diff_exp_method = get_or_create(DiffExpMethod, name=metadata.diffexp_method)
-        if metadata.threshold:
-            self.ttest_correction_method = get_or_create(TtestCorrectionMethod, name=metadata.threshold)
-        self.metadata  = metadata
+
+        # TODO: This is *awful*. We're storing everything on the extraction
+        # rather than persisting it via a metadata table.
+        self.cutoff = exp_metadata.cutoff
+        self.threshold = exp_metadata.threshold
+        self.organism = exp_metadata.organism
+        self.cell = exp_metadata.cell
+        self.gene = exp_metadata.gene
+        self.disease = exp_metadata.disease
+
+        if exp_metadata.diffexp_method:
+            self.diff_exp_method = get_or_create(DiffExpMethod, name=exp_metadata.diffexp_method)
+        if exp_metadata.correction_method:
+            self.ttest_correction_method = get_or_create(TtestCorrectionMethod, name=exp_metadata.correction_method)
 
     def __repr__(self):
         return '<Extraction %r>' % self.id
@@ -74,12 +83,12 @@ class Extraction(db.Model):
         """Creates a new extraction, as opposed to an extraction from the
         database.
         """
-        metadata = Metadata.from_args(args)
+        exp_metadata = Metadata.from_args(args)
         skip_target_apps = True if 'skip_targets_apps' in args else False
         if skip_target_apps:
             print 'skipping target applications'
-        genelists = genelists_maker(softfile, metadata, skip_target_apps)
-        return cls(softfile, genelists, metadata)
+        genelists = genelists_maker(softfile, exp_metadata, skip_target_apps)
+        return cls(softfile, genelists, exp_metadata)
 
     @classmethod
     def from_geo(cls, args):

@@ -31,12 +31,12 @@ class ExtractEndpoint(unittest.TestCase):
 
     # This should be multiple unit tests but it is annoyingly slow to run.
     def test_extraction_endpoint_chdir(self):
+
         import time
         s = time.time()
 
         self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
             is_geo = True,
-            skip_target_apps = True,
             dataset = 'GDS5077',
             platform = 'GPL10558',
             organism = 'Homo sapiens',
@@ -99,7 +99,6 @@ class ExtractEndpoint(unittest.TestCase):
             B_cols = ['GSM1071457', 'GSM1071456']
         ))
         self.resp_dict = json.loads(self.resp.data.decode())
-        import pdb; pdb.set_trace()
         self.assertEquals(self.resp.status_code, 200)
         self.assertTrue('extraction_id' in self.resp_dict)
         extraction_id = self.resp_dict['extraction_id']

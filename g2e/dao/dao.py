@@ -25,6 +25,7 @@ def save(extraction):
 def fetch(extraction_id):
     """Single entry point for fetching extractions from database by ID.
     """
+    print 'Fetching extraction_id ' + extraction_id
     with session_scope() as session:
         extraction = session.query(Extraction).filter_by(extraction_id=extraction_id).first()
         return extraction
