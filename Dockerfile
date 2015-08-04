@@ -21,7 +21,7 @@ RUN pip install \
     Flask==0.10.1 \
     SQLAlchemy==0.9.9 \
     flask-cors==2.0.1 \
-    flask-sqlalchemy=2.0 \
+    flask-sqlalchemy==2.0 \
     mysql-connector-python==2.0.3 \
     nose==1.3.4 \
     numpy==1.9.2 \
