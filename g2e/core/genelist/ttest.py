@@ -20,7 +20,7 @@ def ttest(A, B, genes, ttest_correction_method, ttest_cutoff):
 
     genes, pvalues = _get_pvalues(A, B, genes)
     if ttest_correction_method:
-        pvalues = _correct_pvalues(pvalues, ttest_correction_method)
+        pvalues = _correct_pvalues(pvalues, ttest_correction_method.name)
 
     # Zip them together so we can track them.
     gene_pvalues = list(zip(genes, pvalues))
@@ -60,7 +60,7 @@ def _get_pvalues(A, B, genes):
     return genes, pvalues
 
 
-def _correct_pvalues(pvalues, ttest_correction_method):
+def _correct_pvalues(pvalues, ttest_correction_method_name):
     """Corrects for multiple comparisons.
     """
     # The multiple comparisons problem arises when a test increases the
@@ -71,7 +71,7 @@ def _correct_pvalues(pvalues, ttest_correction_method):
 	# http://en.wikipedia.org/wiki/Multiple_comparisons_problem
     return r_stats.p_adjust(
         FloatVector(pvalues),
-        method = ttest_correction_method
+        method = ttest_correction_method_name
     )
 
 

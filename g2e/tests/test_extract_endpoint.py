@@ -1,7 +1,5 @@
 import json
-from StringIO import StringIO
 import unittest
-import numpy as np
 
 import g2e.app
 
@@ -52,7 +50,7 @@ class ExtractEndpoint(unittest.TestCase):
         resp_dict = json.loads(resp.data.decode())
 
         # Test response from round-trip.
-        self.assertTrue(resp_dict['metadata']['diffexp_method'] == 'chdir')
+        self.assertTrue(resp_dict['metadata']['diff_exp_method'] == 'chdir')
         self.assertTrue(resp_dict['metadata']['cutoff'] == 500)
         self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
         self.assertTrue('static/softfile/clean/GDS5077_' in resp_dict['softfile']['text_file'])
@@ -90,8 +88,13 @@ class ExtractEndpoint(unittest.TestCase):
             is_geo = 'True',
             dataset = 'GDS5077',
             organism = 'Mus musculus',
+
+            # Both of these arguments are misnamed--or haven't been updated
+            # because I don't want to release a new version of the extensions
+            # just to support this. They should be changed in the future.
             diffexp_method = 'ttest',
             correction_method = 'BH',
+
             threshold = 0.05,
             normalize = True,
             platform = 'GPL10558',
@@ -105,8 +108,8 @@ class ExtractEndpoint(unittest.TestCase):
         resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
         resp_dict = json.loads(resp.data.decode())
 
-        self.assertTrue(resp_dict['metadata']['diffexp_method'] == 'ttest')
-        self.assertTrue(resp_dict['metadata']['correction_method'] == 'BH')
+        self.assertTrue(resp_dict['metadata']['diff_exp_method'] == 'ttest')
+        self.assertTrue(resp_dict['metadata']['ttest_correction_method'] == 'BH')
         self.assertTrue(resp_dict['metadata']['threshold'] == 0.05)
 
         self.assertTrue(resp_dict['softfile']['name'] == 'GDS5077')
@@ -147,8 +150,8 @@ class ExtractEndpoint(unittest.TestCase):
         extraction_id = self.resp_dict['extraction_id']
         resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
         resp_dict = json.loads(resp.data.decode())
-        genelist = resp_dict['genelists'][2]['ranked_genes']
 
+        genelist = resp_dict['genelists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'MBTPS1') == -0.0185085)
         self.assertTrue(get_gene_value(genelist, 'SPRED2') == 0.0537715)
         self.assertTrue(get_gene_value(genelist, 'ZNF274') == -0.00367804)

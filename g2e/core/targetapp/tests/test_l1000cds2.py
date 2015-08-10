@@ -1,7 +1,7 @@
 import unittest
 
 import g2e.core.targetapp.l1000cds2 as l1000cds2
-from g2e.core.metadata.metadata import Metadata
+from g2e.model.expmetadata import ExpMetadata
 from g2e.model.gene import Gene
 from g2e.model.rankedgene import RankedGene
 
@@ -9,7 +9,7 @@ from g2e.model.rankedgene import RankedGene
 class TestL1000CDS2(unittest.TestCase):
 
     def testL1000CDS2Link(self):
-        md = Metadata(None, None, None, None, None, None, None, None, None)
+        md = ExpMetadata(None, None, None, None, None, None, None)
 
         ranked_genes = [
             RankedGene(Gene('DDIT4'), 9.97),

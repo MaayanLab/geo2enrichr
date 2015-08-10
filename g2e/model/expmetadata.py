@@ -78,17 +78,20 @@ class ExpMetadata(db.Model):
                 else:
                     threshold = float(threshold)
 
-        organism     = args['organism']     if 'organism'     in args else None
-        cell         = args['cell']         if 'cell'         in args else None
+        print 'ttest_correction_method: ' + str(ttest_correction_method)
+        print 'threshold: ' + str(threshold)
+
+        organism = args['organism'] if 'organism' in args else None
+        cell = args['cell'] if 'cell' in args else None
         perturbation = args['perturbation'] if 'perturbation' in args else None
-        gene         = args['gene']         if 'gene'         in args else None
-        disease      = args['disease']      if 'disease'      in args else None
+        gene = args['gene'] if 'gene' in args else None
+        disease = args['disease'] if 'disease' in args else None
 
         # This metadata is actually in the SoftFile instance as well, but
         # adding it here makes it easier to add to the description passed to
         # the target applications.
-        platform     = args['platform']     if 'platform'     in args else None
-        normalize    = True if ('normalize' not in args or args['normalize'] == 'True') else False
+        platform = args['platform'] if 'platform' in args else None
+        normalize = True if ('normalize' not in args or args['normalize'] == 'True') else False
         return cls(cutoff, threshold, organism, cell, perturbation, gene, disease, diff_exp_method, ttest_correction_method, platform, normalize)
 
     def __str__(self):
@@ -123,6 +126,6 @@ class ExpMetadata(db.Model):
             'disease': self.disease,
             'platform': self.platform,
             'normalize': self.normalize,
-            'diff_exp_method': self.diff_exp_method.name,
-            'ttest_correction_method': self.ttest_correction_method.name
+            'diff_exp_method': self.diff_exp_method.name if self.diff_exp_method else None,
+            'ttest_correction_method': self.ttest_correction_method.name  if self.ttest_correction_method else None
         }

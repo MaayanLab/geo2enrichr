@@ -1,5 +1,4 @@
 import unittest
-import numpy as np
 
 from g2e.core.softfile.softfilemanager import _build_selections
 
