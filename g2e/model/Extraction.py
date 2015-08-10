@@ -22,11 +22,8 @@ import time
 
 from g2e.app import db
 from g2e.model.softfile import SoftFile
-from g2e.core.metadata.metadata import Metadata
-from g2e.model.diffexpmethod import DiffExpMethod
-from g2e.model.ttestcorrectionmethod import TtestCorrectionMethod
+from g2e.model.expmetadata import ExpMetadata
 from g2e.core.genelist.genelistsmaker import genelists_maker
-from g2e.dao.util import get_or_create
 
 
 class Extraction(db.Model):
@@ -39,17 +36,8 @@ class Extraction(db.Model):
     extraction_id = db.Column(db.String(10))
     softfile = db.relationship('SoftFile', uselist=False, backref='extractions')
     genelists = db.relationship('GeneList', backref=db.backref('genelists', order_by=id))
-
-    diff_exp_method_fk = db.Column(db.Integer, db.ForeignKey('diff_exp_method.id'))
-    ttest_correction_method_fk = db.Column(db.Integer, db.ForeignKey('ttest_correction_method.id'))
-
-    cutoff = db.Column(db.Integer)
-    threshold = db.Column(db.Float)
-    organism = db.Column(db.String(255))
-    cell = db.Column(db.String(255))
-    perturbation = db.Column(db.String(255))
-    gene = db.Column(db.String(255))
-    disease = db.Column(db.String(255))
+    genelists = db.relationship('GeneList', backref=db.backref('genelists', order_by=id))
+    exp_metadata = db.relationship('ExpMetadata', uselist=False, backref=db.backref('genelists', order_by=id))
 
     def __init__(self, softfile, genelists, exp_metadata):
         """Construct an Extraction instance. This is called only by class
@@ -60,20 +48,7 @@ class Extraction(db.Model):
         self.extraction_id = hashlib.sha1(str(time.time())).hexdigest()[:10]
         self.softfile  = softfile
         self.genelists = genelists
-
-        # TODO: This is *awful*. We're storing everything on the extraction
-        # rather than persisting it via a metadata table.
-        self.cutoff = exp_metadata.cutoff
-        self.threshold = exp_metadata.threshold
-        self.organism = exp_metadata.organism
-        self.cell = exp_metadata.cell
-        self.gene = exp_metadata.gene
-        self.disease = exp_metadata.disease
-
-        if exp_metadata.diffexp_method:
-            self.diff_exp_method = get_or_create(DiffExpMethod, name=exp_metadata.diffexp_method)
-        if exp_metadata.correction_method:
-            self.ttest_correction_method = get_or_create(TtestCorrectionMethod, name=exp_metadata.correction_method)
+        self.exp_metadata  = exp_metadata
 
     def __repr__(self):
         return '<Extraction %r>' % self.id
@@ -83,11 +58,8 @@ class Extraction(db.Model):
         """Creates a new extraction, as opposed to an extraction from the
         database.
         """
-        exp_metadata = Metadata.from_args(args)
-        skip_target_apps = True if 'skip_targets_apps' in args else False
-        if skip_target_apps:
-            print 'skipping target applications'
-        genelists = genelists_maker(softfile, exp_metadata, skip_target_apps)
+        exp_metadata = ExpMetadata.from_args(args)
+        genelists = genelists_maker(softfile, exp_metadata)
         return cls(softfile, genelists, exp_metadata)
 
     @classmethod
@@ -112,5 +84,5 @@ class Extraction(db.Model):
             'extraction_id': self.extraction_id,
             'softfile': self.softfile.serialize,
             'genelists': [gl.serialize for gl in self.genelists],
-            'metadata': Metadata.from_extraction(self).__dict__,
+            'metadata': self.exp_metadata.serialize
         }

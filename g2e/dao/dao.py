@@ -6,9 +6,8 @@ __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
 __contact__ = "avi.maayan@mssm.edu"
 """
 
-from contextlib import contextmanager
 
-from g2e.app import db
+from g2e.dao.util import session_scope
 from g2e.model.extraction import Extraction
 
 
@@ -29,17 +28,3 @@ def fetch(extraction_id):
     with session_scope() as session:
         extraction = session.query(Extraction).filter_by(extraction_id=extraction_id).first()
         return extraction
-
-
-@contextmanager
-def session_scope():
-    """Provides a transactional scope around a series of operations. Credit:
-    http://docs.sqlalchemy.org/en/rel_0_9/orm/session_basics.html.
-    """
-    try:
-        yield db.session
-        db.session.commit()
-    except Exception as e:
-        print 'Rolling back database'
-        print e
-        db.session.rollback()

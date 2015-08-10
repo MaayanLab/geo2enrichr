@@ -18,12 +18,12 @@ def diffexp(A, B, genes, metadata):
     """Delegates to the correct helper function based on client or default
     configuration.
     """
-    if metadata.diffexp_method == 'ttest':
+    if metadata.diff_exp_method == 'ttest':
         genes, values = ttest.ttest(
             A,
             B,
             genes,
-            metadata.correction_method,
+            metadata.ttest_correction_method,
             metadata.threshold
         )
     else:

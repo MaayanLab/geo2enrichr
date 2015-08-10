@@ -6,13 +6,12 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-from g2e.app import db
 from g2e.core.genelist.diffexp import diffexp
 from g2e.core.targetapp.targetapps import target_all_apps
 from g2e.model.genelist import GeneList
 
 
-def genelists_maker(softfile, metadata, skip_target_apps):
+def genelists_maker(softfile, metadata):
     """Wrapper method for creating one of each "kind" of gene list: up, down,
     and combined.
     """
@@ -31,14 +30,14 @@ def genelists_maker(softfile, metadata, skip_target_apps):
     up_genes     = [t for t in ranked_genes if t.value > 0]
     down_genes   = [t for t in ranked_genes if t.value < 0]
 
-    target_apps_up       = {} if skip_target_apps else target_all_apps(up_genes,     1, metadata)
-    target_apps_down     = {} if skip_target_apps else target_all_apps(down_genes,  -1, metadata)
-    target_apps_combined = {} if skip_target_apps else target_all_apps(ranked_genes, 0, metadata)
+    target_apps_up       = target_all_apps(up_genes,     1, metadata)
+    target_apps_down     = target_all_apps(down_genes,  -1, metadata)
+    target_apps_combined = target_all_apps(ranked_genes, 0, metadata)
 
     # 3. Apply cutoff if the differential expression method is the
     #    Characteristic Direction. We don't apply it earlier because PAEA
     #    requires the full signature.
-    if metadata.diffexp_method == 'chdir':
+    if metadata.diff_exp_method == 'chdir':
         print 'Applying cutoff to the Characteristic Direction'
         ranked_genes = _apply_cutoff(ranked_genes, metadata.cutoff)
 

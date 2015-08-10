@@ -2,7 +2,23 @@
 """
 
 
+from contextlib import contextmanager
+
 from g2e.app import db
+
+
+@contextmanager
+def session_scope():
+    """Provides a transactional scope around a series of operations. Credit:
+    http://docs.sqlalchemy.org/en/rel_0_9/orm/session_basics.html.
+    """
+    try:
+        yield db.session
+        db.session.commit()
+    except Exception as e:
+        print 'Rolling back database'
+        print e
+        db.session.rollback()
 
 
 def get_or_create(model, **kwargs):

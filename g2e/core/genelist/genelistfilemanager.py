@@ -20,9 +20,9 @@ def write(name, direction, ranked_genes, metadata):
     with open(full_path, 'w+') as f:
         f.write( _line('direction', direction) )
         f.write( _line('num_genes', len(ranked_genes)) )
-        f.write( _line('diffexp_method', metadata.diffexp_method) )
+        f.write( _line('diffexp_method', metadata.diff_exp_method) )
         f.write( _line('cutoff', metadata.cutoff) )
-        f.write( _line('correction_method', metadata.correction_method) )
+        f.write( _line('correction_method', metadata.ttest_correction_method) )
         f.write( _line('threshold', metadata.threshold) )
         f.write( _line('cell', metadata.cell) )
         f.write( _line('perturbation', metadata.perturbation) )

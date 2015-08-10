@@ -14,7 +14,7 @@ class TtestCorrectionMethod(db.Model):
     __tablename__ = 'ttest_correction_method'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
-    extraction = db.relationship('Extraction', backref='ttest_correction_method')
+    extraction = db.relationship('ExpMetadata', backref='ttest_correction_method')
 
     def __init__(self, name):
         self.name = name
