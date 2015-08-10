@@ -3,6 +3,7 @@
 # This script takes one or two arguments
 # $1 'dev' or 'prod'
 # $2 'skip' [optional]
+# $3 'push' [optional - use 'test' as the second argument to not skip tests']
 
 # Any subsequent(*) commands which fail will cause the shell script to exit immediately
 # http://www.gnu.org/software/bash/manual/bashref.html#The-Set-Builtin
@@ -71,7 +72,7 @@ fi
 
 # Run Docker
 # -----------------------------------------------------------------------------
-DOCKER_IMAGE='146.203.54.165:5000/g2e:latest'
+DOCKER_IMAGE='maayanlab/g2e:latest'
 if [[ $1 = 'prod' ]]; then
     boot2docker init
     boot2docker up
@@ -90,7 +91,7 @@ if [[ $3 = 'push' ]]; then
     # We use an insecure, private registry. If this script errors, run the
     # following command to tell Docker to go ahead anyway.
     #
-    # boot2docker sshcurl post t "echo $'EXTRA_ARGS=\"--insecure-registry 146.203.54.165:5000\"' | sudo tee -a /var/lib/boot2docker/profile && sudo /etc/init.d/docker restart"
+    # boot2docker ssh "echo $'EXTRA_ARGS=\"--insecure-registry 146.203.54.165:5000\"' | sudo tee -a /var/lib/boot2docker/profile && sudo /etc/init.d/docker restart"
     printf '%s\n' 'Pushing to private Docker repo'
     docker push $DOCKER_IMAGE
 else
