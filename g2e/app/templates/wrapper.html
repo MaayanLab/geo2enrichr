@@ -2,10 +2,11 @@
 <html>
 {% include 'head.html' %}
 <body>
+    {% include 'nav.html' %}
     <div class="wrapper">
         <div class="content">
             {% block body %}{% endblock %}
         </div>
-        {% include 'footer.html' %}
     </div>
+    {% include 'footer.html' %}
 </body>
