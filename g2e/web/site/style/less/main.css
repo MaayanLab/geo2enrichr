@@ -1,0 +1,354 @@
+/* Structure all pages to allow for footer. Other styling for these elements is
+ * below.
+ * ------------------------------------------------------------------------- */
+html,
+body {
+  height: 100%;
+}
+.wrapper {
+  min-height: 100%;
+  padding-bottom: 90px;
+  position: relative;
+}
+.footer {
+  height: 90px;
+}
+/* Push all content out from under the fix nav. Do not use "margin-top" because
+ * this pushes the sticky footer down as well.
+ */
+.content {
+  position: relative;
+  top: 50px;
+  padding-bottom: 90px;
+}
+/* Tag selectors 
+ * ------------- */
+input {
+  border: none;
+  font-size: 13px;
+}
+a {
+  color: #009dff;
+  text-decoration: none;
+}
+a:hover {
+  color: #009dff;
+  text-decoration: underline;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Open Sans', arial, sans-serif;
+}
+/* Page
+ * ---- */
+#wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -200px;
+}
+footer,
+.push {
+  height: 200px;
+}
+footer {
+  border-top: 1px solid #dddddd;
+  background: #eeeeee;
+  color: #444444;
+  width: 100%;
+}
+footer a,
+footer p {
+  font-size: 12px;
+}
+footer a {
+  color: #009dff;
+  text-decoration: none;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+footer #share {
+  padding-top: 10px;
+}
+footer #share .company img {
+  margin-left: 2px;
+  width: 25px;
+}
+footer #share .company img:hover {
+  opacity: 0.75;
+}
+.wrapper {
+  margin: 0 auto;
+  width: 600px;
+}
+header {
+  border-bottom: 1px solid #dddddd;
+}
+header #logo {
+  background: #f5f5f5;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5), color-stop(100%, #eeeeee));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, #f5f5f5 0%, #eeeeee 100%);
+  /* W3C */
+  border-bottom: 1px solid #dddddd;
+  padding: 10px 0;
+}
+header #logo a:hover {
+  text-decoration: none;
+}
+header a {
+  border: none;
+  color: black;
+  font-family: 'Open Sans', arial, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+}
+header a:hover {
+  cursor: pointer;
+  color: black;
+}
+header h1,
+header ul {
+  display: inline;
+}
+header nav {
+  margin: 10px 0;
+}
+header nav .selected {
+  border-bottom: 2px solid #444444;
+}
+header nav ul {
+  padding-left: 0;
+}
+header nav ul li {
+  border-right: 1px solid #eeeeee;
+  display: inline;
+  list-style-type: none;
+  padding: 0 10px;
+}
+header nav ul li a {
+  font-size: 13px;
+}
+header nav ul li a:hover {
+  border-bottom: 2px solid #aaaaaa;
+  text-decoration: none;
+}
+header nav ul li.last {
+  border-right: none;
+}
+header nav ul li.first {
+  padding-left: 0;
+}
+header img {
+  width: 30px;
+}
+header h1 {
+  margin-left: 10px;
+}
+header h1 a {
+  font-size: 40px;
+}
+.content {
+  padding-bottom: 20px;
+  width: 650px;
+}
+.content img {
+  width: 100%;
+}
+.content img.browser-logo {
+  width: 50px;
+}
+.content .caption {
+  font-style: italic;
+}
+.content table {
+  table-layout: fixed;
+  border-spacing: 0;
+  font-size: 13px;
+  padding-bottom: 20px;
+  width: 100%;
+}
+.content table caption {
+  border-bottom: 2px solid #dddddd;
+  font-style: italic;
+  margin-top: 20px;
+  text-align: left;
+}
+.content table caption.top {
+  margin-top: 0;
+}
+.content table tr {
+  height: 25px;
+}
+.content table tr td {
+  border-bottom: 1px solid #dddddd;
+  padding: 5px 0;
+}
+.content table tr td:first-child {
+  font-weight: bold;
+  width: 32%;
+}
+.content table tr td:last-child {
+  word-wrap: break-word;
+}
+.content table tr td input {
+  width: 100%;
+}
+.content table.extensions tr:first-child {
+  padding-bottom: 10px;
+}
+.content table.extensions td:first-child {
+  width: 10%;
+}
+.content table.extensions td {
+  height: 100px;
+  vertical-align: top;
+}
+.content table.extensions td p {
+  margin: 0;
+}
+.content.api table,
+.content.manual table,
+.content.pipeline table {
+  padding-bottom: 0;
+}
+.content.api table td,
+.content.manual table td,
+.content.pipeline table td {
+  border: none;
+}
+.content.api section,
+.content.manual section,
+.content.pipeline section {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #dddddd;
+}
+.content.api section.last,
+.content.manual section.last,
+.content.pipeline section.last {
+  border: none;
+}
+.content.api pre,
+.content.manual pre,
+.content.pipeline pre,
+.content.api .code,
+.content.manual .code,
+.content.pipeline .code {
+  background: #eeeeee;
+  padding: 10px;
+  font-family: monospace;
+  /* Example links overflow the pre tag if the text is too large. */
+  font-size: 12px;
+}
+.content.api pre,
+.content.manual pre,
+.content.pipeline pre {
+  white-space: pre-wrap;
+  /* CSS 3 */
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;
+  /* Opera 4-6 */
+  white-space: -o-pre-wrap;
+  /* Opera 7 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
+}
+.content.api table td:first-child {
+  width: 12%;
+}
+.content.api table td {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+form button.submit {
+  font-size: 14px;
+}
+form .description {
+  background: #f5f5f5;
+  margin-top: 10px;
+  padding: 5px;
+}
+form .description p {
+  margin: 10px;
+}
+.loader {
+  background-color: rgba(255, 255, 255, 0.75);
+  cursor: wait;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+.loader .modal {
+  background: #fffac7;
+  border: 1px solid #fff169;
+  color: #444444;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0 auto;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  right: 0;
+  top: 200px;
+  width: 75px;
+}
+.results ul {
+  padding-left: 15px;
+}
+.results #geneLists {
+  /* This over-selects but we don't care since the table is filled with images. */
+}
+.results #geneLists img {
+  width: 20px;
+}
+.results #geneLists img:hover {
+  opacity: .5;
+}
+.results #geneLists td {
+  height: 20px;
+}
+.results #geneLists tr {
+  font-weight: bold;
+}
+.mono {
+  font-family: monospace;
+}
+.left {
+  float: left;
+}
+.highlight {
+  color: #d90000;
+}
+.ui-tooltip {
+  background: #fffac7;
+  border: 1px solid #fff169;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #444444;
+  font-family: arial, sans-serif;
+  font-size: 12px;
+  /*font-weight: bold;*/
+  radius: 0;
+  padding: 5px;
+}

@@ -24,12 +24,18 @@ cors = CORS(app)
 if not DEBUG:
     # Configure Apache logging.
     logging.basicConfig(stream=sys.stderr)
+else:
+    print 'Starting in DEBUG mode'
 
 # Import these after connecting to the DB.
-from g2e.endpoint.index import index
+from g2e.endpoint.base import base
+from g2e.endpoint.error import error
 from g2e.endpoint.static import static
-from g2e.endpoint.api import api
+from g2e.endpoint.extract import extract
+from g2e.endpoint.tag import tag
 
-app.register_blueprint(index)
+app.register_blueprint(base)
+app.register_blueprint(error)
 app.register_blueprint(static)
-app.register_blueprint(api)
+app.register_blueprint(extract)
+app.register_blueprint(tag)

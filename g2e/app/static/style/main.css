@@ -1,0 +1,31 @@
+/* Structure all pages to allow for footer. Other styling for these elements is
+ * below.
+ * ------------------------------------------------------------------------- */
+body {
+  margin: 0;
+}
+html,
+body {
+  height: 100%;
+}
+.wrapper {
+  min-height: 100%;
+  padding-bottom: 200px;
+  position: relative;
+}
+.content {
+  position: relative;
+  top: 50px;
+  padding-bottom: 200px;
+}
+.footer {
+  height: 200px;
+  position: absolute;
+  bottom: 0;
+}
+/* Styling of main elements
+ * ------------------------------------------------------------------------- */
+.footer {
+  background: blue;
+  width: 100%;
+}

@@ -1,0 +1,11 @@
+{% extends 'wrapper.html' %}
+{% block body %}
+
+    <h2>{{ tag.name }}</h2>
+    <ul>
+        {% for extraction in tag.extractions %}
+            <li>{{ extraction.extraction_id }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

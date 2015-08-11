@@ -1,0 +1,36 @@
+@import '../../../web/extension/common/less/common.less';
+@import 'variable.less';
+
+
+/* Structure all pages to allow for footer. Other styling for these elements is
+ * below.
+ * ------------------------------------------------------------------------- */
+body {
+    margin: 0;
+}
+html,
+body {
+	height: 100%;
+}
+.wrapper {
+    min-height: 100%;
+    padding-bottom: @dimension-footer-height;
+    position: relative;
+}
+.content {
+    position: relative;
+    top: @dimension-nav-height;
+    padding-bottom: @dimension-footer-height;
+}
+.footer {
+    height: @dimension-footer-height;
+    position: absolute;
+    bottom: 0;
+}
+
+/* Styling of main elements
+ * ------------------------------------------------------------------------- */
+.footer {
+    background: blue;
+    width: 100%;
+}

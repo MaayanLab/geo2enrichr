@@ -1,19 +1,32 @@
 @import '../../../extension/common/less/common.less';
+@import 'variable.less';
 
 
 @footer-height: 200px;
 
 
-/* Reset
- * ----- */
+/* Structure all pages to allow for footer. Other styling for these elements is
+ * below.
+ * ------------------------------------------------------------------------- */
 html,
 body {
-    height: 100%;
-    margin: 0;
+	height: 100%;
 }
-body {
-    font-family: @font-family-base;
-    font-size: 13px;
+.wrapper {
+	min-height: 100%;
+	padding-bottom: @dimension-footer-height;
+	position: relative;
+}
+.footer {
+	height: @dimension-footer-height;
+}
+/* Push all content out from under the fix nav. Do not use "margin-top" because
+ * this pushes the sticky footer down as well.
+ */
+.content {
+	position: relative;
+	top: @dimension-nav-height;
+	padding-bottom: @dimension-footer-height;
 }
 
 /* Tag selectors 
