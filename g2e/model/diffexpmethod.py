@@ -6,7 +6,7 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-from g2e.app import db
+from g2e import db
 
 
 class DiffExpMethod(db.Model):

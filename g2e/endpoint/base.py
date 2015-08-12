@@ -7,7 +7,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from flask import Blueprint
-from g2e.app.config import BASE_URL
+from g2e.config import BASE_URL
 from flask import render_template
 
 

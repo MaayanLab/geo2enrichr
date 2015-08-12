@@ -8,7 +8,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 from flask import Blueprint, request, jsonify
 from flask.ext.cors import cross_origin
-from g2e.app.config import BASE_API_URL
+from g2e.config import BASE_API_URL
 from g2e.dao import extractiondao
 from g2e.model.extraction import Extraction
 

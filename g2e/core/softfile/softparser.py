@@ -7,7 +7,6 @@ __contact__ = "gregory.gundersen@mssm.edu"
 
 
 import csv
-import numpy as np
 
 import g2e.core.softfile.softfilemanager as softfilemanager
 

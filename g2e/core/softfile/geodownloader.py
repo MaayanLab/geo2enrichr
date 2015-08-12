@@ -8,7 +8,6 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-import os.path
 from gzip import GzipFile
 import zlib
 from urllib2 import urlopen, URLError
@@ -39,11 +38,11 @@ def download(accession):
     
     with open(downloaded_file_path, 'w+') as f:
         while True:
-			bin_chunk = response.read(CHUNK_SIZE)
-			if not bin_chunk:
-				break
-			string = decompressor.decompress(bin_chunk)
-			f.write(string)
+            bin_chunk = response.read(CHUNK_SIZE)
+            if not bin_chunk:
+                break
+            string = decompressor.decompress(bin_chunk)
+            f.write(string)
 
 
 def _get_file_by_url(url, attempts=5):

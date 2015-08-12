@@ -8,7 +8,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 from flask import Blueprint, make_response, send_from_directory
 
-from g2e.app.config import BASE_URL, SERVER_ROOT
+from g2e.config import BASE_URL, SERVER_ROOT
 
 
 static = Blueprint('static', __name__, url_prefix=BASE_URL + '/static')

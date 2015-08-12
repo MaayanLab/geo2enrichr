@@ -7,7 +7,6 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import numpy as np
-from numbers import Number
 
 
 def normalize(genes, A, B):

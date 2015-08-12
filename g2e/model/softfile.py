@@ -8,7 +8,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 import time
 
-from g2e.app import db
+from g2e import db
 import g2e.core.softfile.geodownloader as geodownloader
 import g2e.core.softfile.softparser as softparser
 import g2e.core.softfile.normalizer as normalizer

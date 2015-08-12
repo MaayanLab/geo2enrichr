@@ -7,7 +7,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from flask import Blueprint, render_template
-from g2e.app.config import BASE_URL
+from g2e.config import BASE_URL
 import g2e.dao.tagdao as tagdao
 
 

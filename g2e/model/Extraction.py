@@ -20,7 +20,7 @@ __contact__ = "avi.maayan@mssm.edu"
 import hashlib
 import time
 
-from g2e.app import db
+from g2e import db
 from g2e.model.softfile import SoftFile
 from g2e.model.expmetadata import ExpMetadata
 from g2e.core.genelist.genelistsmaker import genelists_maker

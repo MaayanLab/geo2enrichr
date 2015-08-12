@@ -8,7 +8,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 import hashlib
 
-from g2e.app import db
+from g2e import db
 import g2e.core.genelist.genelistfilemanager as filemanager
 
 
