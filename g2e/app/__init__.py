@@ -7,6 +7,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import logging
+import os
 import sys
 
 from flask import Flask
@@ -21,6 +22,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 cors = CORS(app)
 
+SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
+
 if not DEBUG:
     # Configure Apache logging.
     logging.basicConfig(stream=sys.stderr)
@@ -32,10 +35,12 @@ from g2e.endpoint.base import base
 from g2e.endpoint.error import error
 from g2e.endpoint.static import static
 from g2e.endpoint.extract import extract
+from g2e.endpoint.results import results
 from g2e.endpoint.tag import tag
 
 app.register_blueprint(base)
 app.register_blueprint(error)
 app.register_blueprint(static)
 app.register_blueprint(extract)
+app.register_blueprint(results)
 app.register_blueprint(tag)

@@ -16,33 +16,38 @@ from g2e.model.extraction import Extraction
 extract = Blueprint('api', __name__, url_prefix=BASE_API_URL + '/extract')
 
 
-@extract.route('/<path>', methods=['GET', 'POST'])
+@extract.route('/<extraction_id>')
 @cross_origin()
-def extract_endpoint(path):
-    """Single entry point for extracting a gene list from a SOFT file.
+def get_extraction(extraction_id):
+    """Handle GET request based on extraction ID.
     """
-    if request.method == 'POST':
-        return do_post()
-    elif request.method == 'GET':
-        return do_get(path)
+    extraction = extractiondao.fetch(extraction_id)
+    response = extraction.serialize
+    return jsonify(response)
 
 
-def do_post(path):
-    """Handle POST requests, which are to two endpoints: upload or geo.
+@extract.route('/geo', methods=['POST'])
+@cross_origin()
+def post_from_geo():
+    """Handle POST requests from GEO.
     """
     response = {}
-    if path == 'upload':
-        extraction = Extraction.from_file(request.files['file'], request.form)
-    elif path == 'geo':
-        extraction = Extraction.from_geo(request.form)
+    extraction = Extraction.from_geo(request.form)
     extractiondao.save(extraction)
     response['extraction_id'] = extraction.extraction_id
     return jsonify(response)
 
 
-def do_get(path):
-    """Handle GET request based on extraction ID.
+@extract.route('/upload', methods=['POST'])
+@cross_origin()
+def post_file():
+    """Handle POST file upload.
     """
-    extraction = extractiondao.fetch(path)
-    response = extraction.serialize
+    response = {}
+    extraction = Extraction.from_file(request.files['file'], request.form)
+    extractiondao.save(extraction)
+    response['extraction_id'] = extraction.extraction_id
     return jsonify(response)
+
+
+

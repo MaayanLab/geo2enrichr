@@ -1,0 +1,126 @@
+{% extends 'wrapper.html' %}
+{% block body %}
+
+    <script src="/js/results.js"></script>
+
+    <div class="results">
+        <h1>Results</h1>
+        <table>
+            <caption class="top">Share</caption>
+            <tbody>
+                <tr>
+                    <td>Permanent link to these results</td>
+                    <td>{{ permanent_link }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table>
+            <caption>SOFT file</caption>
+            <tr>
+                <td>Description</td>
+                <td>{{ extraction.softfile.name }}</td>
+            </tr>
+            <tr>
+                <td>Platform</td>
+                <td>{{ extraction.exp_metadata.platform }}</td>
+            </tr>
+            <tr>
+                <td>Normalized</td>
+                <td>{{ extraction.exp_metadata.normalize }}</td>
+            </tr>
+            <tr title="Parsed and cleaned SOFT file, with GEO metadata removed and only the control and samples listed.">
+                <td>Parsed SOFT file</td>
+                <td>
+                    <a href="{{ extraction.softfile.text_file }}" target="_blank">Download</a>
+                </td>
+            </tr>
+        </table>
+    
+        <table>
+            <caption>Metadata</caption>
+            <tr>
+                <td>Differential expression method</td>
+                <td>{{ extraction.exp_metadata.diff_exp_method.name }}</td>
+            </tr>
+            <tr>
+                <td>Cutoff</td>
+                <td>{{ extraction.exp_metadata.cutoff }}</td>
+            </tr>
+            <tr>
+                <td>Correction method</td>
+                <td>{{ extraction.exp_metadata.ttest_correction_method.name }}</td>
+            </tr>
+            <tr>
+                <td>Organism</td>
+                <td>{{ extraction.exp_metadata.organism }}</td>
+            </tr>
+            <tr>
+                <td>Threshold</td>
+                <td>{{ extraction.exp_metadata.threshold }}</td>
+            </tr>
+            <tr>
+                <td>Cell type or tissue</td>
+                <td>{{ extraction.exp_metadata.cell }}</td>
+            </tr>
+            <tr>
+                <td>Perturbation</td>
+                <td>{{ extraction.exp_metadata.perturbation }}</td>
+            </tr>
+            <tr>
+                <td>Manipulated gene</td>
+                <td>{{ extraction.exp_metadata.gene }}</td>
+            </tr>
+            <tr>
+                <td>Relevant disease</td>
+                <td>{{ extraction.exp_metadata.disease }}</td>
+            </tr>
+        </table>
+
+        <table class="gene-lists">
+            <caption>External Links and Downloads</caption>
+            <thead>
+                <tr>
+                    <td></td>
+                    <td title="Text file containing a gene list resulting from differential expression analysis.">Gene lists</td>
+                    <td title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Enrichr</td>
+                    <td title="Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.">L1000CDS2</td>
+                    <td title="Perform principle angle enrichment analysis against over 70 gene set libraries.">PAEA</td>
+                </tr>
+            </thead>
+            {% for gene_list in extraction.genelists %}
+                <tr>
+                    <td>{{ gene_list.direction_as_string }}</td>
+                    <td>
+                        <a href="{{ gene_list.text_file }}" target="_blank">
+                            <img src="/image/download.png">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ gene_list.enrichr_link }}" target="_blank">
+                            <img src="/image/targetapp/enrichr.png">
+                        </a>
+                    </td>
+                    {% if gene_list.l1000cds2_link != '' %}
+                        <td>
+                            <a href="{{ gene_list.l1000cds2_link }}" target="_blank">
+                                <img src="/image/targetapp/l1000cds2.png">
+                            </a>
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    {% if gene_list.paea_link != '' %}
+                        <td>
+                            <a href="{{ gene_list.pea_link }}" target="_blank">
+                                <img src="/image/targetapp/paea.png">
+                            </a>
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

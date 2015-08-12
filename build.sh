@@ -12,8 +12,8 @@ set -e
 # JS
 # -----------------------------------------------------------------------------
 # Write configuration variables into config file.
-CHROME_JS_CONFIG='g2e/web/extension/common/js/config-chrome.js'
-FIREFOX_JS_CONFIG='g2e/web/extension/common/js/config-firefox.js'
+CHROME_JS_CONFIG='g2e/extension/common/js/config-chrome.js'
+FIREFOX_JS_CONFIG='g2e/extension/common/js/config-firefox.js'
 
 # Create empty files
 > $CHROME_JS_CONFIG
@@ -28,7 +28,7 @@ if [[ $1 = 'dev' ]]; then
     printf '%s\n' 'var SERVER = "http://localhost:8083/g2e/";' >> $CHROME_JS_CONFIG
     printf '%s\n' 'var DEBUG = true;' >> $FIREFOX_JS_CONFIG
     printf '%s\n' 'var SERVER = "http://localhost:8083/g2e/";' >> $FIREFOX_JS_CONFIG
-    extId="khihlgenlacbajndipgglejkmomonocn";
+    extId="omkofmggjapmpfpijnnnnpclfejpfpmd";
 else
     echo '--------------------- prod ---------------------'
     printf '%s\n' 'var DEBUG = false;' >> $CHROME_JS_CONFIG

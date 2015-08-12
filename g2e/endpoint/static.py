@@ -6,14 +6,24 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-from flask import Blueprint, send_from_directory
+from flask import Blueprint, make_response, send_from_directory
 
 from g2e.app.config import BASE_URL, SERVER_ROOT
 
 
-static = Blueprint('static', __name__, url_prefix=BASE_URL + '/<path:path>')
+static = Blueprint('static', __name__, url_prefix=BASE_URL + '/static')
+
+SOFTFILE_DIRECTORY = SERVER_ROOT + '/static/softfile'
+GENELIST_DIRECTORY = SERVER_ROOT + '/static/genelist'
 
 
-@static.route('/')
-def static_endpoint(path):
-    return send_from_directory(SERVER_ROOT, path)
+# TODO: These should just return binary blogs from the DB, rather than
+# referencing files on the hard disk.
+@static.route('/softfile/<filename>')
+def softfile_download(filename):
+    return send_from_directory(SOFTFILE_DIRECTORY, filename)
+
+
+@static.route('/genelist/<filename>')
+def genelist_download(filename):
+    return send_from_directory(GENELIST_DIRECTORY, filename)

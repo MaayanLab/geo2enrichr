@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-    var WEB = '../g2e/web/';
+    var WEB = '../g2e/';
 
     var COMMON = WEB + 'extension/common/';
 
@@ -62,9 +62,9 @@ module.exports = function(grunt) {
                     yuicompress: true
                 },
                 files: {
-                    '../g2e/web/extension/chrome/main.css' : '../g2e/web/extension/common/less/main.less',
-                    '../g2e/web/extension/firefox/data/main.css': '../g2e/web/extension/common/less/main.less',
-                    '../g2e/web/site/style/css/main.css'   : '../g2e/web/site/style/less/main.less'
+                    '../g2e/extension/chrome/main.css' : '../g2e/extension/common/less/main.less',
+                    '../g2e/extension/firefox/data/main.css': '../g2e/extension/common/less/main.less',
+                    '../g2e/site/style/css/main.css'   : '../g2e/site/style/less/main.less'
                 }
             }
         },

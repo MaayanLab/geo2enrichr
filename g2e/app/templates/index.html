@@ -1,3 +1,107 @@
 {% extends 'wrapper.html' %}
 {% block body %}
+
+    <script src="/js/upload.js"></script>
+
+    <form>
+        <table class="form">
+            <caption>Please select a file to upload and input required metadata.</caption>
+            <tr>
+                <td>File (500 MB max)</td>
+                <td>
+                    <input type="file" name="file">
+                </td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>
+                    <input name="name" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>Platform</td>
+                <td>
+                    <input name="platform" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>Organism</td>
+                <td>
+                    <input name="organism" value="">
+                </td>
+            </tr>
+        </table>
+
+        <table class="form">
+            <caption>Please select differential expression analysis options.</caption>
+            <tr>
+                <td>Differential expression method</td>
+                <td>
+                    <select class="diffexp_method" name="diffexp_method">
+                        <option value="chdir" selected="selected">Characteristic Direction</option>
+                        <option value="ttest">T-test</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="chdir">
+                <td>Cutoff</td>
+                <td>
+                    <select id="cutoff" name="cutoff">
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                        <option value="200">200</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="ttest">
+                <td>Correction method</td>
+                <td>
+                    <select class="correction_method" name="correction_method">
+                        <option value="BH">Benjamini-Hochberg</option>
+                        <option value="bonferroni">Bonferroni</option>
+                    </select>
+                </td>
+            </tr>
+            <tr id="threshold_row" class="ttest">
+                <td>Threshold</td>
+                <td>
+                    <select name="threshold">
+                        <option value="0.01">0.01</option>
+                        <option value="0.05">0.05</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+
+        <table class="form">
+            <caption>Please input optional metadata.</caption>
+            <tr>
+                <td>Cell type or tissue</td>
+                <td>
+                    <input name="cell" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>Perturbation</td>
+                <td>
+                    <input name="perturbation" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>Manipulated gene</td>
+                <td>
+                    <input name="gene" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>Relevant disease</td>
+                <td>
+                    <input name="disease" value="">
+                </td>
+            </tr>
+        </table>
+
+        <button type="submit">Extract gene lists</button>
+    </form>
+
 {% endblock %}

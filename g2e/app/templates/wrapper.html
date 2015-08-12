@@ -2,7 +2,11 @@
 <html>
 {% include 'head.html' %}
 <body>
-    {% include 'nav.html' %}
+    {% if use_simple_header %}
+        {% include 'header-simple.html' %}
+    {% else %}
+        {% include 'header.html' %}
+    {% endif %}
     <div class="wrapper">
         <div class="content">
             {% block body %}{% endblock %}
