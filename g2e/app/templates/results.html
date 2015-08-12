@@ -1,7 +1,7 @@
 {% extends 'wrapper.html' %}
 {% block body %}
 
-    <script src="/js/results.js"></script>
+    <script src="js/results.js"></script>
 
     <div class="results">
         <h1>Results</h1>
@@ -93,18 +93,18 @@
                     <td>{{ gene_list.direction_as_string }}</td>
                     <td>
                         <a href="{{ gene_list.text_file }}" target="_blank">
-                            <img src="/image/download.png">
+                            <img src="image/download.png">
                         </a>
                     </td>
                     <td>
                         <a href="{{ gene_list.enrichr_link }}" target="_blank">
-                            <img src="/image/targetapp/enrichr.png">
+                            <img src="image/targetapp/enrichr.png">
                         </a>
                     </td>
                     {% if gene_list.l1000cds2_link != '' %}
                         <td>
                             <a href="{{ gene_list.l1000cds2_link }}" target="_blank">
-                                <img src="/image/targetapp/l1000cds2.png">
+                                <img src="image/targetapp/l1000cds2.png">
                             </a>
                         </td>
                     {% else %}
@@ -113,7 +113,7 @@
                     {% if gene_list.paea_link != '' %}
                         <td>
                             <a href="{{ gene_list.pea_link }}" target="_blank">
-                                <img src="/image/targetapp/paea.png">
+                                <img src="image/targetapp/paea.png">
                             </a>
                         </td>
                     {% else %}

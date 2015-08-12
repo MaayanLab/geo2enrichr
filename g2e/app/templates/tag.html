@@ -1,11 +1,30 @@
 {% extends 'wrapper.html' %}
 {% block body %}
 
-    <h2>{{ tag.name }}</h2>
-    <ul>
-        {% for extraction in tag.extractions %}
-            <li>{{ extraction.extraction_id }}</li>
-        {% endfor %}
-    </ul>
+    <div class="tag">
+        <h1>{{ tag.name }}<span class="note">{{ num_tags }} gene signatures</span></h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Link</th>
+                    <th>Organism</th>
+                    <th>Cell</th>
+                    <th>Perturbation</th>
+                    <th>Gene</th>
+                    <th>Disease</th>
+                </tr>
+            </thead>
+            {% for extraction in tag.extractions %}
+                <tr>
+                    <td><a href="{{ base_url }}/{{ extraction.extraction_id }}">{{ extraction.extraction_id }}</a></td>
+                    <td>{{ extraction.exp_metadata.organism if extraction.exp_metadata.organism != None }}</td>
+                    <td>{{ extraction.exp_metadata.cell if extraction.exp_metadata.cell != None}}</td>
+                    <td>{{ extraction.exp_metadata.perturbation if extraction.exp_metadata.perturbation != None}}</td>
+                    <td>{{ extraction.exp_metadata.gene if extraction.exp_metadata.gene != None}}</td>
+                    <td>{{ extraction.exp_metadata.disease if extraction.exp_metadata.disease != None}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
 {% endblock %}

@@ -350,3 +350,16 @@ form .description p {
 .results .gene-lists tr {
   font-weight: bold;
 }
+/* Tag page
+ * -------- */
+.tag th {
+  text-align: left;
+}
+.tag td:first-child {
+  font-weight: normal !important;
+}
+.tag .note {
+  font-size: 12px;
+  font-weight: normal;
+  margin-left: 15px;
+}
