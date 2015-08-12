@@ -101,7 +101,7 @@
                             <img src="image/targetapp/enrichr.png">
                         </a>
                     </td>
-                    {% if gene_list.l1000cds2_link != '' %}
+                    {% if gene_list.l1000cds2_link != None %}
                         <td>
                             <a href="{{ gene_list.l1000cds2_link }}" target="_blank">
                                 <img src="image/targetapp/l1000cds2.png">
@@ -110,7 +110,7 @@
                     {% else %}
                         <td></td>
                     {% endif %}
-                    {% if gene_list.paea_link != '' %}
+                    {% if gene_list.paea_link != None %}
                         <td>
                             <a href="{{ gene_list.pea_link }}" target="_blank">
                                 <img src="image/targetapp/paea.png">
