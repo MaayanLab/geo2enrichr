@@ -29,7 +29,8 @@ def get_link(genes, metadata):
             'aggravate': False,
             'searchMethod': 'CD',
             'share': False,
-            'combination': False
+            'combination': False,
+            'db-version': 'latest'
         },
         'metadata': metadata.to_L1000CDS2_data_format()
     }

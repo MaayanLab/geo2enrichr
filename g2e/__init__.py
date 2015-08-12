@@ -17,7 +17,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from g2e.config import DEBUG, SQLALCHEMY_DATABASE_URI
 
 
-app = Flask(__name__, static_url_path='/g2e')
+app = Flask(__name__, static_url_path='/g2e/static', static_folder='static')
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 cors = CORS(app)
@@ -33,14 +33,12 @@ else:
 # Import these after connecting to the DB.
 from g2e.endpoint.base import base
 from g2e.endpoint.error import error
-from g2e.endpoint.static import static
 from g2e.endpoint.extract import extract
 from g2e.endpoint.results import results
 from g2e.endpoint.tag import tag
 
 app.register_blueprint(base)
 app.register_blueprint(error)
-app.register_blueprint(static)
 app.register_blueprint(extract)
 app.register_blueprint(results)
 app.register_blueprint(tag)

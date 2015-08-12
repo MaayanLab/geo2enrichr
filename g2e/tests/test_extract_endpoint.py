@@ -1,7 +1,7 @@
 import json
 import unittest
 
-import g2e.app
+from g2e import app
 
 
 unittest.TestCase.maxDiff = None
@@ -24,7 +24,7 @@ class ExtractEndpoint(unittest.TestCase):
 
 
     def setUp(self):
-        self.app = g2e.app.app.test_client()
+        self.app = app.test_client()
 
 
     # This should be multiple unit tests but it is annoyingly slow to run.
@@ -65,9 +65,8 @@ class ExtractEndpoint(unittest.TestCase):
             self.assertTrue('text_file' in gl)
             self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
             if gl['direction'] == 0:
-                pass
-                #self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
-                #self.assertTrue('http://amp.pharm.mssm.edu/PAEA' in gl['target_apps']['paea'])
+                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
+                self.assertTrue('http://amp.pharm.mssm.edu/PAEA' in gl['target_apps']['paea'])
             else:
                 self.assertTrue(gl['target_apps']['l1000cds2'] == '')
                 self.assertTrue(gl['target_apps']['paea'] == '')
@@ -125,7 +124,7 @@ class ExtractEndpoint(unittest.TestCase):
             self.assertTrue('text_file' in gl)
             self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
             if gl['direction'] == 0:
-                #self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
+                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
                 self.assertTrue(gl['target_apps']['paea'] == '')
             else:
                 self.assertTrue(gl['target_apps']['l1000cds2'] == '')
