@@ -9,7 +9,6 @@ __contact__ = "avi.maayan@mssm.edu"
 import hashlib
 
 from g2e import db
-import g2e.core.genelist.genelistfilemanager as filemanager
 
 
 rankedgenes_2_genelists = db.Table('rankedgene2genelist', db.metadata,
@@ -39,12 +38,6 @@ class GeneList(db.Model):
         self.enrichr_link   = target_apps['enrichr']
         self.l1000cds2_link = target_apps['l1000cds2']
         self.paea_link      = target_apps['paea']
-        self.text_file      = text_file or filemanager.write(
-            self.name,
-            self.direction,
-            self.ranked_genes,
-            metadata
-        )
 
     def __repr__(self):
         return '<GeneList %r>' % self.id

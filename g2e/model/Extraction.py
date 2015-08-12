@@ -35,9 +35,8 @@ class Extraction(db.Model):
     # the actual database ID to the users.
     extraction_id = db.Column(db.String(10))
     softfile = db.relationship('SoftFile', uselist=False, backref='extractions')
-    genelists = db.relationship('GeneList', backref=db.backref('genelists', order_by=id))
-    genelists = db.relationship('GeneList', backref=db.backref('genelists', order_by=id))
-    exp_metadata = db.relationship('ExpMetadata', uselist=False, backref=db.backref('genelists', order_by=id))
+    genelists = db.relationship('GeneList', backref=db.backref('extraction', order_by=id))
+    exp_metadata = db.relationship('ExpMetadata', uselist=False, backref=db.backref('extraction', order_by=id))
 
     def __init__(self, softfile, genelists, exp_metadata):
         """Construct an Extraction instance. This is called only by class
