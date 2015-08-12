@@ -17,7 +17,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from g2e.app.config import DEBUG, SQLALCHEMY_DATABASE_URI
 
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__, static_url_path='/g2e')
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 cors = CORS(app)
