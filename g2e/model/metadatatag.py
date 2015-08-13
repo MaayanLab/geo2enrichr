@@ -26,4 +26,4 @@ class MetadataTag(db.Model):
         self.name = name
 
     def __repr__(self):
-        return '<Gene %r>' % self.id
+        return '<MetadataTag %r>' % self.id

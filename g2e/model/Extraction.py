@@ -18,6 +18,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import hashlib
+import json
 import time
 
 from g2e import db
@@ -61,7 +62,10 @@ class Extraction(db.Model):
         database.
         """
         exp_metadata = ExpMetadata.from_args(args)
-        tags = args.getlist('tags')
+        if 'tags' in args:
+            tags = json.loads(args.get('tags'))
+        else:
+            tags = []
         metadata_tags = [get_or_create(MetadataTag, name=name) for name in tags]
         genelists = genelists_maker(softfile, exp_metadata)
         return cls(softfile, genelists, exp_metadata, metadata_tags)
@@ -88,5 +92,6 @@ class Extraction(db.Model):
             'extraction_id': self.extraction_id,
             'softfile': self.softfile.serialize,
             'genelists': [gl.serialize for gl in self.genelists],
-            'metadata': self.exp_metadata.serialize
+            'metadata': self.exp_metadata.serialize,
+            'tags': [t.name for t in self.metadata_tags]
         }

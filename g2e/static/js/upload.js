@@ -20,21 +20,13 @@ $(function() {
             $tags = $('#tags'),
             tagValues = [];
 
-        _.each($forms.find('select'), function(select) {
+        $.each($forms.find('select'), function(i, select) {
             var $select = $(select),
                 key = $select.attr('name'),
                 val = $select.val();
             formData.append(key, val);
         });
 
-        _.each($tags.find('li'), function(tag) {
-            var value = $(tag).find('.tagit-label').html();
-            if (typeof value !== 'undefined') {
-                tagValues.push(value);
-            }
-        });
-
-        formData.append('tags', tagValues);
         formData.append('normalize', 'False');
 
         $.ajax({
@@ -69,7 +61,9 @@ $(function() {
     }
 
     function setupTagFunctionality() {
-        $("#tags").tagit();
+        $("#tags").tagit({
+            singleField: true
+        });
     }
 
     function Loader() {
@@ -82,4 +76,7 @@ $(function() {
         }
     }
 
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
 });

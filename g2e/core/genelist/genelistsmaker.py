@@ -6,6 +6,8 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
+from flask import request
+
 from g2e.core.genelist.diffexp import diffexp
 from g2e.core.targetapp.targetapps import target_all_apps
 from g2e.model.genelist import GeneList
@@ -30,9 +32,16 @@ def genelists_maker(softfile, metadata):
     up_genes     = [t for t in ranked_genes if t.value > 0]
     down_genes   = [t for t in ranked_genes if t.value < 0]
 
-    target_apps_up       = target_all_apps(up_genes,     1, metadata)
-    target_apps_down     = target_all_apps(down_genes,  -1, metadata)
-    target_apps_combined = target_all_apps(ranked_genes, 0, metadata)
+    if 'skip_target_apps' in request.form:
+        target_apps_up = target_apps_down = target_apps_combined = {
+            'enrichr': '',
+            'l1000cds2': '',
+            'paea': ''
+        }
+    else:
+        target_apps_up       = target_all_apps(up_genes,     1, metadata)
+        target_apps_down     = target_all_apps(down_genes,  -1, metadata)
+        target_apps_combined = target_all_apps(ranked_genes, 0, metadata)
 
     # 3. Apply cutoff if the differential expression method is the
     #    Characteristic Direction. We don't apply it earlier because PAEA
