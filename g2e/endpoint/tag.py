@@ -17,9 +17,13 @@ tag = Blueprint('tag', __name__, url_prefix=BASE_URL + '/tag')
 @tag.route('/<tag_name>', methods=['GET'])
 def tag_endpoint(tag_name):
     tag = tagdao.fetch(tag_name)
-
-    return render_template('tag.html',
-        base_url=BASE_URL + '/results',
-        num_tags=len(tag.extractions),
-        tag=tag
-    )
+    if tag is None:
+        return render_template('tag-not-found.html',
+            tag_name=tag_name
+        )
+    else:
+        return render_template('tag.html',
+            base_url=BASE_URL + '/results',
+            num_tags=len(tag.extractions),
+            tag=tag
+        )
