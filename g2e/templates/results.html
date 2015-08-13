@@ -15,6 +15,18 @@
             </tbody>
         </table>
 
+        {% if extraction.metadata_tags|length > 0 %}
+            <table>
+                <caption>Tags</caption>
+                {% for tag in extraction.metadata_tags %}
+                    <tr>
+                        <td></td>
+                        <td><a href="tag/{{ tag.name }}">{{ tag.name }}</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
         <table>
             <caption>SOFT file</caption>
             <tr>

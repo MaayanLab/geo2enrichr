@@ -5,7 +5,7 @@ $(function() {
 
     $('button').click(submit);
     $('select.diffexp_method').change(methodChange);
-    $('select.correction_method').change(correctionChange);
+    setupTagFunctionality();
 
     var $chdir = $('.chdir'),
         $ttest = $('.ttest');
@@ -16,7 +16,9 @@ $(function() {
         evt.preventDefault();
         var $forms = $('form'),
             formData = new FormData($forms[0]),
-            loader = Loader();
+            loader = Loader(),
+            $tags = $('#tags'),
+            tagValues = [];
 
         _.each($forms.find('select'), function(select) {
             var $select = $(select),
@@ -24,6 +26,15 @@ $(function() {
                 val = $select.val();
             formData.append(key, val);
         });
+
+        _.each($tags.find('li'), function(tag) {
+            var value = $(tag).find('.tagit-label').html();
+            if (typeof value !== 'undefined') {
+                tagValues.push(value);
+            }
+        });
+
+        formData.append('tags', tagValues);
         formData.append('normalize', 'False');
 
         $.ajax({
@@ -57,8 +68,8 @@ $(function() {
         }
     }
 
-    function correctionChange(evt) {
-
+    function setupTagFunctionality() {
+        $("#tags").tagit();
     }
 
     function Loader() {

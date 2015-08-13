@@ -25,7 +25,9 @@ body {
  * ------------------------------- */
 .wrapper {
   margin: 0 auto;
-  width: 650px;
+  max-width: 650px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 /* Class and tag selectors.
  * ------------------------ */
@@ -114,24 +116,24 @@ form .description p {
  * header, content, footer
  * ----------------------------- */
 .header {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #eeeeee;
 }
 .header #logo {
   background: #f5f5f5;
   /* Old browsers */
-  background: -moz-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  background: -moz-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
   /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5), color-stop(100%, #eeeeee));
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5), color-stop(100%, #f9f9f9));
   /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  background: -webkit-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
   /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  background: -o-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
   /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
+  background: -ms-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
   /* IE10+ */
-  background: linear-gradient(to bottom, #f5f5f5 0%, #eeeeee 100%);
+  background: linear-gradient(to bottom, #f5f5f5 0%, #f9f9f9 100%);
   /* W3C */
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #eeeeee;
   padding: 10px 0;
 }
 .header #logo a:hover {
@@ -163,7 +165,7 @@ form .description p {
   padding-left: 0;
 }
 .header nav ul li {
-  border-right: 1px solid #eeeeee;
+  border-right: 1px solid #f9f9f9;
   display: inline;
   list-style-type: none;
   padding: 0 10px;
@@ -210,7 +212,7 @@ form .description p {
   width: 100%;
 }
 .content table caption {
-  border-bottom: 2px solid #dddddd;
+  border-bottom: 2px solid #eeeeee;
   font-style: italic;
   margin-top: 20px;
   text-align: left;
@@ -222,7 +224,7 @@ form .description p {
   height: 25px;
 }
 .content table tr td {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #eeeeee;
   padding: 5px 0;
 }
 .content table tr td:first-child {
@@ -262,7 +264,7 @@ form .description p {
 .content .manual section,
 .content .pipeline section {
   margin-bottom: 20px;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #eeeeee;
 }
 .content .documentation section.last,
 .content .manual section.last,
@@ -275,7 +277,7 @@ form .description p {
 .content .documentation .code,
 .content .manual .code,
 .content .pipeline .code {
-  background: #eeeeee;
+  background: #f9f9f9;
   padding: 10px;
   font-family: monospace;
   /* Example links overflow the pre tag if the text is too large. */
@@ -304,8 +306,8 @@ form .description p {
   width: 100%;
 }
 .footer {
-  border-top: 1px solid #dddddd;
-  background: #eeeeee;
+  border-top: 1px solid #eeeeee;
+  background: #f9f9f9;
   color: #444444;
   width: 100%;
 }
@@ -362,4 +364,15 @@ form .description p {
   font-size: 12px;
   font-weight: normal;
   margin-left: 15px;
+}
+/* Library Overrides
+ * ----------------- */
+.ui-widget {
+  font-family: arial, sans-serif;
+  font-size: 13px;
+}
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+  color: black;
 }

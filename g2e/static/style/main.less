@@ -30,7 +30,9 @@ body {
  * ------------------------------- */
 .wrapper {
     margin: 0 auto;
-    width: @dim-page-width;
+    max-width: @dim-page-width;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 /* Class and tag selectors.
@@ -363,4 +365,16 @@ form {
         font-weight: normal;
         margin-left: 15px;
     }
+}
+
+/* Library Overrides
+ * ----------------- */
+.ui-widget {
+    font-family: @font-family-base;
+    font-size: @font-size-base;
+}
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    color: black;
 }

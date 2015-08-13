@@ -21,8 +21,10 @@ import hashlib
 import time
 
 from g2e import db
+from g2e.dao.util import get_or_create
 from g2e.model.softfile import SoftFile
 from g2e.model.expmetadata import ExpMetadata
+from g2e.model.metadatatag import MetadataTag
 from g2e.core.genelist.genelistsmaker import genelists_maker
 
 
@@ -38,7 +40,7 @@ class Extraction(db.Model):
     genelists = db.relationship('GeneList', backref=db.backref('extraction', order_by=id))
     exp_metadata = db.relationship('ExpMetadata', uselist=False, backref=db.backref('extraction', order_by=id))
 
-    def __init__(self, softfile, genelists, exp_metadata):
+    def __init__(self, softfile, genelists, exp_metadata, metadata_tags):
         """Construct an Extraction instance. This is called only by class
         methods.
         """
@@ -48,6 +50,7 @@ class Extraction(db.Model):
         self.softfile  = softfile
         self.genelists = genelists
         self.exp_metadata  = exp_metadata
+        self.metadata_tags = metadata_tags
 
     def __repr__(self):
         return '<Extraction %r>' % self.id
@@ -58,8 +61,10 @@ class Extraction(db.Model):
         database.
         """
         exp_metadata = ExpMetadata.from_args(args)
+        tags = args.getlist('tags')
+        metadata_tags = [get_or_create(MetadataTag, name=name) for name in tags]
         genelists = genelists_maker(softfile, exp_metadata)
-        return cls(softfile, genelists, exp_metadata)
+        return cls(softfile, genelists, exp_metadata, metadata_tags)
 
     @classmethod
     def from_geo(cls, args):
