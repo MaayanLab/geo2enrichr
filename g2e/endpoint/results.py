@@ -7,18 +7,18 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from flask import Blueprint, request, render_template
-from g2e.config import BASE_URL
-from g2e.dao import extractiondao
+from g2e.config import Config
+from g2e.dataaccess import dataaccess
 
 
-results = Blueprint('results', __name__, url_prefix=BASE_URL + '/results')
+results = Blueprint('results', __name__, url_prefix=Config.BASE_URL + '/results')
 
 
 @results.route('/<results_id>')
 def results_page(results_id):
     """Single entry point for extracting a gene list from a SOFT file.
     """
-    extraction = extractiondao.fetch(results_id)
+    extraction = dataaccess.fetch_extraction(results_id)
     if extraction is None:
         return render_template('404.html')
 

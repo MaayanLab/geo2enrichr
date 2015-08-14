@@ -7,12 +7,12 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from flask import Blueprint
-from g2e.config import BASE_URL
+from g2e.config import Config
 from g2e import app
 from flask import render_template
 
 
-error = Blueprint('error', __name__, url_prefix=BASE_URL)
+error = Blueprint('error', __name__, url_prefix=Config.BASE_URL)
 
 
 @app.errorhandler(404)

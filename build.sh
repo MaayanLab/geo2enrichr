@@ -61,13 +61,15 @@ fi
 # logged in production.
 # -----------------------------------------------------------------------------
 printf '%s\n' 'Configuring the database.'
-dbconf='g2e/db.conf'
+dbconf='g2e/app.conf'
 if [[ $1 = 'dev' ]]; then
-    credentials=$(head -n 1 g2e/db-dev.conf)
-    echo $credentials > $dbconf
+    credentials=$(head -n 1 g2e/dev.conf)
+    debug=$(tail -n +2 g2e/dev.conf)
+    printf '%s\n%s' $credentials $debug > $dbconf
 else
-    credentials=$(head -n 1 g2e/db-prod.conf)
-    echo $credentials > $dbconf
+    credentials=$(head -n 1 g2e/prod.conf)
+    debug=$(tail -n +2 g2e/prod.conf)
+    printf '%s\n%s' $credentials $debug > $dbconf
 fi
 
 # Run Docker
@@ -81,9 +83,10 @@ if [[ $1 = 'prod' ]]; then
 fi
 
 # Critical step! We need to reset the DB credentials so we can keep developing locally.
-reset=$(head -n 1 g2e/db-dev.conf)
-printf 'reseting credentials to:\n%s\n' $reset
-echo $reset > $dbconf
+reset_credentials=$(head -n 1 g2e/dev.conf)
+reset_debug=$(tail -n +2 g2e/dev.conf)
+printf 'reseting credentials'
+printf '%s\n%s' $reset_credentials $reset_debug > $dbconf
 
 # Push to private docker repo if asked
 # -----------------------------------------------------------------------------

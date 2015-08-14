@@ -9,10 +9,16 @@ __contact__ = "avi.maayan@mssm.edu"
 import os
 
 
-DEBUG = False
-BASE_URL = '/g2e'
-BASE_API_URL = BASE_URL + '/api'
-SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
+class Config(object):
 
-with open('g2e/db.conf') as f:
-    SQLALCHEMY_DATABASE_URI = f.read().strip()
+    with open('g2e/app.conf') as f:
+        lines = [x for x in f.read().split('\n')]
+
+    DEBUG = bool(lines[1])
+    SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
+
+    BASE_URL = '/g2e'
+    BASE_API_URL = BASE_URL + '/api'
+
+    SQLALCHEMY_POOL_RECYCLE = 3600
+    SQLALCHEMY_DATABASE_URI = lines[0]

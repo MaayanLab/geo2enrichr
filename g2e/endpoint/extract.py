@@ -6,14 +6,14 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
-from g2e.config import BASE_API_URL
-from g2e.dao import extractiondao
+from g2e.config import Config
+from g2e.dataaccess import dataaccess
 from g2e.model.extraction import Extraction
 
 
-extract = Blueprint('api', __name__, url_prefix=BASE_API_URL + '/extract')
+extract = Blueprint('api', __name__, url_prefix=Config.BASE_API_URL + '/extract')
 
 
 @extract.route('/<extraction_id>')
@@ -21,9 +21,13 @@ extract = Blueprint('api', __name__, url_prefix=BASE_API_URL + '/extract')
 def get_extraction(extraction_id):
     """Handle GET request based on extraction ID.
     """
-    extraction = extractiondao.fetch(extraction_id)
-    response = extraction.serialize
-    return jsonify(response)
+    extraction = dataaccess.fetch_extraction(extraction_id)
+    if extraction is None:
+        return jsonify({
+            'error': 'No gene signatures with ID %s found' % extraction_id
+        })
+    else:
+        return jsonify(extraction.serialize)
 
 
 @extract.route('/geo', methods=['POST'])
@@ -33,7 +37,7 @@ def post_from_geo():
     """
     response = {}
     extraction = Extraction.from_geo(request.form)
-    extractiondao.save(extraction)
+    dataaccess.save_extraction(extraction)
     response['extraction_id'] = extraction.extraction_id
     return jsonify(response)
 
@@ -45,7 +49,7 @@ def post_file():
     """
     response = {}
     extraction = Extraction.from_file(request.files['file'], request.form)
-    extractiondao.save(extraction)
+    dataaccess.save_extraction(extraction)
     response['extraction_id'] = extraction.extraction_id
     return jsonify(response)
 

@@ -7,7 +7,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from g2e import db
-from g2e.dao.util import get_or_create
+from g2e.dataaccess.util import get_or_create
 from g2e.model.diffexpmethod import DiffExpMethod
 from g2e.model.ttestcorrectionmethod import TtestCorrectionMethod
 

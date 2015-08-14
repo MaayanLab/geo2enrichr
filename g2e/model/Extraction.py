@@ -22,7 +22,7 @@ import json
 import time
 
 from g2e import db
-from g2e.dao.util import get_or_create
+from g2e.dataaccess.util import get_or_create
 from g2e.model.softfile import SoftFile
 from g2e.model.expmetadata import ExpMetadata
 from g2e.model.metadatatag import MetadataTag

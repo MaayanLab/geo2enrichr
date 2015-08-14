@@ -7,11 +7,11 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from flask import Blueprint
-from g2e.config import BASE_URL
+from g2e.config import Config
 from flask import render_template
 
 
-base = Blueprint('base', __name__, url_prefix=BASE_URL)
+base = Blueprint('base', __name__, url_prefix=Config.BASE_URL)
 
 
 @base.route('/')

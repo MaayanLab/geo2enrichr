@@ -14,17 +14,16 @@ from flask import Flask
 from flask.ext.cors import CORS
 from flask.ext.sqlalchemy import SQLAlchemy
 
-from g2e.config import DEBUG, SQLALCHEMY_DATABASE_URI
+from g2e.config import Config
 
 
 app = Flask(__name__, static_url_path='/g2e/static', static_folder='static')
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_POOL_RECYCLE'] = Config.SQLALCHEMY_POOL_RECYCLE
 db = SQLAlchemy(app)
 cors = CORS(app)
 
-SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
-
-if not DEBUG:
+if not Config.DEBUG:
     # Configure Apache logging.
     logging.basicConfig(stream=sys.stderr)
 else:
