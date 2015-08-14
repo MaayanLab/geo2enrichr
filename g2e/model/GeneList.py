@@ -20,7 +20,6 @@ rankedgenes_2_genelists = db.Table('rankedgene2genelist', db.metadata,
 class GeneList(db.Model):
     __tablename__ = 'genelists'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200))
     direction = db.Column(db.Integer)
     extraction_id = db.Column(db.Integer, db.ForeignKey('extractions.id'))
     ranked_genes = db.relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=db.backref('genelists', order_by=id))
@@ -54,7 +53,6 @@ class GeneList(db.Model):
         """Return serialized object.
         """
         return {
-            'name': self.name,
             'direction': self.direction,
             'ranked_genes': [rg.serialize for rg in self.ranked_genes],
             'target_apps': {

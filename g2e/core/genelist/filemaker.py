@@ -22,7 +22,7 @@ def get_file_contents_as_string(genelist):
     contents += __line('perturbation', metadata.perturbation)
     contents += __line('gene', metadata.gene)
     contents += __line('disease', metadata.disease)
-    contents += '!end_exp_metadata\n'
+    contents += '!end_metadata\n'
     for rg in genelist.ranked_genes:
         value_string = '%0.6f' % rg.value
         gene_string = rg.gene.name + '\t' + value_string + '\n'
@@ -33,4 +33,4 @@ def get_file_contents_as_string(genelist):
 def __line(key, val):
     """Handles line formatting.
     """
-    return '!' + key + ':\t' + str(val) + '\n'
+    return ('!%s:\t%s\n') % (key, str(val))

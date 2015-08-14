@@ -92,8 +92,8 @@ if [[ $3 = 'push' ]]; then
     # following command to tell Docker to go ahead anyway.
     #
     # boot2docker ssh "echo $'EXTRA_ARGS=\"--insecure-registry 146.203.54.165:5000\"' | sudo tee -a /var/lib/boot2docker/profile && sudo /etc/init.d/docker restart"
-    printf '%s\n' 'Pushing to private Docker repo'
+    printf '%s\n' 'Pushing to Docker repo'
     docker push $DOCKER_IMAGE
 else
-    printf '%s\n' 'Not pushing to private Docker repo'
+    printf '%s\n' 'Not pushing to Docker repo'
 fi

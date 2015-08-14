@@ -9,7 +9,7 @@ __contact__ = "avi.maayan@mssm.edu"
 import os
 
 
-DEBUG = True
+DEBUG = False
 BASE_URL = '/g2e'
 BASE_API_URL = BASE_URL + '/api'
 SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'

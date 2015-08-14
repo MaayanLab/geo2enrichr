@@ -9,7 +9,7 @@ from g2e.model.rankedgene import RankedGene
 class TestL1000CDS2(unittest.TestCase):
 
     def testL1000CDS2Link(self):
-        '''md = ExpMetadata(None, None, None, None, None, None, None)
+        md = ExpMetadata(None, None, None, None, None, None, None)
 
         ranked_genes = [
             RankedGene(Gene('DDIT4'), 9.97),
@@ -21,5 +21,4 @@ class TestL1000CDS2(unittest.TestCase):
         ]
 
         link = l1000cds2.get_link(ranked_genes, md)
-        self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2/' in link)'''
-        pass
+        self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2/' in link)

@@ -14,11 +14,13 @@ class ExtractEndpoint(unittest.TestCase):
     def test_tags(self):
         print 'Testing tags'
         self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
-            file = (file('g2e/core/genelist/tests/data/example_input.txt'), 'test.txt'),
+            file = (file('g2e/tests/data/example_input.txt'), 'test.txt'),
             diffexp_method = 'ttest',
             name = 'ExampleData',
             cutoff = 'none',
-            tags = json.dumps(['food', 'cats', 'beer']),
+            # The user interface sends the list as a single string with commas.
+            # This test is to ensure we parse that format correctly.
+            tags = 'food,cats,beer',
             skip_target_apps = True
         ))
         extraction_id = json.loads(self.resp.data.decode())['extraction_id']

@@ -10,7 +10,7 @@ class TestTtest(unittest.TestCase):
     def setUp(self):
         # Get ordered list of values.
         answers = []
-        with open('g2e/core/genelist/tests/data/ttest_output_corrected.txt', 'r') as out:
+        with open('g2e/tests/data/ttest_output_corrected.txt', 'r') as out:
             for line in out:
                 ans = float( line.strip() )
                 answers.append(ans)
@@ -19,7 +19,7 @@ class TestTtest(unittest.TestCase):
         genes = []
         A = []
         B = []
-        with open('g2e/core/genelist/tests/data/example_input.txt', 'r') as inp:
+        with open('g2e/tests/data/example_input.txt', 'r') as inp:
             discard = next(inp)
             header = next(inp)
             for line in inp:

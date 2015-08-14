@@ -359,6 +359,7 @@ form .description p {
 /* Tag page
  * -------- */
 .tag th {
+  border-bottom: 2px solid #eeeeee;
   text-align: left;
 }
 .tag td:first-child {

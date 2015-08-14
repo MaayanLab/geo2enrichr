@@ -5,14 +5,14 @@ $(function() {
             newRows = [];
         $el.find('tr').each(function () {
             $(this).find('th,td').each(function (i, td) {
-                if (_.isUndefined(newRows[i])) {
+                if (typeof newRows[i] === 'undefined') {
                     newRows[i] = $('<tr></tr>');
                 }
                 newRows[i].append(this);
             });
         });
         $el.find('tr').remove();
-        _.each(newRows, function (tr) {
+        $.each(newRows, function (i, tr) {
             $el.append(tr);
         });
     }

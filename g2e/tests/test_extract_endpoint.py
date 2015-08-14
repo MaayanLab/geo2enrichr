@@ -61,7 +61,6 @@ class ExtractEndpoint(unittest.TestCase):
 
         for gl in resp_dict['genelists']:
             self.assertTrue('direction' in gl)
-            self.assertTrue('name' in gl)
             self.assertTrue('text_file' in gl)
             self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
             if gl['direction'] == 0:
@@ -120,7 +119,6 @@ class ExtractEndpoint(unittest.TestCase):
 
         for gl in resp_dict['genelists']:
             self.assertTrue('direction' in gl)
-            self.assertTrue('name' in gl)
             self.assertTrue('text_file' in gl)
             self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
             if gl['direction'] == 0:
@@ -140,7 +138,7 @@ class ExtractEndpoint(unittest.TestCase):
 
     def test_file_upload(self):
         self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
-            file = (file('g2e/core/genelist/tests/data/example_input.txt'), 'test.txt'),
+            file = (file('g2e/tests/data/example_input.txt'), 'test.txt'),
             name = 'ExampleData',
             cutoff = 'none'
         ))

@@ -8,19 +8,26 @@ __contact__ = "avi.maayan@mssm.edu"
 
 from flask import Blueprint, Response
 from g2e.config import BASE_URL
-from g2e.dao import genelistdao
+from g2e.dao import extractiondao
 from g2e.core.genelist import filemaker
 
 
 genelist = Blueprint('genelist', __name__, url_prefix=BASE_URL + '/genelist')
 
 
-@genelist.route('/<genelist_name>')
-def get_genelist(genelist_name):
+@genelist.route('/<direction>/<extraction_id>')
+def get_genelist(direction, extraction_id):
     """Handle GET request based on extraction ID.
     """
-    genelist = genelistdao.fetch(genelist_name)
+    extraction = extractiondao.fetch(extraction_id)
+    genelist = __get_genelist_by_direction(extraction, int(direction))
     genelist_str = filemaker.get_file_contents_as_string(genelist)
     response = Response(genelist_str, mimetype='text/plain')
-    #response.headers['Content-Disposition'] = 'attachment; filename=' + genelist_name + '.txt'
     return response
+
+
+def __get_genelist_by_direction(extraction, direction):
+    for genelist in extraction.genelists:
+        if genelist.direction == direction:
+            return genelist
+    return None

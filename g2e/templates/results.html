@@ -18,12 +18,14 @@
         {% if extraction.metadata_tags|length > 0 %}
             <table>
                 <caption>Tags</caption>
-                {% for tag in extraction.metadata_tags %}
-                    <tr>
-                        <td></td>
-                        <td><a href="tag/{{ tag.name }}">{{ tag.name }}</a></td>
-                    </tr>
-                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td>
+                        {% for tag in extraction.metadata_tags %}
+                            <a href="tag/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
             </table>
         {% endif %}
 
@@ -104,7 +106,7 @@
                 <tr>
                     <td>{{ gene_list.direction_as_string }}</td>
                     <td>
-                        <a href="genelist/{{ gene_list.name }}" target="_blank">
+                        <a href="genelist/{{ gene_list.direction }}/{{ extraction.extraction_id }}" target="_blank">
                             <img src="static/image/download.png">
                         </a>
                     </td>

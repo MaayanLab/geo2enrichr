@@ -1,5 +1,4 @@
 import unittest
-import numpy as np
 
 from g2e.core.targetapp.targetapps import _apply_cutoff
 

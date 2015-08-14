@@ -63,7 +63,7 @@ class Extraction(db.Model):
         """
         exp_metadata = ExpMetadata.from_args(args)
         if 'tags' in args:
-            tags = json.loads(args.get('tags'))
+            tags = args.get('tags').split(',')
         else:
             tags = []
         metadata_tags = [get_or_create(MetadataTag, name=name) for name in tags]
