@@ -18,16 +18,16 @@ results = Blueprint('results', __name__, url_prefix=Config.BASE_URL + '/results'
 def results_page(results_id):
     """Single entry point for extracting a gene list from a SOFT file.
     """
-    extraction = dataaccess.fetch_extraction(results_id)
-    if extraction is None:
+    gene_signature = dataaccess.fetch_gene_signature(results_id)
+    if gene_signature is None:
         return render_template('404.html')
 
-    extraction = __process_extraction_for_view(extraction)
+    gene_signature = __process_extraction_for_view(gene_signature)
 
     return render_template('results.html',
         use_simple_header=True,
         permanent_link=request.url,
-        extraction=extraction
+        gene_signature=gene_signature
     )
 
 
@@ -40,12 +40,12 @@ def __get_direction_as_string(direction):
         return 'Combined'
 
 
-def __process_extraction_for_view(extraction):
-    for gene_list in extraction.genelists:
+def __process_extraction_for_view(gene_signature):
+    for gene_list in gene_signature.genelists:
         gene_list.direction_as_string = __get_direction_as_string(gene_list.direction)
 
-    if extraction.exp_metadata.normalize is None or extraction.exp_metadata.normalize is False:
-        extraction.exp_metadata.normalize = False
+    if gene_signature.exp_metadata.normalize is None or gene_signature.exp_metadata.normalize is False:
+        gene_signature.exp_metadata.normalize = False
     else:
-        extraction.exp_metadata.normalize = True
-    return extraction
+        gene_signature.exp_metadata.normalize = True
+    return gene_signature

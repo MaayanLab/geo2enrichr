@@ -15,13 +15,13 @@
             </tbody>
         </table>
 
-        {% if extraction.metadata_tags|length > 0 %}
+        {% if gene_signature.metadata_tags|length > 0 %}
             <table>
                 <caption>Tags</caption>
                 <tr>
                     <td></td>
                     <td>
-                        {% for tag in extraction.metadata_tags %}
+                        {% for tag in gene_signature.metadata_tags %}
                             <a href="tag/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                         {% endfor %}
                     </td>
@@ -33,20 +33,20 @@
             <caption>SOFT file</caption>
             <tr>
                 <td>Description</td>
-                <td>{{ extraction.softfile.name }}</td>
+                <td>{{ gene_signature.softfile.name }}</td>
             </tr>
             <tr>
                 <td>Platform</td>
-                <td>{{ extraction.exp_metadata.platform }}</td>
+                <td>{{ gene_signature.exp_metadata.platform }}</td>
             </tr>
             <tr>
                 <td>Normalized</td>
-                <td>{{ extraction.exp_metadata.normalize }}</td>
+                <td>{{ gene_signature.exp_metadata.normalize }}</td>
             </tr>
             <tr title="Parsed and cleaned SOFT file, with GEO metadata removed and only the control and samples listed.">
                 <td>Parsed SOFT file</td>
                 <td>
-                    <a href="{{ extraction.softfile.text_file }}" target="_blank">Download</a>
+                    <a href="{{ gene_signature.softfile.text_file }}" target="_blank">Download</a>
                 </td>
             </tr>
         </table>
@@ -55,39 +55,39 @@
             <caption>Metadata</caption>
             <tr>
                 <td>Differential expression method</td>
-                <td>{{ extraction.exp_metadata.diff_exp_method.name }}</td>
+                <td>{{ gene_signature.exp_metadata.diff_exp_method.name }}</td>
             </tr>
             <tr>
                 <td>Cutoff</td>
-                <td>{{ extraction.exp_metadata.cutoff }}</td>
+                <td>{{ gene_signature.exp_metadata.cutoff }}</td>
             </tr>
             <tr>
                 <td>Correction method</td>
-                <td>{{ extraction.exp_metadata.ttest_correction_method.name }}</td>
+                <td>{{ gene_signature.exp_metadata.ttest_correction_method.name }}</td>
             </tr>
             <tr>
                 <td>Organism</td>
-                <td>{{ extraction.exp_metadata.organism }}</td>
+                <td>{{ gene_signature.exp_metadata.organism }}</td>
             </tr>
             <tr>
                 <td>Threshold</td>
-                <td>{{ extraction.exp_metadata.threshold }}</td>
+                <td>{{ gene_signature.exp_metadata.threshold }}</td>
             </tr>
             <tr>
                 <td>Cell type or tissue</td>
-                <td>{{ extraction.exp_metadata.cell }}</td>
+                <td>{{ gene_signature.exp_metadata.cell }}</td>
             </tr>
             <tr>
                 <td>Perturbation</td>
-                <td>{{ extraction.exp_metadata.perturbation }}</td>
+                <td>{{ gene_signature.exp_metadata.perturbation }}</td>
             </tr>
             <tr>
                 <td>Manipulated gene</td>
-                <td>{{ extraction.exp_metadata.gene }}</td>
+                <td>{{ gene_signature.exp_metadata.gene }}</td>
             </tr>
             <tr>
                 <td>Relevant disease</td>
-                <td>{{ extraction.exp_metadata.disease }}</td>
+                <td>{{ gene_signature.exp_metadata.disease }}</td>
             </tr>
         </table>
 
@@ -102,11 +102,11 @@
                     <td title="Perform principle angle enrichment analysis against over 70 gene set libraries.">PAEA</td>
                 </tr>
             </thead>
-            {% for gene_list in extraction.genelists %}
+            {% for gene_list in gene_signature.genelists %}
                 <tr>
                     <td>{{ gene_list.direction_as_string }}</td>
                     <td>
-                        <a href="genelist/{{ gene_list.direction }}/{{ extraction.extraction_id }}" target="_blank">
+                        <a href="genelist/{{ gene_list.direction }}/{{ gene_signature.extraction_id }}" target="_blank">
                             <img src="static/image/download.png">
                         </a>
                     </td>

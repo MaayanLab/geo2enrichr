@@ -16,7 +16,7 @@ class ExpMetadata(db.Model):
 
     __tablename__ = 'exp_metadata'
     id = db.Column(db.Integer, primary_key=True)
-    extraction_fk = db.Column(db.Integer, db.ForeignKey('extractions.id'))
+    gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
     diff_exp_method_fk = db.Column(db.Integer, db.ForeignKey('diff_exp_method.id'))
     ttest_correction_method_fk = db.Column(db.Integer, db.ForeignKey('ttest_correction_method.id'))
 

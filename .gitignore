@@ -1,5 +1,6 @@
-# DB connection config. Do *NOT* version control this.
+# DB connection configs. Do *NOT* version control these.
 *.conf
+alembic.ini
 
 # IntelliJ
 .idea

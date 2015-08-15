@@ -16,12 +16,12 @@
             </thead>
             {% for extraction in tag.extractions %}
                 <tr>
-                    <td><a href="{{ base_url }}/{{ extraction.extraction_id }}">{{ extraction.extraction_id }}</a></td>
-                    <td>{{ extraction.exp_metadata.organism if extraction.exp_metadata.organism != None }}</td>
-                    <td>{{ extraction.exp_metadata.cell if extraction.exp_metadata.cell != None}}</td>
-                    <td>{{ extraction.exp_metadata.perturbation if extraction.exp_metadata.perturbation != None}}</td>
-                    <td>{{ extraction.exp_metadata.gene if extraction.exp_metadata.gene != None}}</td>
-                    <td>{{ extraction.exp_metadata.disease if extraction.exp_metadata.disease != None}}</td>
+                    <td><a href="{{ base_url }}/{{ gene_signature.extraction_id }}">{{ gene_signature.extraction_id }}</a></td>
+                    <td>{{ gene_signature.exp_metadata.organism if gene_signature.exp_metadata.organism != None }}</td>
+                    <td>{{ gene_signature.exp_metadata.cell if gene_signature.exp_metadata.cell != None}}</td>
+                    <td>{{ gene_signature.exp_metadata.perturbation if gene_signature.exp_metadata.perturbation != None}}</td>
+                    <td>{{ gene_signature.exp_metadata.gene if gene_signature.exp_metadata.gene != None}}</td>
+                    <td>{{ gene_signature.exp_metadata.disease if gene_signature.exp_metadata.disease != None}}</td>
                 </tr>
             {% endfor %}
         </table>

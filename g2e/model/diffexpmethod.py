@@ -16,7 +16,7 @@ class DiffExpMethod(db.Model):
     name = db.Column(db.String(255))
     # "noload" means we won't load all the extractions into memory when using
     # this object.
-    extractions = db.relationship('ExpMetadata', backref='diff_exp_method', lazy='noload')
+    exp_metadata = db.relationship('ExpMetadata', backref='diff_exp_method', lazy='noload')
 
     def __init__(self, name):
         self.name = name

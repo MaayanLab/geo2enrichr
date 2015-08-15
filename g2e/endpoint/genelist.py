@@ -19,15 +19,15 @@ genelist = Blueprint('genelist', __name__, url_prefix=Config.BASE_URL + '/geneli
 def get_genelist(direction, extraction_id):
     """Handle GET request based on extraction ID.
     """
-    extraction = dataaccess.fetch_extraction(extraction_id)
-    genelist = __get_genelist_by_direction(extraction, int(direction))
+    gene_signature = dataaccess.fetch_gene_signature(extraction_id)
+    genelist = __get_genelist_by_direction(gene_signature, int(direction))
     genelist_str = filemaker.get_file_contents_as_string(genelist)
     response = Response(genelist_str, mimetype='text/plain')
     return response
 
 
-def __get_genelist_by_direction(extraction, direction):
-    for genelist in extraction.genelists:
+def __get_genelist_by_direction(gene_signature, direction):
+    for genelist in gene_signature.genelists:
         if genelist.direction == direction:
             return genelist
     return None

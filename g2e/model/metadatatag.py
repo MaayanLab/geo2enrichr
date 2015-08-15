@@ -10,7 +10,7 @@ from g2e import db
 
 
 tags_to_extractions = db.Table('tags_to_extractions', db.metadata,
-    db.Column('extraction_fk', db.Integer, db.ForeignKey('extractions.id')),
+    db.Column('gene_signature_fk', db.Integer, db.ForeignKey('gene_signature.id')),
     db.Column('metadata_tag_fk', db.Integer, db.ForeignKey('metadata_tag.id'))
 )
 
@@ -20,7 +20,7 @@ class MetadataTag(db.Model):
     __tablename__ = 'metadata_tag'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
-    extractions = db.relationship('Extraction', secondary=tags_to_extractions, backref=db.backref('metadata_tags', order_by=id))
+    gene_signatures = db.relationship('GeneSignature', secondary=tags_to_extractions, backref=db.backref('metadata_tags', order_by=id))
 
     def __init__(self, name):
         self.name = name

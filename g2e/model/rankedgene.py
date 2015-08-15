@@ -11,10 +11,11 @@ from g2e import db
 
 
 class RankedGene(db.Model):
-    __tablename__ = 'rankedgenes'
+
+    __tablename__ = 'ranked_gene'
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Float)
-    gene_id = db.Column(db.Integer, db.ForeignKey('genes.id'))
+    gene_id = db.Column(db.Integer, db.ForeignKey('gene.id'))
 
     def __init__(self, gene, value):
         self.gene = gene

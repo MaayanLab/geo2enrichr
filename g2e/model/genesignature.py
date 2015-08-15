@@ -18,7 +18,6 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import hashlib
-import json
 import time
 
 from g2e import db
@@ -29,17 +28,17 @@ from g2e.model.metadatatag import MetadataTag
 from g2e.core.genelist.genelistsmaker import genelists_maker
 
 
-class Extraction(db.Model):
+class GeneSignature(db.Model):
 
-    __tablename__ = 'extractions'
+    __tablename__ = 'gene_signature'
     id = db.Column(db.Integer, primary_key=True)
     # This is a hexadecimal hash of the time that the extraction occured. This
     # is how the front-end identifies the dataset, so that we do not display
     # the actual database ID to the users.
     extraction_id = db.Column(db.String(10))
-    softfile = db.relationship('SoftFile', uselist=False, backref='extractions')
-    genelists = db.relationship('GeneList', backref=db.backref('extraction', order_by=id))
-    exp_metadata = db.relationship('ExpMetadata', uselist=False, backref=db.backref('extraction', order_by=id))
+    softfile = db.relationship('SoftFile', uselist=False, backref='gene_signatures')
+    genelists = db.relationship('GeneList', backref=db.backref('gene_signature', order_by=id))
+    exp_metadata = db.relationship('ExpMetadata', uselist=False, backref=db.backref('gene_signature', order_by=id))
 
     def __init__(self, softfile, genelists, exp_metadata, metadata_tags):
         """Construct an Extraction instance. This is called only by class
@@ -54,7 +53,7 @@ class Extraction(db.Model):
         self.metadata_tags = metadata_tags
 
     def __repr__(self):
-        return '<Extraction %r>' % self.id
+        return '<GeneSignature %r>' % self.id
 
     @classmethod
     def new(cls, softfile, args):

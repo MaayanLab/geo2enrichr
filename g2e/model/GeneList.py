@@ -11,17 +11,18 @@ import hashlib
 from g2e import db
 
 
-rankedgenes_2_genelists = db.Table('rankedgene2genelist', db.metadata,
-    db.Column('rankedgene_id', db.Integer, db.ForeignKey('rankedgenes.id')),
-    db.Column('genelist_id', db.Integer, db.ForeignKey('genelists.id'))
+rankedgenes_2_genelists = db.Table('ranked_gene_2_gene_list', db.metadata,
+    db.Column('rankedgene_fk', db.Integer, db.ForeignKey('ranked_gene.id')),
+    db.Column('genelist_fk', db.Integer, db.ForeignKey('gene_list.id'))
 )
 
 
 class GeneList(db.Model):
-    __tablename__ = 'genelists'
+
+    __tablename__ = 'gene_list'
     id = db.Column(db.Integer, primary_key=True)
     direction = db.Column(db.Integer)
-    extraction_id = db.Column(db.Integer, db.ForeignKey('extractions.id'))
+    extraction_id = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
     ranked_genes = db.relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=db.backref('genelists', order_by=id))
     text_file = db.Column(db.String(200))
     enrichr_link = db.Column(db.Text)

@@ -10,7 +10,7 @@ __contact__ = "avi.maayan@mssm.edu"
 def get_file_contents_as_string(genelist):
     """Writes the contents of a GeneList to disk and returns a relative path.
     """
-    metadata = genelist.extraction.exp_metadata
+    metadata = genelist.gene_signature.exp_metadata
     contents = ''
     contents += __line('direction', genelist.direction)
     contents += __line('num_genes', len(genelist.ranked_genes))

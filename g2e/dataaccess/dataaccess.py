@@ -8,27 +8,27 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from g2e.dataaccess.util import session_scope
-from g2e.model.extraction import Extraction
+from g2e.model.genesignature import GeneSignature
 from g2e.model.metadatatag import MetadataTag
 
 
-def save_extraction(extraction):
+def save_gene_signature(gene_signature):
     """Saves the SoftFile and GeneList to the database and returns the ID from
     the extraction table.
     """
     with session_scope() as session:
-        session.add(extraction)
+        session.add(gene_signature)
         session.commit()
-        return extraction.extraction_id
+        return gene_signature.extraction_id
 
 
-def fetch_extraction(extraction_id):
+def fetch_gene_signature(extraction_id):
     """Single entry point for fetching extractions from database by ID.
     """
     print 'Fetching extraction_id ' + extraction_id
     with session_scope() as session:
-        extraction = session.query(Extraction).filter_by(extraction_id=extraction_id).first()
-        return extraction
+        gene_signature = session.query(GeneSignature).filter_by(extraction_id=extraction_id).first()
+        return gene_signature
 
 
 def fetch_metadata_tag(tag_name):
