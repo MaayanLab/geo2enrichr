@@ -165,10 +165,10 @@
             -webkit-border-radius: 0px;
         }
     }
+    .g2e-top {
+        margin-top: 20px;
+    }
     #g2e-confirm {
-        .g2e-bottom {
-            padding-top: 20px;
-        }
         .g2e-confirm-tbl {
             padding-top: 10px;
             table-layout: fixed;
@@ -251,8 +251,24 @@
     .g2e-strong {
         font-weight: bold;
     }
+    caption {
+        color: @color-gray;
+        font-size: 13px;
+        font-style: italic;
+        padding-bottom: 5px;
+    }
     #g2e-target-app {
         color: @color-red;
+    }
+    #g2e-tags {
+        ul,
+        li {
+            border-radius: 0;
+            border: none;
+        }
+        input {
+            width: auto;
+        }
     }
 }
 #g2e-table-title {
@@ -304,6 +320,9 @@
     }
 
 }
+
+/* jQuery UI and TagIt overrides
+ */
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content {
     background: white;
     color: gray;
@@ -317,4 +336,98 @@
 }
 .ui-state-focus {
     background: #eeeeee !important;
+}
+ul#g2e-tags {
+    background-color: white;
+    border-radius: 0;
+    border: 1px solid #f5f5f5;
+    padding: 1px 5px;
+    overflow: auto;
+    margin: 0;
+    input {
+        border: none;
+    }
+    li {
+        display: block;
+        float: left;
+        border: none;
+        border-radius: 0;
+        position: relative;
+        top: 1px;
+        margin: 2px 3px;
+        &.tagit-choice {
+            background-color: @color-lightgray3 !important;
+        }
+    }
+    li.choice {
+        position: relative;
+        line-height: inherit;
+    }
+    li.tagit-choice-read-only {
+        padding: .2em .5em .2em .5em;
+    }
+    .tagit-close {
+        display: none;
+    }
+    .ui-effects-wrapper {
+        display: none;
+    }
+    .tagit-label {
+        color: black;
+        font-weight: normal;
+        text-decoration: none;
+    }
+    .ui-widget-content {
+        font-size: @font-size-base !important;
+    }
+}
+.ui-widget-content {
+    background: white;
+}
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    background: #f5f5f5 !important;
+    font-weight: normal;
+}
+input.tagit-hidden-field {
+    display: none;
+}
+ul.tagit li.tagit-choice-editable {
+    padding: 2px 3px;
+}
+ul.tagit li.tagit-new {
+    padding: .25em 4px .25em 0;
+}
+ul.tagit li.tagit-choice .tagit-close {
+    cursor: pointer;
+    float: right;
+    top: 50%;
+}
+/* used for some custom themes that don't need image icons */
+ul.tagit li.tagit-choice .tagit-close .text-icon {
+    display: none;
+}
+ul.tagit li.tagit-choice a.tagit-label {
+    cursor: pointer;
+
+}
+ul.tagit li.tagit-choice input {
+    display: block;
+    float: left;
+    margin: 2px 5px 2px 0;
+}
+ul.tagit input[type="text"] {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: inherit;
+    background-color: inherit;
+    outline: none;
 }

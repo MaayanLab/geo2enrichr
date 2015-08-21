@@ -28,3 +28,6 @@ venv/
 # VIM
 *.swp
 *.swo
+
+# Google Authentication
+geo2enrichr-b92c925f003e.p12

@@ -1,5 +1,5 @@
 
-var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater) {
+var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, templater) {
 
     var geneList, $overlay, $resultsBtn, $submitBtn, $errorMessage;
 
@@ -123,6 +123,8 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
             resetFooter();
             $overlay.hide();
         });
+
+        tagger.init($("#g2e-tags"), $('#required-fields-based-on-tag'));
 
         $ttest = $('.g2e-ttest');
         $cutoff = $('#g2e-cutoff');

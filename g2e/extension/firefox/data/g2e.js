@@ -15,14 +15,17 @@ var SUPPORTED_PLATFORMS = ["GPL8321","GPL7091","GPL11383","GPL2902","GPL4044","G
 var Comm = function(events, notifier, SERVER) {
 
     var fetchGeneList = (function() {
-        $.ajax({
-            url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
-            type: 'GET',
-            dataType: 'JSON',
-            success: function(data) {
-                events.fire('geneListFetched', data);
-            }
-        });
+        //try {
+        //    $.ajax({
+        //        url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
+        //        type: 'GET',
+        //        dataType: 'JSON',
+        //        success: function(data) {
+        //            events.fire('geneListFetched', data);
+        //        }
+        //    });
+        //} catch (err) {
+        //}
     })();
 
     var postSoftFile = function(input) {
@@ -222,14 +225,172 @@ var Events = function() {
 };
 
 
+var Tagger = function(events, templater) {
+
+    var $input, $table;
+
+    var tagsToFields = {
+        FOO: [
+            {
+                required: true,
+                key: "foo",
+                description: "foo foo foo"
+            }
+        ],
+        BAR: [
+            {
+                required: true,
+                key: "bar",
+                description: 'bar bar bar'
+            }
+        ],
+        AGING_BD2K_LINCS_DCIC_COURSERA: [
+            {
+                required: true,
+                key: "young",
+                description: "Age of the young sample"
+            },
+            {
+                required: true,
+                key: "old",
+                description: "Age of the old sample"
+            },
+            {
+                required: true,
+                key: "age_unit",
+                description: "Unit of age, choose among day, month, year"
+            }
+        ],
+        MCF7_BD2K_LINCS_DCIC_COURSERA: [
+            {
+                required: true,
+                key: "pert_type",
+                description: "Perturbation type, choose among genetic, chemical, physical, other"
+            },
+            {
+                required: true,
+                key: "pert_name",
+                description: "Perturbagen name"
+            },
+            {
+                required: false,
+                key: "pert_id",
+                description: "Identifier of the perturbagen"
+            }
+        ],
+        DISEASES_BD2K_LINCS_DCIC_COURSERA: [
+            {
+                required: true,
+                key: "disease_name",
+                description: "Name of the disease"
+            },
+            {
+                required: true,
+                key: "disease_id",
+                description: "ID of the disease (from Disease-Ontology or UMLS)"
+            }
+        ],
+        LIGANDS_BD2K_LINCS_DCIC_COURSERA: [
+            {
+                required: true,
+                key: "ligand_name",
+                description: "Name of the ligand"
+            },
+            {
+                required: true,
+                key: "ligand_id",
+                description: "Identifier of the ligand"
+            }
+        ],
+        DRUGS_BD2K_LINCS_DCIC_COURSERA: [
+            {
+                required: true,
+                key: "drug_name",
+                description: "Name of the drug"
+            },
+            {
+                required: true,
+                key: "drug_id",
+                description: "ID of the Drug (from DrugBank or PubChem)"
+            }
+        ],
+        GENES_BD2K_LINCS_DCIC_COURSERA: [
+            {
+                required: true,
+                key: "pert_type",
+                description: "Perturbation type (KO, KD, OE, Mutation)"
+            }
+        ],
+        PATHOGENS_BD2K_LINCS_DCIC_COURSERA: [
+            {
+                required: true,
+                key: "microbe_name",
+                description: "Name of the virus or bacteria"
+            },
+            {
+                required: false,
+                key: "microbe_id",
+                description: "Taxonomy ID of the virus or bacteria"
+            }
+        ]
+    };
+
+    var addRequiredRows = function(newTag) {
+        tagsToFields[newTag].forEach(function(newRow) {
+            var $tr = templater.getTableRow(newRow.description, newRow.key, "required='" + newRow.required + "'");
+            $table.append($tr);
+        });
+    };
+
+    var removeUnrequiredRows = function(oldTag) {
+        tagsToFields[oldTag].forEach(function(oldRow) {
+            var $oldRow = $('#' + oldRow.key);
+            $oldRow.remove();
+        });
+    };
+
+    var watch = function() {
+        $input.tagit({
+            singleField: true,
+            beforeTagAdded: function (evt, ui) {
+                var newTag = $(ui.tag).find('.tagit-label').html();
+                for (var tag in tagsToFields) {
+                    if (tag === newTag) {
+                        addRequiredRows(newTag);
+                    }
+                }
+            },
+            afterTagRemoved: function (evt, ui) {
+                var oldTag = $(ui.tag).find('.tagit-label').html();
+                for (var tag in tagsToFields) {
+                    if (tag === oldTag) {
+                        removeUnrequiredRows(oldTag);
+                    }
+                }
+            }
+        });
+    };
+
+    var init = function($i, $t) {
+        $input = $i;
+        $table = $t;
+        watch();
+    };
+
+    return {
+        init: init
+    };
+};
+
 var Templater = function(IMAGE_PATH) {
 
-    console.log(IMAGE_PATH);
+    var G2E_TITLE = 'g2e-title',
+        G2E_VALUE = 'g2e-value';
 
     var modal = '' +
         '<div id="g2e-overlay">' +
             '<div id="g2e-modal">' +
-                '<div id="g2e-title">' +
+                '<div id="' + G2E_TITLE + '">' +
                     '<a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">' +
                         '<img src="' + IMAGE_PATH + '">' +
                         '<span>GEO2</span>' +
@@ -243,38 +404,36 @@ var Templater = function(IMAGE_PATH) {
                 '<table id="g2e-main-tbl">' +
                     '<tr>' +
                         '<td id="g2e-confirm">' +
-
-                            '<div class="g2e-lowlight g2e-bottom">Please verify that your data is correct.</div>' +
-                            '<table class="g2e-confirm-tbl">' +
+                            '<table class="g2e-confirm-tbl g2e-top">' +
+                                '<caption>Please verify that your data is correct.</caption>' +
                                 '<tr id="g2e-dataset">' +
-                                    '<td class="g2e-title">Accession num.</td>' +
-                                    '<td class="g2e-value"></td>' +
+                                    '<td class="' + G2E_TITLE + '">Accession num.</td>' +
+                                    '<td class="' + G2E_VALUE + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-platform">' +
-                                    '<td class="g2e-title">Platform</td>' +
-                                    '<td class="g2e-value"></td>' +
+                                    '<td class="' + G2E_TITLE + '">Platform</td>' +
+                                    '<td class="' + G2E_VALUE + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-organism">' +
-                                    '<td class="g2e-title">Organism</td>' +
-                                    '<td class="g2e-value"></td>' +
+                                    '<td class="' + G2E_TITLE + '">Organism</td>' +
+                                    '<td class="' + G2E_VALUE + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-A_cols">' +
-                                    '<td class="g2e-title">Control samples</td>' +
-                                    '<td class="g2e-value"></td>' +
+                                    '<td class="' + G2E_TITLE + '">Control samples</td>' +
+                                    '<td class="' + G2E_VALUE + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-B_cols" class="g2e-last">' +
-                                    '<td class="g2e-title">Treatment or condition samples</td>' +
-                                    '<td class="g2e-value"></td>' +
+                                    '<td class="' + G2E_TITLE + '">Treatment or condition samples</td>' +
+                                    '<td class="' + G2E_VALUE + '"></td>' +
                                 '</tr>' +
                             '</table>' +
-
-                            '<div class="g2e-lowlight g2e-bottom">Please select differential expression analysis options.</div>' +
-                            '<table class="g2e-confirm-tbl">' +
+                            '<table class="g2e-confirm-tbl g2e-top">' +
+                                '<caption>Please select differential expression analysis options.</caption>' +
                                 '<tr id="g2e-diffexp">' +
-                                    '<td class="g2e-title">' +
+                                    '<td class="' + G2E_TITLE + '">' +
                                         'Differential expression method' +
                                     '</td>' +
-                                    '<td class="g2e-value g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
                                         '<select>' +
                                             '<option value="chdir">Characteristic direction</option>' +
                                             '<option value="ttest">T-test</option>' +
@@ -282,90 +441,98 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-normalize">' +
-                                    '<td class="g2e-title">' +
+                                    '<td class="' + G2E_TITLE + '">' +
                                         'Log-transform and quantile normalize if necessary&#42;' +
                                     '</td>' +
-                                    '<td class="g2e-value g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
                                         '<select>' +
-                                            '<option value="True">Yes</option>' +
                                             '<option value="False">No</option>' +
+                                            '<option value="True">Yes</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-cutoff">' +
-                                    '<td class="g2e-title">' +
+                                    '<td class="' + G2E_TITLE + '">' +
                                         'Cutoff' +
                                     '</td>' +
-                                    '<td class="g2e-value g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
                                         '<select>' +
                                             '<option value="500">500</option>' +
                                             '<option value="1000">1000</option>' +
                                             '<option value="200">200</option>' +
-                                            //'<option value="None">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
-
                                 '<tr id="g2e-correction-method" class="g2e-ttest">'+
-                                    '<td class="g2e-title">' +
+                                    '<td class="' + G2E_TITLE + '">' +
                                         'Correction method' +
                                     '</td>' +
-                                    '<td class="g2e-value g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
                                         '<select>' +
                                             '<option value="BH">Benjamini-Hochberg</option>' +
                                             '<option value="bonferroni">Bonferroni</option>' +
-                                            //'<option value="none">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-threshold" class="g2e-ttest">' +
-                                    '<td class="g2e-title">' +
+                                    '<td class="' + G2E_TITLE + '">' +
                                         'Threshold' +
                                     '</td>' +
-                                    '<td class="g2e-value g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
                                         '<select name="threshold">' +
                                             '<option value="0.01">0.01</option>' +
                                             '<option value="0.05">0.05</option>' +
-                                            //'<option value="none">None</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
-
-                            '<div class="g2e-lowlight g2e-bottom">Please fill out these optional annotations.</div>' +
-                            '<table class="g2e-confirm-tbl">' +
+                            '<table class="g2e-confirm-tbl g2e-top">' +
+                                '<caption>Please fill out these optional annotations.</caption>' +
                                 '<tr id="g2e-cell">' +
-                                    '<td class="g2e-title">' +
+                                    '<td class="' + G2E_TITLE + '">' +
                                         'Cell type or tissue' +
                                     '</td>' +
-                                    '<td class="g2e-value">' +
+                                    '<td class="' + G2E_VALUE + '">' +
                                         '<input placeholder="No data">' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-perturbation">' +
-                                    '<td class="g2e-title">' +
+                                    '<td class="' + G2E_TITLE + '">' +
                                         'Perturbation' +
                                     '</td>' +
-                                    '<td class="g2e-value">' +
+                                    '<td class="' + G2E_VALUE + '">' +
                                         '<input placeholder="No data">' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-gene" class="ui-widget">' +
-                                    '<td class="g2e-title">' +
+                                    '<td class="' + G2E_TITLE + '">' +
                                         '<label for="g2e-geneList">Manipulated gene</label>' +
                                     '</td>' +
-                                    '<td class="g2e-value">' +
+                                    '<td class="' + G2E_VALUE + '">' +
                                         '<input id="g2e-geneList" placeholder="No data">' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-disease" class="ui-widget g2e-last">' +
-                                    '<td class="g2e-title">' +
+                                    '<td class="' + G2E_TITLE + '">' +
                                         '<label for="g2e-diseaseList">Relevant disease</label>' +
                                     '</td>' +
-                                    '<td class="g2e-value g2e-last">' +
+                                    '<td class="' + G2E_VALUE + ' g2e-last">' +
                                         '<input id="g2e-diseaseList" placeholder="No data">' +
                                     '</td>' +
                                 '</tr>' +
+                            '</table>' +
+                            '<table class="g2e-confirm-tbl g2e-top">' +
+                                '<caption>Please apply metadata tags.</caption>' +
+                                '<tr id="g2e-cell">' +
+                                    '<td class="' + G2E_TITLE + '">' +
+                                        'Metadata Tags' +
+                                    '</td>' +
+                                    '<td class="' + G2E_VALUE + '">' +
+                                        '<ul id="g2e-tags"></ul>' +
+                                    '</td>' +
+                                '</tr>' +
+                            '</table>' +
+                            '<table class="g2e-confirm-tbl" id="required-fields-based-on-tag">' +
                             '</table>' +
                         '</td>' +
                     '</tr>' +
@@ -389,9 +556,9 @@ var Templater = function(IMAGE_PATH) {
     var EMBED_BTN_ID ="g2e-embedded-button";
 
     var templates = {
-        'modal': modal,
-        'gds': {
-            'btn': $('' +
+        modal: modal,
+        gds: {
+            btn: $('' +
                 '<tr>' +
                     // "azline" comes from the GEO website.
                     '<td class="azline" id="' + EMBED_BTN_ID + '">' +
@@ -401,15 +568,15 @@ var Templater = function(IMAGE_PATH) {
                     '</td>' +
                 '</tr>')
         },
-        'gse': {
-            'btn': $('' +
+        gse: {
+            btn: $('' +
                 '<tr>' +
                     '<td id="' + EMBED_BTN_ID + '">' +
                         '<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
                         '<img src="' + IMAGE_PATH + '">' +
                     '</td>' +
                 '</tr>'),
-            'thead': $('' +
+            thead: $('' +
                 // TODO: Rename "table-title" to "title"
                 '<tr valign="top" id="g2e-table-title">' +
                     '<td></td>' +
@@ -418,7 +585,7 @@ var Templater = function(IMAGE_PATH) {
                     '<td class="g2e-expmt">Experimental</td>' +
                 '</tr>'),
 
-            'chkbxs': '' +
+            chkbxs: '' +
                 '<td>' +
                     '<input class="g2e-chkbx g2e-control" type="checkbox" />' +
                 '</td>' +
@@ -437,6 +604,16 @@ var Templater = function(IMAGE_PATH) {
         },
         embedBtnId: function() {
             return EMBED_BTN_ID;
+        },
+        getTableRow: function(value, id, attrs) {
+            return $('' +
+                '<tr id="' + id + '">' +
+                    '<td class="' + G2E_TITLE + '">' + value + '</td>' +
+                    '<td class="' + G2E_VALUE + '">' +
+                        '<input placeholder="No data" ' + attrs + '>' +
+                    '</td>' +
+                '</tr>'
+            );
         }
     };
 };
@@ -697,7 +874,7 @@ var GseScraper = function(events) {
 };
 
 
-var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater) {
+var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, templater) {
 
     var geneList, $overlay, $resultsBtn, $submitBtn, $errorMessage;
 
@@ -822,6 +999,8 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, template
             $overlay.hide();
         });
 
+        tagger.init($("#g2e-tags"), $('#required-fields-based-on-tag'));
+
         $ttest = $('.g2e-ttest');
         $cutoff = $('#g2e-cutoff');
         $threshold = $('#g2e-threshold');
@@ -856,6 +1035,7 @@ var main = function() {
     var events = Events(),
         notifier = Notifier(DEBUG),
         templater = Templater(IMAGE_PATH),
+        tagger = Tagger(events, templater),
         baseScraper = BaseScraper(DEBUG),
         bootstrapper = Bootstrapper(events, notifier, templater),
         scraper,
@@ -871,8 +1051,8 @@ var main = function() {
 
     scraper = $.extend(modeScraper, baseScraper);
     comm = Comm(events, notifier, SERVER);
-    ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater);
-    
+    ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, templater);
+
     bootstrapper.init();
 };
 

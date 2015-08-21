@@ -7,8 +7,7 @@
         "128": "logo-128x128.png"
     },
     "permissions": [
-        "downloads",
-        "http://amp.pharm.mssm.edu/Enrichr/*"
+        "downloads"
     ],
     "content_scripts": [
         {
@@ -17,7 +16,7 @@
                 "http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi*"
             ],
             "css": ["open-sans.css", "main.css", "jquery-ui.min.css"],
-            "js": ["jquery-1.11.2.min.js", "jquery-ui.min.js", "g2e.js"]
+            "js": ["jquery-1.11.2.min.js", "jquery-ui.min.js", "tag-it.min.js", "g2e.js"]
         }
     ],
     "web_accessible_resources": [

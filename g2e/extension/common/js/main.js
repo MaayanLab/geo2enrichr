@@ -6,6 +6,7 @@ var main = function() {
     var events = Events(),
         notifier = Notifier(DEBUG),
         templater = Templater(IMAGE_PATH),
+        tagger = Tagger(events, templater),
         baseScraper = BaseScraper(DEBUG),
         bootstrapper = Bootstrapper(events, notifier, templater),
         scraper,
@@ -21,7 +22,7 @@ var main = function() {
 
     scraper = $.extend(modeScraper, baseScraper);
     comm = Comm(events, notifier, SERVER);
-    ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, templater);
-    
+    ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, templater);
+
     bootstrapper.init();
 };

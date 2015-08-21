@@ -2,14 +2,17 @@
 var Comm = function(events, notifier, SERVER) {
 
     var fetchGeneList = (function() {
-        $.ajax({
-            url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
-            type: 'GET',
-            dataType: 'JSON',
-            success: function(data) {
-                events.fire('geneListFetched', data);
-            }
-        });
+        //try {
+        //    $.ajax({
+        //        url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
+        //        type: 'GET',
+        //        dataType: 'JSON',
+        //        success: function(data) {
+        //            events.fire('geneListFetched', data);
+        //        }
+        //    });
+        //} catch (err) {
+        //}
     })();
 
     var postSoftFile = function(input) {
