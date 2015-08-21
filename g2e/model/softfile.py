@@ -20,7 +20,7 @@ class SoftFile(db.Model):
     """
     __tablename__ = 'soft_file'
     id = db.Column(db.Integer, primary_key=True)
-    extraction_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
+    gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
     name = db.Column(db.String(200))
     platform = db.Column(db.String(200))
     is_geo = db.Column(db.Boolean)

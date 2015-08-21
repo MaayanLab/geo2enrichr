@@ -12,26 +12,30 @@ var IMAGE_PATH = self.options.logoUrl;
 var SUPPORTED_PLATFORMS = ["GPL8321","GPL7091","GPL11383","GPL2902","GPL4044","GPL2700","GPL6887","GPL3084","GPL16268","GPL13692","GPL2881","GPL2011","GPL94","GPL15207","GPL3697","GPL2006","GPL93","GPL92","GPL339","GPL284","GPL6883","GPL17518","GPL887","GPL15401","GPL13712","GPL201","GPL1261","GPL10558","GPL6193","GPL6244","GPL3050","GPL7430","GPL6101","GPL6885","GPL95","GPL4685","GPL2507","GPL3408","GPL44","GPL6102","GPL4200","GPL6480","GPL6106","GPL7202","GPL4134","GPL1708","GPL3921","GPL85","GPL4074","GPL2897","GPL4133","GPL6947","GPL10666","GPL1536","GPL1355","GPL11532","GPL4487","GPL80","GPL81","GPL6096","GPL8063","GPL737","GPL11202","GPL16686","GPL15792","GPL6246","GPL340","GPL2895","GPL11180","GPL97","GPL13497","GPL571","GPL570"];
 
 
-var Comm = function(events, notifier, SERVER) {
+/* Communicates to external resources, such as G2E and Enrichr's APIs.
+ */
+var Comm = function(events, loader, notifier, SERVER) {
 
+    /* An IIFE that fetches a list of genes from Enrichr for autocomplete.
+     */
     var fetchGeneList = (function() {
-        //try {
-        //    $.ajax({
-        //        url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
-        //        type: 'GET',
-        //        dataType: 'JSON',
-        //        success: function(data) {
-        //            events.fire('geneListFetched', data);
-        //        }
-        //    });
-        //} catch (err) {
-        //}
+        try {
+            $.ajax({
+                url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(data) {
+                    events.fire('geneListFetched', data);
+                }
+            });
+        } catch (err) {
+        }
     })();
 
+    /* POSTs user data to G2E servers.
+     */
     var postSoftFile = function(input) {
-        console.log("POSTING");
-        var $loader = $('<div class="g2e-loader-container"><div class="g2e-loader-modal">Processing data. This may take a minute.</div></div>');
-        $('body').append($loader);
+        loader.start();
         $.post(SERVER + 'api/extract/geo',
             input,
             function(data) {
@@ -39,16 +43,15 @@ var Comm = function(events, notifier, SERVER) {
                     events.fire('resultsError');
                 } else {
                     var id = data.extraction_id,
-                        url = SERVER + '#results/' + id;
+                        url = SERVER + 'results/' + id;
                     events.fire('resultsReady', url);
                 }
             })
             .fail(function(xhr, status, error) {
-                console.log("FAILED:");
                 events.fire('resultsError');
             })
             .always(function() {
-                $loader.remove();
+                loader.stop();
             });
     };
 
@@ -196,6 +199,29 @@ var GseBootstrapper = function(events, templater) {
 };
 
 
+/* A simple loading screen with a cached reference to the DOM element.
+ */
+var Loader = (function() {
+
+    var $body = $('body'),
+        $el = $('' +
+            '<div class="g2e-loader-container">' +
+                '<div class="g2e-loader-modal">Processing data. This may take a minute.</div>' +
+            '</div>'
+        );
+
+    return function() {
+        return {
+            start: function() {
+                $body.append($el);
+            },
+            stop: function() {
+                $el.remove();
+            }
+        };
+    };
+})();
+
 var Events = function() {
 
 	var channel = {};
@@ -225,25 +251,17 @@ var Events = function() {
 };
 
 
+/* Abstracts issues of adding new required fields depending on metadata. This
+ * module is only required for a 2015 Coursera MOOC and could be refactored
+ * once the course is over.
+ *
+ * https://www.coursera.org/course/bd2klincs
+ */
 var Tagger = function(events, templater) {
 
-    var $input, $table;
+    var $input, $table, selectedTags = {};
 
     var tagsToFields = {
-        FOO: [
-            {
-                required: true,
-                key: "foo",
-                description: "foo foo foo"
-            }
-        ],
-        BAR: [
-            {
-                required: true,
-                key: "bar",
-                description: 'bar bar bar'
-            }
-        ],
         AGING_BD2K_LINCS_DCIC_COURSERA: [
             {
                 required: true,
@@ -336,13 +354,15 @@ var Tagger = function(events, templater) {
     };
 
     var addRequiredRows = function(newTag) {
+        selectedTags[newTag] = tagsToFields[newTag];
         tagsToFields[newTag].forEach(function(newRow) {
-            var $tr = templater.getTableRow(newRow.description, newRow.key, "required='" + newRow.required + "'");
+            var $tr = templater.getTableRow(newRow.description, newRow.key);
             $table.append($tr);
         });
     };
 
     var removeUnrequiredRows = function(oldTag) {
+        selectedTags[oldTag] = undefined;
         tagsToFields[oldTag].forEach(function(oldRow) {
             var $oldRow = $('#' + oldRow.key);
             $oldRow.remove();
@@ -378,7 +398,10 @@ var Tagger = function(events, templater) {
     };
 
     return {
-        init: init
+        init: init,
+        getSelectedTags: function() {
+            return selectedTags;
+        }
     };
 };
 
@@ -605,12 +628,12 @@ var Templater = function(IMAGE_PATH) {
         embedBtnId: function() {
             return EMBED_BTN_ID;
         },
-        getTableRow: function(value, id, attrs) {
+        getTableRow: function(value, id) {
             return $('' +
                 '<tr id="' + id + '">' +
                     '<td class="' + G2E_TITLE + '">' + value + '</td>' +
                     '<td class="' + G2E_VALUE + '">' +
-                        '<input placeholder="No data" ' + attrs + '>' +
+                        '<input placeholder="No data">' +
                     '</td>' +
                 '</tr>'
             );
@@ -638,6 +661,10 @@ var Notifier = function(DEBUG) {
 };
 
 
+/* BaseScraper contains functions that are used on both GSE and GDS pages.
+ * The returned object is then mixed in with a secondary scraper, depending on
+ * context.
+ */
 var BaseScraper = function(DEBUG) {
 
     return {
@@ -693,6 +720,23 @@ var BaseScraper = function(DEBUG) {
             }
 
             return data;
+        },
+
+        /* Gets data from fields that are specific for the upcoming Coursera
+         * MOOC. In principle, we can remove this in the future.
+         *
+         * GWG. August 2015.
+         */
+        getCrowdsourcingMetadata: function($modal) {
+            $('#required-fields-based-on-tag').find('tr').each(function(i, tr) {
+                var $tr = $(tr);
+                if ($tr.find('input').attr('required') === 'true') {
+                    debugger;
+                } else {
+                    debugger;
+                }
+            });
+            return {};
         },
 
         textFromHtml: function($el) {
@@ -898,9 +942,13 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, 
     };
 
     var postData = function() {
+        // TODO: The scraper should have a single method that returns all the
+        // necessary data.
         var scrapedData = scraper.getScrapedData($overlay),
             userOptions = scraper.getUserOptions($overlay),
+            crowdsourcedMetadata = scraper.getCrowdsourcingMetadata($overlay),
             allData = $.extend({}, scrapedData, userOptions);
+            allData.crowdsourcedMetadata = crowdsourcedMetadata;
         if (isValidData(scrapedData)) {
             $(this).addClass('g2e-lock').off();
             comm.postSoftFile(allData);
@@ -923,6 +971,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, 
     };
 
     var isValidData = function(data) {
+        var selectedTags = tagger.getSelectedTags();
         if (!data.A_cols || data.A_cols.length < 2) {
             notifier.warn('Please select 2 or more control samples');
             return false;
@@ -938,6 +987,16 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, 
             notifier.warn('Please input a valid gene.');
             return false;
         }
+
+        for (var tag in selectedTags) {
+            for (var field in selectedTags[tag]) {
+                var conf = selectedTags[tag][field];
+                if (conf.required) {
+                    debugger;
+                }
+            }
+        }
+
         return true;
     };
 
@@ -1035,6 +1094,7 @@ var main = function() {
     var events = Events(),
         notifier = Notifier(DEBUG),
         templater = Templater(IMAGE_PATH),
+        loader = Loader(),
         tagger = Tagger(events, templater),
         baseScraper = BaseScraper(DEBUG),
         bootstrapper = Bootstrapper(events, notifier, templater),
@@ -1042,6 +1102,11 @@ var main = function() {
         ui,
         comm;
 
+    /* TODO:
+     * The Scraper--a class that doesn't exist--constructor should consume
+     * the bootstrapper, discover what site it is on, and return the
+     * appropriate constructor. main.js should not know about this.
+     */
     var isGdsFl = bootstrapper.isGds();
     if (isGdsFl === 1) {
         modeScraper = GdsScraper(events);
@@ -1050,7 +1115,7 @@ var main = function() {
     }
 
     scraper = $.extend(modeScraper, baseScraper);
-    comm = Comm(events, notifier, SERVER);
+    comm = Comm(events, loader, notifier, SERVER);
     ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, templater);
 
     bootstrapper.init();

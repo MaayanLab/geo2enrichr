@@ -16,6 +16,7 @@ module.exports = function(grunt) {
         COMMON + 'js/Bootstrapper.js',
         COMMON + 'js/GdsBootstrapper.js',
         COMMON + 'js/GseBootstrapper.js',
+        COMMON + 'js/Loader.js',
         COMMON + 'js/Events.js',
         COMMON + 'js/Tagger.js',
         COMMON + 'js/Templater.js',

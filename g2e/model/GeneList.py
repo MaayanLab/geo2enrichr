@@ -12,8 +12,8 @@ from g2e import db
 
 
 rankedgenes_2_genelists = db.Table('ranked_gene_2_gene_list', db.metadata,
-    db.Column('rankedgene_fk', db.Integer, db.ForeignKey('ranked_gene.id')),
-    db.Column('genelist_fk', db.Integer, db.ForeignKey('gene_list.id'))
+    db.Column('ranked_gene_fk', db.Integer, db.ForeignKey('ranked_gene.id')),
+    db.Column('gene_list_fk', db.Integer, db.ForeignKey('gene_list.id'))
 )
 
 
@@ -22,7 +22,7 @@ class GeneList(db.Model):
     __tablename__ = 'gene_list'
     id = db.Column(db.Integer, primary_key=True)
     direction = db.Column(db.Integer)
-    extraction_id = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
+    gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
     ranked_genes = db.relationship('RankedGene', secondary=rankedgenes_2_genelists, backref=db.backref('genelists', order_by=id))
     text_file = db.Column(db.String(200))
     enrichr_link = db.Column(db.Text)
@@ -32,12 +32,12 @@ class GeneList(db.Model):
     def __init__(self, ranked_genes, direction, metadata, target_apps, name=None, text_file=None):
         """Constructs a gene list.
         """
-        self.ranked_genes   = ranked_genes
-        self.direction      = direction
-        self.name           = name or self._name()
-        self.enrichr_link   = target_apps['enrichr']
+        self.ranked_genes = ranked_genes
+        self.direction = direction
+        self.name = name or self._name()
+        self.enrichr_link = target_apps['enrichr']
         self.l1000cds2_link = target_apps['l1000cds2']
-        self.paea_link      = target_apps['paea']
+        self.paea_link = target_apps['paea']
 
     def __repr__(self):
         return '<GeneList %r>' % self.id

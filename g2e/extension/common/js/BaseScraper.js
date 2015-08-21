@@ -1,4 +1,8 @@
 
+/* BaseScraper contains functions that are used on both GSE and GDS pages.
+ * The returned object is then mixed in with a secondary scraper, depending on
+ * context.
+ */
 var BaseScraper = function(DEBUG) {
 
     return {
@@ -54,6 +58,23 @@ var BaseScraper = function(DEBUG) {
             }
 
             return data;
+        },
+
+        /* Gets data from fields that are specific for the upcoming Coursera
+         * MOOC. In principle, we can remove this in the future.
+         *
+         * GWG. August 2015.
+         */
+        getCrowdsourcingMetadata: function($modal) {
+            $('#required-fields-based-on-tag').find('tr').each(function(i, tr) {
+                var $tr = $(tr);
+                if ($tr.find('input').attr('required') === 'true') {
+                    debugger;
+                } else {
+                    debugger;
+                }
+            });
+            return {};
         },
 
         textFromHtml: function($el) {

@@ -321,7 +321,7 @@
 
 }
 
-/* jQuery UI and TagIt overrides
+/* jQuery UI overrides
  */
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content {
     background: white;
@@ -330,13 +330,25 @@
     z-index: 1001;
     width: 100px;
 }
-.ui-tooltip, .ui-widget, .ui-corner-all, .ui-widget-content {
-    font-size: 10px !important;
-    border-radius: none !important;
+.ui-tooltip,
+.ui-widget,
+.ui-corner-all,
+.ui-widget-content {
+    font-family: @font-family-base !important;
+    font-size: @font-size-base !important;
+    border-radius: 0 !important;
 }
 .ui-state-focus {
-    background: #eeeeee !important;
+    background: @color-lightgray1 !important;
+    border: none !important;
+    color: black !important;
 }
+.ui-menu-item {
+    font-family: @font-size-base !important;
+}
+
+/* TagIt overrides
+ */
 ul#g2e-tags {
     background-color: white;
     border-radius: 0;
@@ -378,6 +390,7 @@ ul#g2e-tags {
         text-decoration: none;
     }
     .ui-widget-content {
+        // The size of text while typing.
         font-size: @font-size-base !important;
     }
 }

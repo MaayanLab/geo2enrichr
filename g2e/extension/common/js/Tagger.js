@@ -1,23 +1,15 @@
 
+/* Abstracts issues of adding new required fields depending on metadata. This
+ * module is only required for a 2015 Coursera MOOC and could be refactored
+ * once the course is over.
+ *
+ * https://www.coursera.org/course/bd2klincs
+ */
 var Tagger = function(events, templater) {
 
-    var $input, $table;
+    var $input, $table, selectedTags = {};
 
     var tagsToFields = {
-        FOO: [
-            {
-                required: true,
-                key: "foo",
-                description: "foo foo foo"
-            }
-        ],
-        BAR: [
-            {
-                required: true,
-                key: "bar",
-                description: 'bar bar bar'
-            }
-        ],
         AGING_BD2K_LINCS_DCIC_COURSERA: [
             {
                 required: true,
@@ -110,13 +102,15 @@ var Tagger = function(events, templater) {
     };
 
     var addRequiredRows = function(newTag) {
+        selectedTags[newTag] = tagsToFields[newTag];
         tagsToFields[newTag].forEach(function(newRow) {
-            var $tr = templater.getTableRow(newRow.description, newRow.key, "required='" + newRow.required + "'");
+            var $tr = templater.getTableRow(newRow.description, newRow.key);
             $table.append($tr);
         });
     };
 
     var removeUnrequiredRows = function(oldTag) {
+        selectedTags[oldTag] = undefined;
         tagsToFields[oldTag].forEach(function(oldRow) {
             var $oldRow = $('#' + oldRow.key);
             $oldRow.remove();
@@ -152,6 +146,9 @@ var Tagger = function(events, templater) {
     };
 
     return {
-        init: init
+        init: init,
+        getSelectedTags: function() {
+            return selectedTags;
+        }
     };
 };

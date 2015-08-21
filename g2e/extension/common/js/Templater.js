@@ -222,12 +222,12 @@ var Templater = function(IMAGE_PATH) {
         embedBtnId: function() {
             return EMBED_BTN_ID;
         },
-        getTableRow: function(value, id, attrs) {
+        getTableRow: function(value, id) {
             return $('' +
                 '<tr id="' + id + '">' +
                     '<td class="' + G2E_TITLE + '">' + value + '</td>' +
                     '<td class="' + G2E_VALUE + '">' +
-                        '<input placeholder="No data" ' + attrs + '>' +
+                        '<input placeholder="No data">' +
                     '</td>' +
                 '</tr>'
             );

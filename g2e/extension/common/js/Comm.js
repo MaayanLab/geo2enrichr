@@ -1,24 +1,28 @@
 
-var Comm = function(events, notifier, SERVER) {
+/* Communicates to external resources, such as G2E and Enrichr's APIs.
+ */
+var Comm = function(events, loader, notifier, SERVER) {
 
+    /* An IIFE that fetches a list of genes from Enrichr for autocomplete.
+     */
     var fetchGeneList = (function() {
-        //try {
-        //    $.ajax({
-        //        url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
-        //        type: 'GET',
-        //        dataType: 'JSON',
-        //        success: function(data) {
-        //            events.fire('geneListFetched', data);
-        //        }
-        //    });
-        //} catch (err) {
-        //}
+        try {
+            $.ajax({
+                url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(data) {
+                    events.fire('geneListFetched', data);
+                }
+            });
+        } catch (err) {
+        }
     })();
 
+    /* POSTs user data to G2E servers.
+     */
     var postSoftFile = function(input) {
-        console.log("POSTING");
-        var $loader = $('<div class="g2e-loader-container"><div class="g2e-loader-modal">Processing data. This may take a minute.</div></div>');
-        $('body').append($loader);
+        loader.start();
         $.post(SERVER + 'api/extract/geo',
             input,
             function(data) {
@@ -26,16 +30,15 @@ var Comm = function(events, notifier, SERVER) {
                     events.fire('resultsError');
                 } else {
                     var id = data.extraction_id,
-                        url = SERVER + '#results/' + id;
+                        url = SERVER + 'results/' + id;
                     events.fire('resultsReady', url);
                 }
             })
             .fail(function(xhr, status, error) {
-                console.log("FAILED:");
                 events.fire('resultsError');
             })
             .always(function() {
-                $loader.remove();
+                loader.stop();
             });
     };
 

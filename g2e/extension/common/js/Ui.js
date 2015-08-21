@@ -23,9 +23,13 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, 
     };
 
     var postData = function() {
+        // TODO: The scraper should have a single method that returns all the
+        // necessary data.
         var scrapedData = scraper.getScrapedData($overlay),
             userOptions = scraper.getUserOptions($overlay),
+            crowdsourcedMetadata = scraper.getCrowdsourcingMetadata($overlay),
             allData = $.extend({}, scrapedData, userOptions);
+            allData.crowdsourcedMetadata = crowdsourcedMetadata;
         if (isValidData(scrapedData)) {
             $(this).addClass('g2e-lock').off();
             comm.postSoftFile(allData);
@@ -48,6 +52,7 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, 
     };
 
     var isValidData = function(data) {
+        var selectedTags = tagger.getSelectedTags();
         if (!data.A_cols || data.A_cols.length < 2) {
             notifier.warn('Please select 2 or more control samples');
             return false;
@@ -63,6 +68,16 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, 
             notifier.warn('Please input a valid gene.');
             return false;
         }
+
+        for (var tag in selectedTags) {
+            for (var field in selectedTags[tag]) {
+                var conf = selectedTags[tag][field];
+                if (conf.required) {
+                    debugger;
+                }
+            }
+        }
+
         return true;
     };
 

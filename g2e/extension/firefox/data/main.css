@@ -313,7 +313,7 @@
   top: 200px;
   width: 150px;
 }
-/* jQuery UI and TagIt overrides
+/* jQuery UI overrides
  */
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content {
   background: white;
@@ -326,12 +326,20 @@
 .ui-widget,
 .ui-corner-all,
 .ui-widget-content {
-  font-size: 10px !important;
-  border-radius: none !important;
+  font-family: arial, sans-serif !important;
+  font-size: 13px !important;
+  border-radius: 0 !important;
 }
 .ui-state-focus {
-  background: #eeeeee !important;
+  background: #f5f5f5 !important;
+  border: none !important;
+  color: black !important;
 }
+.ui-menu-item {
+  font-family: 13px !important;
+}
+/* TagIt overrides
+ */
 ul#g2e-tags {
   background-color: white;
   border-radius: 0;
