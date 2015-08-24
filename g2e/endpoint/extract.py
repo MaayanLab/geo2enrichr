@@ -35,7 +35,6 @@ def get_extraction(extraction_id):
 def post_from_geo():
     """Handle POST requests from GEO.
     """
-    import pdb; pdb.set_trace()
     response = {}
     gene_signature = GeneSignature.from_geo(request.form)
     dataaccess.save_gene_signature(gene_signature)
