@@ -24,6 +24,6 @@ def tag_endpoint(tag_name):
     else:
         return render_template('tag.html',
             base_url=Config.BASE_URL + '/results',
-            num_tags=len(tag.extractions),
+            num_tags=len(tag.gene_signatures),
             tag=tag
         )

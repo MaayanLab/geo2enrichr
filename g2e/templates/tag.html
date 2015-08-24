@@ -14,7 +14,7 @@
                     <th>Disease</th>
                 </tr>
             </thead>
-            {% for extraction in tag.extractions %}
+            {% for gene_signature in tag.gene_signatures %}
                 <tr>
                     <td><a href="{{ base_url }}/{{ gene_signature.extraction_id }}">{{ gene_signature.extraction_id }}</a></td>
                     <td>{{ gene_signature.exp_metadata.organism if gene_signature.exp_metadata.organism != None }}</td>
