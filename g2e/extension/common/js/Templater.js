@@ -149,7 +149,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
-                            '<table class="g2e-confirm-tbl" id="required-fields-based-on-tag">' +
+                            '<table class="g2e-confirm-tbl" id="g2e-required-fields-based-on-tag">' +
                             '</table>' +
                         '</td>' +
                     '</tr>' +
@@ -175,7 +175,7 @@ var Templater = function(IMAGE_PATH) {
     var templates = {
         modal: modal,
         gds: {
-            btn: $('' +
+            openModalButton: $('' +
                 '<tr>' +
                     // "azline" comes from the GEO website.
                     '<td class="azline" id="' + EMBED_BTN_ID + '">' +
@@ -186,7 +186,7 @@ var Templater = function(IMAGE_PATH) {
                 '</tr>')
         },
         gse: {
-            btn: $('' +
+            openModalButton: $('' +
                 '<tr>' +
                     '<td id="' + EMBED_BTN_ID + '">' +
                         '<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
@@ -202,7 +202,7 @@ var Templater = function(IMAGE_PATH) {
                     '<td class="g2e-expmt">Experimental</td>' +
                 '</tr>'),
 
-            chkbxs: '' +
+            checkboxes: '' +
                 '<td>' +
                     '<input class="g2e-chkbx g2e-control" type="checkbox" />' +
                 '</td>' +

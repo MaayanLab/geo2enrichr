@@ -1,18 +1,10 @@
 
-var GdsScraper = function(events) {
-
-    var $details,
-        $hook;
-
-    events.on('bootstrapped', function(data) {
-        $details = data.details;
-        $hook = data.hook;
-    });
+var GdsScraper = function($metadataTableParent, $modalButtonParent) {
 
     return {
 
         getDataset: function() {
-            var record_caption = $details.find('.caption').text(),
+            var record_caption = $metadataTableParent.find('.caption').text(),
                 re = new RegExp(/(?:GDS|GSE)[0-9]*/);
             return re.exec(record_caption)[0];
         },
@@ -26,7 +18,7 @@ var GdsScraper = function(events) {
         },
 
         getSamples: function() {
-            var $groupRow = $($hook.children().find('tbody td')[0]),
+            var $groupRow = $($modalButtonParent.children().find('tbody td')[0]),
                 bkp_not_found = true,
                 samplesStr = this.textFromHtml($groupRow),
                 samplesArr = samplesStr.split(' '),
@@ -54,7 +46,7 @@ var GdsScraper = function(events) {
             // 2. Strip out all the whitespace (newlines, tabs, etc.)
             // 3. Split on the semicolon (notice there are two) and return just the code.
             var idx = this.getRowIdxFromName(name);
-            var text = $($details.find('tr')[idx]).text();
+            var text = $($metadataTableParent.find('tr')[idx]).text();
             // Remove any preceding whitespace.
             return text.split(':')[1].replace(/\s*/, '');
         },
@@ -62,7 +54,7 @@ var GdsScraper = function(events) {
         getRowIdxFromName: function(attrName) {
             var self = this,
                 result;
-            $details.find('tr').each(function(i, tr) {
+            $metadataTableParent.find('tr').each(function(i, tr) {
                 var titleEl = $(tr).find('th')[0],
                     titleText = self.normalizeText($(titleEl).text()),
                     titleName = titleText.split(':')[0];

@@ -1,11 +1,13 @@
 
 /* Communicates to external resources, such as G2E and Enrichr's APIs.
  */
-var Comm = function(events, loader, notifier, SERVER) {
+var Comm = function(events, LoadingScreen, SERVER) {
+
+    var loadingScreen = LoadingScreen('Processing data. This may take a minute.');
 
     /* An IIFE that fetches a list of genes from Enrichr for autocomplete.
      */
-    var fetchGeneList = (function() {
+    (function fetchGeneList() {
         try {
             $.ajax({
                 url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
@@ -21,10 +23,10 @@ var Comm = function(events, loader, notifier, SERVER) {
 
     /* POSTs user data to G2E servers.
      */
-    var postSoftFile = function(input) {
-        loader.start();
+    function postSoftFile(inputData) {
+        loadingScreen.start();
         $.post(SERVER + 'api/extract/geo',
-            input,
+            inputData,
             function(data) {
                 if (!!data.error) {
                     events.fire('resultsError');
@@ -38,9 +40,9 @@ var Comm = function(events, loader, notifier, SERVER) {
                 events.fire('resultsError');
             })
             .always(function() {
-                loader.stop();
+                loadingScreen.stop();
             });
-    };
+    }
 
     return {
         postSoftFile: postSoftFile

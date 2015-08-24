@@ -7,7 +7,7 @@
  */
 var Tagger = function(events, templater) {
 
-    var $input, $table, selectedTags = {};
+    var $table, selectedTags = {};
 
     var tagsToFields = {
         AGING_BD2K_LINCS_DCIC_COURSERA: [
@@ -117,7 +117,7 @@ var Tagger = function(events, templater) {
         });
     };
 
-    var watch = function() {
+    var watch = function($input) {
         $input.tagit({
             singleField: true,
             beforeTagAdded: function (evt, ui) {
@@ -139,10 +139,9 @@ var Tagger = function(events, templater) {
         });
     };
 
-    var init = function($i, $t) {
-        $input = $i;
-        $table = $t;
-        watch();
+    var init = function($input, _$table) {
+        $table = _$table;
+        watch($input);
     };
 
     return {

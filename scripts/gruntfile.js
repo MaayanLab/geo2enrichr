@@ -13,18 +13,18 @@ module.exports = function(grunt) {
     var src_files = [
         COMMON + 'js/platforms.js',
         COMMON + 'js/Comm.js',
-        COMMON + 'js/Bootstrapper.js',
-        COMMON + 'js/GdsBootstrapper.js',
-        COMMON + 'js/GseBootstrapper.js',
-        COMMON + 'js/Loader.js',
+        COMMON + 'js/Page.js',
+        COMMON + 'js/UiEmbedder.js',
         COMMON + 'js/Events.js',
         COMMON + 'js/Tagger.js',
         COMMON + 'js/Templater.js',
+        COMMON + 'js/LoadingScreen.js',
         COMMON + 'js/Notifier.js',
-        COMMON + 'js/BaseScraper.js',
+        COMMON + 'js/ScreenScraper.js',
         COMMON + 'js/GdsScraper.js',
         COMMON + 'js/GseScraper.js',
-        COMMON + 'js/Ui.js',
+        COMMON + 'js/ModalBox.js',
+        COMMON + 'js/UserInputHandler.js',
         COMMON + 'js/main.js'
     ];
 

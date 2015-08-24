@@ -1,23 +1,17 @@
 
-var GseScraper = function(events) {
-
-    var $details;
-
-    events.on('bootstrapped', function(data) {
-        $details = data.details;
-    });
+var GseScraper = function($metadataTableParent) {
 
     return {
 
         getByName: function(name) {
             var idx = this.getRowIdxByName(name);
-            return $($details.find('tr')[idx]).find('a').text();
+            return $($metadataTableParent.find('tr')[idx]).find('a').text();
         },
 
         getRowIdxByName: function(attr_name) {
             var self = this,
                 result;
-            $details.find('tr').each(function(i, tr) {
+            $metadataTableParent.find('tr').each(function(i, tr) {
                 var text = $(tr).find('td')
                                 .first()
                                 .text();

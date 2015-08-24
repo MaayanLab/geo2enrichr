@@ -14,11 +14,13 @@ var SUPPORTED_PLATFORMS = ["GPL8321","GPL7091","GPL11383","GPL2902","GPL4044","G
 
 /* Communicates to external resources, such as G2E and Enrichr's APIs.
  */
-var Comm = function(events, loader, notifier, SERVER) {
+var Comm = function(events, LoadingScreen, SERVER) {
+
+    var loadingScreen = LoadingScreen('Processing data. This may take a minute.');
 
     /* An IIFE that fetches a list of genes from Enrichr for autocomplete.
      */
-    var fetchGeneList = (function() {
+    (function fetchGeneList() {
         try {
             $.ajax({
                 url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
@@ -34,10 +36,10 @@ var Comm = function(events, loader, notifier, SERVER) {
 
     /* POSTs user data to G2E servers.
      */
-    var postSoftFile = function(input) {
-        loader.start();
+    function postSoftFile(inputData) {
+        loadingScreen.start();
         $.post(SERVER + 'api/extract/geo',
-            input,
+            inputData,
             function(data) {
                 if (!!data.error) {
                     events.fire('resultsError');
@@ -51,9 +53,9 @@ var Comm = function(events, loader, notifier, SERVER) {
                 events.fire('resultsError');
             })
             .always(function() {
-                loader.stop();
+                loadingScreen.stop();
             });
-    };
+    }
 
     return {
         postSoftFile: postSoftFile
@@ -61,108 +63,67 @@ var Comm = function(events, loader, notifier, SERVER) {
 };
 
 
-var Bootstrapper = function(events, notifier, templater) {
-    
-    var isGds = function() {
-        var path;
+/* Checks which, if any, dataset page GEO2Enrichr is on.
+ */
+function Page() {
+
+    var IS_DATASET_PAGE,
+        IS_GDS_PAGE,
+        path;
+
+    (function findPage() {
         if (window.location.pathname !== '/') {
             path = window.location.pathname.split('/')[1];
             if (path === 'sites') {
-                return 1;
+                IS_DATASET_PAGE = true;
+                IS_GDS_PAGE = true;
             } else if (path === 'geo') {
-                return -1;
+                IS_DATASET_PAGE = true;
+                IS_GDS_PAGE = false;
+            } else {
+                IS_DATASET_PAGE = false;
             }
-            return 0;
         }
-    };
-
-    // We may have multiple GEO2[X] extensions installed. Guard against this.
-    var extensionAlreadyInstalled = function() {
-        if ($('#' + templater.embedBtnId()).length) {
-            notifier.log('Another GEO2[X] extension is installed.');
-            return true;
-        }
-        return false;
-    };
-
-    var init = function() {
-        if (extensionAlreadyInstalled()) {
-            return;
-        }
-
-        var isGdsFl = isGds();
-        if (isGdsFl === 1) {
-            GdsBootstrapper(events, templater).init();
-        } else if (isGdsFl === -1) {
-            GseBootstrapper(events, templater).init();
-        }
-        // Else do nothing.
-    };
+    })();
 
     return {
-        init: init,
-        isGds: isGds
+        isDataset: function() {
+            return IS_DATASET_PAGE;
+        },
+        isGds: function() {
+            return IS_GDS_PAGE;
+        }
     };
-};
+}
 
+/* Embeds HTML into the page, depending on context.
+ */
+function UiEmbedder(events, page, screenScraper, templater) {
 
-var GdsBootstrapper = function(events, templater) {
+    (function embed() {
+        var $modalButtonParent = screenScraper.getModalButtonParent();
+        if (page.isGds()) {
+            embedInGdsPage($modalButtonParent);
+        } else {
+            var $metadataTableParent = screenScraper.getMetadataTable();
+            embedInGsePage($modalButtonParent, $metadataTableParent);
+        }
+    })();
 
-    var embed = function($hook) {
-        $hook
-            .children()
-            .last()
-            .after(templater.get('btn', 'gds'));
-        events.fire('bootstrapped', {
-            details: $('#gds_details'),
-            hook: $hook
-        });
-    };
-
-    var init = function() {
-        var id = setInterval(function() {
-            var $hook = $('#diff_express > tbody');
-            if ($hook.length) {
-                embed($hook);
-                clearInterval(id);
-            }
-        }, 50);
-    };
-
-	return {
-        init: init
-	};
-};
-
-
-var GseBootstrapper = function(events, templater) {
-
-	var $gse_details;
-
-    var embed = function($hook) {
-
-        $hook.append(templater.get('btn', 'gse'));
-
-        // Find the details table.
-        $('table').each(function(i, el) {
-            var $el = $(el);
-            if ($el.attr('width') === '600' &&
-                $el.attr('cellpadding') === '2' &&
-                $el.attr('cellspacing') === '0')
-            {
-                $gse_details = $el;
-                return false;
-            }
+    function embedInGsePage($modalButtonParent, $metadataTableParent) {
+        var $openModalButtonHtml = templater.get('openModalButton', 'gse');
+        $modalButtonParent.append($openModalButtonHtml);
+        $openModalButtonHtml.click(function() {
+            events.fire('openModalBox');
         });
 
-        // Find the samples from the details table.
-        $gse_details.find('tr').each(function(i, tr) {
+        $metadataTableParent.find('tr').each(function(i, tr) {
             if ($(tr)
-                    .find('td')
-                    .first()
-                    .text()
-                    .toLowerCase()
-                    .indexOf('samples') === 0)
+                .find('td')
+                .first()
+                .text()
+                .toLowerCase()
+                .indexOf('samples') === 0)
             {
                 $samples_table = $(tr);
                 return false;
@@ -172,7 +133,7 @@ var GseBootstrapper = function(events, templater) {
         $samples_table
             .find('tr')
             .each(function(i, tr) {
-                $(tr).append(templater.get('chkbxs', 'gse'));
+                $(tr).append(templater.get('checkboxes', 'gse'));
             })
             .end()
             .find('table')
@@ -180,47 +141,16 @@ var GseBootstrapper = function(events, templater) {
             .find('tr')
             .first()
             .before(templater.get('thead', 'gse'));
+    }
 
-        events.fire('bootstrapped', {
-            details: $gse_details,
-            table: $samples_table
+    function embedInGdsPage($modalButtonParent) {
+        var $openModalButtonHtml = templater.get('openModalButton', 'gds');
+        $modalButtonParent.children().last().after($openModalButtonHtml);
+        $openModalButtonHtml.click(function() {
+            events.fire('openModalBox');
         });
-    };
-
-    var init = function() {
-        // Go up two parents to find the table.
-        var $hook = $('#geo2r').next();
-        embed($hook);
-    };
-
-	return {
-        init: init
-	};
-};
-
-
-/* A simple loading screen with a cached reference to the DOM element.
- */
-var Loader = (function() {
-
-    var $body = $('body'),
-        $el = $('' +
-            '<div class="g2e-loader-container">' +
-                '<div class="g2e-loader-modal">Processing data. This may take a minute.</div>' +
-            '</div>'
-        );
-
-    return function() {
-        return {
-            start: function() {
-                $body.append($el);
-            },
-            stop: function() {
-                $el.remove();
-            }
-        };
-    };
-})();
+    }
+}
 
 var Events = function() {
 
@@ -259,7 +189,7 @@ var Events = function() {
  */
 var Tagger = function(events, templater) {
 
-    var $input, $table, selectedTags = {};
+    var $table, selectedTags = {};
 
     var tagsToFields = {
         AGING_BD2K_LINCS_DCIC_COURSERA: [
@@ -369,7 +299,7 @@ var Tagger = function(events, templater) {
         });
     };
 
-    var watch = function() {
+    var watch = function($input) {
         $input.tagit({
             singleField: true,
             beforeTagAdded: function (evt, ui) {
@@ -391,10 +321,9 @@ var Tagger = function(events, templater) {
         });
     };
 
-    var init = function($i, $t) {
-        $input = $i;
-        $table = $t;
-        watch();
+    var init = function($input, _$table) {
+        $table = _$table;
+        watch($input);
     };
 
     return {
@@ -555,7 +484,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
-                            '<table class="g2e-confirm-tbl" id="required-fields-based-on-tag">' +
+                            '<table class="g2e-confirm-tbl" id="g2e-required-fields-based-on-tag">' +
                             '</table>' +
                         '</td>' +
                     '</tr>' +
@@ -581,7 +510,7 @@ var Templater = function(IMAGE_PATH) {
     var templates = {
         modal: modal,
         gds: {
-            btn: $('' +
+            openModalButton: $('' +
                 '<tr>' +
                     // "azline" comes from the GEO website.
                     '<td class="azline" id="' + EMBED_BTN_ID + '">' +
@@ -592,7 +521,7 @@ var Templater = function(IMAGE_PATH) {
                 '</tr>')
         },
         gse: {
-            btn: $('' +
+            openModalButton: $('' +
                 '<tr>' +
                     '<td id="' + EMBED_BTN_ID + '">' +
                         '<span id="g2e-link">' + BUTTON_TEXT + '</span>' +
@@ -608,7 +537,7 @@ var Templater = function(IMAGE_PATH) {
                     '<td class="g2e-expmt">Experimental</td>' +
                 '</tr>'),
 
-            chkbxs: '' +
+            checkboxes: '' +
                 '<td>' +
                     '<input class="g2e-chkbx g2e-control" type="checkbox" />' +
                 '</td>' +
@@ -642,6 +571,27 @@ var Templater = function(IMAGE_PATH) {
 };
 
 
+/* A simple loading screen with a configurable message.
+ */
+function LoadingScreen(message) {
+
+    var $body = $('body'),
+        $el = $('' +
+            '<div class="g2e-loader-container">' +
+                '<div class="g2e-loader-modal">' + message + '</div>' +
+            '</div>'
+        );
+
+    return {
+        start: function() {
+            $body.append($el);
+        },
+        stop: function() {
+            $el.remove();
+        }
+    };
+}
+
 var Notifier = function(DEBUG) {
 
 	var log = function(msg) {
@@ -661,82 +611,46 @@ var Notifier = function(DEBUG) {
 };
 
 
-/* BaseScraper contains functions that are used on both GSE and GDS pages.
- * The returned object is then mixed in with a secondary scraper, depending on
- * context.
+/* Contains functions that are used on both GSE and GDS pages. The returned
+ * object is a mixin of the general functionality with a context-dependent
+ * scraper.
  */
-var BaseScraper = function(DEBUG) {
+function ScreenScraper(page, SUPPORTED_PLATFORMS, onConstructedCallback) {
 
-    return {
+    var modeScraper,
+        $modalButtonParent,
+        $metadataTableParent;
 
-        getScrapedData: function($modal) {
+    var scraper = {
+
+        getModalButtonParent: function() {
+            return $modalButtonParent;
+        },
+
+        getMetadataTableParent: function () {
+            return $metadataTableParent;
+        },
+
+        isSupportedPlatform: function() {
+            var platform = this.getPlatform();
+            // TODO: These two branches should be in an $.ajax callback.
+            if (platform && $.inArray(platform, SUPPORTED_PLATFORMS) === -1) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+
+        getDataFromPage: function() {
             var data = {},
-                samples = this.getSamples();
-
-            data.A_cols   = samples.A_cols;
-            data.B_cols   = samples.B_cols;
-            // Short circuit select saved data; this represents user input.
+                samples;
+            samples = this.getSamples();
+            data.A_cols = samples.A_cols;
+            data.B_cols = samples.B_cols;
             data.dataset  = this.getDataset();
             data.organism = this.getOrganism();
             data.platform = this.getPlatform();
-
             return data;
-        },
-
-        getUserOptions: function($modal) {
-            var data = {},
-                method = $modal.find('#g2e-diffexp option:selected').val(),
-                cutoff = $modal.find('#g2e-cutoff option:selected').val(),
-                normalize = $modal.find('#g2e-normalize option:selected').val(),
-                cell = $modal.find('#g2e-cell .g2e-value input').val(),
-                perturbation = $modal.find('#g2e-perturbation .g2e-value input').val(),
-                gene = $modal.find('#g2e-gene #g2e-geneList').val(),
-                disease = $modal.find('#g2e-disease #g2e-diseaseList').val(),
-                threshold = $modal.find('#g2e-threshold option:selected').val();
-
-            if (method) {
-                data.diffexp_method = method;
-            }
-            if (cutoff) {
-                data.cutoff = cutoff;
-            }
-            if (normalize) {
-                data.normalize = normalize;
-            }
-            if (cell) {
-                data.cell = cell.replace(/_|\.|-/, '');
-            }
-            if (perturbation) {
-                data.perturbation = perturbation.replace(/_|\.|-/, '');
-            }
-            if (gene) {
-                data.gene = gene;
-            }
-            if (disease) {
-                data.disease = disease;
-            }
-            if (threshold) {
-                data.threshold = threshold;
-            }
-
-            return data;
-        },
-
-        /* Gets data from fields that are specific for the upcoming Coursera
-         * MOOC. In principle, we can remove this in the future.
-         *
-         * GWG. August 2015.
-         */
-        getCrowdsourcingMetadata: function($modal) {
-            $('#required-fields-based-on-tag').find('tr').each(function(i, tr) {
-                var $tr = $(tr);
-                if ($tr.find('input').attr('required') === 'true') {
-                    debugger;
-                } else {
-                    debugger;
-                }
-            });
-            return {};
         },
 
         textFromHtml: function($el) {
@@ -751,24 +665,45 @@ var BaseScraper = function(DEBUG) {
         normalizeText: function(el) {
             return el.replace(/\s/g, '').toLowerCase();
         }
-    };  
-};
+    };
 
+    /* This function is async because GDS pages do not load all at once. This
+     * Why the ScreenScraper constructor does not return an instance immediately.
+     */
+    (function getContextDependentScraper() {
+        if (page.isGds()) {
+            $metadataTableParent = $('#gds_details');
+            var id = setInterval(function () {
+                $modalButtonParent = $('#diff_express > tbody');
+                if ($modalButtonParent.length) {
+                    clearInterval(id);
+                    modeScraper = GdsScraper($metadataTableParent, $modalButtonParent);
+                    onConstructedCallback($.extend(modeScraper, scraper));
+                }
+            }, 50);
+        } else {
+            // Go up two parents to find the table.
+            $modalButtonParent = $('#geo2r').next();
+            // Find the details table based on its style attributes.
+            $('table').each(function(i, table) {
+                var $table = $(table);
+                if ($table.attr('width') === '600' && $table.attr('cellpadding') === '2' && $table.attr('cellspacing') === '0') {
+                    $metadataTableParent = $table;
+                    return false;
+                }
+            });
+            modeScraper = GseScraper($metadataTableParent);
+            onConstructedCallback($.extend(modeScraper, scraper));
+        }
+    })();
+}
 
-var GdsScraper = function(events) {
-
-    var $details,
-        $hook;
-
-    events.on('bootstrapped', function(data) {
-        $details = data.details;
-        $hook = data.hook;
-    });
+var GdsScraper = function($metadataTableParent, $modalButtonParent) {
 
     return {
 
         getDataset: function() {
-            var record_caption = $details.find('.caption').text(),
+            var record_caption = $metadataTableParent.find('.caption').text(),
                 re = new RegExp(/(?:GDS|GSE)[0-9]*/);
             return re.exec(record_caption)[0];
         },
@@ -782,7 +717,7 @@ var GdsScraper = function(events) {
         },
 
         getSamples: function() {
-            var $groupRow = $($hook.children().find('tbody td')[0]),
+            var $groupRow = $($modalButtonParent.children().find('tbody td')[0]),
                 bkp_not_found = true,
                 samplesStr = this.textFromHtml($groupRow),
                 samplesArr = samplesStr.split(' '),
@@ -810,7 +745,7 @@ var GdsScraper = function(events) {
             // 2. Strip out all the whitespace (newlines, tabs, etc.)
             // 3. Split on the semicolon (notice there are two) and return just the code.
             var idx = this.getRowIdxFromName(name);
-            var text = $($details.find('tr')[idx]).text();
+            var text = $($metadataTableParent.find('tr')[idx]).text();
             // Remove any preceding whitespace.
             return text.split(':')[1].replace(/\s*/, '');
         },
@@ -818,7 +753,7 @@ var GdsScraper = function(events) {
         getRowIdxFromName: function(attrName) {
             var self = this,
                 result;
-            $details.find('tr').each(function(i, tr) {
+            $metadataTableParent.find('tr').each(function(i, tr) {
                 var titleEl = $(tr).find('th')[0],
                     titleText = self.normalizeText($(titleEl).text()),
                     titleName = titleText.split(':')[0];
@@ -833,25 +768,19 @@ var GdsScraper = function(events) {
 };
 
 
-var GseScraper = function(events) {
-
-    var $details;
-
-    events.on('bootstrapped', function(data) {
-        $details = data.details;
-    });
+var GseScraper = function($metadataTableParent) {
 
     return {
 
         getByName: function(name) {
             var idx = this.getRowIdxByName(name);
-            return $($details.find('tr')[idx]).find('a').text();
+            return $($metadataTableParent.find('tr')[idx]).find('a').text();
         },
 
         getRowIdxByName: function(attr_name) {
             var self = this,
                 result;
-            $details.find('tr').each(function(i, tr) {
+            $metadataTableParent.find('tr').each(function(i, tr) {
                 var text = $(tr).find('td')
                                 .first()
                                 .text();
@@ -918,46 +847,72 @@ var GseScraper = function(events) {
 };
 
 
-var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, templater) {
+/* The primary user interface, a single modal box.
+ */
+function ModalBox(events, tagger, templater, userInputHandler) {
 
-    var geneList, $overlay, $resultsBtn, $submitBtn, $errorMessage;
+    var $modalBox;
+    (function init() {
+        var html = templater.get('modal');
+        $(html).hide().appendTo('body');
+        $('#g2e-modal').draggable();
+        $modalBox = $('#g2e-overlay');
+        $modalBox.find('#g2e-error-message').hide();
+        $modalBox.find('#g2e-submit-btn').click(function() {
+            userInputHandler.sendDataToServer($modalBox);
+        });
+        $modalBox.find('#g2e-close-btn').click(function() {
+            resetFooter();
+            $modalBox.hide();
+        });
+        tagger.init(
+            $modalBox.find("#g2e-tags"),
+            $modalBox.find('#g2e-required-fields-based-on-tag')
+        );
+        setupDiffExpMethodOptions();
+    })();
 
-    // This function is called every time the "Pipe to Enrichr" button is clicked.
-    var openModalBox = function() {
-        var scrapedData = scraper.getScrapedData($overlay);
-        fillConfirmationTable(scrapedData);
-        $overlay.show();
-    };
+    events.on('openModalBox', openModalBox);
 
-    var showResultsLink = function(extractionId) {
-        $resultsBtn.show().click(function() {
+    events.on('geneListFetched', setAutocomplete);
+
+    events.on('resultsReady', function(data) {
+        $modalBox.find('g2e-lock').off();
+        showResultsLink(data);
+    });
+
+    events.on('resultsError', function() {
+        $modalBox.find('#g2e-error-message').show();
+    });
+
+    events.on('dataPosted', function() {
+        $modalBox.find('.g2e-lock').off();
+    });
+
+    function openModalBox() {
+        var data = userInputHandler.getData($modalBox);
+        fillConfirmationTable(data.scrapedData);
+        $modalBox.show();
+    }
+
+    function showResultsLink(extractionId) {
+        $modalBox.find('#g2e-results-btn').show().click(function() {
             window.open(extractionId, "_blank");
         });
-    };
+    }
 
-    var resetFooter = function() {
-        $resultsBtn.hide().off();
-        $submitBtn.removeClass('g2e-lock').off().click(postData);
-        $errorMessage.hide();
-    };
+    function resetFooter() {
+        $modalBox.find('#g2e-results-btn').hide().off();
+        $modalBox.find('#g2e-submit-btn')
+            .removeClass('g2e-lock')
+            .off()
+            .click(function() {
+                userInputHandler.sendDataToServer($modalBox);
+            });
+        $modalBox.find('#g2e-error-message').hide();
+    }
 
-    var postData = function() {
-        // TODO: The scraper should have a single method that returns all the
-        // necessary data.
-        var scrapedData = scraper.getScrapedData($overlay),
-            userOptions = scraper.getUserOptions($overlay),
-            crowdsourcedMetadata = scraper.getCrowdsourcingMetadata($overlay),
-            allData = $.extend({}, scrapedData, userOptions);
-            allData.crowdsourcedMetadata = crowdsourcedMetadata;
-        if (isValidData(scrapedData)) {
-            $(this).addClass('g2e-lock').off();
-            comm.postSoftFile(allData);
-        } else {
-            resetFooter();
-        }
-    };
-
-    var fillConfirmationTable = function(scrapedData) {
+    function fillConfirmationTable(scrapedData) {
         var prop, html, elemId;
         for (prop in scrapedData) {
             var val = scrapedData[prop];
@@ -968,22 +923,98 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, 
             }
             $('#g2e-' + prop + ' td').eq(1).html(html);
         }
-    };
+    }
 
-    var isValidData = function(data) {
+    function setAutocomplete(data) {
+        $modalBox.find('#g2e-geneList').autocomplete({
+            source: function(request, response) {
+                var results = $.ui.autocomplete.filter(data, request.term);
+                response(results.slice(0, 10));
+            },
+            minLength: 2,
+            delay: 250,
+            autoFocus: true
+        });
+    }
+
+    function setupDiffExpMethodOptions() {
+        var $ttest = $('.g2e-ttest');
+        var $cutoff = $('#g2e-cutoff');
+        var $threshold = $('#g2e-threshold');
+        $ttest.hide();
+        $modalBox.find('#g2e-diffexp').change(function(evt) {
+            var method = $(evt.target).val();
+            if (method === 'chdir') {
+                $cutoff.show();
+                $ttest.hide();
+            } else {
+                $cutoff.hide();
+                $ttest.show();
+            }
+        });
+        $modalBox.find('#g2e-correction-method').change(function(evt) {
+            var val = $(evt.target).val();
+            if (val === 'none') {
+                $threshold.hide();
+            } else {
+                $threshold.show();
+            }
+        });
+    }
+}
+
+function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
+
+    var geneList;
+    events.on('geneListFetched', function(data) {
+        geneList = data;
+    });
+
+    function sendDataToServer($modalBox) {
+        var selectedData = getData($modalBox);
+        if (isValidData(selectedData)) {
+
+            var data = {};
+            for (var prop1 in selectedData.scrapedData) {
+                data[prop1] = selectedData.scrapedData[prop1];
+            }
+            for (var prop2 in selectedData.userOptions) {
+                data[prop2] = selectedData.userOptions[prop2];
+            }
+
+            data.metadataTags = {};
+            for (var prop3 in selectedData.crowdsourcedMetadata) {
+                data.metadataTags[prop3] = selectedData.crowdsourcedMetadata[prop3];
+            }
+
+            comm.postSoftFile(data);
+
+            events.fire('dataPosted');
+        }
+    }
+
+    function getData($modalBox) {
+        return {
+            scrapedData: screenScraper.getDataFromPage(),
+            userOptions: getUserOptions($modalBox),
+            crowdsourcedMetadata: getCrowdsourcedMetadata()
+        };
+    }
+
+    function isValidData(data) {
         var selectedTags = tagger.getSelectedTags();
-        if (!data.A_cols || data.A_cols.length < 2) {
+        if (!data.scrapedData.A_cols || data.scrapedData.A_cols.length < 2) {
             notifier.warn('Please select 2 or more control samples');
             return false;
         }
-        if (!data.B_cols || data.B_cols.length < 2) {
+        if (!data.scrapedData.B_cols || data.scrapedData.B_cols.length < 2) {
             notifier.warn('Please select 2 or more experimental samples');
             return false;
         }
         // * WARNINGS *
         // It is important to verify that the user has *tried* to select a gene before warning them.
         // $.inArray() returns -1 if the value is not found. Do not check for truthiness.
-        if (geneList && data.gene && $.inArray(data.gene, geneList) === -1) {
+        if (geneList && data.userOptions.gene && $.inArray(data.userOptions.gene, geneList) === -1) {
             notifier.warn('Please input a valid gene.');
             return false;
         }
@@ -998,129 +1029,92 @@ var Ui = function(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, 
         }
 
         return true;
-    };
+    }
 
-    var setAutocomplete = function(elemName, data) {
-        $overlay.find(elemName).autocomplete({
-            source: function(request, response) {
-                var results = $.ui.autocomplete.filter(data, request.term);
-                response(results.slice(0, 10));
-            },
-            minLength: 2,
-            delay: 250,
-            autoFocus: true
-        });
-    };
+    function getUserOptions($modalBox) {
 
-    events.on('bootstrapped', function() {
-        var $g2eLink =  $('#g2e-embedded-button #g2e-link'),
-            platform = scraper.getPlatform();
+        var data = {},
+            method = $modalBox.find('#g2e-diffexp option:selected').val(),
+            cutoff = $modalBox.find('#g2e-cutoff option:selected').val(),
+            normalize = $modalBox.find('#g2e-normalize option:selected').val(),
+            cell = $modalBox.find('#g2e-cell .g2e-value input').val(),
+            perturbation = $modalBox.find('#g2e-perturbation .g2e-value input').val(),
+            gene = $modalBox.find('#g2e-gene #g2e-geneList').val(),
+            disease = $modalBox.find('#g2e-disease #g2e-diseaseList').val(),
+            threshold = $modalBox.find('#g2e-threshold option:selected').val();
 
-        /* SUPPORTED_PLATFORMS is a global variable built by the deployment
-         * script. We do this because (1) the array is small and can be loaded
-         * into the client's memory; (2) any network, if the array was fetched
-         * from the server, would erroneously tell the client we support that
-         * platform; and (3) manually updating this variable in JS is easy to
-         * forget.
-         */
-        if (platform && $.inArray(platform, SUPPORTED_PLATFORMS) === -1) {
-            $g2eLink.html('<strong class="g2e-strong">This platform is not currently supported.');
-        } else {
-            $g2eLink.click(openModalBox);
+        if (method) {
+            data.diffexp_method = method;
         }
-    });
+        if (cutoff) {
+            data.cutoff = cutoff;
+        }
+        if (normalize) {
+            data.normalize = normalize;
+        }
+        if (cell) {
+            data.cell = cell.replace(/_|\.|-/, '');
+        }
+        if (perturbation) {
+            data.perturbation = perturbation.replace(/_|\.|-/, '');
+        }
+        if (gene) {
+            data.gene = gene;
+        }
+        if (disease) {
+            data.disease = disease;
+        }
+        if (threshold) {
+            data.threshold = threshold;
+        }
 
-    events.on('requestFailed', function(errorData) {
-        notifier.warn(errorData.message);
-        resetFooter();
-    });
+        return data;
+    }
 
-    events.on('geneListFetched', function(geneList) {
-        setAutocomplete('#g2e-geneList', geneList);
-    });
-
-    events.on('resultsReady', showResultsLink);
-
-    events.on('resultsError', function() {
-        $errorMessage.show();
-    });
-
-    var init = (function() {
-        var html = templater.get('modal');
-        $(html).hide().appendTo('body');
-        $('#g2e-modal').draggable();
-        $overlay = $('#g2e-overlay');
-        $resultsBtn = $overlay.find('#g2e-results-btn');
-        $errorMessage = $overlay.find('#g2e-error-message').hide();
-        $submitBtn = $overlay.find('#g2e-submit-btn').click(postData);
-        $overlay.find('#g2e-close-btn').click(function() {
-            resetFooter();
-            $overlay.hide();
-        });
-
-        tagger.init($("#g2e-tags"), $('#required-fields-based-on-tag'));
-
-        $ttest = $('.g2e-ttest');
-        $cutoff = $('#g2e-cutoff');
-        $threshold = $('#g2e-threshold');
-        $ttest.hide();
-        $('#g2e-diffexp').change(function(evt) {
-            var method = $(evt.target).val();
-            if (method === 'chdir') {
-                $cutoff.show();
-                $ttest.hide();
+    /* August 2015:
+     * Gets data from fields that are specific for the upcoming Coursera
+     * MOOC. In principle, we can remove this in the future.
+     */
+    function getCrowdsourcedMetadata() {
+        $('#required-fields-based-on-tag').find('tr').each(function(i, tr) {
+            var $tr = $(tr);
+            if ($tr.find('input').attr('required') === 'true') {
+                debugger;
             } else {
-                $cutoff.hide();
-                $ttest.show();
+                debugger;
             }
         });
+        return {};
+    }
 
-        $('#g2e-correction-method').change(function(evt) {
-            var val = $(evt.target).val();
-            if (val === 'none') {
-                $threshold.hide();
-            } else {
-                $threshold.show();
-            }
-        });
-    })();
-};
+    return {
+        getData: getData,
+        sendDataToServer: sendDataToServer
+    };
+}
 
 var main = function() {
 
-    /* EXTENSION_ID, DEBUG, SERVER, and SUPPORTED_PLATFORMS are set in
-     * config.js via build.sh.
-     */
-    var events = Events(),
-        notifier = Notifier(DEBUG),
-        templater = Templater(IMAGE_PATH),
-        loader = Loader(),
-        tagger = Tagger(events, templater),
-        baseScraper = BaseScraper(DEBUG),
-        bootstrapper = Bootstrapper(events, notifier, templater),
-        scraper,
-        ui,
-        comm;
+    var page = Page();
 
-    /* TODO:
-     * The Scraper--a class that doesn't exist--constructor should consume
-     * the bootstrapper, discover what site it is on, and return the
-     * appropriate constructor. main.js should not know about this.
-     */
-    var isGdsFl = bootstrapper.isGds();
-    if (isGdsFl === 1) {
-        modeScraper = GdsScraper(events);
-    } else if (isGdsFl === -1) {
-        modeScraper = GseScraper(events, templater);
+    if (page.isDataset()) {
+        ScreenScraper(page, SUPPORTED_PLATFORMS, function(screenScraper) {
+            if (screenScraper.isSupportedPlatform()) {
+
+                var events = Events(),
+                    notifier = Notifier(DEBUG),
+                    templater = Templater(IMAGE_PATH),
+                    tagger = Tagger(events, templater),
+                    comm =  Comm(events, LoadingScreen, SERVER),
+                    userInputHandler;
+
+                UiEmbedder(events, page, screenScraper, templater);
+                userInputHandler = UserInputHandler(comm, events, notifier, screenScraper, tagger);
+                ModalBox(events, tagger, templater, userInputHandler);
+            }
+        });
     }
-
-    scraper = $.extend(modeScraper, baseScraper);
-    comm = Comm(events, loader, notifier, SERVER);
-    ui = Ui(comm, events, notifier, scraper, SUPPORTED_PLATFORMS, tagger, templater);
-
-    bootstrapper.init();
 };
-
 
 	// The Firefox plugin bootstrapper manages when the plugin loads.
     main();
