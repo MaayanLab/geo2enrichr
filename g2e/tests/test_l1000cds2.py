@@ -1,7 +1,7 @@
 import unittest
 
 import g2e.core.targetapp.l1000cds2 as l1000cds2
-from g2e.model.expmetadata import ExpMetadata
+from g2e.model.requiredmetadata import ExpMetadata
 from g2e.model.gene import Gene
 from g2e.model.rankedgene import RankedGene
 

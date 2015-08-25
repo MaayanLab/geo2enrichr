@@ -119,6 +119,9 @@ form {
     font-size: @font-size-base;
     font-style: italic;
 }
+.capitalize-initial {
+    text-transform: capitalize;
+}
 
 /* Main structural elements:
  * header, content, footer
@@ -355,8 +358,9 @@ form {
     }
 }
 
-/* Tag page
- * -------- */
+/* Tag and Metadata pages
+ * ---------------------- */
+.metadata,
 .tag {
     th {
         border-bottom: 2px solid @color-lightgray3;
@@ -369,6 +373,21 @@ form {
         font-size: 12px;
         font-weight: normal;
         margin-left: 15px;
+    }
+    dl {
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+    }
+    dt {
+        float: left;
+        font-style: italic;
+        width: 50%;
+    }
+    dd {
+        float: left;
+        margin: 0;
+        width: 50%;
     }
 }
 

@@ -37,11 +37,11 @@
             </tr>
             <tr>
                 <td>Platform</td>
-                <td>{{ gene_signature.exp_metadata.platform }}</td>
+                <td>{{ gene_signature.softfile.platform }}</td>
             </tr>
             <tr>
                 <td>Normalized</td>
-                <td>{{ gene_signature.exp_metadata.normalize }}</td>
+                <td>{{ gene_signature.softfile.normalize }}</td>
             </tr>
             <tr title="Parsed and cleaned SOFT file, with GEO metadata removed and only the control and samples listed.">
                 <td>Parsed SOFT file</td>
@@ -55,40 +55,24 @@
             <caption>Metadata</caption>
             <tr>
                 <td>Differential expression method</td>
-                <td>{{ gene_signature.exp_metadata.diff_exp_method.name }}</td>
+                <td>{{ gene_signature.required_metadata.diff_exp_method.name }}</td>
             </tr>
             <tr>
                 <td>Cutoff</td>
-                <td>{{ gene_signature.exp_metadata.cutoff }}</td>
+                <td>{{ gene_signature.required_metadata.cutoff }}</td>
             </tr>
             <tr>
                 <td>Correction method</td>
-                <td>{{ gene_signature.exp_metadata.ttest_correction_method.name }}</td>
+                <td>{{ gene_signature.required_metadata.ttest_correction_method.name }}</td>
             </tr>
-            <tr>
-                <td>Organism</td>
-                <td>{{ gene_signature.exp_metadata.organism }}</td>
-            </tr>
-            <tr>
-                <td>Threshold</td>
-                <td>{{ gene_signature.exp_metadata.threshold }}</td>
-            </tr>
-            <tr>
-                <td>Cell type or tissue</td>
-                <td>{{ gene_signature.exp_metadata.cell }}</td>
-            </tr>
-            <tr>
-                <td>Perturbation</td>
-                <td>{{ gene_signature.exp_metadata.perturbation }}</td>
-            </tr>
-            <tr>
-                <td>Manipulated gene</td>
-                <td>{{ gene_signature.exp_metadata.gene }}</td>
-            </tr>
-            <tr>
-                <td>Relevant disease</td>
-                <td>{{ gene_signature.exp_metadata.disease }}</td>
-            </tr>
+
+            {% for opt_meta in gene_signature.optional_metadata %}
+                <tr>
+                    <td class="capitalize-initial">{{ opt_meta.experimental_metadata.name }}</td>
+                    <td>{{ opt_meta.value }}</td>
+                </tr>
+            {% endfor %}
+        
         </table>
 
         <table class="gene-lists">

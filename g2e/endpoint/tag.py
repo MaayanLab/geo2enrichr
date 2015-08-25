@@ -11,12 +11,12 @@ from g2e.config import Config
 import g2e.dataaccess.dataaccess as dataaccess
 
 
-tag = Blueprint('tag', __name__, url_prefix=Config.BASE_URL + '/tag')
+tag = Blueprint('tag', __name__, url_prefix=Config.BASE_EXPLORE_URL + '/tag')
 
 
 @tag.route('/<tag_name>', methods=['GET'])
 def tag_endpoint(tag_name):
-    tag = dataaccess.fetch_metadata_tag(tag_name)
+    tag = dataaccess.fetch_tag(tag_name)
     if tag is None:
         return render_template('not-found.html',
             message='No gene signatures with tag "%s" found' % tag_name

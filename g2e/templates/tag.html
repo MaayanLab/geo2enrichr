@@ -6,24 +6,27 @@
         <table>
             <thead>
                 <tr>
-                    <th>Link</th>
-                    <th>Organism</th>
-                    <th>Cell</th>
-                    <th>Perturbation</th>
-                    <th>Gene</th>
-                    <th>Disease</th>
+                    <th>Gene Signature</th>
+                    <th>Metadata</th>
                 </tr>
             </thead>
-            {% for gene_signature in tag.gene_signatures %}
-                <tr>
-                    <td><a href="{{ base_url }}/{{ gene_signature.extraction_id }}">{{ gene_signature.extraction_id }}</a></td>
-                    <td>{{ gene_signature.exp_metadata.organism if gene_signature.exp_metadata.organism != None }}</td>
-                    <td>{{ gene_signature.exp_metadata.cell if gene_signature.exp_metadata.cell != None}}</td>
-                    <td>{{ gene_signature.exp_metadata.perturbation if gene_signature.exp_metadata.perturbation != None}}</td>
-                    <td>{{ gene_signature.exp_metadata.gene if gene_signature.exp_metadata.gene != None}}</td>
-                    <td>{{ gene_signature.exp_metadata.disease if gene_signature.exp_metadata.disease != None}}</td>
-                </tr>
-            {% endfor %}
+            <tbody>
+                {% for gene_signature in tag.gene_signatures %}
+                    <tr>
+                        <td>
+                            <a href="{{ base_url }}/{{ gene_signature.extraction_id }}">{{ gene_signature.extraction_id }}</a>
+                        </td>
+                        <td>
+                            <dl>
+                            {% for opt_meta in gene_signature.optional_metadata %}
+                                <dt>{{ opt_meta.experimental_metadata.name }}</dt>
+                                <dd>{{ opt_meta.value }}</dd>
+                            {% endfor %}
+                            </dl>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 

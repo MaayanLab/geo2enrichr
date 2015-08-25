@@ -1,0 +1,36 @@
+{% extends 'wrapper.html' %}
+{% block body %}
+
+    <div class="metadata">
+        <h1>{{ metadata.name }} <span class="note">{{ num_tags }} gene signatures</span></h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Gene Signature</th>
+                    <th class="capitalize-initial">{{ metadata.name }}</th>
+                    <th>Tags</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for opt_metadata in metadata.optional_metadata %}
+                    <tr>
+                        <td>
+                            <a href="{{ results_url }}/{{ opt_metadata.gene_signature.extraction_id }}">{{ opt_metadata.gene_signature.extraction_id }}</a>
+                        </td>
+                        <td>
+                            <a href="{{ metadata_url }}/{{ metadata.name }}/{{ opt_metadata.value|custom_urlencode }}">
+                                {{ opt_metadata.value }}
+                            </a>
+                        </td>
+                        <td>
+                            {% for tag in opt_metadata.gene_signature.metadata_tags %}
+                                <a href="{{ tag_url }}/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

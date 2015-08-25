@@ -19,6 +19,7 @@ class Config(object):
 
     BASE_URL = '/g2e'
     BASE_API_URL = BASE_URL + '/api'
+    BASE_EXPLORE_URL = BASE_URL + '/explore'
 
     SQLALCHEMY_POOL_RECYCLE = 3600
     SQLALCHEMY_DATABASE_URI = lines[0]
