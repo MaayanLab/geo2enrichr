@@ -15,7 +15,7 @@ from g2e.dataaccess.util import get_or_create
 from g2e.model.softfile import SoftFile
 from g2e.model.requiredmetadata import RequiredMetadata
 from g2e.model.optionalmetadata import construct_opt_meta_from_args
-from g2e.model.metadatatag import MetadataTag
+from g2e.model.tag import Tag
 from g2e.core.genelist.genelistsmaker import genelists_maker
 
 
@@ -32,7 +32,7 @@ class GeneSignature(db.Model):
     required_metadata = db.relationship('RequiredMetadata', uselist=False, backref=db.backref('gene_signature', order_by=id))
     optional_metadata = db.relationship('OptionalMetadata', backref=db.backref('gene_signature', order_by=id))
 
-    def __init__(self, softfile, genelists, required_metadata, optional_metadata, metadata_tags):
+    def __init__(self, softfile, genelists, required_metadata, optional_metadata, tags):
         """Construct an Extraction instance. This is called only by class
         methods.
         """
@@ -43,7 +43,7 @@ class GeneSignature(db.Model):
         self.genelists = genelists
         self.required_metadata  = required_metadata
         self.optional_metadata  = optional_metadata
-        self.metadata_tags = metadata_tags
+        self.tags = tags
 
     def __repr__(self):
         return '<GeneSignature %r>' % self.id
@@ -58,10 +58,10 @@ class GeneSignature(db.Model):
             tags = args.get('tags').split(',')
         else:
             tags = []
-        metadata_tags = [get_or_create(MetadataTag, name=name) for name in tags]
+        tags = [get_or_create(Tag, name=name) for name in tags]
         optional_metadata = construct_opt_meta_from_args(args)
         genelists = genelists_maker(softfile, required_metadata)
-        return cls(softfile, genelists, required_metadata, optional_metadata, metadata_tags)
+        return cls(softfile, genelists, required_metadata, optional_metadata, tags)
 
     @classmethod
     def from_geo(cls, args):
@@ -86,5 +86,5 @@ class GeneSignature(db.Model):
             'softfile': self.softfile.serialize,
             'genelists': [gl.serialize for gl in self.genelists],
             'metadata': self.required_metadata.serialize,
-            'tags': [t.name for t in self.metadata_tags]
+            'tags': [t.name for t in self.tags]
         }

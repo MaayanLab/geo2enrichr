@@ -15,13 +15,13 @@
             </tbody>
         </table>
 
-        {% if gene_signature.metadata_tags|length > 0 %}
+        {% if gene_signature.tags|length > 0 %}
             <table>
                 <caption>Tags</caption>
                 <tr>
                     <td></td>
                     <td>
-                        {% for tag in gene_signature.metadata_tags %}
+                        {% for tag in gene_signature.tags %}
                             <a href="tag/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                         {% endfor %}
                     </td>

@@ -19,7 +19,7 @@
                         </td>
                         <td>{{ opt_metadata.value }}</td>
                         <td>
-                            {% for tag in opt_metadata.gene_signature.metadata_tags %}
+                            {% for tag in opt_metadata.gene_signature.tags %}
                                 <a href="{{ tag_url }}/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                             {% endfor %}
                         </td>

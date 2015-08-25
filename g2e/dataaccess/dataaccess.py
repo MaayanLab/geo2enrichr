@@ -9,7 +9,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 from g2e.dataaccess.util import session_scope
 from g2e.model.genesignature import GeneSignature
-from g2e.model.metadatatag import MetadataTag
+from g2e.model.tag import Tag
 from g2e.model.optionalmetadata import OptionalMetadata
 
 
@@ -40,7 +40,7 @@ def fetch_tag(tag_name):
     print 'Fetching tag ' + tag_name
     with session_scope() as session:
         return session\
-            .query(MetadataTag)\
+            .query(Tag)\
             .filter(tag_name == tag_name)\
             .first()
 

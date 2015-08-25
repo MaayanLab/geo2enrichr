@@ -22,12 +22,16 @@ from g2e.model.requiredmetadata import RequiredMetadata
 
 def upgrade():
 
-    # rename tables
-    # =============
+    # rename tables & columns
+    # =======================
     op.rename_table('exp_metadata', 'required_metadata')
-    # Delete the columns only after we transfer the data.
-
+    op.rename_table('metadata_tag', 'tag')
     op.rename_table('tags_to_extractions', 'gene_signatures_to_tags')
+
+    # Drop constraints so we can modify columns
+    op.drop_constraint('gene_signatures_to_tags_ibfk_2', 'gene_signatures_to_tags', type_='foreignkey')
+    op.alter_column('gene_signatures_to_tags', 'metadata_tag_fk', new_column_name='tag_fk', type_=sa.Integer)
+    op.create_foreign_key(None, 'gene_signatures_to_tags', 'tag', ['tag_fk'], ['id'])
 
     # create tables
     # =============
@@ -73,7 +77,7 @@ def upgrade():
     op.drop_constraint('required_metadata_ibfk_1', 'required_metadata', type_='foreignkey')
     op.drop_constraint('required_metadata_ibfk_3', 'required_metadata', type_='foreignkey')
 
-    # # Rename columns now that data is moved.
+    # Rename columns now that data is moved.
     op.alter_column('required_metadata', 'diff_exp_method_fk', new_column_name='diff_exp_method', type_=sa.String(255))
     op.alter_column('required_metadata', 'ttest_correction_method_fk', new_column_name='ttest_correction_method', type_=sa.String(255))
 
@@ -81,7 +85,9 @@ def upgrade():
     move_method(conn, 'diff_exp_method')
     move_method(conn, 'ttest_correction_method')
 
-    raise Exception('we dont want this to pass')
+    # Drop deprecated tables
+    op.drop_table('diff_exp_method')
+    op.drop_table('ttest_correction_method')
 
 
 def move_metadata(conn, name):
