@@ -85,7 +85,7 @@ fi
 # Critical step! We need to reset the DB credentials so we can keep developing locally.
 reset_credentials=$(head -n 1 g2e/dev.conf)
 reset_debug=$(tail -n +2 g2e/dev.conf)
-printf 'reseting credentials'
+printf 'Reseting credentials\n'
 printf '%s\n%s' $reset_credentials $reset_debug > $dbconf
 
 # Push to private docker repo if asked
