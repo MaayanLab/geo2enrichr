@@ -17,9 +17,11 @@ class Config(object):
     DEBUG = bool(lines[1])
     SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 
-    BASE_URL = '/g2e'
-    BASE_API_URL = BASE_URL + '/api'
-    BASE_EXPLORE_URL = BASE_URL + '/explore'
+    BASE_URL          = '/g2e'
+    BASE_RESULTS_URL  = BASE_URL + '/results'
+    BASE_API_URL      = BASE_URL + '/api'
+    BASE_TAGS_URL     = BASE_URL + '/explore/tags'
+    BASE_METADATA_URL = BASE_URL + '/explore/metadata'
 
     SQLALCHEMY_POOL_RECYCLE = 3600
     SQLALCHEMY_DATABASE_URI = lines[0]

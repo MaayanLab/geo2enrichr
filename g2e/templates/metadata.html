@@ -2,7 +2,7 @@
 {% block body %}
 
     <div class="metadata">
-        <h1>{{ metadata.name }} <span class="note">{{ num_tags }} gene signatures</span></h1>
+        <h1>{{ metadata_name }} <span class="note">{{ num_tags }} gene signatures</span></h1>
         <table>
             <thead>
                 <tr>
@@ -12,18 +12,18 @@
                 </tr>
             </thead>
             <tbody>
-                {% for opt_metadata in metadata.optional_metadata %}
+                {% for opt_meta in metadata %}
                     <tr>
                         <td>
-                            <a href="{{ results_url }}/{{ opt_metadata.gene_signature.extraction_id }}">{{ opt_metadata.gene_signature.extraction_id }}</a>
+                            <a href="{{ results_url }}/{{ opt_meta.gene_signature.extraction_id }}">{{ opt_meta.gene_signature.extraction_id }}</a>
                         </td>
                         <td>
-                            <a href="{{ metadata_url }}/{{ metadata.name }}/{{ opt_metadata.value|custom_urlencode }}">
-                                {{ opt_metadata.value }}
+                            <a href="{{ metadata_url }}/{{ metadata_name }}/{{ opt_meta.value|custom_urlencode }}">
+                                {{ opt_meta.value }}
                             </a>
                         </td>
                         <td>
-                            {% for tag in opt_metadata.gene_signature.tags %}
+                            {% for tag in opt_meta.gene_signature.tags %}
                                 <a href="{{ tag_url }}/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                             {% endfor %}
                         </td>

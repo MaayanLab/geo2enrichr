@@ -17,28 +17,24 @@ class OptionalMetadata(db.Model):
     value = db.Column(db.String(255))
     gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
 
-    def __init__(self, experimental_metadata, value):
+    def __init__(self, name, value):
         """Constructs a Metadata instance.
         """
-        self.experimental_metadata = experimental_metadata
+        self.name = name
         self.value = value
 
     def __repr__(self):
         return '<OptionalMetadata %r>' % self.id
 
 
-# TODO: This function should not exist. The front-end should send over an
-# 'optionalMetadata' object that can be iterated over and created with an
-# arbitrary number of items and values.
-#
-# The function should look like:
+# TODO: The front-end should send over an 'optionalMetadata' object that can
+# be iterated over and created with an arbitrary number of items and values:
 #
 # opt_meta_list = []
 # for name, value in args.metadata.items():
 #     exp_meta = get_or_create(ExperimentalMetadata, name=name)
 #     opt_meta = OptionalMetadata(exp_meta, value)
 #     opt_meta_list.append(opt_meta)
-
 def construct_opt_meta_from_args(args):
     """Helper method for constructing known optional metadata.
     """

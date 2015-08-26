@@ -8,13 +8,25 @@ __contact__ = "avi.maayan@mssm.edu"
 
 from flask import Blueprint, render_template
 from g2e.config import Config
+from g2e.model.tag import Tag
 import g2e.dataaccess.dataaccess as dataaccess
 
 
-tag = Blueprint('tag', __name__, url_prefix=Config.BASE_EXPLORE_URL + '/tag')
+explore_tags = Blueprint('explore_tags', __name__, url_prefix=Config.BASE_TAGS_URL)
 
 
-@tag.route('/<tag_name>', methods=['GET'])
+
+@explore_tags.route('/', methods=['GET'])
+def tags_endpoint():
+    tags = dataaccess.fetch_all(Tag)
+    return render_template('tags.html',
+        base_tags_url=Config.BASE_TAGS_URL,
+        num_tags=len(tags),
+        tags=tags
+    )
+
+
+@explore_tags.route('/<tag_name>', methods=['GET'])
 def tag_endpoint(tag_name):
     tag = dataaccess.fetch_tag(tag_name)
     if tag is None:
@@ -23,7 +35,7 @@ def tag_endpoint(tag_name):
         )
     else:
         return render_template('tag.html',
-            base_url=Config.BASE_URL + '/results',
+            base_url=Config.BASE_RESULTS_URL,
             num_tags=len(tag.gene_signatures),
             tag=tag
         )

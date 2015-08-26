@@ -55,10 +55,16 @@ class GeneSignature(db.Model):
         """
         required_metadata = RequiredMetadata.from_args(args)
         if 'tags' in args:
-            tags = args.get('tags').split(',')
+            tag_names = args.get('tags').split(',')
         else:
-            tags = []
-        tags = [get_or_create(Tag, name=name) for name in tags]
+            tag_names = []
+
+        tags = []
+        for name in tag_names:
+            # If the name is not an empty string or just whitespace.
+            if bool(name.strip()):
+                tags.append(get_or_create(Tag, name=name))
+
         optional_metadata = construct_opt_meta_from_args(args)
         genelists = genelists_maker(softfile, required_metadata)
         return cls(softfile, genelists, required_metadata, optional_metadata, tags)
@@ -83,8 +89,9 @@ class GeneSignature(db.Model):
     def serialize(self):
         return {
             'extraction_id': self.extraction_id,
-            'softfile': self.softfile.serialize,
-            'genelists': [gl.serialize for gl in self.genelists],
-            'metadata': self.required_metadata.serialize,
+            'soft_file': self.softfile.serialize,
+            'gene_lists': [gl.serialize for gl in self.genelists],
+            'required_metadata': self.required_metadata.serialize,
+            'optional_metadata': {om.name: om.value for om in self.optional_metadata},
             'tags': [t.name for t in self.tags]
         }

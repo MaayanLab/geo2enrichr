@@ -6,7 +6,7 @@
     <div class="results">
         <h1>Results</h1>
         <table>
-            <caption class="top">Share</caption>
+            <caption class="top">Share</caption>e
             <tbody>
                 <tr>
                     <td>Permanent link to these results</td>
@@ -22,7 +22,7 @@
                     <td></td>
                     <td>
                         {% for tag in gene_signature.tags %}
-                            <a href="tag/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
+                            <a href="{{ tags_url }}/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                         {% endfor %}
                     </td>
                 </tr>
@@ -68,7 +68,7 @@
 
             {% for opt_meta in gene_signature.optional_metadata %}
                 <tr>
-                    <td class="capitalize-initial">{{ opt_meta.experimental_metadata.name }}</td>
+                    <td class="capitalize-initial">{{ opt_meta.name }}</td>
                     <td>{{ opt_meta.value }}</td>
                 </tr>
             {% endfor %}

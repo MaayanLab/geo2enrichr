@@ -7,7 +7,7 @@
             <thead>
                 <tr>
                     <th>Gene Signature</th>
-                    <th>Metadata</th>
+                    <th>Optional Metadata</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,7 +19,7 @@
                         <td>
                             <dl>
                             {% for opt_meta in gene_signature.optional_metadata %}
-                                <dt>{{ opt_meta.experimental_metadata.name }}</dt>
+                                <dt>{{ opt_meta.name }}</dt>
                                 <dd>{{ opt_meta.value }}</dd>
                             {% endfor %}
                             </dl>

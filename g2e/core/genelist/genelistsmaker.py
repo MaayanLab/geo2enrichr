@@ -46,7 +46,7 @@ def genelists_maker(softfile, metadata):
     # 3. Apply cutoff if the differential expression method is the
     #    Characteristic Direction. We don't apply it earlier because PAEA
     #    requires the full signature.
-    if metadata.diff_exp_method.name == 'chdir':
+    if metadata.diff_exp_method == 'chdir':
         print 'Applying cutoff to the Characteristic Direction'
         ranked_genes = _apply_cutoff(ranked_genes, metadata.cutoff)
 

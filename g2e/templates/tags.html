@@ -1,0 +1,24 @@
+{% extends 'wrapper.html' %}
+{% block body %}
+
+    <div class="tag">
+        <h1>Tags <span class="note">{{ num_tags }} metadata tags</span></h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tag</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tag in tags %}
+                    <tr>
+                        <td>
+                            <a href="{{ base_tags_url }}/{{ tag.name }}">{{ tag.name }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

@@ -13,10 +13,10 @@ from g2e.dataaccess import dataaccess
 from g2e.model.genesignature import GeneSignature
 
 
-extract = Blueprint('api', __name__, url_prefix=Config.BASE_API_URL + '/extract')
+extract_api = Blueprint('extract_api', __name__, url_prefix=Config.BASE_API_URL + '/extract')
 
 
-@extract.route('/<extraction_id>')
+@extract_api.route('/<extraction_id>')
 @cross_origin()
 def get_extraction(extraction_id):
     """Handle GET request based on extraction ID.
@@ -30,7 +30,7 @@ def get_extraction(extraction_id):
         return jsonify(gene_signature.serialize)
 
 
-@extract.route('/geo', methods=['POST'])
+@extract_api.route('/geo', methods=['POST'])
 @cross_origin()
 def post_from_geo():
     """Handle POST requests from GEO.
@@ -42,7 +42,7 @@ def post_from_geo():
     return jsonify(response)
 
 
-@extract.route('/upload', methods=['POST'])
+@extract_api.route('/upload', methods=['POST'])
 @cross_origin()
 def post_file():
     """Handle POST file upload.

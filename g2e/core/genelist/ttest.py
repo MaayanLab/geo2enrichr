@@ -19,7 +19,7 @@ def ttest(A, B, genes, ttest_correction_method, ttest_cutoff):
     print 'Performing the t-test.'
     genes, pvalues = _get_pvalues(A, B, genes)
     if ttest_correction_method:
-        pvalues = _correct_pvalues(pvalues, ttest_correction_method.name)
+        pvalues = _correct_pvalues(pvalues, ttest_correction_method)
 
     # Zip them together so we can track them.
     gene_pvalues = list(zip(genes, pvalues))

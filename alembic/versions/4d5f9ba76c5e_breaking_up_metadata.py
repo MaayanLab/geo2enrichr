@@ -17,7 +17,7 @@ import sqlalchemy as sa
 
 from g2e.model.optionalmetadata import OptionalMetadata
 from g2e.model.requiredmetadata import RequiredMetadata
-
+from g2e.model.softfile import SoftFile
 
 
 def upgrade():
@@ -28,7 +28,8 @@ def upgrade():
     op.rename_table('metadata_tag', 'tag')
     op.rename_table('tags_to_extractions', 'gene_signatures_to_tags')
 
-    # Drop constraints so we can modify columns
+    # rename columns
+    # ==============
     op.drop_constraint('gene_signatures_to_tags_ibfk_2', 'gene_signatures_to_tags', type_='foreignkey')
     op.alter_column('gene_signatures_to_tags', 'metadata_tag_fk', new_column_name='tag_fk', type_=sa.Integer)
     op.create_foreign_key(None, 'gene_signatures_to_tags', 'tag', ['tag_fk'], ['id'])
@@ -65,11 +66,6 @@ def upgrade():
     op.drop_column('required_metadata', 'perturbation')
     op.drop_column('required_metadata', 'disease')
 
-    # This isn't part of the migration per se, but we're performing clean up.
-    # These belong (and already exist) on SoftFile.
-    op.drop_column('required_metadata', 'normalize')
-    op.drop_column('required_metadata', 'platform')
-
     # Move data from diff_exp_method and ttest_correction_method
     # ----------------------------------------------------------
 
@@ -77,17 +73,28 @@ def upgrade():
     op.drop_constraint('required_metadata_ibfk_1', 'required_metadata', type_='foreignkey')
     op.drop_constraint('required_metadata_ibfk_3', 'required_metadata', type_='foreignkey')
 
-    # Rename columns now that data is moved.
+    # Rename columns before moving data.
     op.alter_column('required_metadata', 'diff_exp_method_fk', new_column_name='diff_exp_method', type_=sa.String(255))
     op.alter_column('required_metadata', 'ttest_correction_method_fk', new_column_name='ttest_correction_method', type_=sa.String(255))
 
-    # Move data
+    # Move methods from their own tables to required_metadata.
     move_method(conn, 'diff_exp_method')
     move_method(conn, 'ttest_correction_method')
 
     # Drop deprecated tables
     op.drop_table('diff_exp_method')
     op.drop_table('ttest_correction_method')
+
+
+    # Perform some basic cleanup
+    # ==========================
+
+    # This isn't part of the migration per se, but we're performing clean up.
+    # These belong (and already exist) on SoftFile.
+    op.drop_column('required_metadata', 'normalize')
+    op.drop_column('required_metadata', 'platform')
+
+    rebuild_normalize_column(conn)
 
 
 def move_metadata(conn, name):
@@ -110,8 +117,25 @@ def move_method(conn, method):
     results = res.fetchall()
 
     for r in results:
+        # We cannot assign to r[0]--"TypeError: 'RowProxy' object does not support item assignment"
         if r[0] == 'NA':
-            r[0] = None
-        stmt = tbl.update(tbl.c.gene_signature_fk == r[1])\
-            .values({ method: r[0] })
+            v = None
+        else:
+            v = r[0]
+        stmt = tbl.update(tbl.c.gene_signature_fk == r[1]).values({ method: v })
         conn.execute(stmt)
+
+
+def rebuild_normalize_column(conn):
+    sql = 'SELECT id, normalize FROM soft_file'
+    res = conn.execute(sql)
+    results = res.fetchall()
+    sf_to_normalize = []
+
+    tbl = SoftFile.__table__
+
+    for r in results:
+        if r[1] is None:
+            v = False
+            stmt = tbl.update(tbl.c.id == r[0]).values({ 'normalize': v })
+            conn.execute(stmt)
