@@ -2,8 +2,8 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var DEBUG = false;
-var SERVER = "http://amp.pharm.mssm.edu/g2e/";
+var DEBUG = true;
+var SERVER = "http://localhost:8083/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
 // This file is built when new platforms are added.
 //// We use an array rather than hitting an API endpoint because this is much
@@ -181,155 +181,149 @@ var Events = function() {
 };
 
 
-/* Abstracts issues of adding new required fields depending on metadata. This
- * module is only required for a 2015 Coursera MOOC and could be refactored
- * once the course is over.
+/* Abstracts issues of adding new required fields depending on metadata. 95%
+ * of this module is only required for a 2015 Coursera MOOC and could be
+ * refactored once the course is over.
  *
  * https://www.coursera.org/course/bd2klincs
  */
 var Tagger = function(events, templater) {
 
-    var $table, selectedTags = {};
+    var selectedTags = [],
+        newFields = [],
+        $table;
 
     var tagsToFields = {
-        AGING_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        AGING_BD2K_LINCS_DCIC_COURSERA: {
+            young: {
                 required: true,
-                key: "young",
                 description: "Age of the young sample"
             },
-            {
+            old: {
                 required: true,
-                key: "old",
                 description: "Age of the old sample"
             },
-            {
+            age_unit: {
                 required: true,
-                key: "age_unit",
                 description: "Unit of age, choose among day, month, year"
             }
-        ],
-        MCF7_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        MCF7_BD2K_LINCS_DCIC_COURSERA: {
+            pert_type: {
                 required: true,
-                key: "pert_type",
                 description: "Perturbation type, choose among genetic, chemical, physical, other"
             },
-            {
+            pert_name: {
                 required: true,
-                key: "pert_name",
                 description: "Perturbagen name"
             },
-            {
+            pert_id: {
                 required: false,
-                key: "pert_id",
                 description: "Identifier of the perturbagen"
             }
-        ],
-        DISEASES_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        DISEASES_BD2K_LINCS_DCIC_COURSERA: {
+            disease_name: {
                 required: true,
-                key: "disease_name",
                 description: "Name of the disease"
             },
-            {
+            disease_id: {
                 required: true,
-                key: "disease_id",
                 description: "ID of the disease (from Disease-Ontology or UMLS)"
             }
-        ],
-        LIGANDS_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        LIGANDS_BD2K_LINCS_DCIC_COURSERA: {
+            ligand_name: {
                 required: true,
-                key: "ligand_name",
                 description: "Name of the ligand"
             },
-            {
+            ligand_id: {
                 required: true,
-                key: "ligand_id",
                 description: "Identifier of the ligand"
             }
-        ],
-        DRUGS_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        DRUGS_BD2K_LINCS_DCIC_COURSERA: {
+            drug_name: {
                 required: true,
-                key: "drug_name",
                 description: "Name of the drug"
             },
-            {
+            drug_id: {
                 required: true,
-                key: "drug_id",
                 description: "ID of the Drug (from DrugBank or PubChem)"
             }
-        ],
-        GENES_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        GENES_BD2K_LINCS_DCIC_COURSERA: {
+            pert_type: {
                 required: true,
-                key: "pert_type",
                 description: "Perturbation type (KO, KD, OE, Mutation)"
             }
-        ],
-        PATHOGENS_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        PATHOGENS_BD2K_LINCS_DCIC_COURSERA: {
+            microbe_name: {
                 required: true,
-                key: "microbe_name",
                 description: "Name of the virus or bacteria"
             },
-            {
+            microbe_id: {
                 required: false,
-                key: "microbe_id",
                 description: "Taxonomy ID of the virus or bacteria"
             }
-        ]
+        }
     };
 
-    var addRequiredRows = function(newTag) {
-        selectedTags[newTag] = tagsToFields[newTag];
-        tagsToFields[newTag].forEach(function(newRow) {
-            var $tr = templater.getTableRow(newRow.description, newRow.key);
+    function addRequiredRows(newTag) {
+        $.each(tagsToFields[newTag], function(key, newRow) {
+            newFields.push(key);
+            var $tr = templater.getTableRow(newRow.description, key);
             $table.append($tr);
         });
-    };
+    }
 
-    var removeUnrequiredRows = function(oldTag) {
-        selectedTags[oldTag] = undefined;
-        tagsToFields[oldTag].forEach(function(oldRow) {
-            var $oldRow = $('#' + oldRow.key);
+    function removeUnrequiredRows(oldTag) {
+        $.each(tagsToFields[oldTag], function(key) {
+            var $oldRow = $('#' + key),
+                idx = newFields.indexOf(key);
+            if (idx > -1) {
+                newFields.splice(idx, 1);
+            }
             $oldRow.remove();
         });
-    };
+    }
 
-    var watch = function($input) {
+    function watch($input) {
         $input.tagit({
             singleField: true,
             beforeTagAdded: function (evt, ui) {
                 var newTag = $(ui.tag).find('.tagit-label').html();
-                for (var tag in tagsToFields) {
-                    if (tag === newTag) {
-                        addRequiredRows(newTag);
-                    }
+                selectedTags.push(newTag);
+                if (typeof tagsToFields[newTag] !== 'undefined') {
+                    addRequiredRows(newTag);
                 }
             },
             afterTagRemoved: function (evt, ui) {
-                var oldTag = $(ui.tag).find('.tagit-label').html();
-                for (var tag in tagsToFields) {
-                    if (tag === oldTag) {
-                        removeUnrequiredRows(oldTag);
-                    }
+                var oldTag = $(ui.tag).find('.tagit-label').html(),
+                    idx = selectedTags.indexOf(oldTag);
+                if (idx > -1) {
+                    selectedTags.splice(idx, 1);
+                }
+                if (typeof tagsToFields[oldTag] !== 'undefined') {
+                    removeUnrequiredRows(oldTag);
                 }
             }
         });
-    };
+    }
 
-    var init = function($input, _$table) {
-        $table = _$table;
+    function init($input, $t) {
+        $table = $t;
         watch($input);
-    };
+    }
 
     return {
         init: init,
         getSelectedTags: function() {
             return selectedTags;
+        },
+        getNewFields: function() {
+            return newFields;
         }
     };
 };
@@ -859,7 +853,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         $modalBox = $('#g2e-overlay');
         $modalBox.find('#g2e-error-message').hide();
         $modalBox.find('#g2e-submit-btn').click(function() {
-            userInputHandler.sendDataToServer($modalBox);
+            userInputHandler.sendDataToServer();
         });
         $modalBox.find('#g2e-close-btn').click(function() {
             resetFooter();
@@ -869,6 +863,8 @@ function ModalBox(events, tagger, templater, userInputHandler) {
             $modalBox.find("#g2e-tags"),
             $modalBox.find('#g2e-required-fields-based-on-tag')
         );
+
+        userInputHandler.setModalBox($modalBox);
         setupDiffExpMethodOptions();
     })();
 
@@ -886,7 +882,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
     });
 
     events.on('dataPosted', function() {
-        $modalBox.find('.g2e-lock').off();
+        $modalBox.find('#g2e-submit-btn').addClass('g2e-lock').off();
     });
 
     function openModalBox() {
@@ -903,12 +899,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
 
     function resetFooter() {
         $modalBox.find('#g2e-results-btn').hide().off();
-        $modalBox.find('#g2e-submit-btn')
-            .removeClass('g2e-lock')
-            .off()
-            .click(function() {
-                userInputHandler.sendDataToServer($modalBox);
-            });
+        $modalBox.find('#g2e-submit-btn').removeClass('g2e-lock').off().click(userInputHandler.sendDataToServer);
         $modalBox.find('#g2e-error-message').hide();
     }
 
@@ -970,39 +961,57 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         geneList = data;
     });
 
-    function sendDataToServer($modalBox) {
-        var selectedData = getData($modalBox);
+    var $modalBox;
+    function setModalBox($el) {
+        $modalBox = $el;
+    }
+
+    function sendDataToServer() {
+        var selectedData = getData();
         if (isValidData(selectedData)) {
-
-            var data = {};
-            for (var prop1 in selectedData.scrapedData) {
-                data[prop1] = selectedData.scrapedData[prop1];
-            }
-            for (var prop2 in selectedData.userOptions) {
-                data[prop2] = selectedData.userOptions[prop2];
-            }
-
-            data.metadataTags = {};
-            for (var prop3 in selectedData.crowdsourcedMetadata) {
-                data.metadataTags[prop3] = selectedData.crowdsourcedMetadata[prop3];
-            }
-
-            comm.postSoftFile(data);
-
+            selectedData = prepareForTransfer(selectedData);
+            comm.postSoftFile(selectedData);
             events.fire('dataPosted');
         }
     }
 
-    function getData($modalBox) {
+    function prepareForTransfer(selectedData) {
+        var result = {};
+
+        $.each(selectedData.scrapedData, function(key, obj) {
+            result[key] = obj;
+        });
+
+        $.each(selectedData.userOptions, function(key, obj) {
+            result[key] = obj;
+        });
+
+        result.metadata = {};
+        $.each(selectedData.crowdsourcedMetadata, function(key, obj) {
+            result.metadata[key] = obj;
+        });
+
+        result.tags = selectedData.tags;
+
+        return result;
+    }
+
+    function getData() {
         return {
             scrapedData: screenScraper.getDataFromPage(),
-            userOptions: getUserOptions($modalBox),
+            userOptions: getUserOptions(),
+            tags: tagger.getSelectedTags(),
             crowdsourcedMetadata: getCrowdsourcedMetadata()
         };
     }
 
     function isValidData(data) {
-        var selectedTags = tagger.getSelectedTags();
+        var selectedTags = tagger.getSelectedTags(),
+            tag,
+            field,
+            conf,
+            selectedValue;
+
         if (!data.scrapedData.A_cols || data.scrapedData.A_cols.length < 2) {
             notifier.warn('Please select 2 or more control samples');
             return false;
@@ -1011,7 +1020,6 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             notifier.warn('Please select 2 or more experimental samples');
             return false;
         }
-        // * WARNINGS *
         // It is important to verify that the user has *tried* to select a gene before warning them.
         // $.inArray() returns -1 if the value is not found. Do not check for truthiness.
         if (geneList && data.userOptions.gene && $.inArray(data.userOptions.gene, geneList) === -1) {
@@ -1019,11 +1027,14 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             return false;
         }
 
-        for (var tag in selectedTags) {
-            for (var field in selectedTags[tag]) {
-                var conf = selectedTags[tag][field];
-                if (conf.required) {
-                    debugger;
+        // Use traditional for loops so we can exit early if necessary.
+        for (tag in selectedTags) {
+            for (field in selectedTags[tag]) {
+                conf = selectedTags[tag][field];
+                selectedValue = data.crowdsourcedMetadata[field];
+                if (conf.required && !selectedValue) {
+                    notifier.warn('Please add metadata field "' + conf.description + '"');
+                    return false;
                 }
             }
         }
@@ -1031,7 +1042,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         return true;
     }
 
-    function getUserOptions($modalBox) {
+    function getUserOptions() {
 
         var data = {},
             method = $modalBox.find('#g2e-diffexp option:selected').val(),
@@ -1076,20 +1087,22 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
      * MOOC. In principle, we can remove this in the future.
      */
     function getCrowdsourcedMetadata() {
-        $('#required-fields-based-on-tag').find('tr').each(function(i, tr) {
-            var $tr = $(tr);
-            if ($tr.find('input').attr('required') === 'true') {
-                debugger;
-            } else {
-                debugger;
+        // I really hate how much this function knows about the DOM.
+        var result = {};
+        var $table = $modalBox.find('#g2e-required-fields-based-on-tag');
+        $.each(tagger.getNewFields(), function(i, key) {
+            var $input = $table.find('#' + key + ' input');
+            if ($input.length) {
+                result[key] = $input.val().replace(/ /g,'');
             }
         });
-        return {};
+        return result;
     }
 
     return {
         getData: getData,
-        sendDataToServer: sendDataToServer
+        sendDataToServer: sendDataToServer,
+        setModalBox: setModalBox
     };
 }
 

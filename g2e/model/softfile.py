@@ -13,6 +13,7 @@ import g2e.core.softfile.geodownloader as geodownloader
 import g2e.core.softfile.softparser as softparser
 import g2e.core.softfile.normalizer as normalizer
 import g2e.core.softfile.softfilemanager as softfilemanager
+from g2e.util.requestutil import get_param_as_list
 
 
 class SoftFile(db.Model):
@@ -57,7 +58,8 @@ class SoftFile(db.Model):
             geodownloader.download(name)
 
         platform = args['platform']
-        A_cols, B_cols = cls.get_cols(args)
+        A_cols = get_param_as_list(args, 'A_cols')
+        B_cols = get_param_as_list(args, 'B_cols')
         genes, A, B, selections, stats = softparser.parse(name, is_geo, platform, A_cols, B_cols)
 
         normalize = True if ('normalize' not in args or args['normalize'] == 'True') else False
@@ -84,27 +86,6 @@ class SoftFile(db.Model):
     @classmethod
     def from_db(cls, name, platform, is_geo, normalize, text_file):
         return cls(name=name, platform=platform, is_geo=is_geo, normalize=normalize, text_file=text_file)
-
-    @classmethod
-    def get_cols(cls, args):
-        """Handles getting the samples depending on the way the HTTP request was
-        made.
-        """
-        # The "array[]" notation really confused me; see this Stack Overflow
-        # answer for details: http://stackoverflow.com/a/23889195/1830334
-        if 'A_cols[]' in args:
-            A_cols = args.getlist('A_cols[]')
-            B_cols = args.getlist('B_cols[]')
-        elif len(args.getlist('A_cols')) > 0:
-            A_cols = args.getlist('A_cols')
-            B_cols = args.getlist('B_cols')
-        elif 'A_cols' in args:
-            A_cols = [x for x in args.get('A_cols').split(',')]
-            B_cols = [x for x in args.get('B_cols').split(',')]
-
-        A_cols = [x.encode('ascii') for x in A_cols]
-        B_cols = [x.encode('ascii') for x in B_cols]
-        return A_cols, B_cols
 
     @property
     def serialize(self):

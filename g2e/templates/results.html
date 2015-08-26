@@ -6,7 +6,7 @@
     <div class="results">
         <h1>Results</h1>
         <table>
-            <caption class="top">Share</caption>e
+            <caption class="top">Share</caption>
             <tbody>
                 <tr>
                     <td>Permanent link to these results</td>
@@ -83,7 +83,9 @@
                     <td title="Text file containing a gene list resulting from differential expression analysis.">Gene lists</td>
                     <td title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Enrichr</td>
                     <td title="Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.">L1000CDS2</td>
-                    <td title="Perform principle angle enrichment analysis against over 70 gene set libraries.">PAEA</td>
+                    {% if show_paea %}
+                        <td title="Perform principle angle enrichment analysis against over 70 gene set libraries.">PAEA</td>
+                    {% endif %}
                 </tr>
             </thead>
             {% for gene_list in gene_signature.genelists %}
@@ -108,14 +110,12 @@
                     {% else %}
                         <td></td>
                     {% endif %}
-                    {% if gene_list.paea_link != None and gene_list.paea_link != '' %}
+                    {% if show_paea %}
                         <td>
                             <a href="{{ gene_list.paea_link }}" target="_blank">
                                 <img src="static/image/targetapp/paea.png">
                             </a>
                         </td>
-                    {% else %}
-                        <td></td>
                     {% endif %}
                 </tr>
             {% endfor %}

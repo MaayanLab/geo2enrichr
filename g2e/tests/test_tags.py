@@ -14,7 +14,7 @@ class ExtractEndpoint(unittest.TestCase):
         self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
             file = (file('g2e/tests/data/example_input.txt'), 'test.txt'),
             diffexp_method = 'ttest',
-            tags = 'food,cats,beer',
+            tags = ['food', 'cats', 'beer'],
             skip_target_apps = True
         ))
         extraction_id = json.loads(self.resp.data.decode())['extraction_id']
@@ -31,7 +31,7 @@ class ExtractEndpoint(unittest.TestCase):
         self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
             file = (file('g2e/tests/data/example_input.txt'), 'test.txt'),
             diffexp_method = 'ttest',
-            tags = ',  ,     ,',
+            tags = ['', '  ', '     '],
             skip_target_apps = True
         ))
         extraction_id = json.loads(self.resp.data.decode())['extraction_id']

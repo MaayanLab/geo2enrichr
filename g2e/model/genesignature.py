@@ -11,10 +11,9 @@ import hashlib
 import time
 
 from g2e import db
-from g2e.dataaccess.util import get_or_create
 from g2e.model.softfile import SoftFile
 from g2e.model.requiredmetadata import RequiredMetadata
-from g2e.model.optionalmetadata import construct_opt_meta_from_args
+from g2e.model.optionalmetadata import OptionalMetadata
 from g2e.model.tag import Tag
 from g2e.core.genelist.genelistsmaker import genelists_maker
 
@@ -54,18 +53,9 @@ class GeneSignature(db.Model):
         database.
         """
         required_metadata = RequiredMetadata.from_args(args)
-        if 'tags' in args:
-            tag_names = args.get('tags').split(',')
-        else:
-            tag_names = []
+        optional_metadata = OptionalMetadata.from_args(args)
+        tags = Tag.from_args(args)
 
-        tags = []
-        for name in tag_names:
-            # If the name is not an empty string or just whitespace.
-            if bool(name.strip()):
-                tags.append(get_or_create(Tag, name=name))
-
-        optional_metadata = construct_opt_meta_from_args(args)
         genelists = genelists_maker(softfile, required_metadata)
         return cls(softfile, genelists, required_metadata, optional_metadata, tags)
 

@@ -26,43 +26,34 @@ class OptionalMetadata(db.Model):
     def __repr__(self):
         return '<OptionalMetadata %r>' % self.id
 
+    @classmethod
+    def from_args(cls, args):
+        """Helper method for constructing known optional metadata.
+        """
+        optional_metadata = []
+        for key in ['organism', 'cell', 'perturbation', 'disease']:
+            if key in args:
+                value = args[key]
+                optional_metadata.append(OptionalMetadata(key, value))
 
-# TODO: The front-end should send over an 'optionalMetadata' object that can
-# be iterated over and created with an arbitrary number of items and values:
-#
-# opt_meta_list = []
-# for name, value in args.metadata.items():
-#     exp_meta = get_or_create(ExperimentalMetadata, name=name)
-#     opt_meta = OptionalMetadata(exp_meta, value)
-#     opt_meta_list.append(opt_meta)
-def construct_opt_meta_from_args(args):
-    """Helper method for constructing known optional metadata.
-    """
-    organism = args['organism'] if 'organism' in args else None
-    cell = args['cell'] if 'cell' in args else None
-    perturbation = args['perturbation'] if 'perturbation' in args else None
-    gene = args['gene'] if 'gene' in args else None
-    disease = args['disease'] if 'disease' in args else None
+        # This is a hack, but I don't want to refactor too much right now.
+        # An HTML form does not support nesting of fields, but we need to
+        # to know which fields are arbitrary metadata. I noticed that they
+        # are rendered as the string:
+        #
+        #     metadata[<field name>]
+        #
+        # Thus, we iterate, looking for these properties. The alternative to
+        # this approach would require POSTing the file and JSON metadata
+        # separately. See:
+        #
+        # http://stackoverflow.com/questions/3938569
+        for key in args:
+            if 'metadata[' in key:
+                # Remove the 'Metadata[]' from around the field name.
+                # I know this sucks.
+                name = key[9:]
+                name = name[:-1]
+                optional_metadata.append(OptionalMetadata(name, args[key]))
 
-    opt_meta_list = []
-    if organism:
-        opt_meta = OptionalMetadata('organism', organism)
-        opt_meta_list.append(opt_meta)
-
-    if cell:
-        opt_meta = OptionalMetadata('cell', cell)
-        opt_meta_list.append(opt_meta)
-
-    if perturbation:
-        opt_meta = OptionalMetadata('perturbation', perturbation)
-        opt_meta_list.append(opt_meta)
-
-    if gene:
-        opt_meta = OptionalMetadata('gene', gene)
-        opt_meta_list.append(opt_meta)
-
-    if disease:
-        opt_meta = OptionalMetadata('organism', disease)
-        opt_meta_list.append(opt_meta)
-
-    return opt_meta_list
+        return optional_metadata

@@ -1,153 +1,147 @@
 
-/* Abstracts issues of adding new required fields depending on metadata. This
- * module is only required for a 2015 Coursera MOOC and could be refactored
- * once the course is over.
+/* Abstracts issues of adding new required fields depending on metadata. 95%
+ * of this module is only required for a 2015 Coursera MOOC and could be
+ * refactored once the course is over.
  *
  * https://www.coursera.org/course/bd2klincs
  */
 var Tagger = function(events, templater) {
 
-    var $table, selectedTags = {};
+    var selectedTags = [],
+        newFields = [],
+        $table;
 
     var tagsToFields = {
-        AGING_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        AGING_BD2K_LINCS_DCIC_COURSERA: {
+            young: {
                 required: true,
-                key: "young",
                 description: "Age of the young sample"
             },
-            {
+            old: {
                 required: true,
-                key: "old",
                 description: "Age of the old sample"
             },
-            {
+            age_unit: {
                 required: true,
-                key: "age_unit",
                 description: "Unit of age, choose among day, month, year"
             }
-        ],
-        MCF7_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        MCF7_BD2K_LINCS_DCIC_COURSERA: {
+            pert_type: {
                 required: true,
-                key: "pert_type",
                 description: "Perturbation type, choose among genetic, chemical, physical, other"
             },
-            {
+            pert_name: {
                 required: true,
-                key: "pert_name",
                 description: "Perturbagen name"
             },
-            {
+            pert_id: {
                 required: false,
-                key: "pert_id",
                 description: "Identifier of the perturbagen"
             }
-        ],
-        DISEASES_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        DISEASES_BD2K_LINCS_DCIC_COURSERA: {
+            disease_name: {
                 required: true,
-                key: "disease_name",
                 description: "Name of the disease"
             },
-            {
+            disease_id: {
                 required: true,
-                key: "disease_id",
                 description: "ID of the disease (from Disease-Ontology or UMLS)"
             }
-        ],
-        LIGANDS_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        LIGANDS_BD2K_LINCS_DCIC_COURSERA: {
+            ligand_name: {
                 required: true,
-                key: "ligand_name",
                 description: "Name of the ligand"
             },
-            {
+            ligand_id: {
                 required: true,
-                key: "ligand_id",
                 description: "Identifier of the ligand"
             }
-        ],
-        DRUGS_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        DRUGS_BD2K_LINCS_DCIC_COURSERA: {
+            drug_name: {
                 required: true,
-                key: "drug_name",
                 description: "Name of the drug"
             },
-            {
+            drug_id: {
                 required: true,
-                key: "drug_id",
                 description: "ID of the Drug (from DrugBank or PubChem)"
             }
-        ],
-        GENES_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        GENES_BD2K_LINCS_DCIC_COURSERA: {
+            pert_type: {
                 required: true,
-                key: "pert_type",
                 description: "Perturbation type (KO, KD, OE, Mutation)"
             }
-        ],
-        PATHOGENS_BD2K_LINCS_DCIC_COURSERA: [
-            {
+        },
+        PATHOGENS_BD2K_LINCS_DCIC_COURSERA: {
+            microbe_name: {
                 required: true,
-                key: "microbe_name",
                 description: "Name of the virus or bacteria"
             },
-            {
+            microbe_id: {
                 required: false,
-                key: "microbe_id",
                 description: "Taxonomy ID of the virus or bacteria"
             }
-        ]
+        }
     };
 
-    var addRequiredRows = function(newTag) {
-        selectedTags[newTag] = tagsToFields[newTag];
-        tagsToFields[newTag].forEach(function(newRow) {
-            var $tr = templater.getTableRow(newRow.description, newRow.key);
+    function addRequiredRows(newTag) {
+        $.each(tagsToFields[newTag], function(key, newRow) {
+            newFields.push(key);
+            var $tr = templater.getTableRow(newRow.description, key);
             $table.append($tr);
         });
-    };
+    }
 
-    var removeUnrequiredRows = function(oldTag) {
-        selectedTags[oldTag] = undefined;
-        tagsToFields[oldTag].forEach(function(oldRow) {
-            var $oldRow = $('#' + oldRow.key);
+    function removeUnrequiredRows(oldTag) {
+        $.each(tagsToFields[oldTag], function(key) {
+            var $oldRow = $('#' + key),
+                idx = newFields.indexOf(key);
+            if (idx > -1) {
+                newFields.splice(idx, 1);
+            }
             $oldRow.remove();
         });
-    };
+    }
 
-    var watch = function($input) {
+    function watch($input) {
         $input.tagit({
             singleField: true,
             beforeTagAdded: function (evt, ui) {
                 var newTag = $(ui.tag).find('.tagit-label').html();
-                for (var tag in tagsToFields) {
-                    if (tag === newTag) {
-                        addRequiredRows(newTag);
-                    }
+                selectedTags.push(newTag);
+                if (typeof tagsToFields[newTag] !== 'undefined') {
+                    addRequiredRows(newTag);
                 }
             },
             afterTagRemoved: function (evt, ui) {
-                var oldTag = $(ui.tag).find('.tagit-label').html();
-                for (var tag in tagsToFields) {
-                    if (tag === oldTag) {
-                        removeUnrequiredRows(oldTag);
-                    }
+                var oldTag = $(ui.tag).find('.tagit-label').html(),
+                    idx = selectedTags.indexOf(oldTag);
+                if (idx > -1) {
+                    selectedTags.splice(idx, 1);
+                }
+                if (typeof tagsToFields[oldTag] !== 'undefined') {
+                    removeUnrequiredRows(oldTag);
                 }
             }
         });
-    };
+    }
 
-    var init = function($input, _$table) {
-        $table = _$table;
+    function init($input, $t) {
+        $table = $t;
         watch($input);
-    };
+    }
 
     return {
         init: init,
         getSelectedTags: function() {
             return selectedTags;
+        },
+        getNewFields: function() {
+            return newFields;
         }
     };
 };

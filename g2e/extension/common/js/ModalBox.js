@@ -11,7 +11,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         $modalBox = $('#g2e-overlay');
         $modalBox.find('#g2e-error-message').hide();
         $modalBox.find('#g2e-submit-btn').click(function() {
-            userInputHandler.sendDataToServer($modalBox);
+            userInputHandler.sendDataToServer();
         });
         $modalBox.find('#g2e-close-btn').click(function() {
             resetFooter();
@@ -21,6 +21,8 @@ function ModalBox(events, tagger, templater, userInputHandler) {
             $modalBox.find("#g2e-tags"),
             $modalBox.find('#g2e-required-fields-based-on-tag')
         );
+
+        userInputHandler.setModalBox($modalBox);
         setupDiffExpMethodOptions();
     })();
 
@@ -38,7 +40,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
     });
 
     events.on('dataPosted', function() {
-        $modalBox.find('.g2e-lock').off();
+        $modalBox.find('#g2e-submit-btn').addClass('g2e-lock').off();
     });
 
     function openModalBox() {
@@ -55,12 +57,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
 
     function resetFooter() {
         $modalBox.find('#g2e-results-btn').hide().off();
-        $modalBox.find('#g2e-submit-btn')
-            .removeClass('g2e-lock')
-            .off()
-            .click(function() {
-                userInputHandler.sendDataToServer($modalBox);
-            });
+        $modalBox.find('#g2e-submit-btn').removeClass('g2e-lock').off().click(userInputHandler.sendDataToServer);
         $modalBox.find('#g2e-error-message').hide();
     }
 

@@ -6,39 +6,57 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         geneList = data;
     });
 
-    function sendDataToServer($modalBox) {
-        var selectedData = getData($modalBox);
+    var $modalBox;
+    function setModalBox($el) {
+        $modalBox = $el;
+    }
+
+    function sendDataToServer() {
+        var selectedData = getData();
         if (isValidData(selectedData)) {
-
-            var data = {};
-            for (var prop1 in selectedData.scrapedData) {
-                data[prop1] = selectedData.scrapedData[prop1];
-            }
-            for (var prop2 in selectedData.userOptions) {
-                data[prop2] = selectedData.userOptions[prop2];
-            }
-
-            data.metadataTags = {};
-            for (var prop3 in selectedData.crowdsourcedMetadata) {
-                data.metadataTags[prop3] = selectedData.crowdsourcedMetadata[prop3];
-            }
-
-            comm.postSoftFile(data);
-
+            selectedData = prepareForTransfer(selectedData);
+            comm.postSoftFile(selectedData);
             events.fire('dataPosted');
         }
     }
 
-    function getData($modalBox) {
+    function prepareForTransfer(selectedData) {
+        var result = {};
+
+        $.each(selectedData.scrapedData, function(key, obj) {
+            result[key] = obj;
+        });
+
+        $.each(selectedData.userOptions, function(key, obj) {
+            result[key] = obj;
+        });
+
+        result.metadata = {};
+        $.each(selectedData.crowdsourcedMetadata, function(key, obj) {
+            result.metadata[key] = obj;
+        });
+
+        result.tags = selectedData.tags;
+
+        return result;
+    }
+
+    function getData() {
         return {
             scrapedData: screenScraper.getDataFromPage(),
-            userOptions: getUserOptions($modalBox),
+            userOptions: getUserOptions(),
+            tags: tagger.getSelectedTags(),
             crowdsourcedMetadata: getCrowdsourcedMetadata()
         };
     }
 
     function isValidData(data) {
-        var selectedTags = tagger.getSelectedTags();
+        var selectedTags = tagger.getSelectedTags(),
+            tag,
+            field,
+            conf,
+            selectedValue;
+
         if (!data.scrapedData.A_cols || data.scrapedData.A_cols.length < 2) {
             notifier.warn('Please select 2 or more control samples');
             return false;
@@ -47,7 +65,6 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             notifier.warn('Please select 2 or more experimental samples');
             return false;
         }
-        // * WARNINGS *
         // It is important to verify that the user has *tried* to select a gene before warning them.
         // $.inArray() returns -1 if the value is not found. Do not check for truthiness.
         if (geneList && data.userOptions.gene && $.inArray(data.userOptions.gene, geneList) === -1) {
@@ -55,11 +72,14 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             return false;
         }
 
-        for (var tag in selectedTags) {
-            for (var field in selectedTags[tag]) {
-                var conf = selectedTags[tag][field];
-                if (conf.required) {
-                    debugger;
+        // Use traditional for loops so we can exit early if necessary.
+        for (tag in selectedTags) {
+            for (field in selectedTags[tag]) {
+                conf = selectedTags[tag][field];
+                selectedValue = data.crowdsourcedMetadata[field];
+                if (conf.required && !selectedValue) {
+                    notifier.warn('Please add metadata field "' + conf.description + '"');
+                    return false;
                 }
             }
         }
@@ -67,7 +87,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         return true;
     }
 
-    function getUserOptions($modalBox) {
+    function getUserOptions() {
 
         var data = {},
             method = $modalBox.find('#g2e-diffexp option:selected').val(),
@@ -112,19 +132,21 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
      * MOOC. In principle, we can remove this in the future.
      */
     function getCrowdsourcedMetadata() {
-        $('#required-fields-based-on-tag').find('tr').each(function(i, tr) {
-            var $tr = $(tr);
-            if ($tr.find('input').attr('required') === 'true') {
-                debugger;
-            } else {
-                debugger;
+        // I really hate how much this function knows about the DOM.
+        var result = {};
+        var $table = $modalBox.find('#g2e-required-fields-based-on-tag');
+        $.each(tagger.getNewFields(), function(i, key) {
+            var $input = $table.find('#' + key + ' input');
+            if ($input.length) {
+                result[key] = $input.val().replace(/ /g,'');
             }
         });
-        return {};
+        return result;
     }
 
     return {
         getData: getData,
-        sendDataToServer: sendDataToServer
+        sendDataToServer: sendDataToServer,
+        setModalBox: setModalBox
     };
 }

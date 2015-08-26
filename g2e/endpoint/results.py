@@ -24,11 +24,17 @@ def results_page(results_id):
 
     gene_signature = __process_extraction_for_view(gene_signature)
 
+    if gene_signature.required_metadata.diff_exp_method == 'chdir':
+        show_paea = True
+    else:
+        show_paea = False
+
     return render_template('results.html',
         tags_url=Config.BASE_TAGS_URL,
         use_simple_header=True,
         permanent_link=request.url,
-        gene_signature=gene_signature
+        gene_signature=gene_signature,
+        show_paea = show_paea
     )
 
 
