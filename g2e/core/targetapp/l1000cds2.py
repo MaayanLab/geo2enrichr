@@ -10,7 +10,7 @@ import json
 import requests
 
 
-BASE_URL = 'http://amp.pharm.mssm.edu/L1000CDS2/'
+L1000CDS2_URL = 'http://amp.pharm.mssm.edu/L1000CDS2/'
 
 
 def get_link(genes, metadata):
@@ -18,7 +18,7 @@ def get_link(genes, metadata):
     """
     print 'Calculating cosine distance'
 
-    url = BASE_URL + 'query'
+    url = L1000CDS2_URL + 'query'
     headers = { 'content-type': 'application/json' }
     payload = {
         'data': {

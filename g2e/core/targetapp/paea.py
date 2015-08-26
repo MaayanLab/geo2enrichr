@@ -10,8 +10,8 @@ import json
 import requests
 
 
-POST_URL = 'http://amp.pharm.mssm.edu/Enrichr/addList'
-GET_URL  = 'http://amp.pharm.mssm.edu/PAEA?id='
+PAEA_POST_URL = 'http://amp.pharm.mssm.edu/Enrichr/addList'
+PAEA_GET_URL  = 'http://amp.pharm.mssm.edu/PAEA?id='
 
 
 def get_link(genes, description):
@@ -28,10 +28,10 @@ def get_link(genes, description):
         'inputMethod': 'PAEA',
         'description': description
     }
-    resp = requests.post(POST_URL, files=payload)
+    resp = requests.post(PAEA_POST_URL, files=payload)
 
     if resp.status_code == 200:
-        link = GET_URL + str(json.loads(resp.text)['userListId'])
+        link = PAEA_GET_URL + str(json.loads(resp.text)['userListId'])
         print 'Link to PAEA: ' + link
         return link
     else:

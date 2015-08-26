@@ -10,7 +10,7 @@ import time
 import requests
 
 
-BASE_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
+ENRICHR_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
 
 
 def get_link(genes, description):
@@ -19,16 +19,12 @@ def get_link(genes, description):
     # Enrichr does not care about the sign of the rank; it treats the rank
     # simply as a membership value for a fuzzy set.
     genes = [(rg.gene.name, str(abs(rg.value))) for rg in genes]
-
     genes_str = '\n'.join([rg.gene.name + ',' + str(rg.value) for t in genes]).encode('ascii')
-    payload = {
-        'list': genes_str,
-        'description': description
-    }
+
     sess = requests.session()
 
     # 1. POST the data to the server. We do not need the response.
-    sess.post(BASE_URL + 'enrich', files={ 'list': (None, genes_str), 'description': (None, description) })
+    sess.post(ENRICHR_URL + 'enrich', files={ 'list': (None, genes_str), 'description': (None, description) })
 
     # I've noticed that sometimes the GET errors out and wonder if it is a
     # race condition of some sort. This throttles the back-to-back requests
@@ -37,11 +33,11 @@ def get_link(genes, description):
 
     # 2. GET our link via the "share" endpoint. The requests module (and
     # Enrichr handle cookies for us.
-    resp = sess.get(BASE_URL + 'share')
+    resp = sess.get(ENRICHR_URL + 'share')
     if resp.status_code == 200:
         link_id = json.loads(resp.text)['link_id']
         print 'Link to enrichr: ' + link_id
-        return BASE_URL + 'enrich?dataset=' + link_id
+        return ENRICHR_URL + 'enrich?dataset=' + link_id
     else:
         print 'Error with Enrichr'
         return None
