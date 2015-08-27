@@ -74,11 +74,11 @@ def path(name):
 def _build_selections(selections):
     """Handles the ordering of the columns based on control vs. sample.
     """
-    A_indices = selections['A_indices']
-    B_indices = selections['B_indices']
-    result_list = range(max(A_indices + B_indices)+1)
-    for i in A_indices:
-        result_list[i] = 'A'
-    for i in B_indices:
-        result_list[i] = 'B'
-    return filter(lambda x: x == 'A' or x == 'B', result_list)
+    a_indices = selections['a_indices']
+    b_indices = selections['b_indices']
+    result_list = range(max(a_indices + b_indices)+1)
+    for i in a_indices:
+        result_list[i] = 'a'
+    for i in b_indices:
+        result_list[i] = 'b'
+    return filter(lambda x: x == 'a' or x == 'b', result_list)

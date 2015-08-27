@@ -7,35 +7,35 @@ class TestBuildSelections(unittest.TestCase):
 
 	def testAABB(self):
 		selections = {}
-		selections['A_indices'] = [0,1]
-		selections['B_indices'] = [2,3]
+		selections['a_indices'] = [0,1]
+		selections['b_indices'] = [2,3]
 		ans = _build_selections(selections)
-		self.assertEqual(ans, ['A','A','B','B'])
+		self.assertEqual(ans, ['a','a','b','b'])
 
 	def testABAB(self):
 		selections = {}
-		selections['A_indices'] = [0,2]
-		selections['B_indices'] = [1,3]
+		selections['a_indices'] = [0,2]
+		selections['b_indices'] = [1,3]
 		ans = _build_selections(selections)
-		self.assertEqual(ans, ['A','B','A','B'])
+		self.assertEqual(ans, ['a','b','a','b'])
 
 	def testBABA(self):
 		selections = {}
-		selections['A_indices'] = [2,4]
-		selections['B_indices'] = [1,3]
+		selections['a_indices'] = [2,4]
+		selections['b_indices'] = [1,3]
 		ans = _build_selections(selections)
-		self.assertEqual(ans, ['B','A','B','A'])
+		self.assertEqual(ans, ['b','a','b','a'])
 
 	def testBBABBBB(self):
 		selections = {}
-		selections['A_indices'] = [3]
-		selections['B_indices'] = [1,2,4,5,6,7]
+		selections['a_indices'] = [3]
+		selections['b_indices'] = [1,2,4,5,6,7]
 		ans = _build_selections(selections)
-		self.assertEqual(ans, ['B','B','A','B','B','B','B'])
+		self.assertEqual(ans, ['b','b','a','b','b','b','b'])
 
 	def testIndices(self):
 		selections = {}
-		selections['A_indices'] = [3,99]
-		selections['B_indices'] = [45,67]
+		selections['a_indices'] = [3,99]
+		selections['b_indices'] = [45,67]
 		ans = _build_selections(selections)
-		self.assertEqual(ans, ['A','B','B','A'])
+		self.assertEqual(ans, ['a','b','b','a'])

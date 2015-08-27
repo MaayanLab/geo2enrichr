@@ -56,13 +56,11 @@ class SoftFile(db.Model):
         """Constructs a SoftFile
         """
         name = args['dataset']
-        is_geo = True
-
         if not softfilemanager.file_exists(name):
             geodownloader.download(name)
 
         platform = args['platform']
-
+        is_geo = True
         a_cols = get_param_as_list(args, 'A_cols')
         b_cols = get_param_as_list(args, 'B_cols')
 
@@ -88,7 +86,7 @@ class SoftFile(db.Model):
         else:
             name = str(time.time())[:10]
         text_file = softfilemanager.save(name, file_obj)
-        genes, samples, a_vals, b_vals = softparser.parse(name, is_geo=False)
+        genes, a_vals, b_vals, samples = softparser.parse(name, is_geo=False)
         samples = [SoftFileSample(x, True) for x in samples if x == '0']\
             + [SoftFileSample(x, False) for x in samples if x == '1']
         platform = args['platform'] if 'platform' in args else None

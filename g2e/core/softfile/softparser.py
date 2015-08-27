@@ -46,14 +46,13 @@ def _parse_file(filename):
             b_row = line[idx:]
             a_vals.append([float(pv) for pv in a_row])
             b_vals.append([float(pv) for pv in b_row])
-    return (genes, samples, a_vals, b_vals)
+    return (genes, a_vals, b_vals, samples)
 
 
 def _parse_geo(filename, platform, samples):
     """Parses SOFT files, discarding bad data and converting probe IDs to gene
     sybmols.
     """
-
     a_cols = [x.name for x in samples if x.is_control]
     b_cols = [x.name for x in samples if not x.is_control]
     
@@ -77,8 +76,8 @@ def _parse_geo(filename, platform, samples):
         b_cols = ['"{}"'.format(x.upper()) for x in b_cols]
 
     genes = []
-    A = []
-    B = []
+    a_vals = []
+    b_vals = []
     selections = {}
 
     # For statistics about data quality.
@@ -100,10 +99,10 @@ def _parse_geo(filename, platform, samples):
             line_length = len(header)
 
             # Find column indices.
-            A_indices = [header.index(gsm) for gsm in a_cols]
-            B_indices = [header.index(gsm) for gsm in b_cols]
-            selections['A_indices'] = A_indices
-            selections['B_indices'] = B_indices
+            a_indices = [header.index(gsm) for gsm in a_cols]
+            b_indices = [header.index(gsm) for gsm in b_cols]
+            selections['a_indices'] = a_indices
+            selections['b_indices'] = b_indices
 
             for line in soft_in:
                 split_line = line.rstrip('\r\n').split('\t')
@@ -134,10 +133,10 @@ def _parse_geo(filename, platform, samples):
                     unconverted_probes += 1
                     continue
 
-                A_row = [float(values[i]) for i in A_indices]
-                B_row = [float(values[i]) for i in B_indices]
-                A.append(A_row)
-                B.append(B_row)
+                a_row = [float(values[i]) for i in a_indices]
+                b_row = [float(values[i]) for i in b_indices]
+                a_vals.append(a_row)
+                b_vals.append(b_row)
                 genes.append(gene)
 
         stats = {
@@ -149,7 +148,7 @@ def _parse_geo(filename, platform, samples):
     except IOError:
         raise IOError('Could not read SOFT file from local server.')
 
-    return (genes, A, B, selections, stats)
+    return (genes, a_vals, b_vals, selections, stats)
 
 
 def platform_supported(platform):

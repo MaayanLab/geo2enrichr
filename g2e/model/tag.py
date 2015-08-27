@@ -10,6 +10,7 @@ from g2e import db
 from g2e.dataaccess.util import get_or_create
 from g2e.util.requestutil import get_param_as_list
 
+
 gene_signatures_to_tags = db.Table('gene_signatures_to_tags', db.metadata,
     db.Column('gene_signature_fk', db.Integer, db.ForeignKey('gene_signature.id')),
     db.Column('tag_fk', db.Integer, db.ForeignKey('tag.id'))
