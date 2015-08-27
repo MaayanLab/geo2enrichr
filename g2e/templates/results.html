@@ -69,7 +69,9 @@
             {% for opt_meta in gene_signature.optional_metadata %}
                 <tr>
                     <td class="capitalize-initial">{{ opt_meta.name }}</td>
-                    <td>{{ opt_meta.value }}</td>
+                    <td>
+                        <a href="{{ metadata_url }}/{{ opt_meta.name }}/{{ opt_meta.value }}">{{ opt_meta.value }}</a>
+                    </td>
                 </tr>
             {% endfor %}
         

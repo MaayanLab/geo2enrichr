@@ -13,7 +13,7 @@ from g2e.core.targetapp.targetapps import target_all_apps
 from g2e.model.genelist import GeneList
 
 
-def genelists_maker(soft_file, metadata, tags):
+def genelists_maker(soft_file, required_metadata, optional_metadata, tags):
     """Wrapper method for creating one of each "kind" of gene list: up, down,
     and combined.
     """
@@ -24,7 +24,7 @@ def genelists_maker(soft_file, metadata, tags):
         soft_file.a_vals,
         soft_file.b_vals,
         soft_file.genes,
-        metadata
+        required_metadata
     )
 
     # 2. Analyze the full gene list on target applications.
@@ -39,16 +39,18 @@ def genelists_maker(soft_file, metadata, tags):
             'paea': ''
         }
     else:
-        target_apps_up = target_all_apps(up_genes, 1, metadata)
-        target_apps_down = target_all_apps(down_genes, -1, metadata)
-        target_apps_combined = target_all_apps(ranked_genes, 0, metadata, tags)
+        target_apps_up = target_all_apps(up_genes, 1, required_metadata)
+        target_apps_down = target_all_apps(down_genes, -1, required_metadata)
+        target_apps_combined = target_all_apps(
+            ranked_genes, 0, required_metadata, optional_metadata, soft_file, tags
+        )
 
     # 3. Apply cutoff if the differential expression method is the
     #    Characteristic Direction. We don't apply it earlier because PAEA
     #    requires the full signature.
-    if metadata.diff_exp_method == 'chdir':
+    if required_metadata.diff_exp_method == 'chdir':
         print 'Applying cutoff to the Characteristic Direction'
-        ranked_genes = _apply_cutoff(ranked_genes, metadata.cutoff)
+        ranked_genes = _apply_cutoff(ranked_genes, required_metadata.cutoff)
 
     # 4. Build gene lists that we will store.
 
@@ -59,9 +61,9 @@ def genelists_maker(soft_file, metadata, tags):
     down_genes = [t for t in ranked_genes if t.value < 0]
 
     gene_lists = [
-        GeneList(up_genes, 1, metadata, target_apps_up),
-        GeneList(down_genes, -1, metadata, target_apps_down),
-        GeneList(ranked_genes, 0, metadata, target_apps_combined)
+        GeneList(up_genes, 1, required_metadata, target_apps_up),
+        GeneList(down_genes, -1, required_metadata, target_apps_down),
+        GeneList(ranked_genes, 0, required_metadata, target_apps_combined)
     ]
 
     return gene_lists

@@ -56,7 +56,7 @@ class GeneSignature(db.Model):
         optional_metadata = OptionalMetadata.from_args(args)
         tags = Tag.from_args(args)
 
-        gene_lists = genelists_maker(soft_file, required_metadata, tags)
+        gene_lists = genelists_maker(soft_file, required_metadata, optional_metadata, tags)
         return cls(soft_file, gene_lists, required_metadata, optional_metadata, tags)
 
     @classmethod
