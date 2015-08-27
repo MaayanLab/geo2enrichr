@@ -33,20 +33,20 @@
             <caption>SOFT file</caption>
             <tr>
                 <td>Description</td>
-                <td>{{ gene_signature.softfile.name }}</td>
+                <td>{{ gene_signature.soft_file.name }}</td>
             </tr>
             <tr>
                 <td>Platform</td>
-                <td>{{ gene_signature.softfile.platform }}</td>
+                <td>{{ gene_signature.soft_file.platform }}</td>
             </tr>
             <tr>
                 <td>Normalized</td>
-                <td>{{ gene_signature.softfile.normalize }}</td>
+                <td>{{ gene_signature.soft_file.normalize }}</td>
             </tr>
             <tr title="Parsed and cleaned SOFT file, with GEO metadata removed and only the control and samples listed.">
                 <td>Parsed SOFT file</td>
                 <td>
-                    <a href="{{ gene_signature.softfile.text_file }}" target="_blank">Download</a>
+                    <a href="{{ gene_signature.soft_file.text_file }}" target="_blank">Download</a>
                 </td>
             </tr>
         </table>
@@ -88,7 +88,7 @@
                     {% endif %}
                 </tr>
             </thead>
-            {% for gene_list in gene_signature.genelists %}
+            {% for gene_list in gene_signature.gene_lists %}
                 <tr>
                     <td>{{ gene_list.direction_as_string }}</td>
                     <td>
@@ -111,11 +111,15 @@
                         <td></td>
                     {% endif %}
                     {% if show_paea %}
-                        <td>
-                            <a href="{{ gene_list.paea_link }}" target="_blank">
-                                <img src="static/image/targetapp/paea.png">
-                            </a>
-                        </td>
+                        {% if gene_list.paea_link != None and gene_list.paea_link != '' %}
+                            <td>
+                                <a href="{{ gene_list.paea_link }}" target="_blank">
+                                    <img src="static/image/targetapp/paea.png">
+                                </a>
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
                     {% endif %}
                 </tr>
             {% endfor %}

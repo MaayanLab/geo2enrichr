@@ -13,7 +13,7 @@ from g2e.core.targetapp.targetapps import target_all_apps
 from g2e.model.genelist import GeneList
 
 
-def genelists_maker(softfile, metadata):
+def genelists_maker(soft_file, metadata, tags):
     """Wrapper method for creating one of each "kind" of gene list: up, down,
     and combined.
     """
@@ -21,9 +21,9 @@ def genelists_maker(softfile, metadata):
     #    perform the thresholding for the t-test since that is part of
     #    the analysis.
     ranked_genes = diffexp(
-        softfile.A,
-        softfile.B,
-        softfile.genes,
+        soft_file.a_vals,
+        soft_file.b_vals,
+        soft_file.genes,
         metadata
     )
 
@@ -41,7 +41,7 @@ def genelists_maker(softfile, metadata):
     else:
         target_apps_up = target_all_apps(up_genes, 1, metadata)
         target_apps_down = target_all_apps(down_genes, -1, metadata)
-        target_apps_combined = target_all_apps(ranked_genes, 0, metadata)
+        target_apps_combined = target_all_apps(ranked_genes, 0, metadata, tags)
 
     # 3. Apply cutoff if the differential expression method is the
     #    Characteristic Direction. We don't apply it earlier because PAEA
@@ -58,13 +58,13 @@ def genelists_maker(softfile, metadata):
     up_genes = [t for t in ranked_genes if t.value > 0]
     down_genes = [t for t in ranked_genes if t.value < 0]
 
-    genelists = [
+    gene_lists = [
         GeneList(up_genes, 1, metadata, target_apps_up),
         GeneList(down_genes, -1, metadata, target_apps_down),
         GeneList(ranked_genes, 0, metadata, target_apps_combined)
     ]
 
-    return genelists
+    return gene_lists
 
 
 def _apply_cutoff(ranked_genes, cutoff):

@@ -54,7 +54,7 @@ if [[ $2 = 'skip' ]]; then
     printf '%s\n' 'Skipping Python unit tests'
 else
     printf '%s\n' 'Running Python unit tests'
-    nosetests --exe --nocapture
+    nosetests --exe -v --pdb
 fi
 
 # Configure DB. Do this *after* running the unit tests, so tests don't get

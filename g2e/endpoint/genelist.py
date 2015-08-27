@@ -27,7 +27,7 @@ def get_genelist(direction, extraction_id):
 
 
 def __get_genelist_by_direction(gene_signature, direction):
-    for genelist in gene_signature.genelists:
-        if genelist.direction == direction:
-            return genelist
+    for gene_list in gene_signature.gene_lists:
+        if gene_list.direction == direction:
+            return gene_list
     return None

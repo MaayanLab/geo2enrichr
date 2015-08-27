@@ -48,11 +48,11 @@ def __get_direction_as_string(direction):
 
 
 def __process_extraction_for_view(gene_signature):
-    for gene_list in gene_signature.genelists:
+    for gene_list in gene_signature.gene_lists:
         gene_list.direction_as_string = __get_direction_as_string(gene_list.direction)
 
-    if gene_signature.softfile.normalize is None or gene_signature.softfile.normalize is False:
-        gene_signature.softfile.normalize = False
+    if gene_signature.soft_file.normalize is None or gene_signature.soft_file.normalize is False:
+        gene_signature.soft_file.normalize = False
     else:
-        gene_signature.softfile.normalize = True
+        gene_signature.soft_file.normalize = True
     return gene_signature

@@ -39,7 +39,7 @@ def get_link(genes, metadata):
 
     if resp.status_code == 200:
         share_id = json.loads(resp.text)['shareId']
-        link = BASE_URL + '#/result/' + share_id
+        link = L1000CDS2_URL + '#/result/' + share_id
         print 'Link to L100CDS2: ' + link
         return link
     else:

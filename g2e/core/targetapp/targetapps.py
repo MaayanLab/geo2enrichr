@@ -10,6 +10,7 @@ import time
 import g2e.core.targetapp.enrichr as enrichr
 import g2e.core.targetapp.l1000cds2 as l1000cds2
 import g2e.core.targetapp.paea as paea
+import g2e.core.targetapp.crowdsourcing as crowdsourcing
 
 
 # Granular control of how many genes are sent to each downstream application.
@@ -22,7 +23,7 @@ L1000CDS2_CUTOFF = 2000
 PAEA_CUTOFF      = 2000
 
 
-def target_all_apps(ranked_genes, direction, metadata):
+def target_all_apps(ranked_genes, direction, metadata, tags=None):
     """Returns a dictionary of app-to-link key-value pairs.
     """
     result = { 'enrichr': '', 'l1000cds2': '', 'paea': '' }
@@ -43,6 +44,8 @@ def target_all_apps(ranked_genes, direction, metadata):
             if metadata.diff_exp_method == 'chdir':
                 paea_genes = _apply_cutoff(ranked_genes, PAEA_CUTOFF)
                 result['paea'] = paea.get_link(paea_genes, description)
+            crowdsourcing.post_if_necessary(ranked_genes, metadata, tags)
+
     except:
         print 'Error with target applications'
     return result

@@ -17,13 +17,13 @@ CLEANED_DIR = BASE_DIR + 'clean/'
 EXT         = '.txt'
 
 
-def write(name, platform, normalize, genes, A, B, gsms, selections, stats):
+def write(name, platform, normalize, genes, a_vals, b_vals, samples, selections, stats):
     """Writes the contents of a SoftFile to disk and returns a relative path.
     """
     print 'Writing clean SOFT file.'
 
-    AB = normalizer.concat(A, B)
-    gene_values_dict = { k:v for (k,v) in zip(genes, AB) }
+    ab_vals = normalizer.concat(a_vals, b_vals)
+    gene_values_dict = { k:v for (k,v) in zip(genes, ab_vals) }
 
     # We add the time to the cleaned SOFT file name because not all SOFT files
     # of the same GEO accession ID will have the same *cleaned* content. Users
@@ -38,7 +38,7 @@ def write(name, platform, normalize, genes, A, B, gsms, selections, stats):
         f.write('!discarded_lines\t' + str(stats['discarded_lines_pct']) + '%\n')
         f.write('!end_metadata\n')
         f.write(' \t' + '\t'.join(_build_selections(selections)) + '\n')
-        f.write(' \t' + '\t'.join(gsms) + '\n')
+        f.write(' \t' + '\t'.join([x.name for x in samples]) + '\n')
         for gene, val in gene_values_dict.items():
             val_str = '\t'.join(map(str, val))
             f.write(gene + '\t' + val_str + '\n')

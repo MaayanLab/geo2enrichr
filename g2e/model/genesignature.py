@@ -26,20 +26,20 @@ class GeneSignature(db.Model):
     # is how the front-end identifies the dataset, so that we do not display
     # the actual database ID to the users.
     extraction_id = db.Column(db.String(10))
-    softfile = db.relationship('SoftFile', uselist=False, backref='gene_signatures')
-    genelists = db.relationship('GeneList', backref=db.backref('gene_signature', order_by=id))
+    soft_file = db.relationship('SoftFile', uselist=False, backref='gene_signatures')
+    gene_lists = db.relationship('GeneList', backref=db.backref('gene_signature', order_by=id))
     required_metadata = db.relationship('RequiredMetadata', uselist=False, backref=db.backref('gene_signature', order_by=id))
     optional_metadata = db.relationship('OptionalMetadata', backref=db.backref('gene_signature', order_by=id))
 
-    def __init__(self, softfile, genelists, required_metadata, optional_metadata, tags):
+    def __init__(self, soft_file, gene_lists, required_metadata, optional_metadata, tags):
         """Construct an Extraction instance. This is called only by class
         methods.
         """
         # This is *not* the database ID. This is hashed so that users cannot
         # simply guess the ID for other user's data.
         self.extraction_id = hashlib.sha1(str(time.time())).hexdigest()[:10]
-        self.softfile  = softfile
-        self.genelists = genelists
+        self.soft_file = soft_file
+        self.gene_lists = gene_lists
         self.required_metadata  = required_metadata
         self.optional_metadata  = optional_metadata
         self.tags = tags
@@ -48,7 +48,7 @@ class GeneSignature(db.Model):
         return '<GeneSignature %r>' % self.id
 
     @classmethod
-    def new(cls, softfile, args):
+    def new(cls, soft_file, args):
         """Creates a new extraction, as opposed to an extraction from the
         database.
         """
@@ -56,31 +56,29 @@ class GeneSignature(db.Model):
         optional_metadata = OptionalMetadata.from_args(args)
         tags = Tag.from_args(args)
 
-        genelists = genelists_maker(softfile, required_metadata)
-        return cls(softfile, genelists, required_metadata, optional_metadata, tags)
+        gene_lists = genelists_maker(soft_file, required_metadata, tags)
+        return cls(soft_file, gene_lists, required_metadata, optional_metadata, tags)
 
     @classmethod
     def from_geo(cls, args):
         """Creates an extraction from GEO data.
         """
-        softfile = SoftFile.from_geo(args)
-        return cls.new(softfile, args)
+        soft_file = SoftFile.from_geo(args)
+        return cls.new(soft_file, args)
 
     @classmethod
     def from_file(cls, file_obj, args):
         """Creates an extraction from a custom, uploaded SOFT file.
         """
-        # PURPLE_WIRE: Users *will* upload bad data and parsing their files
-        # *will* throw an error. Catch and handle appropriately.
-        softfile = SoftFile.from_file(file_obj, args)
-        return cls.new(softfile, args)
+        soft_file = SoftFile.from_file(file_obj, args)
+        return cls.new(soft_file, args)
 
     @property
     def serialize(self):
         return {
             'extraction_id': self.extraction_id,
-            'soft_file': self.softfile.serialize,
-            'gene_lists': [gl.serialize for gl in self.genelists],
+            'soft_file': self.soft_file.serialize,
+            'gene_lists': [gl.serialize for gl in self.gene_lists],
             'required_metadata': self.required_metadata.serialize,
             'optional_metadata': {om.name: om.value for om in self.optional_metadata},
             'tags': [t.name for t in self.tags]

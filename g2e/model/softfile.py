@@ -13,36 +13,40 @@ import g2e.core.softfile.geodownloader as geodownloader
 import g2e.core.softfile.softparser as softparser
 import g2e.core.softfile.normalizer as normalizer
 import g2e.core.softfile.softfilemanager as softfilemanager
+from g2e.model.softfilesample import SoftFileSample
 from g2e.util.requestutil import get_param_as_list
+from g2e.dataaccess.util import get_or_create
 
 
 class SoftFile(db.Model):
-    """List of gene symbols and expression values.
+    """Metadata for the processed SOFT file.
     """
     __tablename__ = 'soft_file'
     id = db.Column(db.Integer, primary_key=True)
     gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
+    samples = db.relationship('SoftFileSample', backref='soft_files')
     name = db.Column(db.String(200))
     platform = db.Column(db.String(200))
     is_geo = db.Column(db.Boolean)
     normalize = db.Column(db.Boolean)
     text_file = db.Column(db.String(255))
 
-    def __init__(self, name, A_cols=None, B_cols=None, genes=None, A=None, B=None, text_file=None, is_geo=False, platform=None, stats=None, normalize=None):
+    def __init__(self, name, samples, genes, a_vals, b_vals, platform, text_file, is_geo=False, stats=None, normalize=None):
         """Constructs a SoftFile instance.
         """
         # This should only be called via the class methods.
         self.name = name
-        self.A_cols = A_cols
-        self.B_cols = B_cols
+        self.samples = samples
         self.genes = genes
-        self.A = A
-        self.B = B
         self.is_geo = is_geo
         self.platform = platform
         self.stats = stats
         self.normalize = normalize
         self.text_file = text_file
+
+        # These are *not* persisted to the database. Used by diffexp module.
+        self.a_vals = a_vals
+        self.b_vals = b_vals
 
     def __repr__(self):
         return '<SoftFile %r>' % self.id
@@ -58,17 +62,22 @@ class SoftFile(db.Model):
             geodownloader.download(name)
 
         platform = args['platform']
-        A_cols = get_param_as_list(args, 'A_cols')
-        B_cols = get_param_as_list(args, 'B_cols')
-        genes, A, B, selections, stats = softparser.parse(name, is_geo, platform, A_cols, B_cols)
+
+        a_cols = get_param_as_list(args, 'A_cols')
+        b_cols = get_param_as_list(args, 'B_cols')
+
+        # Use get_or_create to track GSMs. We don't do this for custom files.
+        samples = [get_or_create(SoftFileSample, name=sample, is_control=True) for sample in a_cols]\
+            + [get_or_create(SoftFileSample, name=sample, is_control=False) for sample in b_cols]
+
+        genes, a_vals, b_vals, selections, stats = softparser.parse(name, is_geo, platform, samples)
 
         normalize = True if ('normalize' not in args or args['normalize'] == 'True') else False
         if normalize:
-            genes, A, B = normalizer.normalize(genes, A, B)
+            genes, a_vals, b_vals = normalizer.normalize(genes, a_vals, b_vals)
 
-        gsms = A_cols + B_cols
-        text_file = softfilemanager.write(name, platform, normalize, genes, A, B, gsms, selections, stats)
-        return cls(name, A_cols, B_cols, genes=genes, A=A, B=B, text_file=text_file, is_geo=is_geo, platform=platform, stats=stats, normalize=normalize)
+        text_file = softfilemanager.write(name, platform, normalize, genes, a_vals, b_vals, samples, selections, stats)
+        return cls(name, samples, genes, a_vals, b_vals, platform, text_file, is_geo=is_geo, stats=stats, normalize=normalize)
 
     @classmethod
     def from_file(cls, file_obj, args):
@@ -79,13 +88,11 @@ class SoftFile(db.Model):
         else:
             name = str(time.time())[:10]
         text_file = softfilemanager.save(name, file_obj)
-        genes, A, B = softparser.parse(name, is_geo=False)
+        genes, samples, a_vals, b_vals = softparser.parse(name, is_geo=False)
+        samples = [SoftFileSample(x, True) for x in samples if x == '0']\
+            + [SoftFileSample(x, False) for x in samples if x == '1']
         platform = args['platform'] if 'platform' in args else None
-        return cls(name, genes=genes, A=A, B=B, platform=platform, text_file=text_file)
-
-    @classmethod
-    def from_db(cls, name, platform, is_geo, normalize, text_file):
-        return cls(name=name, platform=platform, is_geo=is_geo, normalize=normalize, text_file=text_file)
+        return cls(name, samples, genes, a_vals, b_vals, platform, text_file)
 
     @property
     def serialize(self):

@@ -11,14 +11,14 @@ import csv
 import g2e.core.softfile.softfilemanager as softfilemanager
 
 
-def parse(name, is_geo=True, platform=None, A_cols=None, B_cols=None):
+def parse(name, is_geo=True, platform=None, samples=None):
     """Entry point for all file parsing. If the dataset is from GEO, this
     delegates to a function that makes some basic assumptions about GEO files.
     """
     print('Parsing SOFT file.')
     full_name = softfilemanager.path(name)
     if is_geo:
-        return _parse_geo(full_name, platform, A_cols, B_cols)
+        return _parse_geo(full_name, platform, samples)
     return _parse_file(full_name)
 
 
@@ -26,32 +26,37 @@ def _parse_file(filename):
     """Parses custom SOFT file, making no assumptions about the data.
     """
     genes = []
-    A = []
-    B = []
+    a_vals = []
+    b_vals = []
     with open(filename, 'rU') as csvfile:
         reader = csv.reader(csvfile, delimiter='\t')
         # First line should be column names.
         discard = next(csvfile)
-        indices = next(csvfile)
+        samples = next(csvfile)
+        samples = samples.strip().split('\t')
 
         # Convert to a string so we can use rindex next.
-        indices = ''.join(indices.strip().split('\t'))
+        indices = ''.join(samples)
         # +1 to account for the leftmost gene symbol column.
         idx = indices.index('1')+1
 
         for line in reader:
             genes.append(line[0])
-            A_row = line[1:idx]
-            B_row = line[idx:]
-            A.append([float(pv) for pv in A_row])
-            B.append([float(pv) for pv in B_row])
-    return (genes, A, B)
+            a_row = line[1:idx]
+            b_row = line[idx:]
+            a_vals.append([float(pv) for pv in a_row])
+            b_vals.append([float(pv) for pv in b_row])
+    return (genes, samples, a_vals, b_vals)
 
 
-def _parse_geo(filename, platform, A_cols, B_cols):
+def _parse_geo(filename, platform, samples):
     """Parses SOFT files, discarding bad data and converting probe IDs to gene
     sybmols.
     """
+
+    a_cols = [x.name for x in samples if x.is_control]
+    b_cols = [x.name for x in samples if not x.is_control]
+    
     # COL_OFFSET changes because GDS files are "curated", meaning that they
     # have their gene symbols included. GSE files do not and are 1 column
     # thinner. That said, we do not trust the DGS mapping and do the probe-to-
@@ -60,16 +65,16 @@ def _parse_geo(filename, platform, A_cols, B_cols):
         BOF = '!dataset_table_begin'
         EOF = '!dataset_table_end'
         COL_OFFSET = 2
-        A_cols = [x.upper() for x in A_cols]
-        B_cols = [x.upper() for x in B_cols]
+        a_cols = [x.upper() for x in a_cols]
+        b_cols = [x.upper() for x in b_cols]
     else:
         BOF = '!series_matrix_table_begin'
         EOF = '!series_matrix_table_end'
         COL_OFFSET = 1
         # The strings are formatted like so: '"GSM..."'. This formatting
         # strips inner quotation marks.
-        A_cols = ['"{}"'.format(x.upper()) for x in A_cols]
-        B_cols = ['"{}"'.format(x.upper()) for x in B_cols]
+        a_cols = ['"{}"'.format(x.upper()) for x in a_cols]
+        b_cols = ['"{}"'.format(x.upper()) for x in b_cols]
 
     genes = []
     A = []
@@ -95,8 +100,8 @@ def _parse_geo(filename, platform, A_cols, B_cols):
             line_length = len(header)
 
             # Find column indices.
-            A_indices = [header.index(gsm) for gsm in A_cols]
-            B_indices = [header.index(gsm) for gsm in B_cols]
+            A_indices = [header.index(gsm) for gsm in a_cols]
+            B_indices = [header.index(gsm) for gsm in b_cols]
             selections['A_indices'] = A_indices
             selections['B_indices'] = B_indices
 
@@ -145,31 +150,6 @@ def _parse_geo(filename, platform, A_cols, B_cols):
         raise IOError('Could not read SOFT file from local server.')
 
     return (genes, A, B, selections, stats)
-
-
-def parse_custom(filename):
-    """Parses custom SOFT files uploaded by the user.
-    """
-    genes = []
-    A = []
-    B = []
-
-    with open(filename) as soft_in:
-        samples = next(soft_in).strip().split('\t')
-        header = next(soft_in).strip().split('\t')
-        A_indices = [i for i,k in enumerate(header) if k == '0']
-        B_indices = [i for i,k in enumerate(header) if k == '1']
-
-        for line in soft_in:
-            line = line.rstrip().split('\t')
-            genes.append(line[0])
-            values = line[1:]
-            A_row = [float(values[i]) for i in A_indices]
-            B_row = [float(values[i]) for i in B_indices]
-            A.append(A_row)
-            B.append(B_row)
-
-    return genes, samples, header, A, B
 
 
 def platform_supported(platform):
