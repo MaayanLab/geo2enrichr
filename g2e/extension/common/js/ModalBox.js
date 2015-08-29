@@ -10,9 +10,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         $('#g2e-modal').draggable();
         $modalBox = $('#g2e-overlay');
         $modalBox.find('#g2e-error-message').hide();
-        $modalBox.find('#g2e-submit-btn').click(function() {
-            userInputHandler.sendDataToServer();
-        });
+        $modalBox.find('#g2e-submit-btn').click(userInputHandler.sendDataToServer);
         $modalBox.find('#g2e-close-btn').click(function() {
             resetFooter();
             $modalBox.hide();
@@ -21,6 +19,9 @@ function ModalBox(events, tagger, templater, userInputHandler) {
             $modalBox.find("#g2e-tags"),
             $modalBox.find('#g2e-required-fields-based-on-tag')
         );
+        $modalBox.find('#g2e-crowdsourcing-details button').click(function() {
+            userInputHandler.checkIfProcessed();
+        });
 
         userInputHandler.setModalBox($modalBox);
         setupDiffExpMethodOptions();
@@ -44,7 +45,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
     });
 
     function openModalBox() {
-        var data = userInputHandler.getData($modalBox);
+        var data = userInputHandler.getData();
         fillConfirmationTable(data.scrapedData);
         $modalBox.show();
     }

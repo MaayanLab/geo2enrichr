@@ -11,7 +11,7 @@ var main = function() {
                     notifier = Notifier(DEBUG),
                     templater = Templater(IMAGE_PATH),
                     tagger = Tagger(events, templater),
-                    comm =  Comm(events, LoadingScreen, SERVER),
+                    comm =  Comm(events, LoadingScreen, notifier, SERVER),
                     userInputHandler;
 
                 UiEmbedder(events, page, screenScraper, templater);

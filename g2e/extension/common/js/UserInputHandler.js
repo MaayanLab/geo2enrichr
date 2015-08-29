@@ -13,7 +13,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
     function sendDataToServer() {
         var selectedData = getData();
-        if (isValidData(selectedData)) {
+        if (isValidData(selectedData, false)) {
             selectedData = prepareForTransfer(selectedData);
             comm.postSoftFile(selectedData);
             events.fire('dataPosted');
@@ -35,7 +35,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         $.each(selectedData.crowdsourcedMetadata, function(key, obj) {
             result.metadata[key] = obj;
         });
-
+        
         result.tags = selectedData.tags;
 
         return result;
@@ -50,12 +50,17 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         };
     }
 
-    function isValidData(data) {
+    function isValidData(data, onlyCheckingIfProcessed) {
         var selectedTags = tagger.getSelectedTags(),
+            tagsToFields = tagger.getTagsToFields(),
+            checkForUser = false,
             tag,
             field,
             conf,
-            selectedValue;
+            selectedValue,
+            email,
+            key,
+            i;
 
         if (!data.scrapedData.A_cols || data.scrapedData.A_cols.length < 2) {
             notifier.warn('Please select 2 or more control samples');
@@ -72,13 +77,26 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             return false;
         }
 
-        // Use traditional for loops so we can exit early if necessary.
-        for (tag in selectedTags) {
-            for (field in selectedTags[tag]) {
-                conf = selectedTags[tag][field];
-                selectedValue = data.crowdsourcedMetadata[field];
-                if (conf.required && !selectedValue) {
-                    notifier.warn('Please add metadata field "' + conf.description + '"');
+        if (!onlyCheckingIfProcessed) {
+            // Use traditional for loops so we can exit early if necessary.
+            for (i = 0; i < selectedTags.length; i++) {
+                tag = selectedTags[i];
+                for (field in tagsToFields[tag]) {
+                    // If we reach this line of code, we need to verify the email and key.
+                    checkForUser = true;
+                    conf = tagsToFields[tag][field];
+                    selectedValue = data.crowdsourcedMetadata[field];
+                    if (conf.required && !selectedValue) {
+                        notifier.warn('Please add metadata field "' + conf.description + '"');
+                        return false;
+                    }
+                }
+            }
+            if (checkForUser) {
+                email = data.crowdsourcedMetadata.userEmail;
+                key = data.crowdsourcedMetadata.userKey;
+                if (typeof email === 'undefined' || email === '' || typeof key === 'undefined' || key === '') {
+                    notifier.warn('Please add an email address and submission key.');
                     return false;
                 }
             }
@@ -141,10 +159,47 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 result[key] = $input.val().replace(/ /g,'');
             }
         });
+        result.userEmail = $modalBox.find('#g2e-user-email').val();
+        result.userKey = $modalBox.find('#g2e-user-key').val();
         return result;
     }
 
+    /* August 2015
+     * Checks if data was processed for particular Coursera microtask. Can
+     * also be deprecated in the future.
+     */
+    function checkIfProcessed() {
+        var data = getData(),
+            payload;
+        if (data.tags.length != 1) {
+            notifier.warn('Please check with only one tag.');
+            return;
+        }
+        if (isValidData(data, true)) {
+            payload = {
+                geo_id: data.scrapedData.dataset,
+                ctrl_ids: data.scrapedData.A_cols.join(','),
+                pert_ids: data.scrapedData.B_cols.join(','),
+                hashtag: '#' + data.tags[0]
+            };
+
+            //var form = new FormData();
+            //$.each(payload, function(key, val) {
+            //    form.append(key, val);
+            //});
+
+            comm.checkIfProcessed(payload, function(alreadyProcssed) {
+                if (alreadyProcssed) {
+                    notifier.warn('This combination of selected samples and tag has already been processed.');
+                } else {
+                    notifier.warn('This combination of selected samples and tag has *not* been processed.');
+                }
+            });
+        }
+    }
+
     return {
+        checkIfProcessed: checkIfProcessed,
         getData: getData,
         sendDataToServer: sendDataToServer,
         setModalBox: setModalBox

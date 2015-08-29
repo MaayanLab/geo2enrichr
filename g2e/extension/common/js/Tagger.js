@@ -9,6 +9,7 @@ var Tagger = function(events, templater) {
 
     var selectedTags = [],
         newFields = [],
+        numCrowdsourcingTabs = 0,
         $table;
 
     var tagsToFields = {
@@ -115,6 +116,8 @@ var Tagger = function(events, templater) {
                 selectedTags.push(newTag);
                 if (typeof tagsToFields[newTag] !== 'undefined') {
                     addRequiredRows(newTag);
+                    numCrowdsourcingTabs++;
+                    $('.g2e-crowdsourcing').show();
                 }
             },
             afterTagRemoved: function (evt, ui) {
@@ -125,6 +128,10 @@ var Tagger = function(events, templater) {
                 }
                 if (typeof tagsToFields[oldTag] !== 'undefined') {
                     removeUnrequiredRows(oldTag);
+                    numCrowdsourcingTabs--;
+                    if (numCrowdsourcingTabs === 0) {
+                        $('.g2e-crowdsourcing').hide();
+                    }
                 }
             }
         });
@@ -142,6 +149,9 @@ var Tagger = function(events, templater) {
         },
         getNewFields: function() {
             return newFields;
+        },
+        getTagsToFields: function() {
+            return tagsToFields;
         }
     };
 };

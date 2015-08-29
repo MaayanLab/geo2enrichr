@@ -27,7 +27,7 @@ PAEA_CUTOFF      = 2000
 def target_all_apps(ranked_genes, direction, required_metadata, optional_metadata=None, soft_file=None, tags=None):
     """Returns a dictionary of app-to-link key-value pairs.
     """
-    result = { 'enrichr': '', 'l1000cds2': '', 'paea': '' }
+    result = {'enrichr': '', 'l1000cds2': '', 'paea': '', 'crowdsourcing': ''}
     description = _description(direction, required_metadata)
 
     try:
@@ -45,12 +45,14 @@ def target_all_apps(ranked_genes, direction, required_metadata, optional_metadat
             if required_metadata.diff_exp_method == 'chdir':
                 paea_genes = _apply_cutoff(ranked_genes, PAEA_CUTOFF)
                 result['paea'] = paea.get_link(paea_genes, description)
-            crowdsourcing.post_if_necessary(
-                ranked_genes, required_metadata, optional_metadata, soft_file, tags
-            )
+            if len(tags) > 0:
+                result['crowdsourcing'] = crowdsourcing.post_if_necessary(
+                    ranked_genes, optional_metadata, soft_file, tags
+                )
 
     except:
         print 'Error with target applications'
+
     return result
 
 

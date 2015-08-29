@@ -149,15 +149,33 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
-                            '<table class="g2e-confirm-tbl" id="g2e-required-fields-based-on-tag">' +
+                            '<table class="g2e-confirm-tbl g2e-crowdsourcing" id="g2e-required-fields-based-on-tag">' +
                             '</table>' +
                         '</td>' +
                     '</tr>' +
                 '</table>' +
                 '<div id="g2e-extract">' +
-                    '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
-                    '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
-                    '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
+                    '<div class="g2e-left">' +
+                        '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
+                        '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
+                        '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
+                    '</div>' +
+                    '<div id="g2e-crowdsourcing-details" class="g2e-right g2e-crowdsourcing g2e-hidden">' +
+                        '<h4>Coursera Microtasks</h4>' +
+                        '<div>' +
+                            '<button>Check if already processed</button>' +
+                        '</div>' +
+                        '<div>' +
+                            '<label for="g2e-user-email">Email ' +
+                                '<input id="g2e-user-email" text="text">' +
+                            '</label>' +
+                        '</div>' +
+                        '<div>' +
+                            '<label for="g2e-user-key">Submission Key ' +
+                                '<input id="g2e-user-key" text="text">' +
+                            '</label>' +
+                        '</div>' +
+                    '</div>' +
                 '</div>' +
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 

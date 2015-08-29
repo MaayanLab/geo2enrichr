@@ -1,7 +1,18 @@
 @import '../../common/less/common.less';
 
-
 #g2e-overlay {
+
+    /* Generic classes*/
+    .g2e-left {
+        float: left;
+    }
+    .g2e-right {
+        float: right;
+    }
+    .g2e-hidden {
+        display: none;
+    }
+
     background-color: rgba(255,255,255,0.5);
     font-family: @font-family-base;
     height: 100%;
@@ -29,11 +40,15 @@
     a:visited {
         color: @color-blue;
     }
-    table, tbody {
+    table,
+    tbody {
         border-spacing: 0;
         border-collapse: collapse;
         margin: 0;
         padding: 0;
+        input {
+            border: none;
+        }
     }
     .g2e-lock,
     .g2e-lock:hover {
@@ -60,7 +75,6 @@
         font-size: 13px;
         font-size: 13px;
         background: none;
-        border: none;
         border-radius: 0;
     }
     .g2e-last {
@@ -268,6 +282,18 @@
         }
         input {
             width: auto;
+        }
+    }
+    #g2e-crowdsourcing-details {
+        div {
+            margin: 5px 0;
+        }
+        input {
+            border: 1px solid @color-lightgray3;
+            width: 100%;
+        }
+        label {
+            font-weight: bold;
         }
     }
 }

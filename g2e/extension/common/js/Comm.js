@@ -1,7 +1,7 @@
 
 /* Communicates to external resources, such as G2E and Enrichr's APIs.
  */
-var Comm = function(events, LoadingScreen, SERVER) {
+var Comm = function(events, LoadingScreen, notifier, SERVER) {
 
     var loadingScreen = LoadingScreen('Processing data. This may take a minute.');
 
@@ -44,7 +44,24 @@ var Comm = function(events, LoadingScreen, SERVER) {
             });
     }
 
+    function checkIfProcessed(payload, callback) {
+        loadingScreen.start();
+        $.post(
+            'http://maayanlab.net/crowdsourcing/check_geo.php',
+            payload,
+            function(response) {
+                callback(response === 'exist');
+            })
+            .error(function() {
+                notifier.warn('Unknown error.');
+            })
+            .always(function() {
+                loadingScreen.stop();
+            });
+    }
+
     return {
+        checkIfProcessed: checkIfProcessed,
         postSoftFile: postSoftFile
     };
 };

@@ -14,7 +14,7 @@ var SUPPORTED_PLATFORMS = ["GPL8321","GPL7091","GPL11383","GPL2902","GPL4044","G
 
 /* Communicates to external resources, such as G2E and Enrichr's APIs.
  */
-var Comm = function(events, LoadingScreen, SERVER) {
+var Comm = function(events, LoadingScreen, notifier, SERVER) {
 
     var loadingScreen = LoadingScreen('Processing data. This may take a minute.');
 
@@ -57,7 +57,24 @@ var Comm = function(events, LoadingScreen, SERVER) {
             });
     }
 
+    function checkIfProcessed(payload, callback) {
+        loadingScreen.start();
+        $.post(
+            'http://maayanlab.net/crowdsourcing/check_geo.php',
+            payload,
+            function(response) {
+                callback(response === 'exist');
+            })
+            .error(function() {
+                notifier.warn('Unknown error.');
+            })
+            .always(function() {
+                loadingScreen.stop();
+            });
+    }
+
     return {
+        checkIfProcessed: checkIfProcessed,
         postSoftFile: postSoftFile
     };
 };
@@ -191,6 +208,7 @@ var Tagger = function(events, templater) {
 
     var selectedTags = [],
         newFields = [],
+        numCrowdsourcingTabs = 0,
         $table;
 
     var tagsToFields = {
@@ -297,6 +315,8 @@ var Tagger = function(events, templater) {
                 selectedTags.push(newTag);
                 if (typeof tagsToFields[newTag] !== 'undefined') {
                     addRequiredRows(newTag);
+                    numCrowdsourcingTabs++;
+                    $('.g2e-crowdsourcing').show();
                 }
             },
             afterTagRemoved: function (evt, ui) {
@@ -307,6 +327,10 @@ var Tagger = function(events, templater) {
                 }
                 if (typeof tagsToFields[oldTag] !== 'undefined') {
                     removeUnrequiredRows(oldTag);
+                    numCrowdsourcingTabs--;
+                    if (numCrowdsourcingTabs === 0) {
+                        $('.g2e-crowdsourcing').hide();
+                    }
                 }
             }
         });
@@ -324,6 +348,9 @@ var Tagger = function(events, templater) {
         },
         getNewFields: function() {
             return newFields;
+        },
+        getTagsToFields: function() {
+            return tagsToFields;
         }
     };
 };
@@ -478,15 +505,33 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
-                            '<table class="g2e-confirm-tbl" id="g2e-required-fields-based-on-tag">' +
+                            '<table class="g2e-confirm-tbl g2e-crowdsourcing" id="g2e-required-fields-based-on-tag">' +
                             '</table>' +
                         '</td>' +
                     '</tr>' +
                 '</table>' +
                 '<div id="g2e-extract">' +
-                    '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
-                    '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
-                    '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
+                    '<div class="g2e-left">' +
+                        '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
+                        '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
+                        '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
+                    '</div>' +
+                    '<div id="g2e-crowdsourcing-details" class="g2e-right g2e-crowdsourcing g2e-hidden">' +
+                        '<h4>Coursera Microtasks</h4>' +
+                        '<div>' +
+                            '<button>Check if already processed</button>' +
+                        '</div>' +
+                        '<div>' +
+                            '<label for="g2e-user-email">Email ' +
+                                '<input id="g2e-user-email" text="text">' +
+                            '</label>' +
+                        '</div>' +
+                        '<div>' +
+                            '<label for="g2e-user-key">Submission Key ' +
+                                '<input id="g2e-user-key" text="text">' +
+                            '</label>' +
+                        '</div>' +
+                    '</div>' +
                 '</div>' +
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 
@@ -852,9 +897,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         $('#g2e-modal').draggable();
         $modalBox = $('#g2e-overlay');
         $modalBox.find('#g2e-error-message').hide();
-        $modalBox.find('#g2e-submit-btn').click(function() {
-            userInputHandler.sendDataToServer();
-        });
+        $modalBox.find('#g2e-submit-btn').click(userInputHandler.sendDataToServer);
         $modalBox.find('#g2e-close-btn').click(function() {
             resetFooter();
             $modalBox.hide();
@@ -863,6 +906,9 @@ function ModalBox(events, tagger, templater, userInputHandler) {
             $modalBox.find("#g2e-tags"),
             $modalBox.find('#g2e-required-fields-based-on-tag')
         );
+        $modalBox.find('#g2e-crowdsourcing-details button').click(function() {
+            userInputHandler.checkIfProcessed();
+        });
 
         userInputHandler.setModalBox($modalBox);
         setupDiffExpMethodOptions();
@@ -886,7 +932,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
     });
 
     function openModalBox() {
-        var data = userInputHandler.getData($modalBox);
+        var data = userInputHandler.getData();
         fillConfirmationTable(data.scrapedData);
         $modalBox.show();
     }
@@ -968,7 +1014,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
     function sendDataToServer() {
         var selectedData = getData();
-        if (isValidData(selectedData)) {
+        if (isValidData(selectedData, false)) {
             selectedData = prepareForTransfer(selectedData);
             comm.postSoftFile(selectedData);
             events.fire('dataPosted');
@@ -990,7 +1036,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         $.each(selectedData.crowdsourcedMetadata, function(key, obj) {
             result.metadata[key] = obj;
         });
-
+        
         result.tags = selectedData.tags;
 
         return result;
@@ -1005,12 +1051,17 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         };
     }
 
-    function isValidData(data) {
+    function isValidData(data, onlyCheckingIfProcessed) {
         var selectedTags = tagger.getSelectedTags(),
+            tagsToFields = tagger.getTagsToFields(),
+            checkForUser = false,
             tag,
             field,
             conf,
-            selectedValue;
+            selectedValue,
+            email,
+            key,
+            i;
 
         if (!data.scrapedData.A_cols || data.scrapedData.A_cols.length < 2) {
             notifier.warn('Please select 2 or more control samples');
@@ -1027,13 +1078,26 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             return false;
         }
 
-        // Use traditional for loops so we can exit early if necessary.
-        for (tag in selectedTags) {
-            for (field in selectedTags[tag]) {
-                conf = selectedTags[tag][field];
-                selectedValue = data.crowdsourcedMetadata[field];
-                if (conf.required && !selectedValue) {
-                    notifier.warn('Please add metadata field "' + conf.description + '"');
+        if (!onlyCheckingIfProcessed) {
+            // Use traditional for loops so we can exit early if necessary.
+            for (i = 0; i < selectedTags.length; i++) {
+                tag = selectedTags[i];
+                for (field in tagsToFields[tag]) {
+                    // If we reach this line of code, we need to verify the email and key.
+                    checkForUser = true;
+                    conf = tagsToFields[tag][field];
+                    selectedValue = data.crowdsourcedMetadata[field];
+                    if (conf.required && !selectedValue) {
+                        notifier.warn('Please add metadata field "' + conf.description + '"');
+                        return false;
+                    }
+                }
+            }
+            if (checkForUser) {
+                email = data.crowdsourcedMetadata.userEmail;
+                key = data.crowdsourcedMetadata.userKey;
+                if (typeof email === 'undefined' || email === '' || typeof key === 'undefined' || key === '') {
+                    notifier.warn('Please add an email address and submission key.');
                     return false;
                 }
             }
@@ -1096,10 +1160,47 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 result[key] = $input.val().replace(/ /g,'');
             }
         });
+        result.userEmail = $modalBox.find('#g2e-user-email').val();
+        result.userKey = $modalBox.find('#g2e-user-key').val();
         return result;
     }
 
+    /* August 2015
+     * Checks if data was processed for particular Coursera microtask. Can
+     * also be deprecated in the future.
+     */
+    function checkIfProcessed() {
+        var data = getData(),
+            payload;
+        if (data.tags.length != 1) {
+            notifier.warn('Please check with only one tag.');
+            return;
+        }
+        if (isValidData(data, true)) {
+            payload = {
+                geo_id: data.scrapedData.dataset,
+                ctrl_ids: data.scrapedData.A_cols.join(','),
+                pert_ids: data.scrapedData.B_cols.join(','),
+                hashtag: '#' + data.tags[0]
+            };
+
+            //var form = new FormData();
+            //$.each(payload, function(key, val) {
+            //    form.append(key, val);
+            //});
+
+            comm.checkIfProcessed(payload, function(alreadyProcssed) {
+                if (alreadyProcssed) {
+                    notifier.warn('This combination of selected samples and tag has already been processed.');
+                } else {
+                    notifier.warn('This combination of selected samples and tag has *not* been processed.');
+                }
+            });
+        }
+    }
+
     return {
+        checkIfProcessed: checkIfProcessed,
         getData: getData,
         sendDataToServer: sendDataToServer,
         setModalBox: setModalBox
@@ -1118,7 +1219,7 @@ var main = function() {
                     notifier = Notifier(DEBUG),
                     templater = Templater(IMAGE_PATH),
                     tagger = Tagger(events, templater),
-                    comm =  Comm(events, LoadingScreen, SERVER),
+                    comm =  Comm(events, LoadingScreen, notifier, SERVER),
                     userInputHandler;
 
                 UiEmbedder(events, page, screenScraper, templater);
