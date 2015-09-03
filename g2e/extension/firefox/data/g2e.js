@@ -2,8 +2,8 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var DEBUG = true;
-var SERVER = "http://localhost:8083/g2e/";
+var DEBUG = false;
+var SERVER = "http://amp.pharm.mssm.edu/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
 // This file is built when new platforms are added.
 //// We use an array rather than hitting an API endpoint because this is much
@@ -1036,7 +1036,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         $.each(selectedData.crowdsourcedMetadata, function(key, obj) {
             result.metadata[key] = obj;
         });
-        
+
         result.tags = selectedData.tags;
 
         return result;

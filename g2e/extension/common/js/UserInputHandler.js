@@ -35,7 +35,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         $.each(selectedData.crowdsourcedMetadata, function(key, obj) {
             result.metadata[key] = obj;
         });
-        
+
         result.tags = selectedData.tags;
 
         return result;

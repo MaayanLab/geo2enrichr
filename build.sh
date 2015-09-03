@@ -1,16 +1,41 @@
 #!/bin/bash
 
-# This script takes one or two arguments
+# This script takes 1-4 arguments
 # $1 'dev' or 'prod'
-# $2 'skip' [optional]
-# $3 'push' [optional - use 'test' as the second argument to not skip tests']
+# $2 'skip'  [optional]
+# $3 'build' [optional - use any other string to skip]
+# $4 'push'  [optional - use any other string to skip]
 
 # Any subsequent(*) commands which fail will cause the shell script to exit immediately
 # http://www.gnu.org/software/bash/manual/bashref.html#The-Set-Builtin
 set -e
 
-# JS
+# Run unit tests
+# =============================================================================
+
+# Setup virtual environment
 # -----------------------------------------------------------------------------
+
+if hash deactivate 2 > /dev/null; then
+    deactivate
+    source venv/bin/activate
+else
+    source venv/bin/activate
+fi
+
+if [[ $2 = 'skip' ]]; then
+    printf '%s\n' 'Skipping Python unit tests'
+else
+    printf '%s\n' 'Running Python unit tests'
+    nosetests --exe -v --pdb
+fi
+
+# Create front end (if tests pass)
+# =============================================================================
+
+# Configure JS
+# -----------------------------------------------------------------------------
+
 # Write configuration variables into config file.
 CHROME_JS_CONFIG='g2e/extension/common/js/config-chrome.js'
 FIREFOX_JS_CONFIG='g2e/extension/common/js/config-firefox.js'
@@ -48,18 +73,14 @@ printf 'var IMAGE_PATH = self.options.logoUrl;' >> $FIREFOX_JS_CONFIG
 printf '%s\n' 'Building front-end'
 grunt --gruntfile=scripts/gruntfile.js build > /dev/null
 
-# Run unit tests
-# -----------------------------------------------------------------------------
-if [[ $2 = 'skip' ]]; then
-    printf '%s\n' 'Skipping Python unit tests'
-else
-    printf '%s\n' 'Running Python unit tests'
-    nosetests --exe -v --pdb
-fi
-
 # Configure DB. Do this *after* running the unit tests, so tests don't get
 # logged in production.
 # -----------------------------------------------------------------------------
+
+# Even if Docker files at this point, we want the script to finish. Otherwise,
+# we may have a dev.config file pointing to the production DB.
+set +e
+
 printf '%s\n' 'Configuring the database.'
 dbconf='g2e/app.conf'
 if [[ $1 = 'dev' ]]; then
@@ -75,7 +96,7 @@ fi
 # Run Docker
 # -----------------------------------------------------------------------------
 DOCKER_IMAGE='maayanlab/g2e:latest'
-if [[ $1 = 'prod' ]]; then
+if [[ $1 = 'build' ]]; then
     boot2docker init
     boot2docker up
     boot2docker shellinit
