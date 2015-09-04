@@ -88,8 +88,8 @@ def __post(genes, optional_metadata, soft_file, tag):
         'dn_genes': ','.join([x.gene.name for x in genes if x.value < 0]),
 
         # TODO: Read these in from the extension.
-        'email': __get_metadata_value_by_name(optional_metadata, 'userEmail'),
-        'key': __get_metadata_value_by_name(optional_metadata, 'userKey')
+        'email': __get_metadata_value_by_name(optional_metadata, 'user_email'),
+        'key': __get_metadata_value_by_name(optional_metadata, 'user_key')
     }
 
     # microtask-specifc keys
