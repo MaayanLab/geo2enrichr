@@ -2,8 +2,8 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var DEBUG = false;
-var SERVER = "http://amp.pharm.mssm.edu/g2e/";
+var DEBUG = true;
+var SERVER = "http://localhost:8083/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
 // This file is built when new platforms are added.
 //// We use an array rather than hitting an API endpoint because this is much
@@ -1094,8 +1094,8 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 }
             }
             if (checkForUser) {
-                email = data.crowdsourcedMetadata.userEmail;
-                key = data.crowdsourcedMetadata.userKey;
+                email = data.crowdsourcedMetadata.user_email;
+                key = data.crowdsourcedMetadata.user_key;
                 if (typeof email === 'undefined' || email === '' || typeof key === 'undefined' || key === '') {
                     notifier.warn('Please add an email address and submission key.');
                     return false;
@@ -1152,16 +1152,24 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
      */
     function getCrowdsourcedMetadata() {
         // I really hate how much this function knows about the DOM.
-        var result = {};
-        var $table = $modalBox.find('#g2e-required-fields-based-on-tag');
+        var result = {},
+            $table = $modalBox.find('#g2e-required-fields-based-on-tag'),
+            email,
+            key;
         $.each(tagger.getNewFields(), function(i, key) {
             var $input = $table.find('#' + key + ' input');
             if ($input.length) {
                 result[key] = $input.val().replace(/ /g,'');
             }
         });
-        result.userEmail = $modalBox.find('#g2e-user-email').val();
-        result.userKey = $modalBox.find('#g2e-user-key').val();
+        email = $modalBox.find('#g2e-user-email').val();
+        key = $modalBox.find('#g2e-user-key').val();
+
+        if (email !== '' && key !== '') {
+            result.user_email = email;
+            result.user_key = key;
+        }
+
         return result;
     }
 
