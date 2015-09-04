@@ -7,9 +7,12 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-from g2e.config import Config
-import requests
+import json
 import time
+
+import requests
+
+from g2e.config import Config
 
 
 CROWDSOURCING_POST_URL = 'http://maayanlab.net/crowdsourcing/g2e.php'
@@ -42,30 +45,35 @@ CROWDSOURCING_TAGS = {
     },
     'PATHOGENS_BD2K_LINCS_DCIC_COURSERA': {
         'fields': ['microbe_name', 'microbe_id'],
-        'task': 7
+        'task_num': 7
     }
 }
 
 
 def post_if_necessary(genes, optional_metadata, soft_file, tags):
+    print 'POSTing to Crowdsourcing if necessary'
+
     tags_to_post = []
     for tag in tags:
         if tag.name in CROWDSOURCING_TAGS:
             tags_to_post.append(tag)
 
-    successes = {}
+    results = {}
     for tag in tags_to_post:
-        resp = __post(genes, optional_metadata, soft_file, tag)
-        if resp:
-            link = CROWDSOURCING_LEADERBOARD_BASE_URL + '#task' + str(CROWDSOURCING_TAGS[tag.name]['task'])
-            successes[tag.name] = link
+        response = __post(genes, optional_metadata, soft_file, tag)
+        if response['status_code'] == 200:
+            link = CROWDSOURCING_LEADERBOARD_BASE_URL + '#task' + str(CROWDSOURCING_TAGS[tag.name]['task_num'])
+            results[tag.name] = link
+        else:
+            # If multiple errors occur, this only saves the last one but
+            # that's fine.
+            results['message'] = response['message']
 
-    if len(tags_to_post) == len(successes):
-        return successes
-    return {}
+    return results
 
 
 def __post(genes, optional_metadata, soft_file, tag):
+    print '\tPOSTing ' + tag.name
 
     # If we submit an identical study (same GDS or GSE with the same GSMs),
     # the crowdsourcing app rejects the study. For testing purposes, we want
@@ -99,7 +107,10 @@ def __post(genes, optional_metadata, soft_file, tag):
         )
 
     response = requests.post(CROWDSOURCING_POST_URL, data=payload)
-    return response.status_code == 200
+    return {
+        'status_code': response.status_code,
+        'message': json.loads(response.text)['message']
+    }
 
 
 def __get_metadata_value_by_name(optional_metadata, name):

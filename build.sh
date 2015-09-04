@@ -96,7 +96,7 @@ fi
 # Run Docker
 # -----------------------------------------------------------------------------
 DOCKER_IMAGE='maayanlab/g2e:latest'
-if [[ $1 = 'build' ]]; then
+if [[ $3 = 'build' ]]; then
     boot2docker init
     boot2docker up
     boot2docker shellinit
@@ -111,7 +111,7 @@ printf '%s\n%s' $reset_credentials $reset_debug > $dbconf
 
 # Push to private docker repo if asked
 # -----------------------------------------------------------------------------
-if [[ $3 = 'push' ]]; then
+if [[ $4 = 'push' ]]; then
     # We use an insecure, private registry. If this script errors, run the
     # following command to tell Docker to go ahead anyway.
     #
