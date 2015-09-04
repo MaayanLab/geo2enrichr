@@ -2,8 +2,8 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var DEBUG = false;
-var SERVER = "http://amp.pharm.mssm.edu/g2e/";
+var DEBUG = true;
+var SERVER = "http://localhost:8083/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
 // This file is built when new platforms are added.
 //// We use an array rather than hitting an API endpoint because this is much
@@ -415,7 +415,7 @@ var Templater = function(IMAGE_PATH) {
                                 '</tr>' +
                                 '<tr id="g2e-normalize">' +
                                     '<td class="' + G2E_TITLE + '">' +
-                                        'Log-transform and quantile normalize if necessary&#42;' +
+                                        'Normalize if necessary&#42;' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' g2e-select">' +
                                         '<select>' +
@@ -466,7 +466,7 @@ var Templater = function(IMAGE_PATH) {
                                         'Cell type or tissue' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + '">' +
-                                        '<input placeholder="No data">' +
+                                        '<input placeholder="...">' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-perturbation">' +
@@ -474,7 +474,7 @@ var Templater = function(IMAGE_PATH) {
                                         'Perturbation' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + '">' +
-                                        '<input placeholder="No data">' +
+                                        '<input placeholder="...">' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-gene" class="ui-widget">' +
@@ -482,7 +482,7 @@ var Templater = function(IMAGE_PATH) {
                                         '<label for="g2e-geneList">Manipulated gene</label>' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + '">' +
-                                        '<input id="g2e-geneList" placeholder="No data">' +
+                                        '<input id="g2e-geneList" placeholder="...">' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-disease" class="ui-widget g2e-last">' +
@@ -490,7 +490,7 @@ var Templater = function(IMAGE_PATH) {
                                         '<label for="g2e-diseaseList">Relevant disease</label>' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' g2e-last">' +
-                                        '<input id="g2e-diseaseList" placeholder="No data">' +
+                                        '<input id="g2e-diseaseList" placeholder="...">' +
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +

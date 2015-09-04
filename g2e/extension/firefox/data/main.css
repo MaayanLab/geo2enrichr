@@ -4,6 +4,7 @@
   font-family: arial, sans-serif;
   height: 100%;
   left: 0;
+  padding: 15px;
   position: fixed;
   top: 0;
   width: 100%;
@@ -139,13 +140,13 @@
   text-decoration: none;
 }
 #g2e-overlay #g2e-title img {
-  width: 30px;
+  width: 22px;
 }
 #g2e-overlay #g2e-title span:first-of-type {
   margin-left: 10px;
 }
 #g2e-overlay #g2e-title span {
-  font-size: 40px;
+  font-size: 30px;
   font-family: 'Open Sans', arial, sans-serif;
   font-weight: bold;
 }
@@ -180,7 +181,8 @@
   margin-top: 20px;
 }
 #g2e-overlay #g2e-confirm .g2e-confirm-tbl {
-  padding-top: 10px;
+  margin: 10px 0 0 0;
+  padding-top: 0;
   table-layout: fixed;
   width: 100%;
 }
@@ -190,7 +192,7 @@
 }
 #g2e-overlay #g2e-confirm .g2e-confirm-tbl tr {
   border-bottom: 1px solid #eeeeee;
-  height: 25px;
+  height: 20px;
 }
 #g2e-overlay #g2e-confirm .g2e-confirm-tbl td {
   padding: 2px 0;
@@ -206,15 +208,14 @@
   padding-left: 10px;
   width: 100%;
 }
+#g2e-overlay #g2e-confirm .g2e-confirm-tbl td.g2e-value.g2e-select {
+  padding-left: 0 !important;
+}
 #g2e-overlay #g2e-confirm .g2e-confirm-tbl .g2e-last {
   border: none;
 }
-#g2e-overlay #g2e-confirm .g2e-confirm-tbl .g2e-select {
-  padding: 0;
-}
 #g2e-overlay #g2e-footer {
   clear: both;
-  padding: 10px 0 0 0;
 }
 #g2e-overlay #g2e-footer table .g2e-title {
   width: 130px;
@@ -238,7 +239,7 @@
   font-size: 12px;
 }
 #g2e-overlay #g2e-extract {
-  padding-top: 20px;
+  padding: 0;
 }
 #g2e-overlay #g2e-extract button {
   display: inline;

@@ -17,6 +17,7 @@
     font-family: @font-family-base;
     height: 100%;
     left: 0;
+    padding: 15px;
     position: fixed;
     top: 0;
     width: 100%;
@@ -141,13 +142,13 @@
             text-decoration: none;
         }
         img {
-            width: 30px;
+            width: 22px;
         }
         span:first-of-type {
             margin-left: 10px;
         }
         span {
-            font-size: 40px;
+            font-size: 30px;
             font-family: @font-family-accent;
             font-weight: bold;
         }
@@ -184,7 +185,8 @@
     }
     #g2e-confirm {
         .g2e-confirm-tbl {
-            padding-top: 10px;
+            margin: 10px 0 0 0;
+            padding-top: 0;
             table-layout: fixed;
             width: 100%;
             input, select {
@@ -192,7 +194,7 @@
             }
             tr {
                 border-bottom: 1px solid @color-lightgray3;
-                height: 25px;
+                height: 20px;
             }
             td {
                 padding: 2px 0;
@@ -207,18 +209,17 @@
                 background: none;
                 padding-left: 10px;
                 width: 100%;
+                &.g2e-select {
+                    padding-left: 0 !important;
+                }
             }
             .g2e-last {
                 border: none;
-            }
-            .g2e-select {
-                padding: 0;
             }
         }
     }
     #g2e-footer {
         clear: both;
-        padding: 10px 0 0 0;
         table .g2e-title {
             width: 130px;
         }
@@ -242,7 +243,7 @@
         }
     }
     #g2e-extract {
-        padding-top: 20px;
+        padding: 0;
         button {
             display: inline;
             margin-right: 5px;
