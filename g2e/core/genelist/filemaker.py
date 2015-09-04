@@ -10,18 +10,20 @@ __contact__ = "avi.maayan@mssm.edu"
 def get_file_contents_as_string(genelist):
     """Writes the contents of a GeneList to disk and returns a relative path.
     """
-    metadata = genelist.gene_signature.exp_metadata
+    req_metadata = genelist.gene_signature.required_metadata
     contents = ''
     contents += __line('direction', genelist.direction)
     contents += __line('num_genes', len(genelist.ranked_genes))
-    contents += __line('diffexp_method', metadata.diff_exp_method.name)
-    contents += __line('cutoff', metadata.cutoff)
-    contents += __line('correction_method', metadata.ttest_correction_method.name)
-    contents += __line('threshold', metadata.threshold)
-    contents += __line('cell', metadata.cell)
-    contents += __line('perturbation', metadata.perturbation)
-    contents += __line('gene', metadata.gene)
-    contents += __line('disease', metadata.disease)
+    contents += __line('diffexp_method', req_metadata.diff_exp_method)
+    contents += __line('cutoff', req_metadata.cutoff)
+    contents += __line('correction_method', req_metadata.ttest_correction_method)
+    contents += __line('threshold', req_metadata.threshold)
+
+    opt_metadata = genelist.gene_signature.optional_metadata
+    for om in opt_metadata:
+        if om.name != 'user_key':
+            contents += __line(om.name, om.value)
+
     contents += '!end_metadata\n'
     for rg in genelist.ranked_genes:
         value_string = '%0.6f' % rg.value
@@ -33,4 +35,4 @@ def get_file_contents_as_string(genelist):
 def __line(key, val):
     """Handles line formatting.
     """
-    return ('!%s:\t%s\n') % (key, str(val))
+    return ('!%s\t%s\n') % (key, str(val))
