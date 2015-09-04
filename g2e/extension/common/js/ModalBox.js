@@ -46,7 +46,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
 
     function openModalBox() {
         var data = userInputHandler.getData();
-        fillConfirmationTable(data.scrapedData);
+        fillConfirmationTable(data);
         $modalBox.show();
     }
 
@@ -62,8 +62,9 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         $modalBox.find('#g2e-error-message').hide();
     }
 
-    function fillConfirmationTable(scrapedData) {
-        var prop, html, elemId;
+    function fillConfirmationTable(data) {
+        var scrapedData = data.scrapedData,
+            prop, html;
         for (prop in scrapedData) {
             var val = scrapedData[prop];
             if ($.isArray(val)) {
@@ -71,8 +72,9 @@ function ModalBox(events, tagger, templater, userInputHandler) {
             } else {
                 html = val;
             }
-            $('#g2e-' + prop + ' td').eq(1).html(html);
+            $('#g2e-' + prop + ' td input').attr('value', html);
         }
+        $modalBox.find('#g2e-user-key').val(data.crowdsourcedMetadata.user_key);
     }
 
     function setAutocomplete(data) {

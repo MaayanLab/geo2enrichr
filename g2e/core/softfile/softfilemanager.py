@@ -9,12 +9,13 @@ __contact__ = "avi.maayan@mssm.edu"
 import os.path
 import time
 
+import g2e.core.softfile.geodownloader as geodownloader
 import g2e.core.softfile.normalizer as normalizer
 
 
-BASE_DIR    = 'g2e/static/softfile/'
+BASE_DIR = 'g2e/static/softfile/'
 CLEANED_DIR = BASE_DIR + 'clean/'
-EXT         = '.txt'
+EXT = '.txt'
 
 
 def write(name, platform, normalize, genes, a_vals, b_vals, samples, selections, stats):
@@ -69,6 +70,19 @@ def path(name):
     """Returns a relative path to the SoftFile on the server.
     """
     return BASE_DIR + name + EXT
+
+
+def download(accession):
+    """Downloads file from GEO.
+    """
+    file_path = path(accession)
+    geodownloader.download(accession, file_path)
+
+
+def get(name):
+    """Returns file object from disk.
+    """
+    return file(BASE_DIR + name + EXT).read()
 
 
 def _build_selections(selections):

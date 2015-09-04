@@ -239,7 +239,7 @@
   font-size: 12px;
 }
 #g2e-overlay #g2e-extract {
-  padding: 0;
+  padding-top: 10px;
 }
 #g2e-overlay #g2e-extract button {
   display: inline;
@@ -279,6 +279,10 @@
 #g2e-overlay #g2e-tags input {
   width: auto;
 }
+#g2e-overlay #g2e-crowdsourcing-details h1 {
+  font-size: 20px;
+  margin-top: 10px;
+}
 #g2e-overlay #g2e-crowdsourcing-details div {
   margin: 5px 0;
 }
@@ -288,6 +292,9 @@
 }
 #g2e-overlay #g2e-crowdsourcing-details label {
   font-weight: bold;
+}
+#g2e-overlay #g2e-crowdsourcing-details #g2e-user-key-wrapper {
+  margin-left: 20px;
 }
 #g2e-table-title {
   color: #d90000;

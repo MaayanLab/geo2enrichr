@@ -1,12 +1,21 @@
 
 function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
-    var geneList;
+    var $modalBox,
+        geneList,
+        courseraUserKey = localStorage.getItem('g2e-submission-key');
+
     events.on('geneListFetched', function(data) {
         geneList = data;
     });
 
-    var $modalBox;
+    events.on('g2eLoaded', function() {
+        $modalBox.find('#g2e-user-key-wrapper input').change(function() {
+            var newKey = $modalBox.find('#g2e-user-key').val();
+            localStorage.setItem('g2e-submission-key', newKey);
+        });
+    });
+
     function setModalBox($el) {
         $modalBox = $el;
     }
@@ -93,10 +102,9 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 }
             }
             if (checkForUser) {
-                email = data.crowdsourcedMetadata.user_email;
                 key = data.crowdsourcedMetadata.user_key;
-                if (typeof email === 'undefined' || email === '' || typeof key === 'undefined' || key === '') {
-                    notifier.warn('Please add an email address and submission key.');
+                if (typeof key === 'undefined' || key === '') {
+                    notifier.warn('Please add a submission key.');
                     return false;
                 }
             }
@@ -153,7 +161,6 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         // I really hate how much this function knows about the DOM.
         var result = {},
             $table = $modalBox.find('#g2e-required-fields-based-on-tag'),
-            email,
             key;
         $.each(tagger.getNewFields(), function(i, key) {
             var $input = $table.find('#' + key + ' input');
@@ -161,13 +168,15 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 result[key] = $input.val().replace(/ /g,'');
             }
         });
-        email = $modalBox.find('#g2e-user-email').val();
-        key = $modalBox.find('#g2e-user-key').val();
 
-        if (email !== '' && key !== '') {
-            result.user_email = email;
+        key = $modalBox.find('#g2e-user-key').val() || courseraUserKey;
+        if (key !== '') {
             result.user_key = key;
+            localStorage.setItem('g2e-submission-key', key);
         }
+
+        // TODO: THIS IS A BAKED IN HACK UNTIL ZICHEN IMPLEMENTS NEW API
+        result.user_email = 'greg@c4q.nyc';
 
         return result;
     }
@@ -190,11 +199,6 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 pert_ids: data.scrapedData.B_cols.join(','),
                 hashtag: '#' + data.tags[0]
             };
-
-            //var form = new FormData();
-            //$.each(payload, function(key, val) {
-            //    form.append(key, val);
-            //});
 
             comm.checkIfProcessed(payload, function(alreadyProcssed) {
                 if (alreadyProcssed) {

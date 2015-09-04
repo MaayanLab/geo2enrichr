@@ -17,6 +17,8 @@ var main = function() {
                 UiEmbedder(events, page, screenScraper, templater);
                 userInputHandler = UserInputHandler(comm, events, notifier, screenScraper, tagger);
                 ModalBox(events, tagger, templater, userInputHandler);
+
+                events.fire('g2eLoaded');
             }
         });
     }

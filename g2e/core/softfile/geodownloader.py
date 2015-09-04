@@ -13,10 +13,8 @@ import zlib
 from urllib2 import urlopen, URLError
 from StringIO import StringIO
 
-import g2e.core.softfile.softfilemanager as softfilemanager
 
-
-def download(accession):
+def download(accession, downloaded_file_path):
     """Downloads GEO file based on accession number. Side effect is a
     downloaded SOFT file on disk.
 
@@ -24,9 +22,6 @@ def download(accession):
         http://stackoverflow.com/a/27053335/1830334
         http://stackoverflow.com/a/2424549/1830334
     """
-
-    downloaded_file_path = softfilemanager.path(accession)
-
     CHUNK_SIZE = 1024
     decompressor = zlib.decompressobj(16+zlib.MAX_WBITS)
 

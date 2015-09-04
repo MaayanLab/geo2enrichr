@@ -50,6 +50,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             'http://maayanlab.net/crowdsourcing/check_geo.php',
             payload,
             function(response) {
+                console.log(payload);
                 callback(response === 'exist');
             })
             .error(function() {

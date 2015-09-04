@@ -63,6 +63,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             'http://maayanlab.net/crowdsourcing/check_geo.php',
             payload,
             function(response) {
+                console.log(payload);
                 callback(response === 'exist');
             })
             .error(function() {
@@ -213,6 +214,14 @@ var Tagger = function(events, templater) {
 
     var tagsToFields = {
         AGING_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
             young: {
                 required: true,
                 description: "Age of the young sample"
@@ -241,6 +250,15 @@ var Tagger = function(events, templater) {
             }
         },
         DISEASES_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                "key": "",
+                description: "Organism (human, mouse or rat)"
+            },
             disease_name: {
                 required: true,
                 description: "Name of the disease"
@@ -251,6 +269,14 @@ var Tagger = function(events, templater) {
             }
         },
         LIGANDS_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
             ligand_name: {
                 required: true,
                 description: "Name of the ligand"
@@ -261,6 +287,14 @@ var Tagger = function(events, templater) {
             }
         },
         DRUGS_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
             drug_name: {
                 required: true,
                 description: "Name of the drug"
@@ -271,12 +305,32 @@ var Tagger = function(events, templater) {
             }
         },
         GENES_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
+            gene: {
+                required: true,
+                description: "Gene being perturbed in the study"
+            },
             pert_type: {
                 required: true,
                 description: "Perturbation type (KO, KD, OE, Mutation)"
             }
         },
         PATHOGENS_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
             microbe_name: {
                 required: true,
                 description: "Name of the virus or bacteria"
@@ -289,10 +343,19 @@ var Tagger = function(events, templater) {
     };
 
     function addRequiredRows(newTag) {
-        $.each(tagsToFields[newTag], function(key, newRow) {
-            newFields.push(key);
-            var $tr = templater.getTableRow(newRow.description, key);
-            $table.append($tr);
+        // Remove old rows and re-add everything, mixing in row config objects
+        // together to remove duplicates.
+        $table.find('tr').remove();
+        newFields.push(newTag);
+
+        var newRows = {};
+        $.each(newFields, function(i, newTag) {
+            debugger;
+            //var $tr = templater.getTableRow(newRow.description, key);
+            //$table.append($tr);
+            $.each(tagsToFields[newTag], function(key, newRow) {
+
+            });
         });
     }
 
@@ -308,15 +371,27 @@ var Tagger = function(events, templater) {
     }
 
     function watch($input) {
+        var $crowdsourcingElements = $('.g2e-crowdsourcing'),
+            $metadataTable = $('#g2e-metadata');
+
         $input.tagit({
             singleField: true,
             beforeTagAdded: function (evt, ui) {
                 var newTag = $(ui.tag).find('.tagit-label').html();
+
+                // Remove the hash on the tag if a user tries to add one.
+                if (newTag.indexOf('#') === 0) {
+                    newTag = newTag.slice(1);
+                }
+
                 selectedTags.push(newTag);
                 if (typeof tagsToFields[newTag] !== 'undefined') {
                     addRequiredRows(newTag);
                     numCrowdsourcingTabs++;
-                    $('.g2e-crowdsourcing').show();
+                    $crowdsourcingElements.show();
+                }
+                if (numCrowdsourcingTabs > 0) {
+                    $metadataTable.hide();
                 }
             },
             afterTagRemoved: function (evt, ui) {
@@ -329,8 +404,11 @@ var Tagger = function(events, templater) {
                     removeUnrequiredRows(oldTag);
                     numCrowdsourcingTabs--;
                     if (numCrowdsourcingTabs === 0) {
-                        $('.g2e-crowdsourcing').hide();
+                        $crowdsourcingElements.hide();
                     }
+                }
+                if (numCrowdsourcingTabs === 0) {
+                    $metadataTable.show();
                 }
             }
         });
@@ -381,23 +459,23 @@ var Templater = function(IMAGE_PATH) {
                                 '<caption>Please verify that your data is correct.</caption>' +
                                 '<tr id="g2e-dataset">' +
                                     '<td class="' + G2E_TITLE + '">Accession num.</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-platform">' +
                                     '<td class="' + G2E_TITLE + '">Platform</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-organism">' +
                                     '<td class="' + G2E_TITLE + '">Organism</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-A_cols">' +
                                     '<td class="' + G2E_TITLE + '">Control samples</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-B_cols" class="g2e-last">' +
                                     '<td class="' + G2E_TITLE + '">Treatment or condition samples</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                             '</table>' +
                             '<table class="g2e-confirm-tbl g2e-top">' +
@@ -415,7 +493,7 @@ var Templater = function(IMAGE_PATH) {
                                 '</tr>' +
                                 '<tr id="g2e-normalize">' +
                                     '<td class="' + G2E_TITLE + '">' +
-                                        'Normalize if necessary&#42;' +
+                                        'Transform and normalize if necessary&#42;' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' g2e-select">' +
                                         '<select>' +
@@ -459,7 +537,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
-                            '<table class="g2e-confirm-tbl g2e-top">' +
+                            '<table id="g2e-metadata" class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please fill out these optional annotations.</caption>' +
                                 '<tr id="g2e-cell">' +
                                     '<td class="' + G2E_TITLE + '">' +
@@ -505,37 +583,33 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
+                            '<div id="g2e-crowdsourcing-details" class="g2e-crowdsourcing g2e-hidden">' +
+                                '<h1>Coursera Microtasks</h1>' +
+                                '<div class="g2e-left">' +
+                                    '<button>Check if already processed</button>' +
+                                '</div>' +
+                                '<div id="g2e-user-key-wrapper" class="g2e-left">' +
+                                    '<label for="g2e-user-key">Submission Key ' +
+                                        '<input id="g2e-user-key" text="text">' +
+                                    '</label>' +
+                                '</div>' +
+                            '</div>' +
                             '<table class="g2e-confirm-tbl g2e-crowdsourcing" id="g2e-required-fields-based-on-tag">' +
+                                '<caption>Please fill out these required annotations.</caption>' +
                             '</table>' +
                         '</td>' +
                     '</tr>' +
                 '</table>' +
                 '<div id="g2e-extract">' +
-                    '<div class="g2e-left">' +
+                    '<div>' +
                         '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
                         '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
                         '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
                     '</div>' +
-                    '<div id="g2e-crowdsourcing-details" class="g2e-right g2e-crowdsourcing g2e-hidden">' +
-                        '<h4>Coursera Microtasks</h4>' +
-                        '<div>' +
-                            '<button>Check if already processed</button>' +
-                        '</div>' +
-                        '<div>' +
-                            '<label for="g2e-user-email">Email ' +
-                                '<input id="g2e-user-email" text="text">' +
-                            '</label>' +
-                        '</div>' +
-                        '<div>' +
-                            '<label for="g2e-user-key">Submission Key ' +
-                                '<input id="g2e-user-key" text="text">' +
-                            '</label>' +
-                        '</div>' +
-                    '</div>' +
                 '</div>' +
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 
-                        '&#42;See the <a href="http://amp.pharm.mssm.edu/g2e/#pipeline" target="_blank">website</a> for details.<br>' +
+                        '&#42;See the <a href="http://amp.pharm.mssm.edu/g2e/pipeline" target="_blank">website</a> for details.<br>' +
                         'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                     '</p>' +
                 '</div>' +
@@ -601,7 +675,7 @@ var Templater = function(IMAGE_PATH) {
                 '<tr id="' + id + '">' +
                     '<td class="' + G2E_TITLE + '">' + value + '</td>' +
                     '<td class="' + G2E_VALUE + '">' +
-                        '<input placeholder="No data">' +
+                        '<input placeholder="...">' +
                     '</td>' +
                 '</tr>'
             );
@@ -933,7 +1007,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
 
     function openModalBox() {
         var data = userInputHandler.getData();
-        fillConfirmationTable(data.scrapedData);
+        fillConfirmationTable(data);
         $modalBox.show();
     }
 
@@ -949,8 +1023,9 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         $modalBox.find('#g2e-error-message').hide();
     }
 
-    function fillConfirmationTable(scrapedData) {
-        var prop, html, elemId;
+    function fillConfirmationTable(data) {
+        var scrapedData = data.scrapedData,
+            prop, html;
         for (prop in scrapedData) {
             var val = scrapedData[prop];
             if ($.isArray(val)) {
@@ -958,8 +1033,9 @@ function ModalBox(events, tagger, templater, userInputHandler) {
             } else {
                 html = val;
             }
-            $('#g2e-' + prop + ' td').eq(1).html(html);
+            $('#g2e-' + prop + ' td input').attr('value', html);
         }
+        $modalBox.find('#g2e-user-key').val(data.crowdsourcedMetadata.user_key);
     }
 
     function setAutocomplete(data) {
@@ -1002,12 +1078,21 @@ function ModalBox(events, tagger, templater, userInputHandler) {
 
 function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
-    var geneList;
+    var $modalBox,
+        geneList,
+        courseraUserKey = localStorage.getItem('g2e-submission-key');
+
     events.on('geneListFetched', function(data) {
         geneList = data;
     });
 
-    var $modalBox;
+    events.on('g2eLoaded', function() {
+        $modalBox.find('#g2e-user-key-wrapper input').change(function() {
+            var newKey = $modalBox.find('#g2e-user-key').val();
+            localStorage.setItem('g2e-submission-key', newKey);
+        });
+    });
+
     function setModalBox($el) {
         $modalBox = $el;
     }
@@ -1094,10 +1179,9 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 }
             }
             if (checkForUser) {
-                email = data.crowdsourcedMetadata.user_email;
                 key = data.crowdsourcedMetadata.user_key;
-                if (typeof email === 'undefined' || email === '' || typeof key === 'undefined' || key === '') {
-                    notifier.warn('Please add an email address and submission key.');
+                if (typeof key === 'undefined' || key === '') {
+                    notifier.warn('Please add a submission key.');
                     return false;
                 }
             }
@@ -1154,7 +1238,6 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         // I really hate how much this function knows about the DOM.
         var result = {},
             $table = $modalBox.find('#g2e-required-fields-based-on-tag'),
-            email,
             key;
         $.each(tagger.getNewFields(), function(i, key) {
             var $input = $table.find('#' + key + ' input');
@@ -1162,13 +1245,15 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 result[key] = $input.val().replace(/ /g,'');
             }
         });
-        email = $modalBox.find('#g2e-user-email').val();
-        key = $modalBox.find('#g2e-user-key').val();
 
-        if (email !== '' && key !== '') {
-            result.user_email = email;
+        key = $modalBox.find('#g2e-user-key').val() || courseraUserKey;
+        if (key !== '') {
             result.user_key = key;
+            localStorage.setItem('g2e-submission-key', key);
         }
+
+        // TODO: THIS IS A BAKED IN HACK UNTIL ZICHEN IMPLEMENTS NEW API
+        result.user_email = 'greg@c4q.nyc';
 
         return result;
     }
@@ -1191,11 +1276,6 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 pert_ids: data.scrapedData.B_cols.join(','),
                 hashtag: '#' + data.tags[0]
             };
-
-            //var form = new FormData();
-            //$.each(payload, function(key, val) {
-            //    form.append(key, val);
-            //});
 
             comm.checkIfProcessed(payload, function(alreadyProcssed) {
                 if (alreadyProcssed) {
@@ -1233,6 +1313,8 @@ var main = function() {
                 UiEmbedder(events, page, screenScraper, templater);
                 userInputHandler = UserInputHandler(comm, events, notifier, screenScraper, tagger);
                 ModalBox(events, tagger, templater, userInputHandler);
+
+                events.fire('g2eLoaded');
             }
         });
     }

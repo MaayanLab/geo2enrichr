@@ -55,16 +55,22 @@
             <caption>Metadata</caption>
             <tr>
                 <td>Differential expression method</td>
-                <td>{{ gene_signature.required_metadata.diff_exp_method.name }}</td>
+                <td>{{ gene_signature.required_metadata.diff_exp_method }}</td>
             </tr>
+
+            {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
             <tr>
                 <td>Cutoff</td>
                 <td>{{ gene_signature.required_metadata.cutoff }}</td>
             </tr>
+            {% endif %}
+
+            {% if gene_signature.required_metadata.diff_exp_method == 'ttest' %}
             <tr>
                 <td>Correction method</td>
-                <td>{{ gene_signature.required_metadata.ttest_correction_method.name }}</td>
+                <td>{{ gene_signature.required_metadata.ttest_correction_method }}</td>
             </tr>
+            {% endif %}
 
             {% for opt_meta in gene_signature.optional_metadata %}
                 {% if opt_meta.name != 'user_key' %}

@@ -23,5 +23,8 @@ class Config(object):
     BASE_TAGS_URL     = BASE_URL + '/explore/tags'
     BASE_METADATA_URL = BASE_URL + '/explore/metadata'
 
+    GENE_LIST_URL = BASE_URL + '/gene_list'
+    SOFT_FILE_URL = BASE_URL + '/soft_file'
+
     SQLALCHEMY_POOL_RECYCLE = 3600
     SQLALCHEMY_DATABASE_URI = lines[0]

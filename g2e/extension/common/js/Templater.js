@@ -25,23 +25,23 @@ var Templater = function(IMAGE_PATH) {
                                 '<caption>Please verify that your data is correct.</caption>' +
                                 '<tr id="g2e-dataset">' +
                                     '<td class="' + G2E_TITLE + '">Accession num.</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-platform">' +
                                     '<td class="' + G2E_TITLE + '">Platform</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-organism">' +
                                     '<td class="' + G2E_TITLE + '">Organism</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-A_cols">' +
                                     '<td class="' + G2E_TITLE + '">Control samples</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-B_cols" class="g2e-last">' +
                                     '<td class="' + G2E_TITLE + '">Treatment or condition samples</td>' +
-                                    '<td class="' + G2E_VALUE + '"></td>' +
+                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
                                 '</tr>' +
                             '</table>' +
                             '<table class="g2e-confirm-tbl g2e-top">' +
@@ -59,7 +59,7 @@ var Templater = function(IMAGE_PATH) {
                                 '</tr>' +
                                 '<tr id="g2e-normalize">' +
                                     '<td class="' + G2E_TITLE + '">' +
-                                        'Normalize if necessary&#42;' +
+                                        'Transform and normalize if necessary&#42;' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' g2e-select">' +
                                         '<select>' +
@@ -103,7 +103,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
-                            '<table class="g2e-confirm-tbl g2e-top">' +
+                            '<table id="g2e-metadata" class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please fill out these optional annotations.</caption>' +
                                 '<tr id="g2e-cell">' +
                                     '<td class="' + G2E_TITLE + '">' +
@@ -149,37 +149,33 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
+                            '<div id="g2e-crowdsourcing-details" class="g2e-crowdsourcing g2e-hidden">' +
+                                '<h1>Coursera Microtasks</h1>' +
+                                '<div class="g2e-left">' +
+                                    '<button>Check if already processed</button>' +
+                                '</div>' +
+                                '<div id="g2e-user-key-wrapper" class="g2e-left">' +
+                                    '<label for="g2e-user-key">Submission Key ' +
+                                        '<input id="g2e-user-key" text="text">' +
+                                    '</label>' +
+                                '</div>' +
+                            '</div>' +
                             '<table class="g2e-confirm-tbl g2e-crowdsourcing" id="g2e-required-fields-based-on-tag">' +
+                                '<caption>Please fill out these required annotations.</caption>' +
                             '</table>' +
                         '</td>' +
                     '</tr>' +
                 '</table>' +
                 '<div id="g2e-extract">' +
-                    '<div class="g2e-left">' +
+                    '<div>' +
                         '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
                         '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
                         '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
                     '</div>' +
-                    '<div id="g2e-crowdsourcing-details" class="g2e-right g2e-crowdsourcing g2e-hidden">' +
-                        '<h4>Coursera Microtasks</h4>' +
-                        '<div>' +
-                            '<button>Check if already processed</button>' +
-                        '</div>' +
-                        '<div>' +
-                            '<label for="g2e-user-email">Email ' +
-                                '<input id="g2e-user-email" text="text">' +
-                            '</label>' +
-                        '</div>' +
-                        '<div>' +
-                            '<label for="g2e-user-key">Submission Key ' +
-                                '<input id="g2e-user-key" text="text">' +
-                            '</label>' +
-                        '</div>' +
-                    '</div>' +
                 '</div>' +
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 
-                        '&#42;See the <a href="http://amp.pharm.mssm.edu/g2e/#pipeline" target="_blank">website</a> for details.<br>' +
+                        '&#42;See the <a href="http://amp.pharm.mssm.edu/g2e/pipeline" target="_blank">website</a> for details.<br>' +
                         'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                     '</p>' +
                 '</div>' +
@@ -245,7 +241,7 @@ var Templater = function(IMAGE_PATH) {
                 '<tr id="' + id + '">' +
                     '<td class="' + G2E_TITLE + '">' + value + '</td>' +
                     '<td class="' + G2E_VALUE + '">' +
-                        '<input placeholder="No data">' +
+                        '<input placeholder="...">' +
                     '</td>' +
                 '</tr>'
             );

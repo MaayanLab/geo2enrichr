@@ -14,6 +14,14 @@ var Tagger = function(events, templater) {
 
     var tagsToFields = {
         AGING_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
             young: {
                 required: true,
                 description: "Age of the young sample"
@@ -42,6 +50,15 @@ var Tagger = function(events, templater) {
             }
         },
         DISEASES_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                "key": "",
+                description: "Organism (human, mouse or rat)"
+            },
             disease_name: {
                 required: true,
                 description: "Name of the disease"
@@ -52,6 +69,14 @@ var Tagger = function(events, templater) {
             }
         },
         LIGANDS_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
             ligand_name: {
                 required: true,
                 description: "Name of the ligand"
@@ -62,6 +87,14 @@ var Tagger = function(events, templater) {
             }
         },
         DRUGS_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
             drug_name: {
                 required: true,
                 description: "Name of the drug"
@@ -72,12 +105,32 @@ var Tagger = function(events, templater) {
             }
         },
         GENES_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
+            gene: {
+                required: true,
+                description: "Gene being perturbed in the study"
+            },
             pert_type: {
                 required: true,
                 description: "Perturbation type (KO, KD, OE, Mutation)"
             }
         },
         PATHOGENS_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
             microbe_name: {
                 required: true,
                 description: "Name of the virus or bacteria"
@@ -90,10 +143,19 @@ var Tagger = function(events, templater) {
     };
 
     function addRequiredRows(newTag) {
-        $.each(tagsToFields[newTag], function(key, newRow) {
-            newFields.push(key);
-            var $tr = templater.getTableRow(newRow.description, key);
-            $table.append($tr);
+        // Remove old rows and re-add everything, mixing in row config objects
+        // together to remove duplicates.
+        $table.find('tr').remove();
+        newFields.push(newTag);
+
+        var newRows = {};
+        $.each(newFields, function(i, newTag) {
+            debugger;
+            //var $tr = templater.getTableRow(newRow.description, key);
+            //$table.append($tr);
+            $.each(tagsToFields[newTag], function(key, newRow) {
+
+            });
         });
     }
 
@@ -109,15 +171,27 @@ var Tagger = function(events, templater) {
     }
 
     function watch($input) {
+        var $crowdsourcingElements = $('.g2e-crowdsourcing'),
+            $metadataTable = $('#g2e-metadata');
+
         $input.tagit({
             singleField: true,
             beforeTagAdded: function (evt, ui) {
                 var newTag = $(ui.tag).find('.tagit-label').html();
+
+                // Remove the hash on the tag if a user tries to add one.
+                if (newTag.indexOf('#') === 0) {
+                    newTag = newTag.slice(1);
+                }
+
                 selectedTags.push(newTag);
                 if (typeof tagsToFields[newTag] !== 'undefined') {
                     addRequiredRows(newTag);
                     numCrowdsourcingTabs++;
-                    $('.g2e-crowdsourcing').show();
+                    $crowdsourcingElements.show();
+                }
+                if (numCrowdsourcingTabs > 0) {
+                    $metadataTable.hide();
                 }
             },
             afterTagRemoved: function (evt, ui) {
@@ -130,8 +204,11 @@ var Tagger = function(events, templater) {
                     removeUnrequiredRows(oldTag);
                     numCrowdsourcingTabs--;
                     if (numCrowdsourcingTabs === 0) {
-                        $('.g2e-crowdsourcing').hide();
+                        $crowdsourcingElements.hide();
                     }
+                }
+                if (numCrowdsourcingTabs === 0) {
+                    $metadataTable.show();
                 }
             }
         });

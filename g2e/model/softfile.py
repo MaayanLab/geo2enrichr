@@ -9,7 +9,6 @@ __contact__ = "avi.maayan@mssm.edu"
 import time
 
 from g2e import db
-import g2e.core.softfile.geodownloader as geodownloader
 import g2e.core.softfile.softparser as softparser
 import g2e.core.softfile.normalizer as normalizer
 import g2e.core.softfile.softfilemanager as softfilemanager
@@ -30,8 +29,9 @@ class SoftFile(db.Model):
     is_geo = db.Column(db.Boolean)
     normalize = db.Column(db.Boolean)
     text_file = db.Column(db.String(255))
+    actual_text_file = db.Column(db.LargeBinary)
 
-    def __init__(self, name, samples, genes, a_vals, b_vals, platform, text_file, is_geo=False, stats=None, normalize=None):
+    def __init__(self, name, samples, genes, a_vals, b_vals, platform, text_file, actual_text_file=None, is_geo=False, stats=None, normalize=None):
         """Constructs a SoftFile instance.
         """
         # This should only be called via the class methods.
@@ -43,6 +43,7 @@ class SoftFile(db.Model):
         self.stats = stats
         self.normalize = normalize
         self.text_file = text_file
+        self.actual_text_file = actual_text_file
 
         # These are *not* persisted to the database. Used by diffexp module.
         self.a_vals = a_vals
@@ -57,7 +58,7 @@ class SoftFile(db.Model):
         """
         name = args['dataset']
         if not softfilemanager.file_exists(name):
-            geodownloader.download(name)
+            softfilemanager.download(name)
 
         platform = args['platform']
         is_geo = True
@@ -75,7 +76,14 @@ class SoftFile(db.Model):
             genes, a_vals, b_vals = normalizer.normalize(genes, a_vals, b_vals)
 
         text_file = softfilemanager.write(name, platform, normalize, genes, a_vals, b_vals, samples, selections, stats)
-        return cls(name, samples, genes, a_vals, b_vals, platform, text_file, is_geo=is_geo, stats=stats, normalize=normalize)
+        actual_text_file = ''#csoftfilemanager.get(name)
+
+        return cls(
+            name, samples, genes,
+            a_vals, b_vals, platform,
+            text_file, actual_text_file,
+            is_geo=is_geo, stats=stats, normalize=normalize
+        )
 
     @classmethod
     def from_file(cls, file_obj, args):
