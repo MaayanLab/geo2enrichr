@@ -116,8 +116,8 @@ form .description p {
   font-size: 13px;
   font-style: italic;
 }
-.capitalize-initial {
-  text-transform: capitalize;
+.capitalize-initial:first-letter {
+  text-transform: uppercase;
 }
 /* Main structural elements:
  * header, content, footer
