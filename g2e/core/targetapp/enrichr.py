@@ -13,13 +13,11 @@ import requests
 ENRICHR_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
 
 
-def get_link(genes, description):
+def get_link(ranked_genes, description):
     """Returns a shareable link to Enrichr.
     """
-    # Enrichr does not care about the sign of the rank; it treats the rank
-    # simply as a membership value for a fuzzy set.
-    genes = [(rg.gene.name, str(abs(rg.value))) for rg in genes]
-    genes_str = '\n'.join([rg.gene.name + ',' + str(rg.value) for t in genes]).encode('ascii')
+    genes = convert_ranked_genes_to_tuples(ranked_genes)
+    genes_str = get_genes_as_string(genes)
 
     sess = requests.session()
 
@@ -41,3 +39,17 @@ def get_link(genes, description):
     else:
         print 'Error with Enrichr'
         return None
+
+
+def convert_ranked_genes_to_tuples(ranked_genes):
+    """Converts RankedGene instances to tuples appropriate for Enrichr.
+    """
+    # Enrichr does not care about the sign of the rank; it treats the rank
+    # simply as a membership value for a fuzzy set.
+    return [(rg.gene.name, str(abs(rg.value))) for rg in ranked_genes]
+
+
+def get_genes_as_string(genes):
+    """Returns string from list of gene tuples.
+    """
+    return '\n'.join([t[1] + ',' + t[0] for t in genes]).encode('ascii')

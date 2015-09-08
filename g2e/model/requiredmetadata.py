@@ -69,6 +69,9 @@ class RequiredMetadata(db.Model):
         # target applications.
         result = []
         for key,val in self.__dict__.items():
+            # Ignore SQLAlchemy relationships, e.g. gene_signature_fk.
+            if key == '_sa_instance_state':
+                continue
             if val:
                 result.append(str(val))
         return '-'.join(result)
