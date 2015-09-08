@@ -67,21 +67,18 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             field,
             conf,
             selectedValue,
-            email,
             key,
             i;
 
-        if (!data.scrapedData.A_cols || data.scrapedData.A_cols.length < 2) {
+        if (notEnoughSamples(data.scrapedData.A_cols)) {
             notifier.warn('Please select 2 or more control samples');
             return false;
         }
-        if (!data.scrapedData.B_cols || data.scrapedData.B_cols.length < 2) {
+        if (notEnoughSamples(data.scrapedData.B_cols)) {
             notifier.warn('Please select 2 or more experimental samples');
             return false;
         }
-        // It is important to verify that the user has *tried* to select a gene before warning them.
-        // $.inArray() returns -1 if the value is not found. Do not check for truthiness.
-        if (geneList && data.userOptions.gene && $.inArray(data.userOptions.gene, geneList) === -1) {
+        if (isProperGeneSymbol(data.userOptions.gene)) {
             notifier.warn('Please input a valid gene.');
             return false;
         }
@@ -91,7 +88,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             for (i = 0; i < selectedTags.length; i++) {
                 tag = selectedTags[i];
                 for (field in tagsToFields[tag]) {
-                    // If we reach this line of code, we need to verify the email and key.
+                    // If we reach this line of code, we need to verify the submission key.
                     checkForUser = true;
                     conf = tagsToFields[tag][field];
                     selectedValue = data.crowdsourcedMetadata[field];
@@ -102,8 +99,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 }
             }
             if (checkForUser) {
-                key = data.crowdsourcedMetadata.user_key;
-                if (typeof key === 'undefined' || key === '') {
+                if (keyDoesNotExist()) {
                     notifier.warn('Please add a submission key.');
                     return false;
                 }
@@ -175,9 +171,6 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             localStorage.setItem('g2e-submission-key', key);
         }
 
-        // TODO: THIS IS A BAKED IN HACK UNTIL ZICHEN IMPLEMENTS NEW API
-        result.user_email = 'greg@c4q.nyc';
-
         return result;
     }
 
@@ -208,6 +201,28 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 }
             });
         }
+    }
+
+    /* Returns true if the user has selected fewer than 2 samples.
+     */
+    function notEnoughSamples(samples) {
+        return typeof samples === 'undefined' || samples.length < 2;
+    }
+
+    /* Returns true if a gene symbol has been selected and is not in the list
+     * of proper gene symbols.
+     */
+    function isProperGeneSymbol(gene) {
+        // Do not check for truthiness: $.inArray() returns -1 if the value is
+        // not found.
+        return geneList && gene && $.inArray(gene, geneList) === -1;
+    }
+
+    /* Returns true if the user has not input a submission key.
+     */
+    function keyDoesNotExist() {
+        var key = data.crowdsourcedMetadata.user_key;
+        return typeof key === 'undefined' || key === '';
     }
 
     return {

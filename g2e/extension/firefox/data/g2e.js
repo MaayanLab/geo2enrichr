@@ -342,20 +342,36 @@ var Tagger = function(events, templater) {
         }
     };
 
+    function isCrowdsourcingTag(tag) {
+        return typeof tagsToFields[tag] !== 'undefined';
+    }
+
+    function crowdsourcingTagAlreadyAdded() {
+        return numCrowdsourcingTabs === 1;
+    }
+
+    /* Remove the hash on the tag if one exists.
+     */
+    function removeLeadingHash(tag) {
+        if (hasLeadingHash(tag)) {
+            return tag.slice(1);
+        }
+        return tag;
+    }
+
+    function hasLeadingHash(tag) {
+        return tag.indexOf('#') === 0;
+    }
+
+    function isJustHash(tag) {
+        return hasLeadingHash(tag) && tag.length === 1;
+    }
+
     function addRequiredRows(newTag) {
-        // Remove old rows and re-add everything, mixing in row config objects
-        // together to remove duplicates.
-        $table.find('tr').remove();
-        newFields.push(newTag);
-
-        var newRows = {};
-        $.each(newFields, function(i, newTag) {
-            debugger;
-            //var $tr = templater.getTableRow(newRow.description, key);
-            //$table.append($tr);
-            $.each(tagsToFields[newTag], function(key, newRow) {
-
-            });
+        $.each(tagsToFields[newTag], function(key, newRow) {
+            newFields.push(key);
+            var $tr = templater.getTableRow(newRow.description, key);
+            $table.append($tr);
         });
     }
 
@@ -376,16 +392,22 @@ var Tagger = function(events, templater) {
 
         $input.tagit({
             singleField: true,
+            caseSensitive: false,
+            allowDuplicates: false,
             beforeTagAdded: function (evt, ui) {
                 var newTag = $(ui.tag).find('.tagit-label').html();
 
-                // Remove the hash on the tag if a user tries to add one.
-                if (newTag.indexOf('#') === 0) {
-                    newTag = newTag.slice(1);
+                if (isJustHash(newTag)) {
+                    return false;
+                }
+
+                newTag = removeLeadingHash(newTag);
+                if (isCrowdsourcingTag(newTag) && crowdsourcingTagAlreadyAdded()) {
+                    return false;
                 }
 
                 selectedTags.push(newTag);
-                if (typeof tagsToFields[newTag] !== 'undefined') {
+                if (isCrowdsourcingTag(newTag)) {
                     addRequiredRows(newTag);
                     numCrowdsourcingTabs++;
                     $crowdsourcingElements.show();
@@ -393,14 +415,20 @@ var Tagger = function(events, templater) {
                 if (numCrowdsourcingTabs > 0) {
                     $metadataTable.hide();
                 }
+
+                return newTag;
             },
             afterTagRemoved: function (evt, ui) {
                 var oldTag = $(ui.tag).find('.tagit-label').html(),
-                    idx = selectedTags.indexOf(oldTag);
+                    idx;
+
+                oldTag = removeLeadingHash(oldTag);
+                idx = selectedTags.indexOf(oldTag);
+
                 if (idx > -1) {
                     selectedTags.splice(idx, 1);
                 }
-                if (typeof tagsToFields[oldTag] !== 'undefined') {
+                if (isCrowdsourcingTag(oldTag)) {
                     removeUnrequiredRows(oldTag);
                     numCrowdsourcingTabs--;
                     if (numCrowdsourcingTabs === 0) {
@@ -1144,21 +1172,18 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             field,
             conf,
             selectedValue,
-            email,
             key,
             i;
 
-        if (!data.scrapedData.A_cols || data.scrapedData.A_cols.length < 2) {
+        if (notEnoughSamples(data.scrapedData.A_cols)) {
             notifier.warn('Please select 2 or more control samples');
             return false;
         }
-        if (!data.scrapedData.B_cols || data.scrapedData.B_cols.length < 2) {
+        if (notEnoughSamples(data.scrapedData.B_cols)) {
             notifier.warn('Please select 2 or more experimental samples');
             return false;
         }
-        // It is important to verify that the user has *tried* to select a gene before warning them.
-        // $.inArray() returns -1 if the value is not found. Do not check for truthiness.
-        if (geneList && data.userOptions.gene && $.inArray(data.userOptions.gene, geneList) === -1) {
+        if (isProperGeneSymbol(data.userOptions.gene)) {
             notifier.warn('Please input a valid gene.');
             return false;
         }
@@ -1168,7 +1193,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             for (i = 0; i < selectedTags.length; i++) {
                 tag = selectedTags[i];
                 for (field in tagsToFields[tag]) {
-                    // If we reach this line of code, we need to verify the email and key.
+                    // If we reach this line of code, we need to verify the submission key.
                     checkForUser = true;
                     conf = tagsToFields[tag][field];
                     selectedValue = data.crowdsourcedMetadata[field];
@@ -1179,8 +1204,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 }
             }
             if (checkForUser) {
-                key = data.crowdsourcedMetadata.user_key;
-                if (typeof key === 'undefined' || key === '') {
+                if (keyDoesNotExist()) {
                     notifier.warn('Please add a submission key.');
                     return false;
                 }
@@ -1252,9 +1276,6 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             localStorage.setItem('g2e-submission-key', key);
         }
 
-        // TODO: THIS IS A BAKED IN HACK UNTIL ZICHEN IMPLEMENTS NEW API
-        result.user_email = 'greg@c4q.nyc';
-
         return result;
     }
 
@@ -1285,6 +1306,28 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 }
             });
         }
+    }
+
+    /* Returns true if the user has selected fewer than 2 samples.
+     */
+    function notEnoughSamples(samples) {
+        return typeof samples === 'undefined' || samples.length < 2;
+    }
+
+    /* Returns true if a gene symbol has been selected and is not in the list
+     * of proper gene symbols.
+     */
+    function isProperGeneSymbol(gene) {
+        // Do not check for truthiness: $.inArray() returns -1 if the value is
+        // not found.
+        return geneList && gene && $.inArray(gene, geneList) === -1;
+    }
+
+    /* Returns true if the user has not input a submission key.
+     */
+    function keyDoesNotExist() {
+        var key = data.crowdsourcedMetadata.user_key;
+        return typeof key === 'undefined' || key === '';
     }
 
     return {

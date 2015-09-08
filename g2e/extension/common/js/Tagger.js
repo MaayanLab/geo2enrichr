@@ -142,20 +142,36 @@ var Tagger = function(events, templater) {
         }
     };
 
+    function isCrowdsourcingTag(tag) {
+        return typeof tagsToFields[tag] !== 'undefined';
+    }
+
+    function crowdsourcingTagAlreadyAdded() {
+        return numCrowdsourcingTabs === 1;
+    }
+
+    /* Remove the hash on the tag if one exists.
+     */
+    function removeLeadingHash(tag) {
+        if (hasLeadingHash(tag)) {
+            return tag.slice(1);
+        }
+        return tag;
+    }
+
+    function hasLeadingHash(tag) {
+        return tag.indexOf('#') === 0;
+    }
+
+    function isJustHash(tag) {
+        return hasLeadingHash(tag) && tag.length === 1;
+    }
+
     function addRequiredRows(newTag) {
-        // Remove old rows and re-add everything, mixing in row config objects
-        // together to remove duplicates.
-        $table.find('tr').remove();
-        newFields.push(newTag);
-
-        var newRows = {};
-        $.each(newFields, function(i, newTag) {
-            debugger;
-            //var $tr = templater.getTableRow(newRow.description, key);
-            //$table.append($tr);
-            $.each(tagsToFields[newTag], function(key, newRow) {
-
-            });
+        $.each(tagsToFields[newTag], function(key, newRow) {
+            newFields.push(key);
+            var $tr = templater.getTableRow(newRow.description, key);
+            $table.append($tr);
         });
     }
 
@@ -176,16 +192,22 @@ var Tagger = function(events, templater) {
 
         $input.tagit({
             singleField: true,
+            caseSensitive: false,
+            allowDuplicates: false,
             beforeTagAdded: function (evt, ui) {
                 var newTag = $(ui.tag).find('.tagit-label').html();
 
-                // Remove the hash on the tag if a user tries to add one.
-                if (newTag.indexOf('#') === 0) {
-                    newTag = newTag.slice(1);
+                if (isJustHash(newTag)) {
+                    return false;
+                }
+
+                newTag = removeLeadingHash(newTag);
+                if (isCrowdsourcingTag(newTag) && crowdsourcingTagAlreadyAdded()) {
+                    return false;
                 }
 
                 selectedTags.push(newTag);
-                if (typeof tagsToFields[newTag] !== 'undefined') {
+                if (isCrowdsourcingTag(newTag)) {
                     addRequiredRows(newTag);
                     numCrowdsourcingTabs++;
                     $crowdsourcingElements.show();
@@ -193,14 +215,20 @@ var Tagger = function(events, templater) {
                 if (numCrowdsourcingTabs > 0) {
                     $metadataTable.hide();
                 }
+
+                return newTag;
             },
             afterTagRemoved: function (evt, ui) {
                 var oldTag = $(ui.tag).find('.tagit-label').html(),
-                    idx = selectedTags.indexOf(oldTag);
+                    idx;
+
+                oldTag = removeLeadingHash(oldTag);
+                idx = selectedTags.indexOf(oldTag);
+
                 if (idx > -1) {
                     selectedTags.splice(idx, 1);
                 }
-                if (typeof tagsToFields[oldTag] !== 'undefined') {
+                if (isCrowdsourcingTag(oldTag)) {
                     removeUnrequiredRows(oldTag);
                     numCrowdsourcingTabs--;
                     if (numCrowdsourcingTabs === 0) {
