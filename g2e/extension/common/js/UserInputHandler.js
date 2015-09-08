@@ -99,7 +99,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 }
             }
             if (checkForUser) {
-                if (keyDoesNotExist()) {
+                if (keyDoesNotExist(data)) {
                     notifier.warn('Please add a submission key.');
                     return false;
                 }
@@ -220,7 +220,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
     /* Returns true if the user has not input a submission key.
      */
-    function keyDoesNotExist() {
+    function keyDoesNotExist(data) {
         var key = data.crowdsourcedMetadata.user_key;
         return typeof key === 'undefined' || key === '';
     }

@@ -22,22 +22,19 @@ class GeneList(db.Model):
     __tablename__ = 'gene_list'
     id = db.Column(db.Integer, primary_key=True)
     direction = db.Column(db.Integer)
+    required_metadata = db.relationship('RequiredMetadata', backref=db.backref('gene_lists', order_by=id))
     gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
-    ranked_genes = db.relationship('RankedGene', secondary=ranked_gene_2_gene_list, backref=db.backref('genelists', order_by=id))
+    ranked_genes = db.relationship('RankedGene', secondary=ranked_gene_2_gene_list, backref=db.backref('gene_lists', order_by=id))
+    target_app_links = db.relationship("TargetAppLink", backref=db.backref('gene_list', order_by=id))
     text_file = db.Column(db.String(200))
-    enrichr_link = db.Column(db.Text)
-    l1000cds2_link = db.Column(db.Text)
-    paea_link = db.Column(db.Text)
 
-    def __init__(self, ranked_genes, direction, metadata, target_apps, name=None, text_file=None):
+    def __init__(self, ranked_genes, direction, required_metadata, target_app_links):
         """Constructs a gene list.
         """
         self.ranked_genes = ranked_genes
-        self.direction = direction
-        self.name = name or self._name()
-        self.enrichr_link = target_apps['enrichr']
-        self.l1000cds2_link = target_apps['l1000cds2']
-        self.paea_link = target_apps['paea']
+        self.direction = direction,
+        self.required_metadata = required_metadata
+        self.target_app_links = target_app_links
 
     def __repr__(self):
         return '<GeneList %r>' % self.id

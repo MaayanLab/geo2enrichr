@@ -53,23 +53,15 @@ CROWDSOURCING_TAGS = {
 def post_if_necessary(genes, optional_metadata, soft_file, tags):
     print 'POSTing to Crowdsourcing if necessary'
 
-    tags_to_post = []
     for tag in tags:
         if tag.name in CROWDSOURCING_TAGS:
-            tags_to_post.append(tag)
+            return _post(genes, optional_metadata, soft_file, tag)
+    return ''
 
-    results = {}
-    for tag in tags_to_post:
-        response = _post(genes, optional_metadata, soft_file, tag)
-        if response['status_code'] == 200:
-            link = CROWDSOURCING_LEADERBOARD_BASE_URL + '#task' + str(CROWDSOURCING_TAGS[tag.name]['task_num'])
-            results[tag.name] = link
-        else:
-            # If multiple errors occur, this only saves the last one but
-            # that's fine.
-            results['message'] = response['message']
 
-    return results
+def get_link(tag):
+    return CROWDSOURCING_LEADERBOARD_BASE_URL + '#task' + \
+           str(CROWDSOURCING_TAGS[tag.name]['task_num'])
 
 
 def _post(genes, optional_metadata, soft_file, tag):
@@ -104,10 +96,9 @@ def _post(genes, optional_metadata, soft_file, tag):
         )
 
     response = requests.post(CROWDSOURCING_POST_URL, data=payload)
-    return {
-        'status_code': response.status_code,
-        'message': json.loads(response.text)['message']
-    }
+    if response.status_code == 200:
+        return get_link(tag)
+    return ''
 
 
 def _get_metadata_value_by_name(optional_metadata, name):

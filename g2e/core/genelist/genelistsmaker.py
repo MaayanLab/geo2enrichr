@@ -36,7 +36,8 @@ def genelists_maker(soft_file, required_metadata, optional_metadata, tags):
         target_apps_up = target_apps_down = target_apps_combined = {
             'enrichr': '',
             'l1000cds2': '',
-            'paea': ''
+            'paea': '',
+            'crowdsourcing': ''
         }
     else:
         target_apps_up = target_all_apps(up_genes, 1, required_metadata)

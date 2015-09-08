@@ -54,26 +54,6 @@ class TestCrowdsourcing(unittest.TestCase):
             'http://maayanlab.net/crowdsourcing/microtask_leaderboard.php#task5'
         )
 
-    def testWithTwoTags(self):
-        self.optional_metadata += [
-            OptionalMetadata('user_key', '52354fa2e3f22a788f82b6634a5ad548')
-        ]
-
-        tag_name_1 = 'AGING_BD2K_LINCS_DCIC_COURSERA'
-        tag_name_2 = 'PATHOGENS_BD2K_LINCS_DCIC_COURSERA'
-        tags = [Tag(tag_name_1), Tag(tag_name_2)]
-        response = crowdsourcing.post_if_necessary(
-            self.genes, self.optional_metadata, self.soft_file, tags
-        )
-        self.assertTrue(
-            response[tag_name_1],
-            'http://maayanlab.net/crowdsourcing/microtask_leaderboard.php#task5'
-        )
-        self.assertTrue(
-            response[tag_name_2],
-            'http://maayanlab.net/crowdsourcing/microtask_leaderboard.php#task7'
-        )
-
     def testErrorHandling(self):
         tag_name = 'AGING_BD2K_LINCS_DCIC_COURSERA'
         tags = [Tag(tag_name)]

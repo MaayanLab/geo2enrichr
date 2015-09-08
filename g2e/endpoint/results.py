@@ -9,6 +9,7 @@ __contact__ = "avi.maayan@mssm.edu"
 from flask import Blueprint, request, render_template
 from g2e.config import Config
 from g2e.dataaccess import dataaccess
+from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS, get_link
 
 
 results = Blueprint('results', __name__, url_prefix=Config.BASE_URL + '/results')

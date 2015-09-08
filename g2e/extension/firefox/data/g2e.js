@@ -2,8 +2,8 @@
 var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
-var DEBUG = false;
-var SERVER = "http://amp.pharm.mssm.edu/g2e/";
+var DEBUG = true;
+var SERVER = "http://localhost:8083/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
 // This file is built when new platforms are added.
 //// We use an array rather than hitting an API endpoint because this is much
@@ -519,17 +519,6 @@ var Templater = function(IMAGE_PATH) {
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
-                                '<tr id="g2e-normalize">' +
-                                    '<td class="' + G2E_TITLE + '">' +
-                                        'Transform and normalize if necessary&#42;' +
-                                    '</td>' +
-                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
-                                        '<select>' +
-                                            '<option value="False">No</option>' +
-                                            '<option value="True">Yes</option>' +
-                                        '</select>' +
-                                    '</td>' +
-                                '</tr>' +
                                 '<tr id="g2e-cutoff">' +
                                     '<td class="' + G2E_TITLE + '">' +
                                         'Cutoff' +
@@ -561,6 +550,17 @@ var Templater = function(IMAGE_PATH) {
                                         '<select name="threshold">' +
                                             '<option value="0.01">0.01</option>' +
                                             '<option value="0.05">0.05</option>' +
+                                        '</select>' +
+                                    '</td>' +
+                                '</tr>' +
+                                '<tr id="g2e-normalize">' +
+                                    '<td class="' + G2E_TITLE + '">' +
+                                        'Transform and normalize if necessary&#42;' +
+                                    '</td>' +
+                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
+                                        '<select>' +
+                                            '<option value="False">No</option>' +
+                                            '<option value="True">Yes</option>' +
                                         '</select>' +
                                     '</td>' +
                                 '</tr>' +
@@ -1204,7 +1204,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 }
             }
             if (checkForUser) {
-                if (keyDoesNotExist()) {
+                if (keyDoesNotExist(data)) {
                     notifier.warn('Please add a submission key.');
                     return false;
                 }
@@ -1325,7 +1325,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
     /* Returns true if the user has not input a submission key.
      */
-    function keyDoesNotExist() {
+    function keyDoesNotExist(data) {
         var key = data.crowdsourcedMetadata.user_key;
         return typeof key === 'undefined' || key === '';
     }
