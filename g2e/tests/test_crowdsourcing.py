@@ -12,12 +12,17 @@ from g2e.model.tag import Tag
 class TestCrowdsourcing(unittest.TestCase):
 
     def setUp(self):
+
         self.optional_metadata = [
-            OptionalMetadata('pert_id', 'foo'),
-            OptionalMetadata('pert_name', 'foo'),
-            OptionalMetadata('gene', 'foo'),
             OptionalMetadata('cell_type', 'foo'),
             OptionalMetadata('organism', 'foo'),
+
+            OptionalMetadata('young', 'foo'),
+            OptionalMetadata('old', 'foo'),
+            OptionalMetadata('age_unit', 'foo'),
+
+            OptionalMetadata('microbe_name', 'foo'),
+            OptionalMetadata('microbe_id', 'foo'),
         ]
 
         self.samples = [SoftFileSample(name, False) for name in ['a2','a2','a3']]
@@ -34,9 +39,7 @@ class TestCrowdsourcing(unittest.TestCase):
         self.soft_file = SoftFile('fake_name', self.samples, [], None, None, 'fake_platform', None)
 
     def testWithOneTag(self):
-        # I could create a new email address for this, but I don't really care.
         self.optional_metadata += [
-            OptionalMetadata('user_email', 'greg@c4q.nyc'),
             OptionalMetadata('user_key', '52354fa2e3f22a788f82b6634a5ad548')
         ]
 
@@ -45,15 +48,14 @@ class TestCrowdsourcing(unittest.TestCase):
         response = crowdsourcing.post_if_necessary(
             self.genes, self.optional_metadata, self.soft_file, tags
         )
+
         self.assertTrue(
             response[tag_name],
             'http://maayanlab.net/crowdsourcing/microtask_leaderboard.php#task5'
         )
 
     def testWithTwoTags(self):
-        # I could create a new email address for this, but I don't really care.
         self.optional_metadata += [
-            OptionalMetadata('user_email', 'greg@c4q.nyc'),
             OptionalMetadata('user_key', '52354fa2e3f22a788f82b6634a5ad548')
         ]
 

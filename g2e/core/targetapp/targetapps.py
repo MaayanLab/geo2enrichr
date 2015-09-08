@@ -16,11 +16,11 @@ import g2e.core.targetapp.crowdsourcing as crowdsourcing
 # Granular control of how many genes are sent to each downstream application.
 
 # This is applied to every list.
-ENRICHR_CUTOFF   = 1000
+ENRICHR_CUTOFF = 1000
 
 # These are applied only to the combined list.
 L1000CDS2_CUTOFF = 2000
-PAEA_CUTOFF      = 2000
+PAEA_CUTOFF = 2000
 
 
 # ranked_genes, 0, required_metadata, optional_metadata, soft_file, tags

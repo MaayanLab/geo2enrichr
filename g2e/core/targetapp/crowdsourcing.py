@@ -20,7 +20,7 @@ CROWDSOURCING_LEADERBOARD_BASE_URL = 'http://maayanlab.net/crowdsourcing/microta
 
 CROWDSOURCING_TAGS = {
     'AGING_BD2K_LINCS_DCIC_COURSERA': {
-        'fields': ['young', 'old', 'age_unit'],
+        'fields': ['cell_type', 'organism', 'young', 'old', 'age_unit'],
         'task_num': 5
     },
     'MCF7_BD2K_LINCS_DCIC_COURSERA': {
@@ -28,23 +28,23 @@ CROWDSOURCING_TAGS = {
         'task_num': 4
     },
     'DISEASES_BD2K_LINCS_DCIC_COURSERA': {
-        'fields': ['disease_name', 'disease_id'],
+        'fields': ['cell_type', 'organism', 'disease_name', 'disease_id'],
         'task_num': 2
     },
     'LIGANDS_BD2K_LINCS_DCIC_COURSERA': {
-        'fields': ['ligand_name', 'ligand_id'],
+        'fields': ['cell_type', 'organism', 'ligand_name', 'ligand_id'],
         'task_num': 6
     },
     'DRUGS_BD2K_LINCS_DCIC_COURSERA': {
-        'fields': ['drug_name', 'drug_id'],
+        'fields': ['cell_type', 'organism', 'drug_name', 'drug_id'],
         'task_num': 3
     },
     'GENES_BD2K_LINCS_DCIC_COURSERA': {
-        'fields': ['pert_type'],
+        'fields': ['cell_type', 'organism', 'gene', 'pert_type'],
         'task_num': 1
     },
     'PATHOGENS_BD2K_LINCS_DCIC_COURSERA': {
-        'fields': ['microbe_name', 'microbe_id'],
+        'fields': ['cell_type', 'organism', 'microbe_name', 'microbe_id'],
         'task_num': 7
     }
 }
@@ -86,17 +86,14 @@ def _post(genes, optional_metadata, soft_file, tag):
 
     payload = {
         'hashtag': '#' + tag.name,
-        'geo_id': soft_file.platform,
+        'geo_id': soft_file.name,
+        'platform': soft_file.platform,
         'ctrl_ids': ctrl_ids,
         'pert_ids': ','.join([x.name for x in soft_file.samples if not x.is_control]),
-        'gene': _get_metadata_value_by_name(optional_metadata, 'gene'),
-        'cell_type': _get_metadata_value_by_name(optional_metadata, 'cell'),
-        'organism': _get_metadata_value_by_name(optional_metadata, 'organism'),
         'up_genes': ','.join([x.gene.name for x in genes if x.value > 0]),
         'dn_genes': ','.join([x.gene.name for x in genes if x.value < 0]),
 
-        # TODO: Read these in from the extension.
-        'email': _get_metadata_value_by_name(optional_metadata, 'user_email'),
+        # TODO: Read this in from the extension.
         'key': _get_metadata_value_by_name(optional_metadata, 'user_key')
     }
 
