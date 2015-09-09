@@ -16,5 +16,6 @@ To deploy the web application
 2. Run `build.sh`
    $1 - 'prod' for production, 'dev' for development
    $2 - 'skip' to skip tests, 'test' to run tests
-   $3 - 'push' to push to private Docker repo (optional)
+   $3 - 'build' to build the Docker container.
+   $4 - 'push' to push to the Docker repo.
 3. Restart G2E on Marathon.
