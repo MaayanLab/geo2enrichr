@@ -59,7 +59,6 @@ class TestRoundTrip(unittest.TestCase):
 
         for gl in resp_dict['gene_lists']:
             self.assertTrue('direction' in gl)
-            self.assertTrue('text_file' in gl)
             self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
             if gl['direction'] == 0:
                 self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
@@ -114,7 +113,6 @@ class TestRoundTrip(unittest.TestCase):
 
         for gl in resp_dict['gene_lists']:
             self.assertTrue('direction' in gl)
-            self.assertTrue('text_file' in gl)
             self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
 
         genelist = resp_dict['gene_lists'][2]['ranked_genes']

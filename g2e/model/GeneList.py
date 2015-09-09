@@ -25,7 +25,6 @@ class GeneList(db.Model):
     gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
     ranked_genes = db.relationship('RankedGene', secondary=ranked_gene_2_gene_list, backref=db.backref('gene_lists', order_by=id))
     target_app_links = db.relationship("TargetAppLink", backref=db.backref('gene_list', order_by=id))
-    text_file = db.Column(db.String(200))
 
     def __init__(self, ranked_genes, direction, target_app_links):
         """Constructs a gene list.
@@ -56,6 +55,5 @@ class GeneList(db.Model):
         return {
             'direction': self.direction,
             'ranked_genes': [rg.serialize for rg in self.ranked_genes],
-            'target_apps': target_apps,
-            'text_file': self.text_file
+            'target_apps': target_apps
         }
