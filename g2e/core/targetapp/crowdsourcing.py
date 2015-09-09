@@ -24,7 +24,7 @@ CROWDSOURCING_TAGS = {
         'task_num': 5
     },
     'MCF7_BD2K_LINCS_DCIC_COURSERA': {
-        'fields': ['pert_type', 'pert_name', 'pert_id'],
+        'fields': ['cell_type', 'organism', 'pert_type', 'pert_name', 'pert_id'],
         'task_num': 4
     },
     'DISEASES_BD2K_LINCS_DCIC_COURSERA': {
@@ -50,7 +50,7 @@ CROWDSOURCING_TAGS = {
 }
 
 
-def post_if_necessary(genes, optional_metadata, soft_file, tags):
+def get_link(genes, optional_metadata, soft_file, tags):
     print 'POSTing to Crowdsourcing if necessary'
 
     for tag in tags:
@@ -59,7 +59,7 @@ def post_if_necessary(genes, optional_metadata, soft_file, tags):
     return ''
 
 
-def get_link(tag):
+def _build_link(tag):
     return CROWDSOURCING_LEADERBOARD_BASE_URL + '#task' + \
            str(CROWDSOURCING_TAGS[tag.name]['task_num'])
 
@@ -97,7 +97,7 @@ def _post(genes, optional_metadata, soft_file, tag):
 
     response = requests.post(CROWDSOURCING_POST_URL, data=payload)
     if response.status_code == 200:
-        return get_link(tag)
+        return _build_link(tag)
     return ''
 
 

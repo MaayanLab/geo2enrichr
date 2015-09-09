@@ -32,7 +32,6 @@ class TestGeneListEndpoint(unittest.TestCase):
         self.direction = 0
         self.up_gene_list = response['gene_lists'][self.direction]
 
-
     def testEndpoint(self):
         url = '/g2e/genelist/' + str(self.direction) + '/' + self.extraction_id
         response = self.app.get(url)

@@ -45,19 +45,19 @@ class TestCrowdsourcing(unittest.TestCase):
 
         tag_name = 'AGING_BD2K_LINCS_DCIC_COURSERA'
         tags = [Tag(tag_name)]
-        response = crowdsourcing.post_if_necessary(
+        link = crowdsourcing.get_link(
             self.genes, self.optional_metadata, self.soft_file, tags
         )
 
         self.assertTrue(
-            response[tag_name],
+            link,
             'http://maayanlab.net/crowdsourcing/microtask_leaderboard.php#task5'
         )
 
-    def testErrorHandling(self):
-        tag_name = 'AGING_BD2K_LINCS_DCIC_COURSERA'
-        tags = [Tag(tag_name)]
-        response = crowdsourcing.post_if_necessary(
-            self.genes, self.optional_metadata, self.soft_file, tags
-        )
-        self.assertEqual(response['message'], 'Authentication Failed.')
+    # def testErrorHandling(self):
+    #     tag_name = 'AGING_BD2K_LINCS_DCIC_COURSERA'
+    #     tags = [Tag(tag_name)]
+    #     response = crowdsourcing.get_link(
+    #         self.genes, self.optional_metadata, self.soft_file, tags
+    #     )
+    #     self.assertEqual(response['message'], 'Authentication Failed.')

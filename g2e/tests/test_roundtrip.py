@@ -1,4 +1,5 @@
 import json
+import time
 import unittest
 
 from g2e import app
@@ -28,7 +29,6 @@ class TestRoundTrip(unittest.TestCase):
     # This should be multiple unit tests but it is annoyingly slow to run.
     def test_extraction_endpoint_chdir(self):
 
-        import time
         s = time.time()
 
         self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
@@ -64,9 +64,6 @@ class TestRoundTrip(unittest.TestCase):
             if gl['direction'] == 0:
                 self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
                 self.assertTrue('http://amp.pharm.mssm.edu/PAEA' in gl['target_apps']['paea'])
-            else:
-                self.assertTrue(gl['target_apps']['l1000cds2'] == '')
-                self.assertTrue(gl['target_apps']['paea'] == '')
 
         genelist = resp_dict['gene_lists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.0939582)
@@ -78,7 +75,6 @@ class TestRoundTrip(unittest.TestCase):
     # This should be multiple unit tests but it is annoyingly slow to re-run.
     def test_extraction_endpoint_ttest(self):
 
-        import time
         s = time.time()
 
         self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
@@ -120,12 +116,6 @@ class TestRoundTrip(unittest.TestCase):
             self.assertTrue('direction' in gl)
             self.assertTrue('text_file' in gl)
             self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
-            if gl['direction'] == 0:
-                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
-                self.assertTrue(gl['target_apps']['paea'] == '')
-            else:
-                self.assertTrue(gl['target_apps']['l1000cds2'] == '')
-                self.assertTrue(gl['target_apps']['paea'] == '')
 
         genelist = resp_dict['gene_lists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.00469161)

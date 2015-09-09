@@ -22,18 +22,16 @@ class GeneList(db.Model):
     __tablename__ = 'gene_list'
     id = db.Column(db.Integer, primary_key=True)
     direction = db.Column(db.Integer)
-    required_metadata = db.relationship('RequiredMetadata', backref=db.backref('gene_lists', order_by=id))
     gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
     ranked_genes = db.relationship('RankedGene', secondary=ranked_gene_2_gene_list, backref=db.backref('gene_lists', order_by=id))
     target_app_links = db.relationship("TargetAppLink", backref=db.backref('gene_list', order_by=id))
     text_file = db.Column(db.String(200))
 
-    def __init__(self, ranked_genes, direction, required_metadata, target_app_links):
+    def __init__(self, ranked_genes, direction, target_app_links):
         """Constructs a gene list.
         """
         self.ranked_genes = ranked_genes
-        self.direction = direction,
-        self.required_metadata = required_metadata
+        self.direction = direction
         self.target_app_links = target_app_links
 
     def __repr__(self):
@@ -50,13 +48,14 @@ class GeneList(db.Model):
     def serialize(self):
         """Return serialized object.
         """
+        target_apps = {}
+        for app_link in self.target_app_links:
+            key = app_link.target_app.name
+            value = app_link.link
+            target_apps[key] = value
         return {
             'direction': self.direction,
             'ranked_genes': [rg.serialize for rg in self.ranked_genes],
-            'target_apps': {
-                'enrichr': self.enrichr_link,
-                'l1000cds2': self.l1000cds2_link,
-                'paea': self.paea_link,
-            },
+            'target_apps': target_apps,
             'text_file': self.text_file
         }

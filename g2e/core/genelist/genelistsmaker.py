@@ -9,7 +9,7 @@ __contact__ = "avi.maayan@mssm.edu"
 from flask import request
 
 from g2e.core.genelist.diffexp import diffexp
-from g2e.core.targetapp.targetapps import target_all_apps
+from g2e.core.targetapp.targetappsmaker import target_all_apps
 from g2e.model.genelist import GeneList
 
 
@@ -33,12 +33,7 @@ def genelists_maker(soft_file, required_metadata, optional_metadata, tags):
     down_genes = [t for t in ranked_genes if t.value < 0]
 
     if 'skip_target_apps' in request.form:
-        target_apps_up = target_apps_down = target_apps_combined = {
-            'enrichr': '',
-            'l1000cds2': '',
-            'paea': '',
-            'crowdsourcing': ''
-        }
+        target_apps_up = target_apps_down = target_apps_combined = []
     else:
         target_apps_up = target_all_apps(up_genes, 1, required_metadata)
         target_apps_down = target_all_apps(down_genes, -1, required_metadata)
@@ -62,9 +57,9 @@ def genelists_maker(soft_file, required_metadata, optional_metadata, tags):
     down_genes = [t for t in ranked_genes if t.value < 0]
 
     gene_lists = [
-        GeneList(up_genes, 1, required_metadata, target_apps_up),
-        GeneList(down_genes, -1, required_metadata, target_apps_down),
-        GeneList(ranked_genes, 0, required_metadata, target_apps_combined)
+        GeneList(up_genes, 1, target_apps_up),
+        GeneList(down_genes, -1, target_apps_down),
+        GeneList(ranked_genes, 0, target_apps_combined)
     ]
 
     return gene_lists

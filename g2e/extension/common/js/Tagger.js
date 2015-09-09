@@ -36,6 +36,14 @@ var Tagger = function(events, templater) {
             }
         },
         MCF7_BD2K_LINCS_DCIC_COURSERA: {
+            cell_type: {
+                required: true,
+                description: "Cell type or tissue"
+            },
+            organism: {
+                required: true,
+                description: "Organism (human, mouse or rat)"
+            },
             pert_type: {
                 required: true,
                 description: "Perturbation type, choose among genetic, chemical, physical, other"

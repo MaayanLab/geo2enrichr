@@ -82,7 +82,6 @@
                     </tr>
                 {% endif %}
             {% endfor %}
-        
         </table>
 
         <table class="gene-lists">
@@ -92,9 +91,12 @@
                     <td></td>
                     <td title="Text file containing a gene list resulting from differential expression analysis.">Gene lists</td>
                     <td title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Enrichr</td>
-                    <td title="Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.">L1000CDS2</td>
-                    {% if show_paea %}
+                    {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                        <td title="Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.">L1000CDS2</td>
                         <td title="Perform principle angle enrichment analysis against over 70 gene set libraries.">PAEA</td>
+                    {% endif %}
+                    {% if use_crowdsourcing %}
+                        <td title="Crowdsourcin">Crowdsourcing</td>
                     {% endif %}
                 </tr>
             </thead>
@@ -106,31 +108,22 @@
                             <img src="static/image/download.png">
                         </a>
                     </td>
-                    <td>
-                        <a href="{{ gene_list.enrichr_link }}" target="_blank">
-                            <img src="static/image/targetapp/enrichr.png">
-                        </a>
-                    </td>
-                    {% if gene_list.l1000cds2_link != None and gene_list.l1000cds2_link != '' %}
-                        <td>
-                            <a href="{{ gene_list.l1000cds2_link }}" target="_blank">
-                                <img src="static/image/targetapp/l1000cds2.png">
-                            </a>
-                        </td>
-                    {% else %}
-                        <td></td>
+                    {% set num_apps = 2 if use_crowdsourcing else 1 %}
+                    {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                        {% set num_apps = num_apps + 2 %}
                     {% endif %}
-                    {% if show_paea %}
-                        {% if gene_list.paea_link != None and gene_list.paea_link != '' %}
+                    {% for i in range(num_apps) %}
+                        {% set target_app_link = gene_list.target_app_links[i] %}
+                        {% if target_app_link %}
                             <td>
-                                <a href="{{ gene_list.paea_link }}" target="_blank">
-                                    <img src="static/image/targetapp/paea.png">
+                                <a href="{{ target_app_link.link }}" target="_blank">
+                                    <img src="static/image/targetapp/{{ target_app_link.target_app.name }}.png">
                                 </a>
                             </td>
                         {% else %}
                             <td></td>
                         {% endif %}
-                    {% endif %}
+                    {% endfor %}
                 </tr>
             {% endfor %}
         </table>

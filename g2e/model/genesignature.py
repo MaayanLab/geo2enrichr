@@ -40,8 +40,8 @@ class GeneSignature(db.Model):
         self.extraction_id = hashlib.sha1(str(time.time())).hexdigest()[:10]
         self.soft_file = soft_file
         self.gene_lists = gene_lists
-        self.required_metadata  = required_metadata
-        self.optional_metadata  = optional_metadata
+        self.required_metadata = required_metadata
+        self.optional_metadata = optional_metadata
         self.tags = tags
 
     def __repr__(self):

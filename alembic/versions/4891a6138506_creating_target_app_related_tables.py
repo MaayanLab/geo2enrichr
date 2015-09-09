@@ -17,17 +17,17 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    #_build_target_app()
+    _build_target_app()
     link_tbl = _build_target_app_link()
     _transfer_data(link_tbl)
-    raise Exception('whatever')
+    _delete_old_columns()
 
 
 def _build_target_app():
     tbl = op.create_table(
         'target_app',
         sa.Column('id', sa.Integer, primary_key=True),
-        sa.Column('name', sa.String(255)),
+        sa.Column('name', sa.String(255))
     )
     apps = [
         {'name': 'enrichr'},
@@ -77,6 +77,12 @@ def _transfer_data(link_tbl):
 
 def _is_not_empty(link):
     return link is not None and link != ''
+
+
+def _delete_old_columns():
+    op.drop_column('gene_list', 'enrichr_link')
+    op.drop_column('gene_list', 'l1000cds2_link')
+    op.drop_column('gene_list', 'paea_link')
 
 
 def downgrade():

@@ -1,6 +1,6 @@
 import unittest
 
-from g2e.core.targetapp.targetapps import _apply_cutoff
+from g2e.core.targetapp.targetappsmaker import _apply_cutoff
 
 
 class TestApplyCutoff(unittest.TestCase):
