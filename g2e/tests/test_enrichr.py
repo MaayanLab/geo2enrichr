@@ -10,10 +10,10 @@ class TestEnrichr(unittest.TestCase):
     def setUp(self):
         self.ranked_genes = [
             RankedGene(Gene('A'), 1),
-            RankedGene(Gene('B'), 1),
-            RankedGene(Gene('C'), 1),
-            RankedGene(Gene('D'), 1),
-            RankedGene(Gene('E'), 1)
+            RankedGene(Gene('B'), .5),
+            RankedGene(Gene('C'), 0),
+            RankedGene(Gene('D'), -.5),
+            RankedGene(Gene('E'), -1)
         ]
 
     def testGetLink(self):
@@ -29,4 +29,4 @@ class TestEnrichr(unittest.TestCase):
     def testGetGenesAsString(self):
          genes = convert_ranked_genes_to_tuples(self.ranked_genes)
          gene_str = get_genes_as_string(genes)
-         self.assertEqual('1,A\n1,B\n1,C\n1,D\n1,E', gene_str)
+         self.assertEqual('A,1\nB,0.5\nC,0\nD,0.5\nE,1', gene_str)
