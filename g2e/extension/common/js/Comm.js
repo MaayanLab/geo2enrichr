@@ -61,8 +61,13 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             });
     }
 
+    function get(url, cb) {
+        $.get(url, cb);
+    }
+
     return {
         checkIfProcessed: checkIfProcessed,
-        postSoftFile: postSoftFile
+        postSoftFile: postSoftFile,
+        get: get
     };
 };

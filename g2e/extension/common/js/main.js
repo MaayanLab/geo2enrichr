@@ -12,7 +12,10 @@ var main = function() {
                     templater = Templater(IMAGE_PATH),
                     tagger = Tagger(events, templater),
                     comm =  Comm(events, LoadingScreen, notifier, SERVER),
-                    userInputHandler;
+                    userInputHandler,
+
+                    // TODO: Use this! It returns all the metadata we need.
+                    eUtilsApi = EUtilsApi(comm, page, screenScraper);
 
                 UiEmbedder(events, page, screenScraper, templater);
                 userInputHandler = UserInputHandler(comm, events, notifier, screenScraper, tagger);

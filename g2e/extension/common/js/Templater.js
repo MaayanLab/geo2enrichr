@@ -2,7 +2,9 @@
 var Templater = function(IMAGE_PATH) {
 
     var G2E_TITLE = 'g2e-title',
-        G2E_VALUE = 'g2e-value';
+        G2E_VALUE = 'g2e-value',
+        G2E_SELECT = 'g2e-select',
+        G2E_TEXT = 'g2e-text';
 
     var modal = '' +
         '<div id="g2e-overlay">' +
@@ -25,23 +27,23 @@ var Templater = function(IMAGE_PATH) {
                                 '<caption>Please verify that your data is correct.</caption>' +
                                 '<tr id="g2e-dataset">' +
                                     '<td class="' + G2E_TITLE + '">Accession num.</td>' +
-                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-platform">' +
                                     '<td class="' + G2E_TITLE + '">Platform</td>' +
-                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-organism">' +
                                     '<td class="' + G2E_TITLE + '">Organism</td>' +
-                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-A_cols">' +
                                     '<td class="' + G2E_TITLE + '">Control samples</td>' +
-                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-B_cols" class="g2e-last">' +
                                     '<td class="' + G2E_TITLE + '">Treatment or condition samples</td>' +
-                                    '<td class="' + G2E_VALUE + '"><input type="text"></td>' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                             '</table>' +
                             '<table class="g2e-confirm-tbl g2e-top">' +
@@ -50,7 +52,7 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="' + G2E_TITLE + '">' +
                                         'Differential expression method' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
                                         '<select>' +
                                             '<option value="chdir">Characteristic direction</option>' +
                                             '<option value="ttest">T-test</option>' +
@@ -61,7 +63,7 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="' + G2E_TITLE + '">' +
                                         'Cutoff' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
                                         '<select>' +
                                             '<option value="500">500</option>' +
                                             '<option value="1000">1000</option>' +
@@ -73,7 +75,7 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="' + G2E_TITLE + '">' +
                                         'Correction method' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
                                         '<select>' +
                                             '<option value="BH">Benjamini-Hochberg</option>' +
                                             '<option value="bonferroni">Bonferroni</option>' +
@@ -84,7 +86,7 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="' + G2E_TITLE + '">' +
                                         'Threshold' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
                                         '<select name="threshold">' +
                                             '<option value="0.01">0.01</option>' +
                                             '<option value="0.05">0.05</option>' +
@@ -95,7 +97,7 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="' + G2E_TITLE + '">' +
                                         'Transform and normalize if necessary&#42;' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + ' g2e-select">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
                                         '<select>' +
                                             '<option value="False">No</option>' +
                                             '<option value="True">Yes</option>' +
@@ -109,32 +111,32 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="' + G2E_TITLE + '">' +
                                         'Cell type or tissue' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + '">' +
-                                        '<input placeholder="...">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
+                                        '<input type="text" placeholder="...">' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-perturbation">' +
                                     '<td class="' + G2E_TITLE + '">' +
                                         'Perturbation' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + '">' +
-                                        '<input placeholder="...">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
+                                        '<input type="text" placeholder="...">' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-gene" class="ui-widget">' +
                                     '<td class="' + G2E_TITLE + '">' +
                                         '<label for="g2e-geneList">Manipulated gene</label>' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + '">' +
-                                        '<input id="g2e-geneList" placeholder="...">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
+                                        '<input type="text" id="g2e-geneList" placeholder="...">' +
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-disease" class="ui-widget g2e-last">' +
                                     '<td class="' + G2E_TITLE + '">' +
                                         '<label for="g2e-diseaseList">Relevant disease</label>' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + ' g2e-last">' +
-                                        '<input id="g2e-diseaseList" placeholder="...">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' g2e-last">' +
+                                        '<input type="text" id="g2e-diseaseList" placeholder="...">' +
                                     '</td>' +
                                 '</tr>' +
                             '</table>' +
@@ -144,7 +146,7 @@ var Templater = function(IMAGE_PATH) {
                                     '<td class="' + G2E_TITLE + '">' +
                                         'Metadata Tags' +
                                     '</td>' +
-                                    '<td class="' + G2E_VALUE + '">' +
+                                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
                                         '<ul id="g2e-tags"></ul>' +
                                     '</td>' +
                                 '</tr>' +

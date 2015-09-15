@@ -7,7 +7,9 @@ function ModalBox(events, tagger, templater, userInputHandler) {
     (function init() {
         var html = templater.get('modal');
         $(html).hide().appendTo('body');
-        $('#g2e-modal').draggable();
+        $('#g2e-modal').draggable({
+            cancel: '.g2e-text'
+        });
         $modalBox = $('#g2e-overlay');
         $modalBox.find('#g2e-error-message').hide();
         $modalBox.find('#g2e-submit-btn').click(userInputHandler.sendDataToServer);
@@ -72,7 +74,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
             } else {
                 html = val;
             }
-            $('#g2e-' + prop + ' td input').attr('value', html);
+            $('#g2e-' + prop + ' td').eq(1).html(html);
         }
         $modalBox.find('#g2e-user-key').val(data.crowdsourcedMetadata.user_key);
     }
