@@ -667,7 +667,7 @@ var Templater = function(IMAGE_PATH) {
                                 '</div>' +
                                 '<div id="g2e-user-key-wrapper" class="g2e-left">' +
                                     '<label for="g2e-user-key">Submission Key ' +
-                                        '<input id="g2e-user-key" text="text">' +
+                                        '<input id="g2e-user-key" text="text" class="' + G2E_TEXT + '">' +
                                     '</label>' +
                                 '</div>' +
                             '</div>' +
@@ -751,7 +751,7 @@ var Templater = function(IMAGE_PATH) {
             return $('' +
                 '<tr id="' + id + '">' +
                     '<td class="' + G2E_TITLE + '">' + value + '</td>' +
-                    '<td class="' + G2E_VALUE + '">' +
+                    '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
                         '<input placeholder="...">' +
                     '</td>' +
                 '</tr>'
