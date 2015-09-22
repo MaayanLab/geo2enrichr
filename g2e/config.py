@@ -14,7 +14,7 @@ class Config(object):
     with open('g2e/app.conf') as f:
         lines = [x for x in f.read().split('\n')]
 
-    DEBUG = bool(lines[1])
+    DEBUG = lines[1] == 'True'
     SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 
     BASE_URL          = '/g2e'
