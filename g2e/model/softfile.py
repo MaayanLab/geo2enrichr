@@ -76,12 +76,11 @@ class SoftFile(db.Model):
             genes, a_vals, b_vals = normalizer.normalize(genes, a_vals, b_vals)
 
         text_file = softfilemanager.write(name, platform, normalize, genes, a_vals, b_vals, samples, selections, stats)
-        actual_text_file = ''#csoftfilemanager.get(name)
 
         return cls(
             name, samples, genes,
             a_vals, b_vals, platform,
-            text_file, actual_text_file,
+            text_file,
             is_geo=is_geo, stats=stats, normalize=normalize
         )
 
@@ -98,6 +97,7 @@ class SoftFile(db.Model):
         samples = [SoftFileSample(x, True) for x in samples if x == '0']\
             + [SoftFileSample(x, False) for x in samples if x == '1']
         platform = args['platform'] if 'platform' in args else None
+
         return cls(name, samples, genes, a_vals, b_vals, platform, text_file)
 
     @property
