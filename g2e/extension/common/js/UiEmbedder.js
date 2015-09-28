@@ -8,7 +8,7 @@ function UiEmbedder(events, page, screenScraper, templater) {
         if (page.isGds()) {
             embedInGdsPage($modalButtonParent);
         } else {
-            var $metadataTableParent = screenScraper.getMetadataTable();
+            var $metadataTableParent = screenScraper.getMetadataTableParent();
             embedInGsePage($modalButtonParent, $metadataTableParent);
         }
     })();
