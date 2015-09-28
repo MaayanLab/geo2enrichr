@@ -13,6 +13,13 @@ from g2e.model.tag import Tag
 from g2e.model.optionalmetadata import OptionalMetadata
 
 
+def fetch_all(klass):
+    """Fetches all entities of a specific class.
+    """
+    with session_scope() as session:
+        return session.query(klass).all()
+
+
 def save_gene_signature(gene_signature):
     """Saves the SoftFile and GeneList to the database and returns the ID from
     the extraction table.
@@ -21,11 +28,6 @@ def save_gene_signature(gene_signature):
         session.add(gene_signature)
         session.commit()
         return gene_signature.extraction_id
-
-
-def fetch_all(klass):
-    with session_scope() as session:
-        return session.query(klass).all()
 
 
 def fetch_gene_signature(extraction_id):

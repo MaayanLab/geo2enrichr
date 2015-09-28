@@ -37,6 +37,7 @@ from g2e.endpoint.exploremetadata import explore_metadata
 from g2e.endpoint.exploretags import explore_tags
 from g2e.endpoint.extractapi import extract_api
 from g2e.endpoint.genelist import genelist
+from g2e.endpoint.pca import pca
 from g2e.endpoint.softfile import soft_file
 from g2e.endpoint.results import results
 from g2e.util.jinjafilters import jinjafilters
@@ -45,6 +46,7 @@ app.register_blueprint(base)
 app.register_blueprint(error)
 app.register_blueprint(extract_api)
 app.register_blueprint(genelist)
+app.register_blueprint(pca)
 app.register_blueprint(soft_file)
 app.register_blueprint(explore_metadata)
 app.register_blueprint(explore_tags)
