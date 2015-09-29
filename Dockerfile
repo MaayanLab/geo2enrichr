@@ -28,8 +28,10 @@ RUN pip install \
     numpy==1.9.2 \
     requests==2.6.0 \
     scipy==0.15.1 \
+    pandas==0.16.2 \
     singledispatch==3.4.0.3 \
     six==1.9.0 \
+    sklearn==0.0 \
     wsgiref==0.1.2 \
     --allow-external mysql-connector-python
 
