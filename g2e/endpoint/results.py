@@ -32,6 +32,7 @@ def results_page(results_id):
     return render_template('results.html',
         tags_url=Config.BASE_TAGS_URL,
         metadata_url=Config.BASE_METADATA_URL,
+        pca_url=Config.BASE_PCA_URL,
         use_simple_header=True,
         permanent_link=request.url,
         gene_signature=gene_signature,

@@ -23,5 +23,5 @@ def perform_pca(extraction_id):
     """
     gene_signature = dataaccess.fetch_gene_signature(extraction_id)
     if gene_signature:
-        pca_data = pca.do_pca(gene_signature.soft_file)
+        pca_data = pca.get_pca_coordinates(gene_signature.soft_file)
         return render_template('pca.html', pca_data=pca_data)
