@@ -29,15 +29,20 @@ def results_page(results_id):
         if tag.name in CROWDSOURCING_TAGS:
             use_crowdsourcing = True
 
+    if gene_signature.soft_file.samples:
+        show_pca = True
+    else:
+        show_pca = False
+
     return render_template('results.html',
-        tags_url=Config.BASE_TAGS_URL,
-        metadata_url=Config.BASE_METADATA_URL,
-        pca_url=Config.BASE_PCA_URL,
-        use_simple_header=True,
-        permanent_link=request.url,
-        gene_signature=gene_signature,
-        use_crowdsourcing=use_crowdsourcing
-    )
+                            tags_url=Config.BASE_TAGS_URL,
+                            metadata_url=Config.BASE_METADATA_URL,
+                            show_pca=show_pca,
+                            pca_url=Config.BASE_PCA_URL,
+                            use_simple_header=True,
+                            permanent_link=request.url,
+                            gene_signature=gene_signature,
+                            use_crowdsourcing=use_crowdsourcing)
 
 
 def __get_direction_as_string(direction):
