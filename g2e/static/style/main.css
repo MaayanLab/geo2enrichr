@@ -99,6 +99,9 @@ form .description p {
 .right {
   float: right;
 }
+.clear {
+  clear: both;
+}
 .highlight {
   color: #d90000;
 }
