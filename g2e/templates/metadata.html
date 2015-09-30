@@ -6,24 +6,43 @@
         <table>
             <thead>
                 <tr>
-                    <th>Gene Signature</th>
-                    <th class="capitalize-initial">{{ metadata.name }}</th>
+                    <th>Results Page</th>
+                    <th class="capitalize-initial">{{ metadata_name }}</th>
+                    <th>Organism</th>
+                    <th>Platform</th>
+                    <th>Optioanl metadata</th>
                     <th>Tags</th>
                 </tr>
             </thead>
             <tbody>
-                {% for opt_meta in metadata %}
+                {% for row in metadata %}
                     <tr>
                         <td>
-                            <a href="{{ results_url }}/{{ opt_meta.gene_signature.extraction_id }}">{{ opt_meta.gene_signature.extraction_id }}</a>
+                            <a href="{{ results_url }}/{{ row.gene_signature.extraction_id }}">{{ row.gene_signature.extraction_id }}</a>
                         </td>
                         <td>
-                            <a href="{{ metadata_url }}/{{ metadata_name }}/{{ opt_meta.value|custom_urlencode }}">
-                                {{ opt_meta.value }}
+                            <a href="{{ metadata_url }}/{{ metadata_name }}/{{ row.value|custom_urlencode }}">
+                                {{ row.value }}
                             </a>
                         </td>
                         <td>
-                            {% for tag in opt_meta.gene_signature.tags %}
+                            {% for opt_meta in row.gene_signature.optional_metadata %}
+                                {% if opt_meta.name == 'organism' %}
+                                    {{ opt_meta.value }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ row.gene_signature.soft_file.platform }}</td>
+                        <td>
+                            {% for opt_meta in row.gene_signature.optional_metadata %}
+                                {% if opt_meta.name != 'organism' %}
+                                    <dt>{{ opt_meta.name }}</dt>
+                                    <dd>{{ opt_meta.value }}</dd>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for tag in row.gene_signature.tags %}
                                 <a href="{{ tag_url }}/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                             {% endfor %}
                         </td>

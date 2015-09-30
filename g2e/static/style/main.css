@@ -223,6 +223,7 @@ form .description p {
   font-size: 13px;
   padding-bottom: 20px;
   width: 100%;
+  word-break: break-word;
 }
 .content table caption {
   border-bottom: 2px solid #eeeeee;

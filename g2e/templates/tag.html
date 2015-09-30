@@ -1,13 +1,23 @@
 {% extends 'wrapper.html' %}
 {% block body %}
 
+    <script src="static/js/consensus.js"></script>
+
     <div class="tag">
         <h1>{{ tag.name }}<span class="note">{{ num_tags }} gene signatures</span></h1>
         <table>
             <thead>
                 <tr>
-                    <th>Gene Signature</th>
+                    <th>Results Page</th>
+                    <th>Organism</th>
+                    <th>Platform</th>
                     <th>Optional Metadata</th>
+                    <th>
+                        <select>
+                            <option>Clustergrammer</option>
+                        </select>
+                        <button>Visualize</button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -17,12 +27,27 @@
                             <a href="{{ base_url }}/{{ gene_signature.extraction_id }}">{{ gene_signature.extraction_id }}</a>
                         </td>
                         <td>
+                            {% for opt_meta in gene_signature.optional_metadata %}
+                                {% if opt_meta.name == 'organism' %}
+                                    {{ opt_meta.value }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {{ gene_signature.soft_file.platform }}
+                        </td>
+                        <td>
                             <dl>
                             {% for opt_meta in gene_signature.optional_metadata %}
-                                <dt>{{ opt_meta.name }}</dt>
-                                <dd>{{ opt_meta.value }}</dd>
+                                {% if opt_meta.name != 'organism' %}
+                                    <dt>{{ opt_meta.name }}</dt>
+                                    <dd>{{ opt_meta.value }}</dd>
+                                {% endif %}
                             {% endfor %}
                             </dl>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="{{ gene_signature.extraction_id }}">
                         </td>
                     </tr>
                 {% endfor %}
