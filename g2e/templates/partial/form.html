@@ -1,0 +1,115 @@
+<h2>Upload custom SOFT file</h2>
+<div id="example-file">
+    <button>Try an example SOFT file.</button>
+    <a href="static/softfile/example_input.txt" class="">Download example file</a>
+</div>
+<form>
+    <table class="form">
+        <caption class="first">Please select a file to upload and input required metadata.</caption>
+        <tr id="file-input">
+            <td>File (500 MB max)</td>
+            <td>
+                <input type="file" name="file">
+            </td>
+        </tr>
+        <tr id="description-input">
+            <td>Description</td>
+            <td>
+                <input type="text" name="name" value="">
+            </td>
+        </tr>
+        <tr id="platform-input">
+            <td>Platform</td>
+            <td>
+                <input type="text" name="platform" value="">
+            </td>
+        </tr>
+        <tr id="description-organism">
+            <td>Organism</td>
+            <td>
+                <input type="text" name="organism" value="">
+            </td>
+        </tr>
+    </table>
+
+    <table class="form">
+        <caption>Please select differential expression analysis options.</caption>
+        <tr>
+            <td>Differential expression method</td>
+            <td>
+                <select class="diffexp_method" name="diffexp_method">
+                    <option value="chdir" selected="selected">Characteristic Direction</option>
+                    <option value="ttest">T-test</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="chdir">
+            <td>Cutoff</td>
+            <td>
+                <select id="cutoff" name="cutoff">
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="200">200</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="ttest">
+            <td>Correction method</td>
+            <td>
+                <select class="correction_method" name="correction_method">
+                    <option value="BH">Benjamini-Hochberg</option>
+                    <option value="bonferroni">Bonferroni</option>
+                </select>
+            </td>
+        </tr>
+        <tr id="threshold_row" class="ttest">
+            <td>Threshold</td>
+            <td>
+                <select name="threshold">
+                    <option value="0.01">0.01</option>
+                    <option value="0.05">0.05</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+
+    <table class="form">
+        <caption>Please input optional metadata.</caption>
+        <tr>
+            <td>Cell type or tissue</td>
+            <td>
+                <input type="text" name="cell" value="">
+            </td>
+        </tr>
+        <tr>
+            <td>Perturbation</td>
+            <td>
+                <input type="text" name="perturbation" value="">
+            </td>
+        </tr>
+        <tr>
+            <td>Manipulated gene</td>
+            <td>
+                <input type="text" name="gene" value="">
+            </td>
+        </tr>
+        <tr>
+            <td>Relevant disease</td>
+            <td>
+                <input type="text" name="disease" value="">
+            </td>
+        </tr>
+    </table>
+
+    <table class="form">
+        <caption>Apply metadata tags.</caption>
+        <tr>
+            <td>Tags</td>
+            <td>
+                <ul id="tags"></ul>
+            </td>
+        </tr>
+    </table>
+
+    <button id="upload-button" type="submit">Extract gene lists</button>
+</form>

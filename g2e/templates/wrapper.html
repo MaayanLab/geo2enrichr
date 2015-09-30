@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
-{% include 'head.html' %}
+{% include 'partial/head.html' %}
 <body>
     {% if use_simple_header %}
-        {% include 'header-simple.html' %}
+        {% include 'partial/header-simple.html' %}
     {% else %}
-        {% include 'header.html' %}
+        {% include 'partial/header.html' %}
     {% endif %}
     <div class="wrapper">
         <div class="content">
             {% block body %}{% endblock %}
         </div>
     </div>
-    {% include 'footer.html' %}
+    {% include 'partial/footer.html' %}
 </body>

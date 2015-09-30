@@ -8,8 +8,10 @@ __contact__ = "avi.maayan@mssm.edu"
 
 from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
+
 from g2e.config import Config
 from g2e.dataaccess import dataaccess
+import g2e.core.softfile.softfilemanager as softfilemanager
 from g2e.model.genesignature import GeneSignature
 
 
@@ -55,5 +57,18 @@ def post_file():
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
 
+
+@extract_api.route('/example', methods=['POST'])
+@cross_origin()
+def example_file():
+    """Handle an example SOFT file extraction.
+    """
+    args = request.form
+    response = {}
+    file_obj = softfilemanager.get_example_file()
+    gene_signature = GeneSignature.from_file(file_obj, args)
+    dataaccess.save_gene_signature(gene_signature)
+    response['extraction_id'] = gene_signature.extraction_id
+    return jsonify(response)
 
 

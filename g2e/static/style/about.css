@@ -1,6 +1,6 @@
-table td {
+.content table td {
   font-size: 16px;
 }
-table td:first-child {
+.content table td:first-child {
   width: 20% !important;
 }

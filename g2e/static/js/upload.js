@@ -3,17 +3,23 @@
 
 $(function() {
 
-    $('button').click(submit);
-    $('select.diffexp_method').change(methodChange);
-    setupTagFunctionality();
-
-    var $chdir = $('.chdir'),
+    var ENDPOINT = 'upload',
+        $fileInput = $('#file-input td'),
+        $useExampleButton = $('#example-file button'),
+        $descriptionInput = $('#description-input input'),
+        $chdir = $('.chdir'),
         $ttest = $('.ttest');
+
+    $('button#upload-button').click(submit);
+    $('select.diffexp_method').change(methodChange);
+    $useExampleButton.click(showExample);
+    setupTagFunctionality();
 
     $ttest.hide();
 
     function submit(evt) {
         evt.preventDefault();
+
         var $forms = $('form'),
             formData = new FormData($forms[0]),
             loader = Loader(),
@@ -30,7 +36,7 @@ $(function() {
         formData.append('normalize', 'False');
 
         $.ajax({
-            url: '/g2e/api/extract/upload',
+            url: '/g2e/api/extract/' + ENDPOINT,
             type: 'POST',
             data: formData,
             // Tell jQuery not to process data or worry about content-type.
@@ -47,6 +53,13 @@ $(function() {
                 loader.stop();
             }
         });
+    }
+
+    function showExample() {
+        ENDPOINT = 'example';
+        $fileInput.html('Example File Selected');
+        $('#example-file').hide();
+        $descriptionInput.attr('value', 'example_input');
     }
 
     function methodChange(evt) {

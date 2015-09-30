@@ -1,0 +1,31 @@
+.column {
+  width: 390px;
+}
+.column.left {
+  padding-right: 9px;
+}
+.column.right {
+  border-left: 1px solid #eeeeee;
+  padding-left: 9px;
+}
+.content table.extensions {
+  padding-bottom: 0;
+}
+.content table.extensions tr:first-child {
+  padding-bottom: 10px;
+}
+.content table.extensions tr.last td {
+  border: none;
+}
+.content table.extensions tr td {
+  vertical-align: top;
+}
+.content table.extensions tr td p {
+  margin: 0;
+}
+.content table.extensions tr td:first-child {
+  width: 15%;
+}
+#example-file a {
+  margin-left: 10px;
+}

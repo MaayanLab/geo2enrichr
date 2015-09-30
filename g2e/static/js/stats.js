@@ -1,5 +1,4 @@
 function buildStats(stats) {
-    console.log(stats);
 
     var categories = [],
         series = [],

@@ -96,6 +96,9 @@ form .description p {
 .left {
   float: left;
 }
+.right {
+  float: right;
+}
 .highlight {
   color: #d90000;
 }
@@ -244,18 +247,8 @@ form .description p {
 .content table tr td input {
   width: 100%;
 }
-.content table.extensions tr:first-child {
-  padding-bottom: 10px;
-}
-.content table.extensions td:first-child {
-  width: 10%;
-}
-.content table.extensions td {
-  height: 100px;
-  vertical-align: top;
-}
-.content table.extensions td p {
-  margin: 0;
+.content table tr.last td {
+  border-bottom: 0;
 }
 .content .documentation table,
 .content .manual table,

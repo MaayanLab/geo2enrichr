@@ -99,6 +99,9 @@ form {
 .left {
     float: left;
 }
+.right {
+    float: right;
+}
 .highlight {
     color: @color-red;
 }
@@ -243,19 +246,9 @@ form {
                     width: 100%;
                 }
             }
-        }
-        &.extensions {
-            tr:first-child {
-                padding-bottom: 10px;
-            }
-            td:first-child {
-                width: 10%;
-            }
-            td {
-                height: 100px;
-                vertical-align: top;
-                p {
-                    margin: 0;
+            &.last {
+                td {
+                    border-bottom: 0;
                 }
             }
         }

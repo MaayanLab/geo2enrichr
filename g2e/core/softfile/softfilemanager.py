@@ -14,7 +14,9 @@ import g2e.core.softfile.normalizer as normalizer
 
 
 BASE_DIR = 'g2e/static/softfile/'
+TESTS_DATA_DIR = 'g2e/tests/data/'
 CLEANED_DIR = BASE_DIR + 'clean/'
+EXAMPLE_FILE = 'example_input.txt'
 EXT = '.txt'
 
 
@@ -53,6 +55,10 @@ def write(name, platform, normalize, genes, a_vals, b_vals, samples, selections,
 def save(name, file_obj):
     """Saves a SOFT file in the correct directory.
     """
+    if isinstance(file_obj, file):
+        full_path = BASE_DIR + EXAMPLE_FILE
+        return full_path[4:]
+
     full_path = BASE_DIR + name + EXT
     file_obj.save(full_path)
     return full_path[4:]
@@ -82,7 +88,16 @@ def download(accession):
 def get(name):
     """Returns file object from disk.
     """
-    return file(BASE_DIR + name + EXT).read()
+    return open(BASE_DIR + name + EXT).read()
+
+
+def get_example_file():
+    """Returns an example file with synthetic gene expression data.
+    """
+    with open(TESTS_DATA_DIR + EXAMPLE_FILE, 'r') as fin, open(BASE_DIR + EXAMPLE_FILE, 'w+') as fout:
+        for line in fin:
+            fout.write(line)
+    return open(BASE_DIR + EXAMPLE_FILE)
 
 
 def _build_selections(selections):

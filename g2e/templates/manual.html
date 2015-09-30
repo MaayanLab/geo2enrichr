@@ -10,7 +10,7 @@
         <!-- Website -->
 
         <section>
-            <h2>Upload a dataset for analysis</h2>
+            <h3>Upload a dataset for analysis</h3>
             <p>GEO data is saved as <a href="http://www.ncbi.nlm.nih.gov/geo/info/soft.html" target="_blank">Simple Omnibus Format in Text (SOFT)</a> files. These are just tab-separated, plain text files of raw expression data. This website can be used to upload custom "SOFT"-like files. The file should be a tab-separated <span class='mono'>.txt</span> file. The first row contains the column names; the second row contains 0s and 1s, indicating whether the column is control or condition, respectively. Every subsequent row contains a gene symbol and some expression data in columns. Here is an example:</p>
         <pre>
             a	b	c	d
@@ -30,44 +30,7 @@
         </section>
 
         <section class="last">
-            <h2>Use a browser extension</h2>
-            <p>GEO2Enrichr can be used in either Chrome or Firefox. Please click the appropriate link below for links</p>
-            <h4>Installation</h4>
-            <table class="extensions">
-                <tr>
-                    <td>
-                        <a href="https://chrome.google.com/webstore/detail/geo2enrichr/pcbdeobileclecleblcnadplfcicfjlp" target="_blank">
-                            <img src="static/image/chrome.png" class="browser-logo" />
-                        </a>
-                    </td>
-                    <td>
-                        <p>Click <a href='https://chrome.google.com/webstore/detail/geo2enrichr/pcbdeobileclecleblcnadplfcicfjlp' target='_blank'>here</a> to install GEO2Enrichr as an extension in your Chrome browser.</p>
-                        <p>Clicking the <strong>+FREE</strong> button will install and activate the application. The Chrome Web Store will ask you to accept GEO2Enrichr's permission settings. The GEO2Enrichr application needs permission to make HTTP requests to our server for processing the dataset you will select when interacting with entries listed on the GEO site.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="" target="_blank">
-                            <img src="static/image/firefox.png" class="browser-logo" />
-                        </a>
-                    </td>
-                    <td>
-                        <p>The FireFox extension (or add-on) is in the process of <a href="https://addons.mozilla.org/en-US/firefox/addon/geo2enrichr/" target="_blank">being reviewed</a> but is ready for use via a manual installation. To manually install the add-on, follow these instructions:
-                        </p>
-                        <ol>
-                            <li>Download <a href="static/geo2enrichr.xpi">this .xpi file</a>.</li>
-                            <li>Open Firefox.</li>
-                            <li>Click the top-right menu (with three horizontal bars).</li>
-                            <li>Click "Add-ons".</li>
-                            <li>Click "Install Add-on From File".</li>
-                            <li>Navigate to the .xpi file and upload it.</li>
-                        </ol>
-                        <p>The Firefox extension requires the same permissions as the Chrome extension.</p>
-                    </td>
-                </tr>
-            </table>
-            <p>Once your browser extension is installed, please follow the tutorial below.</p>
-            <h4>Tutorial</h4>
+            <h3>Use a browser extension</h3>
             <p>GEO2Enrichr's two browser extensions function the same in both Chrome and Firefox; this tutorial is for both.</p>
             <p>Each extension works by embedding additional functionality into relevant GEO pages that you visit. For example, after installing an extension, visiting the page <a href='http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS5077' target='_blank'>GDS5077</a> and clicking "Compare 2 sets of samples", you should see a new hypertext that says <strong>"Extract knowledge with GEO2Enrichr"</strong> (Fig. 1).</p>
             <img src='static/image/screenshot-embedded.png'/>
