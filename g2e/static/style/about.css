@@ -1,0 +1,6 @@
+table td {
+  font-size: 16px;
+}
+table td:first-child {
+  width: 20% !important;
+}

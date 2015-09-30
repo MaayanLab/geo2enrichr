@@ -6,9 +6,8 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-from flask import Blueprint
+from flask import Blueprint, render_template
 from g2e.config import Config
-from flask import render_template
 
 
 base = Blueprint('base', __name__, url_prefix=Config.BASE_URL)
@@ -32,8 +31,3 @@ def manual_page():
 @base.route('/pipeline')
 def pipeline_page():
     return render_template('pipeline.html')
-
-
-@base.route('/about')
-def about_page():
-    return render_template('about.html')
