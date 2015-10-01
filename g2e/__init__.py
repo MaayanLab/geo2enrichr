@@ -40,6 +40,7 @@ from g2e.endpoint.genelist import genelist
 from g2e.endpoint.pca import pca_blueprint
 from g2e.endpoint.softfile import soft_file
 from g2e.endpoint.results import results
+from g2e.endpoint.suggestapi import suggest_api_blueprint
 from g2e.util.jinjafilters import jinjafilters
 
 app.register_blueprint(base)
@@ -51,4 +52,5 @@ app.register_blueprint(soft_file)
 app.register_blueprint(explore_metadata)
 app.register_blueprint(explore_tags)
 app.register_blueprint(results)
+app.register_blueprint(suggest_api_blueprint)
 app.register_blueprint(jinjafilters)

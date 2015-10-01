@@ -75,6 +75,32 @@ def fetch_metadata_by_value(metadata_name, metadata_value):
             .all()
 
 
+def get_suggestions(query):
+    suggestions = []
+    suggestions += _get_optional_metadata_suggestions(query) or []
+    return suggestions
+
+
+def _get_optional_metadata_suggestions(query):
+    with session_scope() as session:
+        query_results = []
+        query_results += session\
+            .execute('SELECT value FROM optional_metadata WHERE MATCH(value) AGAINST("%s*" IN BOOLEAN MODE)' % query)\
+            .fetchall()
+        query_results += session\
+            .execute('SELECT value FROM optional_metadata WHERE value SOUNDS LIKE "%s"' % query)\
+            .fetchall()
+        query_results += session\
+            .execute('SELECT value FROM optional_metadata WHERE value LIKE "%s"' % query)\
+            .fetchall()
+
+        suggestions = [x[0] for x in query_results]
+        seen = set()
+        for x in suggestions:
+            seen.add(x)
+        return seen
+
+
 def get_statistics():
     """Returns hash with DB statistics for about page.
     """
