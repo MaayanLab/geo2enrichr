@@ -3,7 +3,8 @@ $(function() {
     var loader = Loader(),
         FADE_IN_SPEED = 600,
         FADE_OUT_SPEED = 600,
-        vizTool2Func;
+        vizTool2Func,
+        RESULTS_PAGE_BASE = 'http://amp.pharm.mssm.edu/g2e/results/';
 
     vizTool2Func = {
         'clustergrammer': function() {
@@ -63,7 +64,8 @@ $(function() {
         $.each(arguments, function(i, response) {
             var signature = response[0];
             geneSignatures.push({
-                name: signature.extraction_id,
+                col_title: signature.extraction_id,
+                link: RESULTS_PAGE_BASE + signature.extraction_id,
                 genes: getCombinedList(signature.gene_lists)
             });
         });
@@ -73,23 +75,22 @@ $(function() {
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
-                tag: 'cats',
+                description: 'TODO',
+                link: window.location.href,
                 gene_signatures: geneSignatures
             }),
-            success: function(data) {
-                embedIframe(data.link);
-            },
+            success: embedIframe,
             complete: function() {
                 loader.stop();
             }
         });
     }
 
-    function embedIframe(link) {
+    function embedIframe(data) {
         var $cg = $('#clustergrammer-preview');
         $cg.fadeIn(FADE_IN_SPEED);
-        $cg.find('iframe').attr('src', link);
-        $cg.find('a').attr('href', link);
+        $cg.find('iframe').attr('src', data.preview_link);
+        $cg.find('a').attr('href', data.link);
         $cg.find('button').click(function() {
             $cg.fadeOut(FADE_OUT_SPEED);
         });
