@@ -1,7 +1,7 @@
 {% extends 'wrapper.html' %}
 {% block body %}
 
-    <script src="static/js/consensus.js"></script>
+    {% include 'partial/consensus.html' %}
 
     <div class="tag">
         <h1>{{ tag.name }}<span class="note">{{ num_tags }} gene signatures</span></h1>
@@ -12,12 +12,7 @@
                     <th>Organism</th>
                     <th>Platform</th>
                     <th>Optional Metadata</th>
-                    <th>
-                        <select>
-                            <option>Clustergrammer</option>
-                        </select>
-                        <button>Visualize</button>
-                    </th>
+                    <th>Visualize</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,7 +42,7 @@
                             </dl>
                         </td>
                         <td>
-                            <input type="checkbox" name="{{ gene_signature.extraction_id }}">
+                            <input type="checkbox" class="consensus" name="{{ gene_signature.extraction_id }}">
                         </td>
                     </tr>
                 {% endfor %}

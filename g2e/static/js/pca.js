@@ -1,4 +1,7 @@
-function plotPCA (pcaObj) {
+function plotPCA(pcaObj, container, tooltipFormatter) {
+
+    container = container || 'pca-container';
+    tooltipFormatter = tooltipFormatter || function() { return this.key; };
 
     var mins = pcaObj.ranges[1],
         maxs = pcaObj.ranges[0],
@@ -6,8 +9,7 @@ function plotPCA (pcaObj) {
 
     var chart = new Highcharts.Chart({
         chart: {
-            // zoomType:'xyz',
-            renderTo: 'pca-container',
+            renderTo: container,
             margin: [150, 150, 150, 150],
             type: 'scatter',
             options3d: {
@@ -46,9 +48,8 @@ function plotPCA (pcaObj) {
         },
         series: pcaObj.series,
         tooltip: {
-            formatter: function () {
-                return this.key;
-            }
+            formatter: tooltipFormatter,
+            useHTML: true
         }
     });
 

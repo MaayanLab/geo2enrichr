@@ -11,8 +11,50 @@ import pandas
 import numpy as np
 from sklearn import decomposition
 
+import g2e.dataaccess.dataaccess as dataaccess
 
-def get_pca_coordinates(soft_file):
+
+def from_gene_signatures(extraction_ids):
+    data_frames = []
+    for extraction_id in extraction_ids:
+
+        # TODO: Fetch all gene signatures with a single DB query.
+        gene_sig = dataaccess.fetch_gene_signature(extraction_id)
+        index = []
+        data = []
+        for rg in gene_sig.gene_lists[2].ranked_genes:
+            index.append(rg.gene.name)
+            data.append(rg.value)
+        data_frames.append(pandas.DataFrame(
+            index=index,
+            data=data
+        ))
+
+    df = pandas.concat(data_frames, axis=1)
+    df = df.fillna(0)
+    pca_coords, variance_explained = compute_pca(df.T)
+
+    series = [{'name': 'x', 'data': []}]
+    for i, (x,y,z) in enumerate(pca_coords):
+        key = extraction_ids[i]
+        series[0]['data'].append({'x': x, 'y': y, 'z': z, 'name': key})
+
+    pca_obj = {'series': series}
+
+    # This is common with `from_soft_file`. Abstract it?
+    max_vals = np.max(pca_coords, axis=0)
+    min_vals = np.min(pca_coords, axis=0)
+    ranges = np.vstack((max_vals*1.1, min_vals*1.1))
+    pca_obj['ranges'] = ranges.tolist()
+
+    titles = ['PC%s (%.2f' %
+              (i, pct) + '%' + ' variance captured)' for i, pct in enumerate(variance_explained, start=1)]
+    pca_obj['titles'] = titles
+
+    return json.dumps(pca_obj)
+
+
+def from_soft_file(soft_file):
     df = pandas.read_csv('g2e/' + soft_file.text_file, sep='\t', skiprows=8)
 
     genes = df.ix[:,0]
@@ -23,26 +65,18 @@ def get_pca_coordinates(soft_file):
 
     # sklearn performs its analysis against a (samples, features) matrix, while
     # the SOFT file is a (features, samples) matrix.
-    df = df.T
-
-    pca_coords, variance_explained = compute_pca(df)
+    pca_coords, variance_explained = compute_pca(df.T)
 
     series = [
-        {
-            'name': 'control',
-            'data': []
-        },
-        {
-            'name': 'treatment',
-            'data': []
-        }
+        {'name': 'control', 'data': []},
+        {'name': 'treatment', 'data': []}
     ]
     for i, (x,y,z) in enumerate(pca_coords):
         key = soft_file.samples[i].name
         if soft_file.samples[i].is_control:
-            series[0]['data'].append({'x':x, 'y':y, 'z':z, 'name': key})
+            series[0]['data'].append({'x': x, 'y': y, 'z': z, 'name': key})
         else:
-            series[1]['data'].append({'x':x, 'y':y, 'z':z, 'name': key})
+            series[1]['data'].append({'x': x, 'y': y, 'z': z, 'name': key})
 
     pca_obj = {'series': series}
 

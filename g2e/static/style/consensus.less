@@ -1,0 +1,32 @@
+@import '../../extension/common/less/common.less';
+@import 'variable.less';
+
+#consensus {
+    .description {
+        background: @color-lightgray1;
+        margin-top: 20px;
+        padding: 10px;
+        h3 {
+            margin: 0;
+        }
+    }
+    .options {
+        button {
+            display: block;
+            margin-top: 5px;
+        }
+    }
+    #clustergrammer-preview {
+        display: none;
+        iframe {
+            border: 1px solid @color-lightgray3;
+            height: @dim-page-width;
+            margin-top: 20px;
+            width: @dim-page-width;
+        }
+    }
+    #pca-container {
+        display: none;
+        margin-top: 20px;
+    }
+}

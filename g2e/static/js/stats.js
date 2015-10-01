@@ -2,8 +2,8 @@ function buildStats(stats) {
 
     var categories = [],
         series = [],
-        key,
-        value;
+        value,
+        platform_counts = stats.platform_counts;
 
     series[0] = {
         data: [],
@@ -11,11 +11,19 @@ function buildStats(stats) {
         showInLegend: false,
         name: 'Gene signature'
     };
-    for (key in stats.platform_counts) {
-        categories.push(key);
-        value = stats.platform_counts[key];
-        series[0].data.push(Math.log(value) / Math.LN10);
-    }
+
+    platform_counts.sort(function(a, b) {
+        if (a.count > b.count)
+            return -1;
+        if (a.count < b.count)
+            return 1;
+        return 0;
+    });
+
+    $.each(platform_counts, function(i, obj) {
+        categories.push(obj.platform);
+        series[0].data.push(Math.log(obj.count) / Math.LN10);
+    });
 
     $('#platforms-bar-chart').highcharts({
         chart: {
@@ -28,13 +36,12 @@ function buildStats(stats) {
             text: 'Log10 Scale'
         },
         xAxis: {
-            categories: categories,
-            //crosshair: true
+            categories: categories
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Number of gene signatures'
+                text: 'Gene signatures'
             }
         },
         tooltip: {

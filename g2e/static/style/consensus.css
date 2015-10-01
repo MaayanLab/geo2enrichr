@@ -1,0 +1,25 @@
+#consensus .description {
+  background: #f5f5f5;
+  margin-top: 20px;
+  padding: 10px;
+}
+#consensus .description h3 {
+  margin: 0;
+}
+#consensus .options button {
+  display: block;
+  margin-top: 5px;
+}
+#consensus #clustergrammer-preview {
+  display: none;
+}
+#consensus #clustergrammer-preview iframe {
+  border: 1px solid #eeeeee;
+  height: 800px;
+  margin-top: 20px;
+  width: 800px;
+}
+#consensus #pca-container {
+  display: none;
+  margin-top: 20px;
+}

@@ -84,7 +84,7 @@ def get_statistics():
         num_tags = session.query(Tag).count()
         platforms = session.query(sa.func.distinct(SoftFile.platform))
 
-    platform_counts = {}
+    platform_counts = []
     num_platforms = platforms.count()
     for platform in platforms:
         platform = platform[0]
@@ -92,7 +92,10 @@ def get_statistics():
             .filter(SoftFile.gene_signature_fk == GeneSignature.id)\
             .filter(SoftFile.platform == platform)\
             .count()
-        platform_counts[platform] = count
+        platform_counts.append({
+            'platform': platform,
+            'count': count
+        })
 
     return {
         'num_gene_signatures': num_gene_signatures,

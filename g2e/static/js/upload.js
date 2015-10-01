@@ -22,9 +22,9 @@ $(function() {
 
         var $forms = $('form'),
             formData = new FormData($forms[0]),
-            loader = Loader(),
-            $tags = $('#tags'),
-            tagValues = [];
+            loader = Loader();
+        
+        loader.start();
 
         $.each($forms.find('select'), function(i, select) {
             var $select = $(select),
@@ -77,16 +77,6 @@ $(function() {
         $("#tags").tagit({
             singleField: true
         });
-    }
-
-    function Loader() {
-        var $el = $('<div class="loading"><div class="loader"><div class="modal">Loading...</div></div></div>');
-        $('body').append($el);
-        return {
-            stop: function() {
-                $el.remove();
-            }
-        }
     }
 
     function isBlank(str) {

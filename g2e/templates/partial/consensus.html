@@ -1,0 +1,36 @@
+<link href='static/style/consensus.css' rel='stylesheet' type='text/css'/>
+<script src="static/js/lib/highcharts.js"></script>
+<script src="static/js/lib/highcharts-3d.js"></script>
+<script src="static/js/lib/highcharts-exporting.js"></script>
+<script src="static/js/pca.js"></script>
+<script src="static/js/consensus.js"></script>
+
+<div id="consensus">
+    <div class="description">
+        <h3>Visualization consensus signatures</h3>
+        <ol>
+            <li>Using the drop down below, select a visualization tool.</li>
+            <li>Using the checkboxes in the right-most column, select gene signatures to visualize.</li>
+            <li>Click <strong>Visualize</strong></li>
+        </ol>
+        <div class="options">
+            <select>
+                <option>(Select visualization tool)</option>
+                <option data-app="clustergrammer">Clustergrammer</option>
+                <option data-app="pca">Principal Component Analysis</option>
+            </select>
+            <button>Visualize</button>
+        </div>
+    </div>
+    <div id="clustergrammer-preview">
+        <iframe></iframe>
+        <p>
+            <button>Close</button>
+            <a href="" class="right" target="_blank">Open in Clustergrammer.</a>
+        </p>
+    </div>
+    <div id="pca-container">
+        <div id="pca-visualization"></div>
+        <button>Close</button>
+    </div>
+</div>
