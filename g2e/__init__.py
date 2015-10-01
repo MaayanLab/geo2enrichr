@@ -32,7 +32,6 @@ else:
 
 # Import these after connecting to the DB.
 from g2e.endpoint.base import base
-from g2e.endpoint.about import about
 from g2e.endpoint.error import error
 from g2e.endpoint.exploremetadata import explore_metadata
 from g2e.endpoint.exploretags import explore_tags
@@ -44,7 +43,6 @@ from g2e.endpoint.results import results
 from g2e.util.jinjafilters import jinjafilters
 
 app.register_blueprint(base)
-app.register_blueprint(about)
 app.register_blueprint(error)
 app.register_blueprint(extract_api)
 app.register_blueprint(genelist)

@@ -1,0 +1,39 @@
+{% extends 'wrapper.html' %}
+{% block body %}
+
+    <link href='static/style/about.css' rel='stylesheet' type='text/css'/>
+    <script src="static/js/lib/highcharts.js"></script>
+    <script src="static/js/stats.js"></script>
+
+    <h1>Stats</h1>
+    <section>
+        <div>
+            <table>
+                <tr>
+                    <td>Gene signatures</td>
+                    <td>{{ stats.num_gene_signatures }}</td>
+                </tr>
+                <tr>
+                    <td>Gene lists</td>
+                    <td>{{ stats.num_gene_lists }}</td>
+                </tr>
+                <tr>
+                    <td>Tags</td>
+                    <td>{{ stats.num_tags }}</td>
+                </tr>
+                <tr class="last">
+                    <td>Platforms</td>
+                    <td>{{ stats.num_platforms }}</td>
+                </tr>
+            </table>
+        </div>
+        <div id="platforms-bar-chart"></div>
+    </section>
+
+    <script>
+        $(function() {
+            buildStats({{ stats_json|safe }});
+        });
+    </script>
+
+{% endblock %}

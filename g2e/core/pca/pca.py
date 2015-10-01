@@ -34,7 +34,7 @@ def from_gene_signatures(extraction_ids):
     df = df.fillna(0)
     pca_coords, variance_explained = compute_pca(df.T)
 
-    series = [{'name': 'x', 'data': []}]
+    series = [{'name': 'Gene signatures', 'data': []}]
     for i, (x,y,z) in enumerate(pca_coords):
         key = extraction_ids[i]
         series[0]['data'].append({'x': x, 'y': y, 'z': z, 'name': key})

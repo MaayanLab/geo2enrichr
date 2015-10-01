@@ -1,6 +1,8 @@
 {% extends 'wrapper.html' %}
 {% block body %}
 
+    {% include 'partial/consensus.html' %}
+
     <div class="metadata">
         <h1>{{ metadata_name }} <span class="note">{{ num_tags }} gene signatures</span></h1>
         <table>
@@ -12,6 +14,7 @@
                     <th>Platform</th>
                     <th>Optioanl metadata</th>
                     <th>Tags</th>
+                    <th>Visualize</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,6 +48,9 @@
                             {% for tag in row.gene_signature.tags %}
                                 <a href="{{ tag_url }}/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
                             {% endfor %}
+                        </td>
+                        <td>
+                            <input type="checkbox" class="consensus" name="{{ row.gene_signature.extraction_id }}">
                         </td>
                     </tr>
                 {% endfor %}

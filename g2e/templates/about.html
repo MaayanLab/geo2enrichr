@@ -1,10 +1,6 @@
 {% extends 'wrapper.html' %}
 {% block body %}
 
-    <link href='static/style/about.css' rel='stylesheet' type='text/css'/>
-    <script src="static/js/lib/highcharts.js"></script>
-    <script src="static/js/stats.js"></script>
-
     <h1>About</h1>
     <section>
         <p>Gregory W. Gundersen, Matthew R. Jones, Andrew D. Rouillard, Yan Kou, Caroline D. Monteiro, Axel S. Fledmann, Kevin S. Hu, Avi Ma’ayan. GEO2Enrichr: browser extension and server app to extract gene sets from GEO and analyze them for biological functions. <a href="http://www.ncbi.nlm.nih.gov/pubmed/25971742" target="_blank">Bioinformatics. 2015 Sep 15;31(18):3060-2. doi: 10.1093</a>.</p>
@@ -18,37 +14,5 @@
         <strong>Availability:</strong> GEO2Enrichr is an <a href='https://github.com/MaayanLab/geo2enrichr' target='_blank'>open source</a> tool, freely available for installation as browser extensions at the Chrome Web Store and FireFox Add-ons. Documentation and a browser independent web application can be found on this website.
         </p>
     </section>
-
-    <h1>Stats</h1>
-    <section>
-        <div>
-            <table>
-                <tr>
-                    <td>Gene signatures</td>
-                    <td>{{ stats.num_gene_signatures }}</td>
-                </tr>
-                <tr>
-                    <td>Gene lists</td>
-                    <td>{{ stats.num_gene_lists }}</td>
-                </tr>
-                <tr>
-                    <td>Tags</td>
-                    <td>{{ stats.num_tags }}</td>
-                </tr>
-                <tr class="last">
-                    <td>Platforms</td>
-                    <td>{{ stats.num_platforms }}</td>
-                </tr>
-            </table>
-
-        </div>
-        <div id="platforms-bar-chart"></div>
-    </section>
-
-    <script>
-        $(function() {
-            buildStats({{ stats_json|safe }});
-        });
-    </script>
 
 {% endblock %}

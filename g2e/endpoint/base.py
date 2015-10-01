@@ -7,7 +7,9 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from flask import Blueprint, render_template
+import json
 from g2e.config import Config
+from g2e.dataaccess import dataaccess
 
 
 base = Blueprint('base', __name__, url_prefix=Config.BASE_URL)
@@ -31,3 +33,15 @@ def manual_page():
 @base.route('/pipeline')
 def pipeline_page():
     return render_template('pipeline.html')
+
+
+@base.route('/stats')
+def stats_page():
+    stats = dataaccess.get_statistics()
+    stats_json = json.dumps(stats)
+    return render_template('stats.html', stats=stats, stats_json=stats_json)
+
+
+@base.route('/about')
+def about_page():
+    return render_template('about.html')
