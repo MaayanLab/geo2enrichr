@@ -29,3 +29,32 @@
 #example-file a {
   margin-left: 10px;
 }
+.search-bar input {
+  border: 1px solid #eeeeee;
+}
+.search-bar button {
+  position: relative;
+  top: 2px;
+  margin-left: 10px;
+}
+.twitter-typeahead {
+  float: left;
+}
+.twitter-typeahead .tt-query,
+.twitter-typeahead .tt-hint {
+  color: white;
+}
+.twitter-typeahead .tt-menu {
+  width: 100%;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.twitter-typeahead .tt-suggestion {
+  padding: 3px 20px;
+}
+.twitter-typeahead .tt-suggestion:hover {
+  background: white;
+  cursor: pointer;
+}
