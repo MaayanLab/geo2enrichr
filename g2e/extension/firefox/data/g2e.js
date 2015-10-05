@@ -1317,7 +1317,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         $.each(tagger.getNewFields(), function(i, key) {
             var $input = $table.find('#' + key + ' input');
             if ($input.length) {
-                result[key] = $input.val().replace(/ /g,'');
+                result[key] = $input.val().trim();
             }
         });
 
