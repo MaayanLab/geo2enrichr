@@ -1,4 +1,4 @@
-"""Normalizes, log2 transforms and quantile normalizes, the data as necessary.
+"""Cleans SOFT files depending on user options.
 
 __authors__ = "Gregory Gundersen"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
