@@ -10,7 +10,7 @@ import os.path
 import time
 
 import g2e.core.softfile.geodownloader as geodownloader
-import g2e.core.softfile.normalizer as normalizer
+import g2e.core.softfile.softcleaner as normalizer
 
 
 BASE_DIR = 'g2e/static/softfile/'

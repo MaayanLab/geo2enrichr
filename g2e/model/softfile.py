@@ -10,7 +10,7 @@ import time
 
 from g2e import db
 import g2e.core.softfile.softparser as softparser
-import g2e.core.softfile.normalizer as normalizer
+import g2e.core.softfile.softcleaner as softcleaner
 import g2e.core.softfile.softfilemanager as softfilemanager
 from g2e.model.softfilesample import SoftFileSample
 from g2e.util.requestutil import get_param_as_list
@@ -70,10 +70,8 @@ class SoftFile(db.Model):
             + [get_or_create(SoftFileSample, name=sample, is_control=False) for sample in b_cols]
 
         genes, a_vals, b_vals, selections, stats = softparser.parse(name, is_geo, platform, samples)
-
         normalize = True if ('normalize' not in args or args['normalize'] == 'True') else False
-        if normalize:
-            genes, a_vals, b_vals = normalizer.normalize(genes, a_vals, b_vals)
+        genes, a_vals, b_vals = softcleaner.clean(genes, a_vals, b_vals, normalize)
 
         text_file = softfilemanager.write(name, platform, normalize, genes, a_vals, b_vals, samples, selections, stats)
 
