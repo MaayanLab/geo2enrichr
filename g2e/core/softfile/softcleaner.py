@@ -9,15 +9,31 @@ __contact__ = "avi.maayan@mssm.edu"
 import numpy as np
 
 
-def normalize(genes, A, B):
+def clean(genes, A, B, normalize_data):
+    """Averages expression values for duplicate gene symbols and optionally
+    normalizes the data if necessary.
+    """
+    idx = len(A[0])
+    values = concat(A, B)
+    genes = np.array(genes)
+
+    if normalize_data:
+        genes, values = normalize(genes, values)
+
+    # Average duplicates no matter what.
+    genes, values = avg_dups(genes, values)
+
+    A = values[:,:idx].tolist()
+    B = values[:,idx:].tolist()
+
+    return (genes, A, B)
+
+
+def normalize(genes, values):
     """Normalizes the data, taking the log2 of and quantile normalizing the
     data if necessary.
     """
     print 'Normalizing if necessary'
-
-    idx = len(A[0])
-    values = concat(A, B)
-    genes = np.array(genes)
 
     # Raise exceptions if the A and B are not valid data sets.
     _validate(genes, values)
@@ -31,12 +47,7 @@ def normalize(genes, A, B):
         print 'Quantile normalizing the data.'
         values = qnorm(values)
 
-    genes, values = avg_dups(genes, values)
-
-    A = values[:,:idx].tolist()
-    B = values[:,idx:].tolist()
-
-    return (genes, A, B)
+    return genes, values
 
 
 def concat(A, B):
