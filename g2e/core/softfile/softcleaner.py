@@ -1,4 +1,4 @@
-"""Normalizes, log2 transforms and quantile normalizes, the data as necessary.
+"""Cleans SOFT files depending on user options.
 
 __authors__ = "Gregory Gundersen"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
@@ -9,12 +9,15 @@ __contact__ = "avi.maayan@mssm.edu"
 import numpy as np
 
 
-def clean(genes, A, B, normalize):
+def clean(genes, A, B, normalize_data):
+    """Averages expression values for duplicate gene symbols and optionally
+    normalizes the data if necessary.
+    """
     idx = len(A[0])
     values = concat(A, B)
     genes = np.array(genes)
 
-    if normalize:
+    if normalize_data:
         genes, values = normalize(genes, values)
 
     # Average duplicates no matter what.
