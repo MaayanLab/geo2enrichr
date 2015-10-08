@@ -7,6 +7,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 from flask import Blueprint, render_template, request
+import json
 
 from g2e.core.pca import pca
 from g2e.config import Config
@@ -31,7 +32,8 @@ def perform_soft_file_pca(extraction_id):
     gene_signature = dataaccess.fetch_gene_signature(extraction_id)
     if gene_signature:
         pca_data = pca.from_soft_file(gene_signature.soft_file)
+        pca_json = json.dumps(pca_data)
         return render_template('pca.html',
-                               pca_data=pca_data,
+                               pca_data=pca_json,
                                results_url=Config.BASE_RESULTS_URL,
                                extraction_id=gene_signature.extraction_id)

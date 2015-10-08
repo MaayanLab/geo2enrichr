@@ -42,11 +42,11 @@ class TestGeneListEndpoint(unittest.TestCase):
         lines = [x for x in reader]
 
         self.assertEqual(lines[0], ['!direction', '0'])
-        self.assertEqual(lines[1], ['!num_genes', '527'])
+        self.assertEqual(lines[1], ['!num_genes', '330'])
         self.assertEqual(lines[2], ['!diffexp_method', 'ttest'])
         self.assertEqual(lines[3], ['!cutoff', 'None'])
         self.assertEqual(lines[4], ['!correction_method', 'BH'])
         self.assertEqual(lines[5], ['!threshold', '0.05'])
         self.assertEqual(lines[6], ['!organism', 'Homo sapiens'])
         self.assertEqual(lines[7], ['!end_metadata'])
-        self.assertEqual(len(lines), 535)
+        self.assertEqual(len(lines), 338)

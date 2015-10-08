@@ -6,7 +6,6 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-import json
 import pandas
 import numpy as np
 from sklearn import decomposition
@@ -51,7 +50,7 @@ def from_gene_signatures(extraction_ids):
               (i, pct) + '%' + ' variance captured)' for i, pct in enumerate(variance_explained, start=1)]
     pca_obj['titles'] = titles
 
-    return json.dumps(pca_obj)
+    return pca_obj
 
 
 def from_soft_file(soft_file):
@@ -89,7 +88,7 @@ def from_soft_file(soft_file):
               (i, pct) + '%' + ' variance captured)' for i, pct in enumerate(variance_explained, start=1)]
     pca_obj['titles'] = titles
 
-    return json.dumps(pca_obj)
+    return pca_obj
 
 
 def compute_pca(df, max_components=3):
