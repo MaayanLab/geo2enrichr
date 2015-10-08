@@ -10,8 +10,11 @@
                 <tr>
                     <th>Results Page</th>
                     <th class="capitalize-initial">{{ metadata_name }}</th>
+                    <th>Organism</th>
+                    <th>Platform</th>
+                    <th>Optioanl metadata</th>
                     <th>Tags</th>
-                    <td>Visualize</td>
+                    <th>Visualize</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +24,22 @@
                             <a href="{{ results_url }}/{{ row.gene_signature.extraction_id }}">{{ row.gene_signature.extraction_id }}</a>
                         </td>
                         <td>{{ row.value }}</td>
+                        <td>
+                            {% for opt_meta in row.gene_signature.optional_metadata %}
+                                {% if opt_meta.name == 'organism' %}
+                                    {{ opt_meta.value }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="platform">{{ row.gene_signature.soft_file.platform }}</td>
+                        <td>
+                            {% for opt_meta in row.gene_signature.optional_metadata %}
+                                {% if opt_meta.name != 'organism' %}
+                                    <dt>{{ opt_meta.name }}</dt>
+                                    <dd>{{ opt_meta.value }}</dd>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
                         <td>
                             {% for tag in row.gene_signature.tags %}
                                 <a href="{{ tag_url }}/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}

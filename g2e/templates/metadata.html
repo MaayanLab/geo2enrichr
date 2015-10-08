@@ -35,7 +35,7 @@
                                 {% endif %}
                             {% endfor %}
                         </td>
-                        <td>{{ row.gene_signature.soft_file.platform }}</td>
+                        <td class="platform">{{ row.gene_signature.soft_file.platform }}</td>
                         <td>
                             {% for opt_meta in row.gene_signature.optional_metadata %}
                                 {% if opt_meta.name != 'organism' %}

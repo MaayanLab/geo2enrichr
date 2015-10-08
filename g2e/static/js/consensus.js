@@ -8,12 +8,22 @@ $(function() {
 
     vizTool2Func = {
         'clustergrammer': function() {
-            var promises = buildPromises();
-            $.when.apply($, promises).done(requestClustergrammer);
+            var chbxs = getSelectedCheckboxes(),
+                promises;
+            if (isValidSelection(chbxs)) {
+                loader.start();
+                promises = buildPromises(chbxs);
+                $.when.apply($, promises).done(requestClustergrammer);
+            }
         },
         'pca': function() {
-            var extractionIds = getExtractionIds();
-            requestPca(extractionIds);
+            var chbxs = getSelectedCheckboxes(),
+                extractionIds;
+            if (isValidSelection(chbxs, 'pca')) {
+                loader.start();
+                extractionIds = getExtractionIds(chbxs);
+                requestPca(extractionIds);
+            }
         }
     };
 
@@ -22,7 +32,6 @@ $(function() {
     function visualizeGeneSignatures() {
         var app = $('#consensus select').find(":selected").attr('data-app');
         if (typeof vizTool2Func[app] === 'function') {
-            loader.start();
             vizTool2Func[app]();
         } else {
             alert('No visualization tool selected.');
@@ -31,14 +40,10 @@ $(function() {
 
     /* Clustergrammer
      * -------------- */
-    function buildPromises() {
-        var $inputs = $('input.consensus'),
-            promises = [];
-        $inputs.each(function(i, checkbox) {
-            var $checkbox = $(checkbox);
-            if ($checkbox.is(':checked')) {
-                promises.push(getAjax($checkbox.attr('name')));
-            }
+    function buildPromises(chbxs) {
+        var promises = [];
+        $.each(chbxs, function(i, checkbox) {
+            promises.push(getAjax(checkbox.extractionId));
         });
         return promises;
     }
@@ -124,15 +129,58 @@ $(function() {
         });
     }
 
-    function getExtractionIds() {
-        var $inputs = $('input.consensus'),
-            extractionIds = [];
-        $inputs.each(function(i, checkbox) {
-            var $checkbox = $(checkbox);
-            if ($checkbox.is(':checked')) {
-                extractionIds.push($checkbox.attr('name'));
-            }
+    function getExtractionIds(chbxs) {
+        var extractionIds = [];
+        $.each(chbxs, function(i, checkbox) {
+            extractionIds.push(checkbox.extractionId);
         });
         return extractionIds;
+    }
+
+    /* Helper function for collecting data from selected checkboxes.
+     */
+    function getSelectedCheckboxes() {
+        var selected = [];
+        $('input.consensus').each(function(i, checkbox) {
+            var $checkbox = $(checkbox);
+            if ($checkbox.is(':checked')) {
+                selected.push({
+                    extractionId: $checkbox.attr('name'),
+                    platform: $checkbox.closest('tr').find('.platform').text()
+                });
+            }
+        });
+        return selected;
+    }
+
+    /* Helper function that validates the selected checkboxes, alerting and
+     * returning false if invalid.
+     */
+    function isValidSelection(chbxs, vizType) {
+        var isValid,
+            platform;
+        if (chbxs.length === 0) {
+            alert('Heyo, no selection.');
+            return false;
+        }
+        if (vizType === 'pca' && chbxs.length < 3) {
+            alert('3D PCA requires at least 3 dimensions.');
+            return false;
+        }
+
+        isValid = true;
+        platform = chbxs[0].platform;
+        $.each(chbxs, function(i, obj) {
+            if (obj.platform !== platform) {
+                isValid = false;
+                return false; // Early return.
+            }
+        });
+
+        if (!isValid) {
+            alert('Every gene signature must come from the same platform.');
+        }
+
+        return isValid;
     }
 });
