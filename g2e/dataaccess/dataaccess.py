@@ -8,6 +8,7 @@ __contact__ = "avi.maayan@mssm.edu"
 
 
 import sqlalchemy as sa
+from sqlalchemy.sql import text
 
 from g2e.dataaccess.util import session_scope
 from g2e.model.genelist import GeneList
@@ -85,13 +86,19 @@ def _get_optional_metadata_suggestions(query):
     with session_scope() as session:
         query_results = []
         query_results += session\
-            .execute('SELECT value FROM optional_metadata WHERE MATCH(value) AGAINST("%s*" IN BOOLEAN MODE)' % query)\
+            .execute('SELECT value FROM optional_metadata '
+                     'WHERE MATCH(value) AGAINST(:query IN BOOLEAN MODE)',
+                     {'query': query})\
             .fetchall()
         query_results += session\
-            .execute('SELECT value FROM optional_metadata WHERE value SOUNDS LIKE "%s"' % query)\
+            .execute('SELECT value FROM optional_metadata '
+                     'WHERE value SOUNDS LIKE :query',
+                     {'query': query})\
             .fetchall()
         query_results += session\
-            .execute('SELECT value FROM optional_metadata WHERE value LIKE "%s"' % query)\
+            .execute('SELECT value FROM optional_metadata '
+                     'WHERE value LIKE :query',
+                     {'query': query})\
             .fetchall()
 
         suggestions = [x[0] for x in query_results]
