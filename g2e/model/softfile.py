@@ -109,3 +109,15 @@ class SoftFile(db.Model):
            'platform': self.platform,
            'text_file': self.text_file
        }
+
+    def get_raw_data(self):
+        """Returns the raw data a two-dimensional array.
+        """
+        results = []
+        f = file('g2e/' + self.text_file)
+        for i,line in enumerate(f):
+            if i < 8:
+                continue
+            line = line.strip()
+            results.append(line.split('\t'))
+        return results

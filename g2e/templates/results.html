@@ -50,24 +50,30 @@
             <tr title="Parsed and cleaned SOFT file, with GEO metadata removed and only the control and samples listed.">
                 <td>Parsed SOFT file</td>
                 <td>
-                    <a href="{{ gene_signature.soft_file.text_file }}" target="_blank">Download</a>
+                    <a href="{{ gene_signature.soft_file.text_file }}" target="_blank">
+                        <i class="fa fa-file-o"></i>
+                    </a>
                 </td>
             </tr>
         </table>
 
-        {% if show_pca %}
+        {% if show_viz %}
             <table>
                 <caption>Visualizations</caption>
                 <tr>
                     <td>Principal Component Analysis</td>
                     <td>
-                        <a href="{{ pca_url }}/{{ gene_signature.extraction_id }}">3D plot</a>
+                        <a href="{{ pca_url }}/{{ gene_signature.extraction_id }}">
+                            <i class="fa fa-cube"></i>
+                        </a>
                     </td>
                 </tr>
                 <tr>
                     <td>Hierarchical clustering</td>
                     <td>
-                        <a href="">Hierarchical</a>
+                        <a href="{{ cluster_url }}/{{ gene_signature.extraction_id }}" target="_blank">
+                            <i class="fa fa-map-o"></i>
+                        </a>
                     </td>
                 </tr>
             </table>

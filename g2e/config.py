@@ -21,6 +21,7 @@ class Config(object):
     BASE_RESULTS_URL  = BASE_URL + '/results'
     BASE_API_URL      = BASE_URL + '/api'
     BASE_PCA_URL      = BASE_URL + '/pca'
+    BASE_CLUSTER_URL  = BASE_URL + '/cluster'
     BASE_TAGS_URL     = BASE_URL + '/explore/tags'
     BASE_METADATA_URL = BASE_URL + '/explore/metadata'
 

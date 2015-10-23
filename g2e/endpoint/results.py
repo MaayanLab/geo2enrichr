@@ -30,9 +30,9 @@ def results_page(results_id):
             use_crowdsourcing = True
 
     if gene_signature.soft_file.samples:
-        show_pca = True
+        show_viz = True
     else:
-        show_pca = False
+        show_viz = False
 
     geo_url = None
     filename = gene_signature.soft_file.name
@@ -45,8 +45,9 @@ def results_page(results_id):
     return render_template('results.html',
                             tags_url=Config.BASE_TAGS_URL,
                             metadata_url=Config.BASE_METADATA_URL,
-                            show_pca=show_pca,
+                            show_viz=show_viz,
                             pca_url=Config.BASE_PCA_URL,
+                            cluster_url=Config.BASE_CLUSTER_URL,
                             use_simple_header=True,
                             permanent_link=request.url,
                             gene_signature=gene_signature,
