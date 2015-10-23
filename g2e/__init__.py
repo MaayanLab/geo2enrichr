@@ -36,14 +36,16 @@ from g2e.endpoint.error import error
 from g2e.endpoint.exploremetadata import explore_metadata
 from g2e.endpoint.exploretags import explore_tags
 from g2e.endpoint.extractapi import extract_api
-from g2e.endpoint.genelist import genelist
-from g2e.endpoint.pca import pca_blueprint
+from g2e.endpoint.genelistapi import genelist
+from g2e.endpoint.pcaapi import pca_blueprint
+from g2e.endpoint.clusterapi import cluster_blueprint
 from g2e.endpoint.softfile import soft_file
 from g2e.endpoint.results import results
 from g2e.endpoint.suggestapi import suggest_api_blueprint
 from g2e.util.jinjafilters import jinjafilters
 
 app.register_blueprint(base)
+app.register_blueprint(cluster_blueprint)
 app.register_blueprint(error)
 app.register_blueprint(extract_api)
 app.register_blueprint(genelist)

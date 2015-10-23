@@ -34,6 +34,14 @@ def results_page(results_id):
     else:
         show_pca = False
 
+    geo_url = None
+    filename = gene_signature.soft_file.name
+    if gene_signature.soft_file.is_geo:
+        if 'GDS' in filename:
+            geo_url = 'http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=' + filename
+        else:
+            geo_url = 'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=' + filename
+
     return render_template('results.html',
                             tags_url=Config.BASE_TAGS_URL,
                             metadata_url=Config.BASE_METADATA_URL,
@@ -42,6 +50,7 @@ def results_page(results_id):
                             use_simple_header=True,
                             permanent_link=request.url,
                             gene_signature=gene_signature,
+                            geo_url=geo_url,
                             use_crowdsourcing=use_crowdsourcing)
 
 

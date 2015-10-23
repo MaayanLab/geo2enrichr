@@ -1,4 +1,4 @@
-"""Performs principal component analysis on an input SOFT file.
+"""Delegates to principal component analysis module.
 
 __authors__ = "Gregory Gundersen, Zichen Wang"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"

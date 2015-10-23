@@ -33,7 +33,11 @@
             <caption>SOFT file</caption>
             <tr>
                 <td>Description</td>
-                <td>{{ gene_signature.soft_file.name }}</td>
+                {% if gene_signature.soft_file.is_geo %}
+                    <td><a href="{{ geo_url }}" target="_blank">{{ gene_signature.soft_file.name }}</a></td>
+                {% else %}
+                    <td>{{ gene_signature.soft_file.name }}</td>
+                {% endif %}
             </tr>
             <tr>
                 <td>Platform</td>
@@ -54,10 +58,16 @@
         {% if show_pca %}
             <table>
                 <caption>Visualizations</caption>
-                <tr title="">
+                <tr>
                     <td>Principal Component Analysis</td>
                     <td>
                         <a href="{{ pca_url }}/{{ gene_signature.extraction_id }}">3D plot</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Hierarchical clustering</td>
+                    <td>
+                        <a href="">Hierarchical</a>
                     </td>
                 </tr>
             </table>
