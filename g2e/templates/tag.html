@@ -5,10 +5,11 @@
 
     <div class="tag">
         <h1>{{ tag.name }}<span class="note">{{ num_tags }} gene signatures</span></h1>
-        <table>
+        <table class="table">
             <thead>
                 <tr>
-                    <th>Results Page</th>
+                    <th></th>
+                    <th>Results</th>
                     <th>Organism</th>
                     <th>Platform</th>
                     <th>Optional Metadata</th>
@@ -18,8 +19,11 @@
             <tbody>
                 {% for gene_signature in tag.gene_signatures %}
                     <tr>
+                        <td>{{ loop.index }}</td>
                         <td>
-                            <a href="{{ base_url }}/{{ gene_signature.extraction_id }}">{{ gene_signature.extraction_id }}</a>
+                            <a href="{{ base_url }}/{{ gene_signature.extraction_id }}">
+                                <i class="fa fa-file-o"></i>
+                            </a>
                         </td>
                         <td>
                             {% for opt_meta in gene_signature.optional_metadata %}
@@ -35,8 +39,12 @@
                             <dl>
                             {% for opt_meta in gene_signature.optional_metadata %}
                                 {% if opt_meta.name != 'organism' %}
-                                    <dt>{{ opt_meta.name }}</dt>
-                                    <dd>{{ opt_meta.value }}</dd>
+                                    <dt class="capitalize-initial">{{ opt_meta.name }}</dt>
+                                    <dd>
+                                        <span class="badge">
+                                            <a href="{{ base_tags_url }}/{{ opt_meta.value }}" target="_blank">{{ opt_meta.value }}</a>
+                                        </span>
+                                    </dd>
                                 {% endif %}
                             {% endfor %}
                             </dl>

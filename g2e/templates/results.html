@@ -1,40 +1,34 @@
 {% extends 'wrapper.html' %}
 
-{% block title %}Results{% endblock %}
+{% block title %}Results - {{ gene_signature.extraction_id }}{% endblock %}
 
 {% block body %}
 
     <script src="static/js/results.js"></script>
 
     <div id="results-page">
-        <h1>Results</h1>
-        <table>
-            <caption class="top">Share</caption>
-            <tbody>
-                <tr>
-                    <td>Permanent link to these results</td>
-                    <td>{{ permanent_link }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Results</h1>
+                <p class="instruction">This is a permanent results page for your analyzed data. Please save the link in your browser's address bar.</p>
+            </div>
+        </div>
 
         {% if gene_signature.tags|length > 0 %}
-            <table>
-                <caption>Tags</caption>
-                <tr>
-                    <td></td>
-                    <td>
-                        {% for tag in gene_signature.tags %}
-                            <span class="tag">
-                                <a href="{{ tags_url }}/{{ tag.name }}">{{ tag.name }}</a>
-                            </span>
-                        {% endfor %}
-                    </td>
-                </tr>
-            </table>
+            <section>
+                <h5>Tags</h5>
+                <p>
+                    {% for tag in gene_signature.tags %}
+                        <span class="badge">
+                            <a href="{{ tags_url }}/{{ tag.name }}">{{ tag.name }}</a>
+                        </span>
+                    {% endfor %}
+                </p>
+
+            </section>
         {% endif %}
 
-        <table>
+        <table class="table">
             <caption>SOFT file</caption>
             <tr>
                 <td>Description</td>
@@ -62,29 +56,7 @@
             </tr>
         </table>
 
-        {% if show_viz %}
-            <table>
-                <caption>Visualizations</caption>
-                <tr>
-                    <td>Principal Component Analysis</td>
-                    <td>
-                        <a href="{{ pca_url }}/{{ gene_signature.extraction_id }}">
-                            <i class="fa fa-cube"></i>
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Hierarchical clustering</td>
-                    <td>
-                        <a href="{{ cluster_url }}/{{ gene_signature.extraction_id }}" target="_blank">
-                            <i class="fa fa-map-o"></i>
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        {% endif %}
-    
-        <table>
+        <table class="table">
             <caption>Metadata</caption>
             <tr>
                 <td>Differential expression method</td>
@@ -110,14 +82,38 @@
                     <tr>
                         <td class="capitalize-initial">{{ opt_meta.name|replace("_", " ") }}</td>
                         <td>
-                            <a href="{{ metadata_url }}/{{ opt_meta.name }}/{{ opt_meta.value }}">{{ opt_meta.value }}</a>
+                            <span class="badge">
+                                <a href="{{ metadata_url }}/{{ opt_meta.name }}/{{ opt_meta.value }}">{{ opt_meta.value }}</a>
+                            </span>
                         </td>
                     </tr>
                 {% endif %}
             {% endfor %}
         </table>
 
-        <table class="gene-lists">
+        {% if show_viz %}
+            <table class="table">
+                <caption>Visualizations</caption>
+                <tr>
+                    <td>Principal Component Analysis</td>
+                    <td>
+                        <a href="{{ pca_url }}/{{ gene_signature.extraction_id }}">
+                            <i class="fa fa-cube"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Hierarchical clustering</td>
+                    <td>
+                        <a href="{{ cluster_url }}/{{ gene_signature.extraction_id }}" target="_blank">
+                            <i class="fa fa-map-o"></i>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        {% endif %}
+
+        <table class="table gene-lists">
             <caption>External Links and Downloads</caption>
             <thead>
                 <tr>
@@ -138,7 +134,7 @@
                     <td>{{ gene_list.direction_as_string }}</td>
                     <td>
                         <a href="genelist/{{ gene_list.direction }}/{{ gene_signature.extraction_id }}" target="_blank">
-                            <img src="static/image/download.png">
+                            <i class="fa fa-download"></i>
                         </a>
                     </td>
                     {% set num_apps = 2 if use_crowdsourcing else 1 %}

@@ -16,22 +16,36 @@
 #index-page table.extensions tr td:first-child {
   width: 15%;
 }
-#index-page table td {
-  vertical-align: middle;
-}
-#index-page table td.key {
-  font-weight: bold;
-  width: 30%;
-}
-#index-page table td.value {
-  width: 70%;
-}
 #index-page #intro-text {
   font-size: 16px;
 }
 #index-page #example-file a {
   position: relative;
   left: 10px;
+}
+#index-page table,
+#results-page table {
+  vertical-align: middle;
+}
+#index-page table caption,
+#results-page table caption {
+  border-bottom: 1px solid #eeeeee;
+}
+#index-page table tr th,
+#results-page table tr th,
+#index-page table tr td,
+#results-page table tr td {
+  border-top: 1px solid #eeeeee;
+  padding: 4px;
+}
+#index-page table tr td:first-child,
+#results-page table tr td:first-child {
+  font-weight: bold;
+  width: 30%;
+}
+#index-page .gene-lists,
+#results-page .gene-lists {
+  table-layout: fixed;
 }
 #results-page ul {
   padding-left: 15px;
@@ -40,7 +54,7 @@
   /* This over-selects but we don't care since the table is filled with images. */
 }
 #results-page .gene-lists img {
-  width: 20px;
+  width: 15px;
 }
 #results-page .gene-lists img:hover {
   opacity: .5;
@@ -51,27 +65,16 @@
 #results-page .gene-lists tr {
   font-weight: bold;
 }
-#results-page .tag {
-  background-color: #eeeeee;
-  padding: 2px 4px;
-  margin-left: 2px;
-  margin-right: 2px;
-}
-#results-page .tag a {
-  color: black;
-  font-weight: bold;
-}
-#results-page .tag a:hover,
-#results-page .tag a:active,
-#results-page .tag a:focus {
-  color: black;
-}
 #manual-page img,
 #pipeline-page img {
   width: 700px;
 }
 #stats-page #platforms-bar-chart {
   height: 1000px;
+}
+table dl {
+  background-color: #f5f5f5;
+  padding: 10px;
 }
 .metadata th,
 .tag th {
@@ -97,12 +100,12 @@
 .metadata dt,
 .tag dt {
   float: left;
-  font-style: italic;
-  width: 50%;
+  font-weight: normal;
+  width: 20%;
 }
 .metadata dd,
 .tag dd {
   float: left;
   margin: 0;
-  width: 50%;
+  width: 80%;
 }

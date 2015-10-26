@@ -26,16 +26,6 @@
                 }
             }
         }
-        td {
-            vertical-align: middle;
-            &.key {
-                font-weight: bold;
-                width: 30%;
-            }
-            &.value {
-                width: 70%;
-            }
-        }
     }
     #intro-text {
         font-size: 16px;
@@ -48,13 +38,40 @@
     }
 }
 
+#index-page,
+#results-page {
+    table {
+        caption {
+            border-bottom: 1px solid @color-lightgray3;
+        }
+        vertical-align: middle;
+        tr {
+            th,
+            td {
+                border-top: 1px solid @color-lightgray3;
+                padding: 4px;
+            }
+            td {
+                &:first-child {
+                    font-weight: bold;
+                    width: 30%;
+                }
+            }
+
+        }
+    }
+    .gene-lists {
+        table-layout: fixed;
+    }
+}
+
 #results-page {
     ul {
         padding-left: 15px;
     }
     .gene-lists {
         img {
-            width: 20px;
+            width: 15px;
             &:hover {
                 opacity: .5;
             }
@@ -65,21 +82,6 @@
         /* This over-selects but we don't care since the table is filled with images. */
         tr {
             font-weight: bold;
-        }
-    }
-    .tag {
-        background-color: @color-lightgray3;
-        padding: 2px 4px;
-        margin-left: 2px;
-        margin-right: 2px;
-        a {
-            color: black;
-            font-weight: bold;
-            &:hover,
-            &:active,
-            &:focus {
-                color: black;
-            }
         }
     }
 }
@@ -97,6 +99,12 @@
     }
 }
 
+table {
+    dl {
+        background-color: @color-lightgray1;
+        padding: 10px;
+    }
+}
 
 .metadata,
 .tag {
@@ -119,12 +127,12 @@
     }
     dt {
         float: left;
-        font-style: italic;
-        width: 50%;
+        font-weight: normal;
+        width: 20%;
     }
     dd {
         float: left;
         margin: 0;
-        width: 50%;
+        width: 80%;
     }
 }

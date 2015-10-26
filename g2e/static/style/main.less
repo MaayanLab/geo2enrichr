@@ -40,8 +40,8 @@ a {
     color: @color-blue;
     text-decoration: none;
     &:hover {
-        color: @color-blue;
-        text-decoration: underline;
+        color: @color-blue-dark;
+        text-decoration: none;
     }
 }
 h1,
@@ -53,6 +53,9 @@ h6 {
     color: @color-black-almost;
     font-family: @font-family-accent;
     font-weight: bold;
+}
+h1 {
+    font-size: 25px;
 }
 img {
     max-width: 100%;
@@ -104,6 +107,12 @@ pre {
     white-space: -o-pre-wrap;   /* Opera 7 */
     word-wrap: break-word;      /* Internet Explorer 5.5+ */
 }
+.fa {
+    color: @color-black-almost;
+    &:hover {
+        color: @color-gray;
+    }
+}
 .loader {
     background-color:rgba(255,255,255,0.75);
     cursor: wait;
@@ -143,9 +152,10 @@ pre {
 .highlight {
     color: @color-red;
 }
-.caption {
+caption {
     font-style: italic;
     margin-top: 10px;
+    padding: 0;
 }
 .ui-tooltip {
     background: @color-lightyellow;
@@ -184,6 +194,26 @@ pre {
         background: white;
         cursor: inherit;
         display: block;
+    }
+}
+.badge {
+    background-color: #777;
+    border-radius: 0;
+    padding: 2px 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    a {
+        color: white;
+        font-weight: bold;
+        &:hover,
+        &:active,
+        &:focus {
+            color: white;
+            text-decoration: none;
+        }
+    }
+    &:hover {
+        background-color: @color-black-almost;
     }
 }
 

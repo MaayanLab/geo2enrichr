@@ -6,14 +6,14 @@
 
     <div id="manual-page">
         <section>
-            <h2>Use</h2>
+            <h1>Use</h1>
             <p>GEO2Enrichr can be used via either this website or a browser extension.</p>
         </section>
 
         <!-- Website -->
 
         <section>
-            <h3>Upload a dataset for analysis</h3>
+            <h1>Upload a dataset for analysis</h1>
             <p>GEO data is saved as <a href="http://www.ncbi.nlm.nih.gov/geo/info/soft.html" target="_blank">Simple Omnibus Format in Text (SOFT)</a> files. These are just tab-separated, plain text files of raw expression data. This website can be used to upload custom "SOFT"-like files. The file should be a tab-separated <span class="mono">.txt</span> file. The first row contains the column names; the second row contains 0s and 1s, indicating whether the column is control or condition, respectively. Every subsequent row contains a gene symbol and some expression data in columns. Here is an example:</p>
         <pre>
             a	b	c	d
@@ -33,7 +33,7 @@
         </section>
 
         <section class="last">
-            <h3>Use a browser extension</h3>
+            <h1>Use a browser extension</h1>
             <p>GEO2Enrichr"s two browser extensions function the same in both Chrome and Firefox; this tutorial is for both.</p>
             <p>Each extension works by embedding additional functionality into relevant GEO pages that you visit. For example, after installing an extension, visiting the page <a href="http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS5077" target="_blank">GDS5077</a> and clicking "Compare 2 sets of samples", you should see a new hypertext that says <strong>"Extract knowledge with GEO2Enrichr"</strong> (Fig. 1).</p>
             <img src="static/image/screenshot-embedded.png" class="center"/>

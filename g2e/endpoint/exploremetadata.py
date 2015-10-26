@@ -21,7 +21,7 @@ def metadata_endpoint(metadata_name):
     metadata = dataaccess.fetch_metadata(metadata_name)
     if metadata is None:
         return render_template(
-            'not-found.html',
+            '404.html',
             message='No gene signatures with metadata "%s" found' % metadata_name
         )
     else:
@@ -42,7 +42,7 @@ def metadata_with_value_endpoint(metadata_name, metadata_value):
     metadata = dataaccess.fetch_metadata_by_value(metadata_name, metadata_value)
     if metadata is None or len(metadata) == 0:
         return render_template(
-            'not-found.html',
+            '404.html',
             message='No gene signatures with metadata "%s" found' % metadata_name
         )
     else:

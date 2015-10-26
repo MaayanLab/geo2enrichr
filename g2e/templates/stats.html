@@ -9,9 +9,14 @@
     <script src="static/js/stats.js"></script>
 
     <div id="stats-page">
-        <section>
-            <div>
-                <h2>Stats</h2>
+        <section class="row last">
+            <div class="col-md-6">
+                <h1>Gene signatures by platform</h1>
+                <p class="instruction">Log10 scale</p>
+                <div id="platforms-bar-chart"></div>
+            </div>
+            <div class="col-md-6">
+                <h1>Stats</h1>
                 <table class="table">
                     <tr>
                         <td class="col-md-3">Gene signatures</td>
@@ -30,11 +35,6 @@
                         <td class="col-md-9">{{ stats.num_platforms }}</td>
                     </tr>
                 </table>
-            </div>
-            <div>
-                <h2>Gene signatures by platform</h2>
-                <p class="instruction">Log10 scale</p>
-                <div id="platforms-bar-chart"></div>
             </div>
         </section>
     </div>

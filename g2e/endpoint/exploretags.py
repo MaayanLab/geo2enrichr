@@ -30,12 +30,13 @@ def tags_endpoint():
 def tag_endpoint(tag_name):
     tag = dataaccess.fetch_tag(tag_name)
     if tag is None:
-        return render_template('not-found.html',
+        return render_template('404.html',
             message='No gene signatures with tag "%s" found' % tag_name
         )
     else:
         return render_template('tag.html',
             base_url=Config.BASE_RESULTS_URL,
+            base_tags_url=Config.BASE_TAGS_URL,
             num_tags=len(tag.gene_signatures),
             tag=tag
         )

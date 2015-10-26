@@ -10,7 +10,7 @@
 
     <div id="documentation-page">
         <section>
-            <h2>REST APIs</h2>
+            <h1>REST APIs</h1>
             <p>
                 These REST APIs provide programmatic access to read and write data to GEO2Enrichr. You may analyze a GEO or custom SOFT file or fetch results from a previous analysis. Requests are made to the base URL:</p>
             <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api</code></pre>
@@ -19,7 +19,7 @@
             </p>
         </section>
         <section>
-            <h2>GET /g2e/api/extract/:id</h2>
+            <h1>GET /g2e/api/extract/:id</h1>
             <p>
                 Returns a JSON blob of data associated with a single user extraction, based on the <span class='mono'>id</span> parameter. The returned data has stable links to the SOFT file; up, down, and combined gene lists; and metadata from both the experiment and analysis.
             </p>
@@ -71,7 +71,7 @@
 }</code></pre>
         </section>
         <section>
-            <h2>POST /g2e/api/extract/geo</h2>
+            <h1>POST /g2e/api/extract/geo</h1>
             <p>
                 Performs differential expression analysis on a GEO SOFT file based on the GEO accession number, platform, and selected samples.
             </p>
@@ -117,7 +117,7 @@
         </section>
 
         <section class='last'>
-            <h2>POST /g2e/api/extract/custom</h2>
+            <h1>POST /g2e/api/extract/custom</h1>
             <p>
                 Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
             </p>
