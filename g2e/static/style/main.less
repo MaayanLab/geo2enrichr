@@ -18,21 +18,12 @@ html {
 body {
     margin-bottom: @dim-footer-height; /* bottom = footer height */
 }
-.footer {
+#footer {
     position: absolute;
     left: 0;
     bottom: 0;
     height: @dim-footer-height;
     width: 100%;
-}
-
-/* Class used to wrap all content.
- * ------------------------------- */
-.wrapper {
-    margin: 0 auto;
-    max-width: @dim-page-width;
-    padding-left: 20px;
-    padding-right: 20px;
 }
 
 /* Class and tag selectors.
@@ -53,8 +44,23 @@ a {
         text-decoration: underline;
     }
 }
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: @color-black-almost;
     font-family: @font-family-accent;
+    font-weight: bold;
+}
+img {
+    max-width: 100%;
+    vertical-align: inherit; /* Bootstrap override */
+    &.center {
+        display: block;
+        margin: 0 auto;
+    }
 }
 form {
     button.submit {
@@ -68,6 +74,35 @@ form {
             margin: 10px;
         }
     }
+}
+table {
+    padding-bottom: 0;
+    td {
+        border: none;
+    }
+}
+section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid @color-lightgray3;
+    &.last {
+        border: none;
+    }
+}
+pre,
+.code {
+    border-radius: 0;
+    background: @color-lightgray2;
+    font-family: @font-family-mono;
+    /* Example links overflow the pre tag if the text is too large. */
+    font-size: 12px;
+}
+pre {
+    border: none;
+    white-space: pre-wrap;      /* CSS 3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap;     /* Opera 4-6 */
+    white-space: -o-pre-wrap;   /* Opera 7 */
+    word-wrap: break-word;      /* Internet Explorer 5.5+ */
 }
 .loader {
     background-color:rgba(255,255,255,0.75);
@@ -108,6 +143,10 @@ form {
 .highlight {
     color: @color-red;
 }
+.caption {
+    font-style: italic;
+    margin-top: 10px;
+}
 .ui-tooltip {
     background: @color-lightyellow;
     border: 1px solid @color-yellow;
@@ -128,11 +167,30 @@ form {
 .capitalize-initial:first-letter {
     text-transform: uppercase;
 }
+.btn-file {
+    position: relative;
+    overflow: hidden;
+    input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+}
 
 /* Main structural elements:
  * header, content, footer
  * ----------------------------- */
-.header {
+#header {
     border-bottom: 1px solid @color-lightgray3;
     #logo {
         background: @color-lightgray1; /* Old browsers */
@@ -152,45 +210,32 @@ form {
     }
     a {
         border: none;
-        color: black;
+        color: @color-black-almost;
         font-family: @font-family-accent;
         font-size: 16px;
         font-weight: bold;
         text-decoration: none;
         &:hover {
             cursor: pointer;
-            color: black;
+            color: @color-black-almost;
         }
     }
-    h1,
-    ul {
-        display: inline;
-    }
-    nav {
-        margin: 10px 0;
-        .selected {
-            border-bottom: 2px solid @color-darkgray;
-        }
-        ul {
-            padding-left: 0;
-            li {
-                a {
-                    font-size: 13px;
-                    &:hover {
-                        border-bottom: 2px solid @color-gray;
-                        text-decoration: none;
-                    }
+    ul.nav {
+        li {
+            border-right: 1px solid @color-lightgray3;
+            a {
+                font-size: 12px;
+                line-height: inherit;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                &:hover {
+                    transition: background-color .25s ease-in-out;
+                    -moz-transition: background-color .25s ease-in-out;
+                    -webkit-transition: background-color .25s ease-in-out;
                 }
-                border-right: 1px solid @color-lightgray2;
-                display: inline;
-                list-style-type: none;
-                padding: 0 10px;
-                &.last {
-                    border-right: none;
-                }
-                &.first {
-                    padding-left: 0;
-                }
+            }
+            &.last {
+                border-right: none;
             }
         }
     }
@@ -198,6 +243,7 @@ form {
         width: 30px;
     }
     h1 {
+        display: inline;
         margin-left: 10px;
         a {
             font-size: 40px;
@@ -207,116 +253,31 @@ form {
         }
     }
 }
-.content {
-    padding-bottom: 20px;
-    img {
-        width: 100%;
-        &.browser-logo {
-            width: 50px;
-        }
-    }
-    .caption {
-        font-style: italic;
-    }
-    table {
-        table-layout: fixed;
-        border-spacing: 0;
-        font-size: 13px;
-        padding-bottom: 20px;
-        width: 100%;
-        word-break: break-word;
-        caption {
-            border-bottom: 2px solid @color-lightgray3;
-            font-style: italic;
-            margin-top: 20px;
-            text-align: left;
-            &.top {
-                margin-top: 0;
-            }
-        }
-        tr {
-            height: 25px;
-            td {
-                border-bottom: 1px solid @color-lightgray3;
-                padding: 5px 0;
-                &:first-child {
-                    font-weight: bold;
-                    width: 32%;
-                }
-                &:last-child {
-                    word-wrap: break-word;
-                }
-                input {
-                    width: 100%;
-                }
-            }
-            &.last {
-                td {
-                    border-bottom: 0;
-                }
-            }
-        }
-    }
-    .documentation,
-    .manual,
-    .pipeline, {
-        table {
-            padding-bottom: 0;
-            td {
-                border: none;
-            }
-        }
-        section {
-            margin-bottom: 20px;
-            border-bottom: 1px solid @color-lightgray3;
-            &.last {
-                border: none;
-            }
-        }
-        pre,
-        .code {
-            background: @color-lightgray2;
-            padding: 10px;
-            font-family: monospace;
-            /* Example links overflow the pre tag if the text is too large. */
-            font-size: 12px;
-        }
-        pre {
-            white-space: pre-wrap;      /* CSS 3 */
-            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-            white-space: -pre-wrap;     /* Opera 4-6 */
-            white-space: -o-pre-wrap;   /* Opera 7 */
-            word-wrap: break-word;      /* Internet Explorer 5.5+ */
-        }
-    }
-    .documentation {
-        table {
-            td:first-child {
-                width: 12%;
-            }
-            td {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-            }
-        }
-    }
+
+#page {
+    padding-bottom: 50px;
 }
-.footer {
-    border-top: 1px solid @color-lightgray3;
-    background: @color-lightgray2;
-    color: @color-darkgray;
-    width: 100%;
+
+#footer {
+    border-top: 3px solid @color-footer-dark;
+    background-color: @color-footer;
+    color: white;
+    h5 {
+        color: white;
+    }
     a,
     p {
         font-size: 12px;
     }
     a {
-        color: @color-blue;
+        color: @color-blue-light;
         text-decoration: none;
         &:hover {
             text-decoration: underline;
         }
+    }
+    .container {
+        margin-top: 20px;
     }
     #share {
         padding-top: 10px;
@@ -332,62 +293,6 @@ form {
     }
 }
 
-/* Results page
- * ------------ */
-.results {
-    ul {
-        padding-left: 15px;
-    }
-    .gene-lists {
-        img {
-            width: 20px;
-            &:hover {
-                opacity: .5;
-            }
-        }
-        td {
-            height: 20px;
-        }
-        /* This over-selects but we don't care since the table is filled with images. */
-        tr {
-            font-weight: bold;
-        }
-    }
-}
-
-/* Tag and Metadata pages
- * ---------------------- */
-.metadata,
-.tag {
-    th {
-        border-bottom: 2px solid @color-lightgray3;
-        text-align: left;
-    }
-    td:first-child {
-        font-weight: normal !important;
-    }
-    .note {
-        font-size: 12px;
-        font-weight: normal;
-        margin-left: 15px;
-    }
-    dl {
-        margin: 0;
-        overflow: hidden;
-        width: 100%;
-    }
-    dt {
-        float: left;
-        font-style: italic;
-        width: 50%;
-    }
-    dd {
-        float: left;
-        margin: 0;
-        width: 50%;
-    }
-}
-
 /* Library Overrides
  * ----------------- */
 .ui-widget {
@@ -397,5 +302,12 @@ form {
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-    color: black;
+    color: @color-black-almost;
+}
+.hljs {
+    background-color: @color-lightgray2 !important;
+}
+.btn-default {
+    border-radius: 0;
+    padding: 4px 8px;
 }

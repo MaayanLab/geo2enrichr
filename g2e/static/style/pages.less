@@ -1,0 +1,130 @@
+@import '../../extension/common/less/common.less';
+@import 'variable.less';
+
+
+#index-page {
+    margin-top: 30px;
+    table {
+        &.extensions {
+            tr {
+                &:first-child {
+                    padding-bottom: 10px;
+                }
+                &.last {
+                    td {
+                        border: none;
+                    }
+                }
+                td {
+                    vertical-align: top;
+                    p {
+                        margin: 0;
+                    }
+                    &:first-child {
+                        width: 15%;
+                    }
+                }
+            }
+        }
+        td {
+            vertical-align: middle;
+            &.key {
+                font-weight: bold;
+                width: 30%;
+            }
+            &.value {
+                width: 70%;
+            }
+        }
+    }
+    #intro-text {
+        font-size: 16px;
+    }
+    #example-file {
+        a {
+            position: relative;
+            left: 10px;
+        }
+    }
+}
+
+#results-page {
+    ul {
+        padding-left: 15px;
+    }
+    .gene-lists {
+        img {
+            width: 20px;
+            &:hover {
+                opacity: .5;
+            }
+        }
+        td {
+            height: 20px;
+        }
+        /* This over-selects but we don't care since the table is filled with images. */
+        tr {
+            font-weight: bold;
+        }
+    }
+    .tag {
+        background-color: @color-lightgray3;
+        padding: 2px 4px;
+        margin-left: 2px;
+        margin-right: 2px;
+        a {
+            color: black;
+            font-weight: bold;
+            &:hover,
+            &:active,
+            &:focus {
+                color: black;
+            }
+        }
+    }
+}
+
+#manual-page,
+#pipeline-page {
+    img {
+        width: 700px;
+    }
+}
+
+#stats-page {
+    #platforms-bar-chart {
+        height: 1000px;
+    }
+}
+
+
+.metadata,
+.tag {
+    th {
+        border-bottom: 2px solid @color-lightgray3;
+        text-align: left;
+    }
+    td:first-child {
+        font-weight: normal !important;
+    }
+    .note {
+        font-size: 12px;
+        font-weight: normal;
+        margin-left: 15px;
+    }
+    dl {
+        margin: 0;
+        overflow: hidden;
+        width: 100%;
+    }
+    dt {
+        float: left;
+        font-style: italic;
+        width: 50%;
+    }
+    dd {
+        float: left;
+        margin: 0;
+        width: 50%;
+    }
+}

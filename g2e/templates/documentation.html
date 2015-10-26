@@ -1,41 +1,41 @@
 {% extends 'wrapper.html' %}
+
+{% block title %}API{% endblock %}
+
 {% block body %}
 
-    <div class="documentation">
+    <link href="static/lib/highlight/styles/default.css" rel="stylesheet"/>
+    <script src="static/lib/highlight/highlight.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <div id="documentation-page">
         <section>
-            <h1>REST APIs</h1>
+            <h2>REST APIs</h2>
             <p>
                 These REST APIs provide programmatic access to read and write data to GEO2Enrichr. You may analyze a GEO or custom SOFT file or fetch results from a previous analysis. Requests are made to the base URL:</p>
-            <p class='code'>
-                http://amp.pharm.mssm.edu/g2e/api
-            </p>
+            <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api</code></pre>
             <p>
                 Responses are in JSON.
             </p>
         </section>
         <section>
-            <h1>GET /g2e/api/extract/:id</h1>
+            <h2>GET /g2e/api/extract/:id</h2>
             <p>
                 Returns a JSON blob of data associated with a single user extraction, based on the <span class='mono'>id</span> parameter. The returned data has stable links to the SOFT file; up, down, and combined gene lists; and metadata from both the experiment and analysis.
             </p>
             <h3>Resource URL</h3>
-            <p class='code'>
-                http://amp.pharm.mssm.edu/g2e/api/extract
-            </p>
+            <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api/extract</code></pre>
             <h3>Parameters</h3>
-            <table>
+            <table class="table">
                 <tr>
-                    <td><span class='mono'>id</span></td>
+                    <td class='mono'>id</td>
                     <td>The ID of the extraction for which to return results.</td>
                 </tr>
             </table>
             <h3>Example request</h3>
-            <p class='code'>
-                http://amp.pharm.mssm.edu/g2e/api/extract/1
-            </p>
+            <pre><code class="bash">http://amp.pharm.mssm.edu/g2e/api/extract/1</code></pre>
             <h3>Example response</h3>
-            <pre>
-{
+            <pre><code class="json">{
   "genelists": [
     {
       "direction": 1,
@@ -68,76 +68,72 @@
     "stats": null,
     "text_file": "static/softfile/clean/GDS5077.txt"
   }
-}</pre>
+}</code></pre>
         </section>
         <section>
-            <h1>POST /g2e/api/extract/geo</h1>
+            <h2>POST /g2e/api/extract/geo</h2>
             <p>
                 Performs differential expression analysis on a GEO SOFT file based on the GEO accession number, platform, and selected samples.
             </p>
             <h3>Resource URL</h3>
-            <p class='code'>
-                http://amp.pharm.mssm.edu/g2e/api/extract/geo
-            </p>
+            <pre><code class="bash">http://amp.pharm.mssm.edu/g2e/api/extract/geo</code></pre>
             <h3>Parameters</h3>
-            <table>
+            <table class="table">
                 <tr>
-                    <td><span class='mono'>dataset</span></td>
+                    <td class='mono'>dataset</td>
                     <td>A valid GEO accession number identifying the dataset.</td>
                 </tr>
                 <tr>
-                    <td><span class='mono'>platform</span></td>
+                    <td class='mono'>platform</td>
                     <td>The GPL number (platform) associated with the GEO accession number.</td>
                 </tr>
                 <tr>
-                    <td><span class='mono'>A_cols</span></td>
+                    <td class='mono'>A_cols</td>
                     <td>An array of GSM numbers to be used as in the control group.</td>
                 </tr>
                 <tr>
-                    <td><span class='mono'>B_cols</span></td>
+                    <td class='mono'>B_cols</td>
                     <td>An array of GSM numbers to be used as in the treatment or condition group.<td>
                 </tr>
             </table>
             <h3>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h3>
-            <pre>
-curl -v http://amp.pharm.mssm.edu/g2e/api/extract/geo --data \
-"dataset=GDS5077&\
-platform=GPL10558&\
-A_cols[]=GSM1071454&A_cols[]=GSM1071455&\
-B_cols[]=GSM1071457&B_cols[]=GSM1071455"
+            <pre><code class="bash">curl -v http://amp.pharm.mssm.edu/g2e/api/extract/geo --data \
+  "dataset=GDS5077&\
+  platform=GPL10558&\
+  A_cols[]=GSM1071454&A_cols[]=GSM1071455&\
+  B_cols[]=GSM1071457&B_cols[]=GSM1071455"
 
-> POST /g2e/api/extract/geo HTTP/1.1
-> User-Agent: curl/7.37.1
-> Host: http://amp.pharm.mssm.edu/
-> Accept: */*
-> Content-Length: 91
-> Content-Type: application/x-www-form-urlencoded</pre>
+&lt; POST /g2e/api/extract/geo HTTP/1.1
+&lt; User-Agent: curl/7.37.1
+&lt; Host: http://amp.pharm.mssm.edu/
+&lt; Accept: */*
+&lt; Content-Length: 91
+&lt; Content-Type: application/x-www-form-urlencoded</code></pre>
     <h3>Example response</h3>
-<pre>< HTTP/1.0 200 OK
+<pre><code class="bash">&lt; HTTP/1.0 200 OK
 {
   "extraction_id": 38
-}</pre>
+}</code></pre>
         </section>
 
         <section class='last'>
-            <h1>POST /g2e/api/extract/custom</h1>
+            <h2>POST /g2e/api/extract/custom</h2>
             <p>
                 Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
             </p>
             <h3>Parameters</h3>
-            <table>
+            <table class="table">
                 <tr>
-                    <td><span class='mono'>file</span></td>
+                    <td class='mono'>file</td>
                     <td>The file to be processed.</td>
                 </tr>
                 <tr>
-                    <td><span class='mono'>name</span></td>
+                    <td class='mono'>name</td>
                     <td>A description of your data.</td>
                 </tr>
             </table>
             <h3>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h3>
-            <pre>
-$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload \
+            <pre><code class="bash">$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload \
 --form "file=@input.txt" name=SyntheticData
 
 > POST /g2e/api/extract/upload HTTP/1.1
@@ -146,13 +142,12 @@ $ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload \
 > Accept: */*
 > Content-Length: 187810
 > Expect: 100-continue
-> Content-Type: multipart/form-data; boundary=------------------------1dcefa53b8e0b8ed</pre>
+> Content-Type: multipart/form-data; boundary=------------------------1dcefa53b8e0b8ed</code></pre>
     <h3>Example response</h3>
-    <pre>
-< HTTP/1.0 200 OK
+    <pre><code class="bash">&lt; HTTP/1.0 200 OK
 {
   "extraction_id": 38
-}</pre>
+}</code></pre>
         </section>
     </div>
 

@@ -14,20 +14,12 @@ body {
   margin-bottom: 200px;
   /* bottom = footer height */
 }
-.footer {
+#footer {
   position: absolute;
   left: 0;
   bottom: 0;
   height: 200px;
   width: 100%;
-}
-/* Class used to wrap all content.
- * ------------------------------- */
-.wrapper {
-  margin: 0 auto;
-  max-width: 800px;
-  padding-left: 20px;
-  padding-right: 20px;
 }
 /* Class and tag selectors.
  * ------------------------ */
@@ -53,7 +45,18 @@ h3,
 h4,
 h5,
 h6 {
+  color: #444444;
   font-family: 'Open Sans', arial, sans-serif;
+  font-weight: bold;
+}
+img {
+  max-width: 100%;
+  vertical-align: inherit;
+  /* Bootstrap override */
+}
+img.center {
+  display: block;
+  margin: 0 auto;
 }
 form button.submit {
   font-size: 14px;
@@ -65,6 +68,40 @@ form .description {
 }
 form .description p {
   margin: 10px;
+}
+table {
+  padding-bottom: 0;
+}
+table td {
+  border: none;
+}
+section {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eeeeee;
+}
+section.last {
+  border: none;
+}
+pre,
+.code {
+  border-radius: 0;
+  background: #f9f9f9;
+  font-family: 'Consolas', courier, monospace;
+  /* Example links overflow the pre tag if the text is too large. */
+  font-size: 12px;
+}
+pre {
+  border: none;
+  white-space: pre-wrap;
+  /* CSS 3 */
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;
+  /* Opera 4-6 */
+  white-space: -o-pre-wrap;
+  /* Opera 7 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
 }
 .loader {
   background-color: rgba(255, 255, 255, 0.75);
@@ -105,6 +142,10 @@ form .description p {
 .highlight {
   color: #d90000;
 }
+.caption {
+  font-style: italic;
+  margin-top: 10px;
+}
 .ui-tooltip {
   background: #fffac7;
   border: 1px solid #fff169;
@@ -125,13 +166,32 @@ form .description p {
 .capitalize-initial:first-letter {
   text-transform: uppercase;
 }
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
 /* Main structural elements:
  * header, content, footer
  * ----------------------------- */
-.header {
+#header {
   border-bottom: 1px solid #eeeeee;
 }
-.header #logo {
+#header #logo {
   background: #f5f5f5;
   /* Old browsers */
   background: -moz-linear-gradient(top, #f5f5f5 0%, #f9f9f9 100%);
@@ -149,247 +209,82 @@ form .description p {
   border-bottom: 1px solid #eeeeee;
   padding: 10px 0;
 }
-.header #logo a:hover {
+#header #logo a:hover {
   text-decoration: none;
 }
-.header a {
+#header a {
   border: none;
-  color: black;
+  color: #444444;
   font-family: 'Open Sans', arial, sans-serif;
   font-size: 16px;
   font-weight: bold;
   text-decoration: none;
 }
-.header a:hover {
+#header a:hover {
   cursor: pointer;
-  color: black;
+  color: #444444;
 }
-.header h1,
-.header ul {
-  display: inline;
+#header ul.nav li {
+  border-right: 1px solid #eeeeee;
 }
-.header nav {
-  margin: 10px 0;
+#header ul.nav li a {
+  font-size: 12px;
+  line-height: inherit;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
-.header nav .selected {
-  border-bottom: 2px solid #444444;
+#header ul.nav li a:hover {
+  transition: background-color 0.25s ease-in-out;
+  -moz-transition: background-color 0.25s ease-in-out;
+  -webkit-transition: background-color 0.25s ease-in-out;
 }
-.header nav ul {
-  padding-left: 0;
-}
-.header nav ul li {
-  border-right: 1px solid #f9f9f9;
-  display: inline;
-  list-style-type: none;
-  padding: 0 10px;
-}
-.header nav ul li a {
-  font-size: 13px;
-}
-.header nav ul li a:hover {
-  border-bottom: 2px solid #aaaaaa;
-  text-decoration: none;
-}
-.header nav ul li.last {
+#header ul.nav li.last {
   border-right: none;
 }
-.header nav ul li.first {
-  padding-left: 0;
-}
-.header img {
+#header img {
   width: 30px;
 }
-.header h1 {
+#header h1 {
+  display: inline;
   margin-left: 10px;
 }
-.header h1 a {
+#header h1 a {
   font-size: 40px;
 }
-.content {
-  padding-bottom: 20px;
+#page {
+  padding-bottom: 50px;
 }
-.content img {
-  width: 100%;
+#footer {
+  border-top: 3px solid #253238;
+  background-color: #36474f;
+  color: white;
 }
-.content img.browser-logo {
-  width: 50px;
+#footer h5 {
+  color: white;
 }
-.content .caption {
-  font-style: italic;
-}
-.content table {
-  table-layout: fixed;
-  border-spacing: 0;
-  font-size: 13px;
-  padding-bottom: 20px;
-  width: 100%;
-  word-break: break-word;
-}
-.content table caption {
-  border-bottom: 2px solid #eeeeee;
-  font-style: italic;
-  margin-top: 20px;
-  text-align: left;
-}
-.content table caption.top {
-  margin-top: 0;
-}
-.content table tr {
-  height: 25px;
-}
-.content table tr td {
-  border-bottom: 1px solid #eeeeee;
-  padding: 5px 0;
-}
-.content table tr td:first-child {
-  font-weight: bold;
-  width: 32%;
-}
-.content table tr td:last-child {
-  word-wrap: break-word;
-}
-.content table tr td input {
-  width: 100%;
-}
-.content table tr.last td {
-  border-bottom: 0;
-}
-.content .documentation table,
-.content .manual table,
-.content .pipeline table {
-  padding-bottom: 0;
-}
-.content .documentation table td,
-.content .manual table td,
-.content .pipeline table td {
-  border: none;
-}
-.content .documentation section,
-.content .manual section,
-.content .pipeline section {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #eeeeee;
-}
-.content .documentation section.last,
-.content .manual section.last,
-.content .pipeline section.last {
-  border: none;
-}
-.content .documentation pre,
-.content .manual pre,
-.content .pipeline pre,
-.content .documentation .code,
-.content .manual .code,
-.content .pipeline .code {
-  background: #f9f9f9;
-  padding: 10px;
-  font-family: monospace;
-  /* Example links overflow the pre tag if the text is too large. */
+#footer a,
+#footer p {
   font-size: 12px;
 }
-.content .documentation pre,
-.content .manual pre,
-.content .pipeline pre {
-  white-space: pre-wrap;
-  /* CSS 3 */
-  white-space: -moz-pre-wrap;
-  /* Mozilla, since 1999 */
-  white-space: -pre-wrap;
-  /* Opera 4-6 */
-  white-space: -o-pre-wrap;
-  /* Opera 7 */
-  word-wrap: break-word;
-  /* Internet Explorer 5.5+ */
-}
-.content .documentation table td:first-child {
-  width: 12%;
-}
-.content .documentation table td {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
-.footer {
-  border-top: 1px solid #eeeeee;
-  background: #f9f9f9;
-  color: #444444;
-  width: 100%;
-}
-.footer a,
-.footer p {
-  font-size: 12px;
-}
-.footer a {
-  color: #009dff;
+#footer a {
+  color: #67c4ff;
   text-decoration: none;
 }
-.footer a:hover {
+#footer a:hover {
   text-decoration: underline;
 }
-.footer #share {
+#footer .container {
+  margin-top: 20px;
+}
+#footer #share {
   padding-top: 10px;
 }
-.footer #share .company img {
+#footer #share .company img {
   margin-left: 2px;
   width: 25px;
 }
-.footer #share .company img:hover {
+#footer #share .company img:hover {
   opacity: 0.75;
-}
-/* Results page
- * ------------ */
-.results ul {
-  padding-left: 15px;
-}
-.results .gene-lists {
-  /* This over-selects but we don't care since the table is filled with images. */
-}
-.results .gene-lists img {
-  width: 20px;
-}
-.results .gene-lists img:hover {
-  opacity: .5;
-}
-.results .gene-lists td {
-  height: 20px;
-}
-.results .gene-lists tr {
-  font-weight: bold;
-}
-/* Tag and Metadata pages
- * ---------------------- */
-.metadata th,
-.tag th {
-  border-bottom: 2px solid #eeeeee;
-  text-align: left;
-}
-.metadata td:first-child,
-.tag td:first-child {
-  font-weight: normal !important;
-}
-.metadata .note,
-.tag .note {
-  font-size: 12px;
-  font-weight: normal;
-  margin-left: 15px;
-}
-.metadata dl,
-.tag dl {
-  margin: 0;
-  overflow: hidden;
-  width: 100%;
-}
-.metadata dt,
-.tag dt {
-  float: left;
-  font-style: italic;
-  width: 50%;
-}
-.metadata dd,
-.tag dd {
-  float: left;
-  margin: 0;
-  width: 50%;
 }
 /* Library Overrides
  * ----------------- */
@@ -400,5 +295,12 @@ form .description p {
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-  color: black;
+  color: #444444;
+}
+.hljs {
+  background-color: #f9f9f9 !important;
+}
+.btn-default {
+  border-radius: 0;
+  padding: 4px 8px;
 }

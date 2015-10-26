@@ -1,34 +1,43 @@
 {% extends 'wrapper.html' %}
+
+{% block title %}Stats{% endblock %}
+
 {% block body %}
 
     <link href='static/style/about.css' rel='stylesheet' type='text/css'/>
-    <script src="static/js/lib/highcharts.js"></script>
+    <script src="static/lib/highcharts/highcharts.js"></script>
     <script src="static/js/stats.js"></script>
 
-    <h1>Stats</h1>
-    <section>
-        <div>
-            <table>
-                <tr>
-                    <td>Gene signatures</td>
-                    <td>{{ stats.num_gene_signatures }}</td>
-                </tr>
-                <tr>
-                    <td>Gene lists</td>
-                    <td>{{ stats.num_gene_lists }}</td>
-                </tr>
-                <tr>
-                    <td>Tags</td>
-                    <td>{{ stats.num_tags }}</td>
-                </tr>
-                <tr class="last">
-                    <td>Platforms</td>
-                    <td>{{ stats.num_platforms }}</td>
-                </tr>
-            </table>
-        </div>
-        <div id="platforms-bar-chart"></div>
-    </section>
+    <div id="stats-page">
+        <section>
+            <div>
+                <h2>Stats</h2>
+                <table class="table">
+                    <tr>
+                        <td class="col-md-3">Gene signatures</td>
+                        <td class="col-md-9">{{ stats.num_gene_signatures }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3">Gene lists</td>
+                        <td class="col-md-9">{{ stats.num_gene_lists }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-3">Tags</td>
+                        <td class="col-md-9">{{ stats.num_tags }}</td>
+                    </tr>
+                    <tr class="last">
+                        <td class="col-md-3">Platforms</td>
+                        <td class="col-md-9">{{ stats.num_platforms }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <h2>Gene signatures by platform</h2>
+                <p class="instruction">Log10 scale</p>
+                <div id="platforms-bar-chart"></div>
+            </div>
+        </section>
+    </div>
 
     <script>
         $(function() {

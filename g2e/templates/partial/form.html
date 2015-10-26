@@ -1,42 +1,42 @@
 <h2>Upload custom SOFT file</h2>
 <div id="example-file">
-    <button>Try an example SOFT file.</button>
+    <button class="btn btn-default">Try an example SOFT file.</button>
     <a href="static/softfile/example_input.txt" class="">Download example file</a>
 </div>
 <form>
-    <table class="form">
+    <table class="table input-group">
         <caption class="first">Please select a file to upload and input required metadata.</caption>
         <tr id="file-input">
-            <td>File (500 MB max)</td>
-            <td>
+            <td class="key">File (500 MB max)</td>
+            <td class="value">
                 <input type="file" name="file">
             </td>
         </tr>
         <tr id="description-input">
-            <td>Description</td>
-            <td>
-                <input type="text" name="name" value="">
+            <td class="key">Description</td>
+            <td class="value">
+                <input type="text" class="form-control input-sm" name="name" value="">
             </td>
         </tr>
         <tr id="platform-input">
-            <td>Platform</td>
-            <td>
-                <input type="text" name="platform" value="">
+            <td class="key">Platform</td>
+            <td class="value">
+                <input type="text" class="form-control input-sm" name="platform" value="">
             </td>
         </tr>
         <tr id="description-organism">
-            <td>Organism</td>
-            <td>
-                <input type="text" name="organism" value="">
+            <td class="key">Organism</td>
+            <td class="value">
+                <input type="text" class="form-control input-sm" name="organism" value="">
             </td>
         </tr>
     </table>
 
-    <table class="form">
+    <table class="table input-group">
         <caption>Please select differential expression analysis options.</caption>
         <tr>
-            <td>Differential expression method</td>
-            <td>
+            <td class="key">Differential expression method</td>
+            <td class="value">
                 <select class="diffexp_method" name="diffexp_method">
                     <option value="chdir" selected="selected">Characteristic Direction</option>
                     <option value="ttest">T-test</option>
@@ -44,9 +44,9 @@
             </td>
         </tr>
         <tr class="chdir">
-            <td>Cutoff</td>
-            <td>
-                <select id="cutoff" name="cutoff">
+            <td class="key">Cutoff</td>
+            <td class="value">
+                <select id="cutoff"name="cutoff">
                     <option value="500">500</option>
                     <option value="1000">1000</option>
                     <option value="200">200</option>
@@ -54,17 +54,17 @@
             </td>
         </tr>
         <tr class="ttest">
-            <td>Correction method</td>
-            <td>
-                <select class="correction_method" name="correction_method">
+            <td class="key">Correction method</td>
+            <td class="value">
+                <select class="correction_method"name="correction_method">
                     <option value="BH">Benjamini-Hochberg</option>
                     <option value="bonferroni">Bonferroni</option>
                 </select>
             </td>
         </tr>
         <tr id="threshold_row" class="ttest">
-            <td>Threshold</td>
-            <td>
+            <td class="key">Threshold</td>
+            <td class="value">
                 <select name="threshold">
                     <option value="0.01">0.01</option>
                     <option value="0.05">0.05</option>
@@ -73,43 +73,43 @@
         </tr>
     </table>
 
-    <table class="form">
+    <table class="table input-group">
         <caption>Please input optional metadata.</caption>
         <tr>
-            <td>Cell type or tissue</td>
-            <td>
-                <input type="text" name="cell" value="">
+            <td class="key">Cell type or tissue</td>
+            <td class="value">
+                <input type="text" class="form-control input-sm" name="cell" value="">
             </td>
         </tr>
         <tr>
-            <td>Perturbation</td>
-            <td>
-                <input type="text" name="perturbation" value="">
+            <td class="key">Perturbation</td>
+            <td class="value">
+                <input type="text" class="form-control input-sm" name="perturbation" value="">
             </td>
         </tr>
         <tr>
-            <td>Manipulated gene</td>
-            <td>
-                <input type="text" name="gene" value="">
+            <td class="key">Manipulated gene</td>
+            <td class="value">
+                <input type="text" class="form-control input-sm" name="gene" value="">
             </td>
         </tr>
         <tr>
-            <td>Relevant disease</td>
-            <td>
-                <input type="text" name="disease" value="">
+            <td class="key">Relevant disease</td>
+            <td class="value">
+                <input type="text" class="form-control input-sm" name="disease" value="">
             </td>
         </tr>
     </table>
 
-    <table class="form">
+    <table class="table" id="tags">
         <caption>Apply metadata tags.</caption>
         <tr>
-            <td>Tags</td>
-            <td>
-                <ul id="tags"></ul>
+            <td class="key">Tags</td>
+            <td class="value">
+                <ul></ul>
             </td>
         </tr>
     </table>
 
-    <button id="upload-button" type="submit">Extract gene lists</button>
+    <button class="btn btn-default" id="upload-button" type="submit">Extract gene lists</button>
 </form>

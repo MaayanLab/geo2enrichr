@@ -1,21 +1,22 @@
 {% extends 'wrapper.html' %}
+
 {% block body %}
 
-    <link href="static/style/index.css" rel="stylesheet" type="text/css"/>
     <link href="static/style/tags.css" rel="stylesheet" type="text/css"/>
     <script src="static/js/upload.js"></script>
-    <script src="static/js/lib/tag-it.js"></script>
+    <script src="static/lib/tag-it/tag-it.js"></script>
 
-    <p>GEO2Enrichr is a web application and two browser extensions designed to ease the extraction of signatures from studies posted on the <a href='http://www.ncbi.nlm.nih.gov/geo/' target='_blank'>Gene Expression Omnibus (GEO)</a> database as well as from custom gene expression files.</p>
-
-{#    {% include 'partial/search.html' %}#}
-
-    <div class="column left">
-        {% include 'partial/intro.html' %}
+    <div id="index-page">
+        <p id="intro-text">GEO2Enrichr is a web application and two browser extensions designed to ease the extraction of signatures from studies posted on the <a href='http://www.ncbi.nlm.nih.gov/geo/' target='_blank'>Gene Expression Omnibus (GEO)</a> database as well as from custom gene expression files.
+        </p>
+        <div class="row">
+            <div class="col-md-5">
+                {% include 'partial/intro.html' %}
+            </div>
+            <div class="col-md-7">
+                {% include 'partial/form.html' %}
+            </div>
+        </div>
     </div>
-    <div class="column right">
-        {% include 'partial/form.html' %}
-    </div>
-    <div class="clear"></div>
 
 {% endblock %}

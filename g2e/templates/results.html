@@ -1,9 +1,12 @@
 {% extends 'wrapper.html' %}
+
+{% block title %}Results{% endblock %}
+
 {% block body %}
 
     <script src="static/js/results.js"></script>
 
-    <div class="results">
+    <div id="results-page">
         <h1>Results</h1>
         <table>
             <caption class="top">Share</caption>
@@ -22,7 +25,9 @@
                     <td></td>
                     <td>
                         {% for tag in gene_signature.tags %}
-                            <a href="{{ tags_url }}/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
+                            <span class="tag">
+                                <a href="{{ tags_url }}/{{ tag.name }}">{{ tag.name }}</a>
+                            </span>
                         {% endfor %}
                     </td>
                 </tr>

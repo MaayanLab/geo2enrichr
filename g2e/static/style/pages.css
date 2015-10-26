@@ -1,0 +1,108 @@
+#index-page {
+  margin-top: 30px;
+}
+#index-page table.extensions tr:first-child {
+  padding-bottom: 10px;
+}
+#index-page table.extensions tr.last td {
+  border: none;
+}
+#index-page table.extensions tr td {
+  vertical-align: top;
+}
+#index-page table.extensions tr td p {
+  margin: 0;
+}
+#index-page table.extensions tr td:first-child {
+  width: 15%;
+}
+#index-page table td {
+  vertical-align: middle;
+}
+#index-page table td.key {
+  font-weight: bold;
+  width: 30%;
+}
+#index-page table td.value {
+  width: 70%;
+}
+#index-page #intro-text {
+  font-size: 16px;
+}
+#index-page #example-file a {
+  position: relative;
+  left: 10px;
+}
+#results-page ul {
+  padding-left: 15px;
+}
+#results-page .gene-lists {
+  /* This over-selects but we don't care since the table is filled with images. */
+}
+#results-page .gene-lists img {
+  width: 20px;
+}
+#results-page .gene-lists img:hover {
+  opacity: .5;
+}
+#results-page .gene-lists td {
+  height: 20px;
+}
+#results-page .gene-lists tr {
+  font-weight: bold;
+}
+#results-page .tag {
+  background-color: #eeeeee;
+  padding: 2px 4px;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+#results-page .tag a {
+  color: black;
+  font-weight: bold;
+}
+#results-page .tag a:hover,
+#results-page .tag a:active,
+#results-page .tag a:focus {
+  color: black;
+}
+#manual-page img,
+#pipeline-page img {
+  width: 700px;
+}
+#stats-page #platforms-bar-chart {
+  height: 1000px;
+}
+.metadata th,
+.tag th {
+  border-bottom: 2px solid #eeeeee;
+  text-align: left;
+}
+.metadata td:first-child,
+.tag td:first-child {
+  font-weight: normal !important;
+}
+.metadata .note,
+.tag .note {
+  font-size: 12px;
+  font-weight: normal;
+  margin-left: 15px;
+}
+.metadata dl,
+.tag dl {
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
+}
+.metadata dt,
+.tag dt {
+  float: left;
+  font-style: italic;
+  width: 50%;
+}
+.metadata dd,
+.tag dd {
+  float: left;
+  margin: 0;
+  width: 50%;
+}

@@ -1,8 +1,16 @@
 function buildStats(stats) {
 
+    Highcharts.setOptions({
+        colors: ['#005f99'],
+        chart: {
+            style: {
+                fontFamily: 'Open Sans'
+            }
+        }
+    });
+
     var categories = [],
         series = [],
-        value,
         platform_counts = stats.platform_counts;
 
     series[0] = {
@@ -21,19 +29,18 @@ function buildStats(stats) {
     });
 
     $.each(platform_counts, function(i, obj) {
-        categories.push(obj.platform);
-        series[0].data.push(Math.log(obj.count) / Math.LN10);
+        if (obj.count > 1) {
+            series[0].data.push(Math.log(obj.count) / Math.log(10));
+            categories.push(obj.platform);
+        }
     });
 
     $('#platforms-bar-chart').highcharts({
         chart: {
-            type: 'column'
+            type: 'bar'
         },
         title: {
-            text: 'Gene signatures by platform'
-        },
-        subtitle: {
-            text: 'Log10 Scale'
+            text: ''
         },
         xAxis: {
             categories: categories
@@ -50,7 +57,8 @@ function buildStats(stats) {
                     '<p style="margin:0;">' + this.x + '</p>' +
                     '<p style="margin:0;">' + Math.round(Math.pow(10, this.y)) + '</p>';
             },
-            useHTML: true
+            useHTML: true,
+            crosshairs: true
         },
         series: series
     });

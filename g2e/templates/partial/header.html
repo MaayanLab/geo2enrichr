@@ -1,31 +1,13 @@
-<div class="header">
-    <div id="logo">
-        <div class="wrapper">
+<div id="header" class="navbar-static-top">
+    <div class="container-full" id="logo">
+        <div class="container">
             <img src="static/image/logo-50x50.png">
             <h1>
                 <a href=""><span>GEO2</span><span class="highlight">Enrichr</span></a>
             </h1>
         </div>
     </div>
-    <div class="wrapper">
-        <nav>
-            <ul>
-                <li class="first">
-                    <a href="documentation" class="api">API</a>
-                </li>
-                <li>
-                    <a href="manual" class="manual">Manual</a>
-                </li>
-                <li>
-                    <a href="pipeline" class="pipeline">Pipeline</a>
-                </li>
-                <li>
-                    <a href="stats" class="stats">Stats</a>
-                </li>
-                <li class="last">
-                    <a href="about" class="about">About</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    {% if not use_simple_header %}
+        {% include "partial/menu.html" %}
+    {% endif %}
 </div>
