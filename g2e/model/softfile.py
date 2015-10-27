@@ -15,7 +15,7 @@ import g2e.core.softfile.softfilemanager as softfilemanager
 from g2e.model.softfilesample import SoftFileSample
 from g2e.util.requestutil import get_param_as_list
 from g2e.dataaccess.util import get_or_create
-from g2e.model.accessionnumber import AccessionNumber
+from g2e.model.geodataset import GeoDataset
 
 
 class SoftFile(db.Model):
@@ -30,7 +30,7 @@ class SoftFile(db.Model):
     is_geo = db.Column(db.Boolean)
     normalize = db.Column(db.Boolean)
     text_file = db.Column(db.String(255))
-    accession_number_fk = db.Column(db.Integer, db.ForeignKey('accession_number.id'))
+    geo_record_fk = db.Column(db.Integer, db.ForeignKey('geo_record.id'))
 
     def __init__(self, name, samples, genes, a_vals, b_vals, platform, text_file, is_geo=False, stats=None, normalize=None):
         """Constructs a SoftFile instance.
@@ -46,7 +46,7 @@ class SoftFile(db.Model):
         self.text_file = text_file
 
         if self.is_geo:
-            self.accession_number = AccessionNumber(self.name)
+            self.accession_number = GeoDataset(self.name)
 
         # These are *not* persisted to the database. Used by diffexp module.
         self.a_vals = a_vals
