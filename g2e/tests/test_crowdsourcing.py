@@ -45,6 +45,7 @@ class TestCrowdsourcing(unittest.TestCase):
 
         tag_name = 'AGING_BD2K_LINCS_DCIC_COURSERA'
         tags = [Tag(tag_name)]
+
         link = crowdsourcing.get_link(
             self.genes, self.optional_metadata, self.soft_file, tags
         )

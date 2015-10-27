@@ -25,7 +25,7 @@ class Tag(db.Model):
     gene_signatures = db.relationship('GeneSignature', secondary=gene_signatures_to_tags, backref=db.backref('tags', order_by=id))
 
     def __init__(self, name):
-        self.name = name.lower()
+        self.name = name
 
     def __repr__(self):
         return '<Tag %r>' % self.id

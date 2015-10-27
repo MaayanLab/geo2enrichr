@@ -55,7 +55,7 @@ if [[ $1 = 'dev' ]]; then
     printf '%s\n' 'var SERVER = "http://localhost:8083/g2e/";' >> $FIREFOX_JS_CONFIG
     extId="omkofmggjapmpfpijnnnnpclfejpfpmd";
 else
-    ecxho '--------------------- prod ---------------------'
+    echo '--------------------- prod ---------------------'
     printf '%s\n' 'var DEBUG = false;' >> $CHROME_JS_CONFIG
     printf '%s\n' 'var SERVER = "http://amp.pharm.mssm.edu/g2e/";' >> $CHROME_JS_CONFIG
     printf '%s\n' 'var DEBUG = false;' >> $FIREFOX_JS_CONFIG
