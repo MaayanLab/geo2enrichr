@@ -3,12 +3,16 @@
   margin-top: 20px;
   padding: 10px;
 }
-#consensus .description h3 {
+#consensus .description h4 {
   margin: 0;
 }
 #consensus .options button {
   display: block;
   margin-top: 5px;
+}
+#consensus ol {
+  margin-top: 10px;
+  padding-left: 20px;
 }
 #consensus #clustergrammer-preview {
   display: none;

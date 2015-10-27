@@ -17,6 +17,9 @@ explore_metadata = Blueprint('explore_metadata', __name__, url_prefix=Config.BAS
 
 @explore_metadata.route('/<path:metadata_name>', methods=['GET'])
 def metadata_endpoint(metadata_name):
+    if metadata_name[-1] == '/':
+        metadata_name = metadata_name[:-1]
+
     metadata_name = urlcodex.decode(metadata_name)
     metadata = dataaccess.fetch_metadata(metadata_name)
     if metadata is None:
@@ -47,8 +50,9 @@ def metadata_with_value_endpoint(metadata_name, metadata_value):
         )
     else:
         return render_template(
-            'metadata-by-value.html',
+            'metadata.html',
             metadata_name=metadata_name,
+            metadata_value=metadata_value,
             results_url=Config.BASE_RESULTS_URL,
             tag_url=Config.BASE_TAGS_URL,
             metadata=metadata

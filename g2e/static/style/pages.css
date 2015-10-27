@@ -72,9 +72,20 @@
 #stats-page #platforms-bar-chart {
   height: 1000px;
 }
-table dl {
+table td {
+  vertical-align: middle !important;
+}
+table .optional-metadata {
   background-color: #f5f5f5;
   padding: 10px;
+}
+table .optional-metadata table {
+  width: 100%;
+}
+table .optional-metadata table td:first-child {
+  font-weight: bold !important;
+  padding-right: 10px;
+  width: 30%;
 }
 .metadata th,
 .tag th {

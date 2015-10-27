@@ -100,9 +100,20 @@
 }
 
 table {
-    dl {
+    td {
+        vertical-align: middle !important;
+    }
+    .optional-metadata {
         background-color: @color-lightgray1;
         padding: 10px;
+        table {
+            width: 100%;
+            td:first-child {
+                font-weight: bold !important;
+                padding-right: 10px;
+                width: 30%;
+            }
+        }
     }
 }
 

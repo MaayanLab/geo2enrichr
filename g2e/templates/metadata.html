@@ -1,61 +1,89 @@
 {% extends 'wrapper.html' %}
+
+{% block title %}
+    {% if metadata_value %}
+        {{ metadata_name|capitalize }} - {{ metadata_value }}
+    {% else %}
+        {{ metadata_name|capitalize }}
+    {% endif %}
+{% endblock %}
+
 {% block body %}
 
     {% include 'partial/consensus.html' %}
 
     <div class="metadata">
         <h1>{{ metadata_name }} <span class="note">{{ num_tags }} gene signatures</span></h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Results Page</th>
-                    <th class="capitalize-initial">{{ metadata_name }}</th>
-                    <th>Organism</th>
-                    <th>Platform</th>
-                    <th>Optioanl metadata</th>
-                    <th>Tags</th>
-                    <th>Visualize</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in metadata %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            <a href="{{ results_url }}/{{ row.gene_signature.extraction_id }}">{{ row.gene_signature.extraction_id }}</a>
-                        </td>
-                        <td>
-                            <a href="{{ metadata_url }}/{{ metadata_name }}/{{ row.value|custom_urlencode }}">
-                                {{ row.value }}
-                            </a>
-                        </td>
-                        <td>
-                            {% for opt_meta in row.gene_signature.optional_metadata %}
-                                {% if opt_meta.name == 'organism' %}
-                                    {{ opt_meta.value }}
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                        <td class="platform">{{ row.gene_signature.soft_file.platform }}</td>
-                        <td>
-                            {% for opt_meta in row.gene_signature.optional_metadata %}
-                                {% if opt_meta.name != 'organism' %}
-                                    <dt>{{ opt_meta.name }}</dt>
-                                    <dd>{{ opt_meta.value }}</dd>
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                        <td>
-                            {% for tag in row.gene_signature.tags %}
-                                <a href="{{ tag_url }}/{{ tag.name }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}
-                            {% endfor %}
-                        </td>
-                        <td>
-                            <input type="checkbox" class="consensus" name="{{ row.gene_signature.extraction_id }}">
-                        </td>
+                        <th></th>
+                        <th>Results</th>
+                        <th>Organism</th>
+                        <th>Platform</th>
+                        <th>Optional metadata</th>
+                        <th>Tags</th>
+                        <th><i class="fa fa-check"></i></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for row in metadata %}
+                        {% set sig = row.gene_signature %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>
+                                <a href="{{ sig.extraction_id|c_results_url }}">
+                                    <i class="fa fa-file-o"></i>
+                                </a>
+                            </td>
+                            <td>
+                                {% set organism = sig.optional_metadata|c_filter_organism|c_filter_empty %}
+                                {% if organism %}
+                                    <a href="{{ organism|c_metadata_value_url('organism') }}">
+                                        {{ organism }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td class="platform">
+                                {% set platform = sig.soft_file.platform|c_filter_empty %}
+                                {% if platform %}
+                                    <a href="{{ platform|c_metadata_value_url('platform') }}">
+                                        {{ platform }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="optional-metadata">
+                                    <table>
+                                    {% for opt_meta in sig.optional_metadata|c_filter_optional_metadata %}
+                                        <tr>
+                                            <td>{{ opt_meta.name|c_replace_underscores|capitalize }}</td>
+                                            <td>
+                                                <a href="{{ opt_meta.value|c_metadata_value_url(opt_meta.name) }}">
+                                                    {{ opt_meta.value }}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </table>
+                                </div>
+                            </td>
+                            <td>
+                                {% for tag in sig.tags %}
+                                    <span class="badge">
+                                        <a href="{{ tag.name|c_tag_url }}">{{ tag.name }}</a>
+                                    </span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <input type="checkbox" class="consensus" name="{{ sig.extraction_id }}">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 {% endblock %}

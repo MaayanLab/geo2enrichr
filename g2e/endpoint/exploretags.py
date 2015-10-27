@@ -15,12 +15,10 @@ import g2e.dataaccess.dataaccess as dataaccess
 explore_tags = Blueprint('explore_tags', __name__, url_prefix=Config.BASE_TAGS_URL)
 
 
-
 @explore_tags.route('/', methods=['GET'])
 def tags_endpoint():
     tags = dataaccess.fetch_all(Tag)
-    return render_template('tags.html',
-        base_tags_url=Config.BASE_TAGS_URL,
+    return render_template('tags-all.html',
         num_tags=len(tags),
         tags=tags
     )
@@ -35,8 +33,6 @@ def tag_endpoint(tag_name):
         )
     else:
         return render_template('tag.html',
-            base_url=Config.BASE_RESULTS_URL,
-            base_tags_url=Config.BASE_TAGS_URL,
             num_tags=len(tag.gene_signatures),
             tag=tag
         )

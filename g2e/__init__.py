@@ -12,7 +12,6 @@ import sys
 from flask import Flask
 from flask.ext.cors import CORS
 from flask.ext.sqlalchemy import SQLAlchemy
-from g2e.util.jinjafilters import custom_urlencode
 
 from g2e.config import Config
 
@@ -22,7 +21,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_POOL_RECYCLE'] = Config.SQLALCHEMY_POOL_RECYCLE
 db = SQLAlchemy(app)
 cors = CORS(app)
-app.jinja_env.filters['custom_urlencode'] = custom_urlencode
 
 if not Config.DEBUG:
     # Configure Apache logging.

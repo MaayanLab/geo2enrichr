@@ -12,11 +12,15 @@
             </thead>
             <tbody>
                 {% for tag in tags %}
-                    <tr>
-                        <td>
-                            <a href="{{ base_tags_url }}/{{ tag.name }}">{{ tag.name }}</a>
-                        </td>
-                    </tr>
+                    {% if tag.name|c_filter_empty %}
+                        <tr>
+                            <td>
+                                <span class="badge">
+                                    <a href="{{ tag.name|c_tag_url }}">{{ tag.name }}</a>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>

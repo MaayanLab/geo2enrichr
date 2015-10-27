@@ -80,11 +80,9 @@
             {% for opt_meta in gene_signature.optional_metadata %}
                 {% if opt_meta.name != 'user_key' %}
                     <tr>
-                        <td class="capitalize-initial">{{ opt_meta.name|replace("_", " ") }}</td>
+                        <td>{{ opt_meta.name|c_replace_underscores|capitalize }}</td>
                         <td>
-                            <span class="badge">
-                                <a href="{{ metadata_url }}/{{ opt_meta.name }}/{{ opt_meta.value }}">{{ opt_meta.value }}</a>
-                            </span>
+                            <a href="{{ metadata_url }}/{{ opt_meta.name }}/{{ opt_meta.value }}">{{ opt_meta.value }}</a>
                         </td>
                     </tr>
                 {% endif %}

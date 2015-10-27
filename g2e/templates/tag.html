@@ -1,61 +1,73 @@
 {% extends 'wrapper.html' %}
+
+{% block title %}{{ tag.name }}{% endblock %}
+
 {% block body %}
 
     {% include 'partial/consensus.html' %}
 
     <div class="tag">
         <h1>{{ tag.name }}<span class="note">{{ num_tags }} gene signatures</span></h1>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Results</th>
-                    <th>Organism</th>
-                    <th>Platform</th>
-                    <th>Optional Metadata</th>
-                    <th>Visualize</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for gene_signature in tag.gene_signatures %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>
-                            <a href="{{ base_url }}/{{ gene_signature.extraction_id }}">
-                                <i class="fa fa-file-o"></i>
-                            </a>
-                        </td>
-                        <td>
-                            {% for opt_meta in gene_signature.optional_metadata %}
-                                {% if opt_meta.name == 'organism' %}
-                                    {{ opt_meta.value }}
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                        <td class="platform">
-                            {{ gene_signature.soft_file.platform }}
-                        </td>
-                        <td>
-                            <dl>
-                            {% for opt_meta in gene_signature.optional_metadata %}
-                                {% if opt_meta.name != 'organism' %}
-                                    <dt class="capitalize-initial">{{ opt_meta.name }}</dt>
-                                    <dd>
-                                        <span class="badge">
-                                            <a href="{{ base_tags_url }}/{{ opt_meta.value }}" target="_blank">{{ opt_meta.value }}</a>
-                                        </span>
-                                    </dd>
-                                {% endif %}
-                            {% endfor %}
-                            </dl>
-                        </td>
-                        <td>
-                            <input type="checkbox" class="consensus" name="{{ gene_signature.extraction_id }}">
-                        </td>
+                        <th></th>
+                        <th>Results</th>
+                        <th>Organism</th>
+                        <th>Platform</th>
+                        <th>Optional Metadata</th>
+                        <th><i class="fa fa-check"></i></th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for gene_signature in tag.gene_signatures %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>
+                                <a href="{{ gene_signature.extraction_id|c_results_url }}">
+                                    <i class="fa fa-file-o"></i>
+                                </a>
+                            </td>
+                            <td>
+                                {% set organism = gene_signature.optional_metadata|c_filter_organism|c_filter_empty %}
+                                {% if organism %}
+                                    <a href="{{ organism|c_metadata_value_url('organism') }}">
+                                        {{ organism }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td class="platform">
+                                <a href="{{ gene_signature.soft_file.platform|c_metadata_value_url('platform') }}">
+                                    {{ gene_signature.soft_file.platform|c_filter_empty }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
+                                    <div class="optional-metadata">
+                                        <table>
+                                        {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                                            <tr>
+                                                <td>{{ opt_meta.name|c_replace_underscores|capitalize }}</td>
+                                                <td>
+                                                    <a href="{{ opt_meta.value|c_metadata_value_url(opt_meta.name) }}">
+                                                        {{ opt_meta.value }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </table>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <input type="checkbox" class="consensus" name="{{ gene_signature.extraction_id }}">
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 {% endblock %}
