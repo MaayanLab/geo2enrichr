@@ -21,7 +21,7 @@ class TestAvgDups(unittest.TestCase):
 		self.assertEqual(len(vals), 3)
 		self.assertEqual(len(vals), len(genes))
 
-	def testData(self):
+	def testMatrix(self):
 		genes_ans = np.array(['A', 'B', 'C'])
 		vals_ans  = np.array([
 			[1.5, 1.5, 5.0, 5.0],

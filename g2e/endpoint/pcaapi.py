@@ -6,7 +6,7 @@ __contact__ = "avi.maayan@mssm.edu"
 """
 
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 import json
 
 from g2e.core.pca import pca
@@ -22,7 +22,7 @@ def perform_gene_signatures_pca():
     """Performs PCA on a list of gene signatures, referenced by extraction_id.
     """
     pca_data = pca.from_gene_signatures(request.json)
-    return pca_data
+    return jsonify(pca_data)
 
 
 @pca_blueprint.route('/<extraction_id>', methods=['GET'])

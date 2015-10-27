@@ -123,7 +123,7 @@ $(function() {
             return '<a href="results/' + this.key + '" target="_blank">' + this.key + '</a>';
         }
         $container.fadeIn(FADE_IN_SPEED);
-        plotPCA(JSON.parse(data), 'pca-visualization', tooltipFormatter);
+        plotPCA(data, 'pca-visualization', tooltipFormatter);
         $container.find('button').click(function() {
             $container.fadeOut(FADE_OUT_SPEED);
         });

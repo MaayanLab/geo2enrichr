@@ -11,6 +11,7 @@ import numpy as np
 from sklearn import decomposition
 
 import g2e.dataaccess.dataaccess as dataaccess
+from g2e.core.softfile.softcleaner import avg_dups
 
 
 def from_gene_signatures(extraction_ids):
@@ -19,15 +20,18 @@ def from_gene_signatures(extraction_ids):
 
         # TODO: Fetch all gene signatures with a single DB query.
         gene_sig = dataaccess.fetch_gene_signature(extraction_id)
-        index = []
-        data = []
+        genes = []
+        values = []
         for rg in gene_sig.gene_lists[2].ranked_genes:
-            index.append(rg.gene.name)
-            data.append(rg.value)
-        data_frames.append(pandas.DataFrame(
-            index=index,
-            data=data
-        ))
+            genes.append(rg.gene.name)
+            values.append([rg.value])
+
+        indices, data = avg_dups(np.array(genes), np.array(values))
+        new_df = pandas.DataFrame(
+            index=indices,
+            data=[x[0] for x in data]
+        )
+        data_frames.append(new_df)
 
     df = pandas.concat(data_frames, axis=1)
     df = df.fillna(0)
