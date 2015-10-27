@@ -26,6 +26,10 @@ def from_gene_signatures(extraction_ids):
             genes.append(rg.gene.name)
             values.append([rg.value])
 
+        # In principle, there should never be duplicates in our gene lists,
+        # but an earlier version of GEO2Enrichr accidentally did not average
+        # duplicates. Thus, any extraction ID for which this is the case will
+        # fail if this step is not performed.
         indices, data = avg_dups(np.array(genes), np.array(values))
         new_df = pandas.DataFrame(
             index=indices,
