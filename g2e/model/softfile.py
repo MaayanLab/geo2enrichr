@@ -28,17 +28,18 @@ class SoftFile(db.Model):
 
     gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'), nullable=False)
     dataset_fk = db.Column(db.Integer, db.ForeignKey('dataset.id'), nullable=False)
-    #is_geo = db.Column(db.Boolean)
-
     samples = db.relationship('SoftFileSample', backref='soft_files')
-    #name = db.Column(db.String(200))
+
     normalize = db.Column(db.Boolean)
     text_file = db.Column(db.String(255))
+
+    # TODO: Drop after transfering data!
+    is_geo = db.Column(db.Boolean)
+    name = db.Column(db.String(200))
 
     def __init__(self, samples, dataset, text_file, genes, a_vals, b_vals, normalize=False, stats=None):
         """Constructs a SoftFile instance.
         """
-        #self.name = name
         self.samples = samples
         self.dataset = dataset
         self.text_file = text_file
