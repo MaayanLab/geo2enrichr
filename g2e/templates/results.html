@@ -28,16 +28,34 @@
             </section>
         {% endif %}
 
+
+        {% set sf = gene_signature.soft_file %}
         <table class="table">
             <caption>SOFT file</caption>
+
             <tr>
-                <td>Description</td>
-                {% if gene_signature.soft_file.is_geo %}
-                    <td><a href="{{ geo_url }}" target="_blank">{{ gene_signature.soft_file.name }}</a></td>
-                {% else %}
-                    <td>{{ gene_signature.soft_file.name }}</td>
-                {% endif %}
+                <td>Title</td>
+                <td>{{ sf.dataset.title }}</td>
             </tr>
+            {% if sf.dataset.record_type == 'geo' %}
+                <tr>
+                    <td>Accession</td>
+                    <td><a href="{{ geo_url }}" target="_blank">{{ sf.dataset.accession }}</a></td>
+                </tr>
+                {% if sf.dataset.summary %}
+                    <tr>
+                        <td>Summary</td>
+                        <td>{{ sf.data_record.summary }}</td>
+                    </tr>
+                {% endif %}
+            {% endif %}
+            {% if sf.dataset.organism %}
+                <tr>
+                    <td>Organism</td>
+                    <td>{{ sf.dataset.organism }}</td>
+                </tr>
+            {% endif %}
+
             <tr>
                 <td>Platform</td>
                 <td>{{ gene_signature.soft_file.platform }}</td>
@@ -77,15 +95,13 @@
             </tr>
             {% endif %}
 
-            {% for opt_meta in gene_signature.optional_metadata %}
-                {% if opt_meta.name != 'user_key' %}
-                    <tr>
-                        <td>{{ opt_meta.name|c_replace_underscores|capitalize }}</td>
-                        <td>
-                            <a href="{{ metadata_url }}/{{ opt_meta.name }}/{{ opt_meta.value }}">{{ opt_meta.value }}</a>
-                        </td>
-                    </tr>
-                {% endif %}
+            {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                <tr>
+                    <td>{{ opt_meta.name|c_replace_underscores|capitalize }}</td>
+                    <td>
+                        <a href="{{ metadata_url }}/{{ opt_meta.name }}/{{ opt_meta.value }}">{{ opt_meta.value }}</a>
+                    </td>
+                </tr>
             {% endfor %}
         </table>
 
@@ -123,7 +139,7 @@
                         <td title="Perform principle angle enrichment analysis against over 70 gene set libraries.">PAEA</td>
                     {% endif %}
                     {% if use_crowdsourcing %}
-                        <td title="Crowdsourcin">Crowdsourcing</td>
+                        <td title="Crowdsourcing">Crowdsourcing</td>
                     {% endif %}
                 </tr>
             </thead>

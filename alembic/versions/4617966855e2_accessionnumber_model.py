@@ -12,16 +12,16 @@ down_revision = '1389749e3669'
 branch_labels = None
 depends_on = None
 
-import requests
 import json
+import time
 
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
+import requests
 
-from g2e.model.georecord import GeoRecord
 from g2e.model.geodataset import GeoDataset
-from g2e.model.geoprofile import GeoProfile
+from g2e.model.customdataset import CustomDataset
 from g2e.model.genesignature import GeneSignature
 
 
@@ -31,87 +31,122 @@ Session = sessionmaker()
 def upgrade():
 
     # op.create_table(
-    #     'geo_record',
+    #     'dataset',
     #     sa.Column('id', sa.Integer, primary_key=True),
-    #     sa.Column('accession', sa.String(255), nullable=False),
+    #     sa.Column('title', sa.Text),
+    #     sa.Column('file_path', sa.Text, nullable=False),
     #     sa.Column('record_type', sa.String(32), nullable=False),
-    #     sa.Column('title', sa.String(255)),
+    #     sa.Column('organism', sa.String(255)),
+    #
+    #     # GEO specific columns.
+    #     sa.Column('accession', sa.String(255)),
+    #     sa.Column('platform', sa.String(32)),
     #     sa.Column('summary', sa.Text)
     # )
     #
     # op.add_column('soft_file',
-    #     sa.Column('geo_record_fk', sa.Integer)
+    #     sa.Column('dataset_fk', sa.Integer)
     # )
     #
-    # op.create_foreign_key(None, 'soft_file', 'geo_record', ['geo_record_fk'], ['id'])
+    # op.create_foreign_key(None, 'soft_file', 'dataset', ['dataset_fk'], ['id'])
+
     _create_accession_numbers()
 
     raise Exception('Don\'t finish!')
 
 
 def _create_accession_numbers():
-
+    """Create new data records for every extracted gene signature.
+    """
     conn = op.get_bind()
     session = Session(bind=conn)
+    for idx, sig in enumerate(session.query(GeneSignature)):
+        if sig.soft_file.is_geo == 1:
+            dataset_id = _load_geo_record(session, sig.soft_file)
+        else:
+            dataset_id = _load_custom(session, sig.soft_file)
 
-    for sig in session.query(GeneSignature):
-        is_geo = sig.soft_file.is_geo == 1
-        if is_geo:
-            accession = sig.soft_file.name
-            if 'GDS' in accession:
-                _load(session, accession, True)
-            else:
-                _load(session, accession, False)
+        sig.soft_file.dataset_fk = dataset_id
+        print '%s - %s' % (idx, sig.soft_file.name)
+        session.commit()
 
 
+def _load_geo_record(session, soft_file): #session, accession, file_path, is_gds, soft_file):
+    data = _load_data_from_gds(session, soft_file)
+    accession = soft_file.name
+    file_path = soft_file.text_file
+    platform = data['gpl'] if 'gpl' in data else soft_file.platform
+    title = data['title'] if 'title' in data else None
+    organism = data['taxon'] if 'taxon' in data else None
+    return _get_or_create_geo_record(session, accession, title, platform, file_path, organism, None)
 
-def _load(session, accession, is_gds):
-    url = _get_url(accession)
+
+def _load_data_from_gds(session, soft_file):
+    accession = soft_file.name
     http_session = requests.session()
-    response = http_session.get(url)
-    if response.ok:
+    if 'GDS' in accession:
+        url = _get_gds_url(accession[3:])
+        response = http_session.get(url)
         acc_id = accession[3:]
         data = json.loads(response.text)['result'][acc_id]
-        title = data['title']
-        if is_gds:
-            summary = data['summary']
-            _get_or_create_gds(session, accession, title, summary)
-        else:
-            _get_or_create_gse(session, accession, title)
+    else:
+        search_url = _get_gse_search_url(accession)
+        response = http_session.get(search_url)
+        search_data = json.loads(response.text)['esearchresult']
+        acc_id = search_data['idlist'][0]
+        url = _get_gds_url(acc_id)
+        response = http_session.get(url)
+        data = json.loads(response.text)['result'][acc_id]
+    return data
 
 
-def _get_or_create_gds(session, accession, title, summary):
-    instance = session.query(GeoRecord).filter_by(accession=accession).first()
+# GEO API handlers
+# --------------
+
+BASE_GEO_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/%s.fcgi?&retmax=1&retmode=json&db=gds'
+
+
+def _get_gds_url(acc_id):
+    url = BASE_GEO_URL % 'esummary'
+    return url + '&id=' + acc_id
+
+
+def _get_gse_search_url(acc_full):
+    url = BASE_GEO_URL % 'esearch'
+    return url + '&term=' + acc_full
+
+
+# Data accessors
+# --------------
+
+def _get_or_create_geo_record(session, accession, title, platform, file_path, organism, summary):
+    instance = session.query(GeoDataset).filter_by(accession=accession).first()
     if not instance:
-        print accession
         instance = GeoDataset(
             accession=accession,
             title=title,
-            summary=summary,
-            record_type='dataset'
+            platform=platform,
+            file_path=file_path,
+            organism=organism,
+            summary=summary
         )
         session.add(instance)
-        session.commit()
+        session.flush()
+        session.refresh(instance)
+        return instance.id
+    return instance.id
 
 
-def _get_or_create_gse(session, accession, title):
-    instance = session.query(GeoRecord).filter_by(accession=accession).first()
-    if not instance:
-        print accession
-        instance = GeoProfile(
-            accession=accession,
-            title=title,
-            record_type='profile'
-        )
-        session.add(instance)
-        session.commit()
+def _load_custom(session, soft_file):
+    title = soft_file.name
+    instance = CustomDataset(
+        title=title,
+        file_path=soft_file.text_file
+    )
+    session.add(instance)
+    session.flush()
+    return instance.id
 
-
-def _get_url(accession):
-    is_gds = 'GDS' in accession
-    BASE_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?&retmax=1&retmode=json'
-    db = 'gds' if is_gds else 'geoprofiles'
-    return '&'.join([BASE_URL, 'db=' + db, 'id=' + accession[3:]])
 
 
 # def _transfer_data():
@@ -162,6 +197,7 @@ def _get_url(accession):
     # data_to_transfer2 = data_to_transfer[cutoff:]
     # op.bulk_insert(link_tbl, data_to_transfer1)
     # op.bulk_insert(link_tbl, data_to_transfer2)
+
 
 if __name__ == '__main__':
     upgrade()

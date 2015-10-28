@@ -30,10 +30,10 @@
                                 </a>
                             </td>
                             <td>
-                                {% set organism = gene_signature.optional_metadata|c_filter_organism|c_filter_empty %}
-                                {% if organism %}
-                                    <a href="{{ organism|c_metadata_value_url('organism') }}">
-                                        {{ organism }}
+                                {% set dataset = gene_signature.soft_file.dataset %}
+                                {% if dataset.organism %}
+                                    <a href="{{ dataset.organism|c_metadata_value_url('organism') }}">
+                                        {{ dataset.organism }}
                                     </a>
                                 {% endif %}
                             </td>

@@ -33,10 +33,11 @@ def c_filter_organism(context, value):
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_filter_optional_metadata')
-def c_filter_organism(context, value):
+def c_filter_optional_metadata(context, value):
     results = []
     for metadata in value:
-        if (metadata.name == 'organism' or
+        if (
+            #metadata.name == 'organism' or
             metadata.name == 'user_key' or
             metadata.name == 'userKey' or
             metadata.name == 'userEmail' or

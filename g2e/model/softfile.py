@@ -30,7 +30,7 @@ class SoftFile(db.Model):
     is_geo = db.Column(db.Boolean)
     normalize = db.Column(db.Boolean)
     text_file = db.Column(db.String(255))
-    geo_record_fk = db.Column(db.Integer, db.ForeignKey('geo_record.id'))
+    dataset_fk = db.Column(db.Integer, db.ForeignKey('dataset.id'), nullable=True)
 
     def __init__(self, name, samples, genes, a_vals, b_vals, platform, text_file, is_geo=False, stats=None, normalize=None):
         """Constructs a SoftFile instance.
