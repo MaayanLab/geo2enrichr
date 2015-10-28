@@ -31,7 +31,7 @@ class OptionalMetadata(db.Model):
         """Helper method for constructing known optional metadata.
         """
         optional_metadata = []
-        for key in ['organism', 'cell', 'perturbation', 'disease']:
+        for key in ['gene', 'cell', 'perturbation', 'disease']:
             if key in args:
                 value = args[key]
                 optional_metadata.append(OptionalMetadata(key, value))

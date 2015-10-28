@@ -15,6 +15,7 @@ from g2e.model.genelist import GeneList
 from g2e.model.genesignature import GeneSignature
 from g2e.model.softfile import SoftFile
 from g2e.model.tag import Tag
+from g2e.model.geodataset import GeoDataset
 from g2e.model.optionalmetadata import OptionalMetadata
 
 

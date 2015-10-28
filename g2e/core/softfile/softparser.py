@@ -31,7 +31,8 @@ def _parse_file(filename):
     with open(filename, 'rU') as csvfile:
         reader = csv.reader(csvfile, delimiter='\t')
         # First line should be column names.
-        discard = next(csvfile)
+        names = next(csvfile)
+        names = names.strip().split('\t')
         samples = next(csvfile)
         samples = samples.strip().split('\t')
 
@@ -46,7 +47,7 @@ def _parse_file(filename):
             b_row = line[idx:]
             a_vals.append([float(pv) for pv in a_row])
             b_vals.append([float(pv) for pv in b_row])
-    return (genes, a_vals, b_vals, samples)
+    return (genes, a_vals, b_vals, zip(names, samples))
 
 
 def _parse_geo(filename, platform, samples):

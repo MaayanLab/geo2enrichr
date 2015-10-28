@@ -35,8 +35,8 @@ def results_page(results_id):
         show_viz = False
 
     geo_url = None
-    filename = gene_signature.soft_file.name
-    if gene_signature.soft_file.is_geo:
+    filename = gene_signature.soft_file.dataset.title
+    if gene_signature.soft_file.dataset.record_type == 'geo':
         if 'GDS' in filename:
             geo_url = 'http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=' + filename
         else:

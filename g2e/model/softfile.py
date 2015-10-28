@@ -16,6 +16,8 @@ from g2e.model.softfilesample import SoftFileSample
 from g2e.util.requestutil import get_param_as_list
 from g2e.dataaccess.util import get_or_create
 from g2e.model.geodataset import GeoDataset
+from g2e.model.customdataset import CustomDataset
+from g2e.dataaccess import datasetdal
 
 
 class SoftFile(db.Model):
@@ -23,34 +25,30 @@ class SoftFile(db.Model):
     """
     __tablename__ = 'soft_file'
     id = db.Column(db.Integer, primary_key=True)
-    gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'))
+
+    gene_signature_fk = db.Column(db.Integer, db.ForeignKey('gene_signature.id'), nullable=False)
+    dataset_fk = db.Column(db.Integer, db.ForeignKey('dataset.id'), nullable=False)
+    #is_geo = db.Column(db.Boolean)
+
     samples = db.relationship('SoftFileSample', backref='soft_files')
-    name = db.Column(db.String(200))
-    platform = db.Column(db.String(200))
-    is_geo = db.Column(db.Boolean)
+    #name = db.Column(db.String(200))
     normalize = db.Column(db.Boolean)
     text_file = db.Column(db.String(255))
-    dataset_fk = db.Column(db.Integer, db.ForeignKey('dataset.id'), nullable=True)
 
-    def __init__(self, name, samples, genes, a_vals, b_vals, platform, text_file, is_geo=False, stats=None, normalize=None):
+    def __init__(self, samples, dataset, text_file, genes, a_vals, b_vals, normalize=False, stats=None):
         """Constructs a SoftFile instance.
         """
-        # This should only be called via the class methods.
-        self.name = name
+        #self.name = name
         self.samples = samples
-        self.genes = genes
-        self.is_geo = is_geo
-        self.platform = platform
-        self.stats = stats
-        self.normalize = normalize
+        self.dataset = dataset
         self.text_file = text_file
-
-        if self.is_geo:
-            self.accession_number = GeoDataset(self.name)
+        self.normalize = normalize
 
         # These are *not* persisted to the database. Used by diffexp module.
+        self.genes = genes
         self.a_vals = a_vals
         self.b_vals = b_vals
+        self.stats = stats
 
     def __repr__(self):
         return '<SoftFile %r>' % self.id
@@ -59,30 +57,43 @@ class SoftFile(db.Model):
     def from_geo(cls, args):
         """Constructs a SoftFile
         """
-        name = args['dataset']
-        if not softfilemanager.file_exists(name):
-            softfilemanager.download(name)
+        accession = args['dataset']
 
-        platform = args['platform']
-        is_geo = True
+        if not softfilemanager.file_exists(accession):
+            softfilemanager.download(accession)
+
+        dataset = datasetdal.get(accession)
+        if dataset == None:
+            platform = args['platform']
+            organism = args['organism'] if 'organism' in args else 'TODO'
+            title = args['title']       if 'title'    in args else 'TODO'
+            summary = args['summary']   if 'summary'  in args else 'TODO'
+            dataset = GeoDataset(
+                accession=accession,
+                platform=platform,
+                organism=organism,
+                title=title,
+                summary=summary
+            )
+
         a_cols = get_param_as_list(args, 'A_cols')
         b_cols = get_param_as_list(args, 'B_cols')
 
         # Use get_or_create to track GSMs. We don't do this for custom files.
-        samples = [get_or_create(SoftFileSample, name=sample, is_control=True) for sample in a_cols]\
-            + [get_or_create(SoftFileSample, name=sample, is_control=False) for sample in b_cols]
+        control      = [get_or_create(SoftFileSample, name=sample, is_control=True)  for sample in a_cols]
+        experimental = [get_or_create(SoftFileSample, name=sample, is_control=False) for sample in b_cols]
+        samples = control + experimental
 
-        genes, a_vals, b_vals, selections, stats = softparser.parse(name, is_geo, platform, samples)
+        genes, a_vals, b_vals, selections, stats = softparser.parse(accession, True, dataset.platform, samples)
         normalize = True if ('normalize' not in args or args['normalize'] == 'True') else False
         genes, a_vals, b_vals = softcleaner.clean(genes, a_vals, b_vals, normalize)
 
-        text_file = softfilemanager.write(name, platform, normalize, genes, a_vals, b_vals, samples, selections, stats)
+        text_file = softfilemanager.write(accession, dataset.platform, normalize, genes, a_vals, b_vals, samples, selections, stats)
 
         return cls(
-            name, samples, genes,
-            a_vals, b_vals, platform,
-            text_file,
-            is_geo=is_geo, stats=stats, normalize=normalize
+            samples, dataset, text_file,
+            genes, a_vals, b_vals,
+            stats=stats, normalize=normalize
         )
 
     @classmethod
@@ -95,11 +106,22 @@ class SoftFile(db.Model):
             name = str(time.time())[:10]
         text_file = softfilemanager.save(name, file_obj)
         genes, a_vals, b_vals, samples = softparser.parse(name, is_geo=False)
-        samples = [SoftFileSample(x, True) for x in samples if x == '0']\
-            + [SoftFileSample(x, False) for x in samples if x == '1']
-        platform = args['platform'] if 'platform' in args else None
 
-        return cls(name, samples, genes, a_vals, b_vals, platform, text_file)
+        control =      [SoftFileSample(x[0], True)  for x in samples if x[1] == '0']
+        experimental = [SoftFileSample(x[0], False) for x in samples if x[1] == '1']
+        samples = control + experimental
+
+        # TODO: Remove this from the web user interface?
+        #platform = args['platform'] if 'platform' in args else None
+
+        organism = args['organism'] if 'organism' in args else None
+
+        dataset = CustomDataset(
+            title=name,
+            organism=organism
+        )
+
+        return cls(samples, dataset, text_file, genes, a_vals, b_vals)
 
     @property
     def serialize(self):

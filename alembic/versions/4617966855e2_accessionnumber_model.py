@@ -34,7 +34,6 @@ def upgrade():
     #     'dataset',
     #     sa.Column('id', sa.Integer, primary_key=True),
     #     sa.Column('title', sa.Text),
-    #     sa.Column('file_path', sa.Text, nullable=False),
     #     sa.Column('record_type', sa.String(32), nullable=False),
     #     sa.Column('organism', sa.String(255)),
     #
@@ -50,7 +49,12 @@ def upgrade():
     #
     # op.create_foreign_key(None, 'soft_file', 'dataset', ['dataset_fk'], ['id'])
 
-    _create_accession_numbers()
+    # TODO:
+    #op.drop_column('soft_file', 'is_geo')
+    #op.drop_column('soft_file', 'name')
+    #op.drop_column('soft_file', 'platform')
+
+    #_create_accession_numbers()
 
     raise Exception('Don\'t finish!')
 
@@ -71,14 +75,13 @@ def _create_accession_numbers():
         session.commit()
 
 
-def _load_geo_record(session, soft_file): #session, accession, file_path, is_gds, soft_file):
+def _load_geo_record(session, soft_file):
     data = _load_data_from_gds(session, soft_file)
     accession = soft_file.name
-    file_path = soft_file.text_file
     platform = data['gpl'] if 'gpl' in data else soft_file.platform
     title = data['title'] if 'title' in data else None
     organism = data['taxon'] if 'taxon' in data else None
-    return _get_or_create_geo_record(session, accession, title, platform, file_path, organism, None)
+    return _get_or_create_geo_record(session, accession, title, platform, organism, None)
 
 
 def _load_data_from_gds(session, soft_file):
@@ -119,14 +122,13 @@ def _get_gse_search_url(acc_full):
 # Data accessors
 # --------------
 
-def _get_or_create_geo_record(session, accession, title, platform, file_path, organism, summary):
+def _get_or_create_geo_record(session, accession, title, platform, organism, summary):
     instance = session.query(GeoDataset).filter_by(accession=accession).first()
     if not instance:
         instance = GeoDataset(
             accession=accession,
             title=title,
             platform=platform,
-            file_path=file_path,
             organism=organism,
             summary=summary
         )
@@ -140,8 +142,7 @@ def _get_or_create_geo_record(session, accession, title, platform, file_path, or
 def _load_custom(session, soft_file):
     title = soft_file.name
     instance = CustomDataset(
-        title=title,
-        file_path=soft_file.text_file
+        title=title
     )
     session.add(instance)
     session.flush()

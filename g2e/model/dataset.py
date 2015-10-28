@@ -15,7 +15,6 @@ class Dataset(db.Model):
     __tablename__ = 'dataset'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
-    file_path = db.Column(db.Text, nullable=False)
     record_type = db.Column(db.String(32), nullable=False)
     summary = db.Column(db.Text)
     organism = db.Column(db.String(255))
@@ -27,7 +26,6 @@ class Dataset(db.Model):
 
     def __init__(self, **kwargs):
         self.title = kwargs['title']
-        self.file_path = kwargs['file_path']
         if 'summary' in kwargs:
             self.summary = kwargs['summary']
         if 'organism' in kwargs:

@@ -25,14 +25,3 @@ class GeoDataset(Dataset):
 
     def __repr__(self):
         return '<GeoDataset %r>' % self.id
-
-    def is_dataset(self):
-        pass
-
-    def is_series(self):
-        pass
-
-    def get_url(self):
-        """Returns a URL to the resource on the GEO website.
-        """
-        pass
