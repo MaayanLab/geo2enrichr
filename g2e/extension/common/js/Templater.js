@@ -1,7 +1,7 @@
 
 var Templater = function(IMAGE_PATH) {
 
-    var G2E_TITLE = 'g2e-title',
+    var G2E_KEY = 'g2e-key',
         G2E_VALUE = 'g2e-value',
         G2E_SELECT = 'g2e-select',
         G2E_TEXT = 'g2e-text';
@@ -9,7 +9,7 @@ var Templater = function(IMAGE_PATH) {
     var modal = '' +
         '<div id="g2e-overlay">' +
             '<div id="g2e-modal">' +
-                '<div id="' + G2E_TITLE + '">' +
+                '<div id="g2e-app-title">' +
                     '<a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">' +
                         '<img src="' + IMAGE_PATH + '">' +
                         '<span>GEO2</span>' +
@@ -26,30 +26,30 @@ var Templater = function(IMAGE_PATH) {
                             '<table class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please verify that your data is correct.</caption>' +
                                 '<tr id="g2e-dataset">' +
-                                    '<td class="' + G2E_TITLE + '">Accession num.</td>' +
+                                    '<td class="' + G2E_KEY + '">Accession num.</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
-                                '<tr id="g2e-platform">' +
-                                    '<td class="' + G2E_TITLE + '">Platform</td>' +
+                                '<tr id="g2e-title">' +
+                                    '<td class="' + G2E_KEY + '">Title</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-organism">' +
-                                    '<td class="' + G2E_TITLE + '">Organism</td>' +
+                                    '<td class="' + G2E_KEY + '">Organism</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-A_cols">' +
-                                    '<td class="' + G2E_TITLE + '">Control samples</td>' +
+                                    '<td class="' + G2E_KEY + '">Control samples</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-B_cols" class="g2e-last">' +
-                                    '<td class="' + G2E_TITLE + '">Treatment or condition samples</td>' +
+                                    '<td class="' + G2E_KEY + '">Treatment or condition samples</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                             '</table>' +
                             '<table class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please select differential expression analysis options.</caption>' +
                                 '<tr id="g2e-diffexp">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Differential expression method' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -60,7 +60,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-cutoff">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Cutoff' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -72,7 +72,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-correction-method" class="g2e-ttest">'+
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Correction method' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -83,7 +83,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-threshold" class="g2e-ttest">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Threshold' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -94,7 +94,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-normalize">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Transform and normalize if necessary&#42;' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -108,7 +108,7 @@ var Templater = function(IMAGE_PATH) {
                             '<table id="g2e-metadata" class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please fill out these optional annotations.</caption>' +
                                 '<tr id="g2e-cell">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Cell type or tissue' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
@@ -116,7 +116,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-perturbation">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Perturbation' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
@@ -124,7 +124,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-gene" class="ui-widget">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         '<label for="g2e-geneList">Manipulated gene</label>' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
@@ -132,7 +132,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-disease" class="ui-widget g2e-last">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         '<label for="g2e-diseaseList">Relevant disease</label>' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' g2e-last">' +
@@ -143,7 +143,7 @@ var Templater = function(IMAGE_PATH) {
                             '<table class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please apply metadata tags.</caption>' +
                                 '<tr id="g2e-cell">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Metadata Tags' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
@@ -225,7 +225,8 @@ var Templater = function(IMAGE_PATH) {
                 '<td>' +
                     '<input class="g2e-chkbx g2e-experimental" type="checkbox" />' +
                 '</td>'
-        }
+        },
+        platformNotSupported: '<p>This platform is not supported.</p>'
     };
 
     return {
@@ -241,7 +242,7 @@ var Templater = function(IMAGE_PATH) {
         getTableRow: function(value, id) {
             return $('' +
                 '<tr id="' + id + '">' +
-                    '<td class="' + G2E_TITLE + '">' + value + '</td>' +
+                    '<td class="' + G2E_KEY + '">' + value + '</td>' +
                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
                         '<input placeholder="...">' +
                     '</td>' +

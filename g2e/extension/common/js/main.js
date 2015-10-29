@@ -1,27 +1,35 @@
 
 var main = function() {
 
-    var page = Page();
+    var events = Events(),
+        page = Page();
 
     if (page.isDataset()) {
-        ScreenScraper(page, SUPPORTED_PLATFORMS, function(screenScraper) {
+        ScreenScraper(events, page, SUPPORTED_PLATFORMS, function(screenScraper) {
+
+            //events, page, screenScraper, templater
+            var notifier = Notifier(DEBUG),
+                templater = Templater(IMAGE_PATH),
+                uiEmbedder = UiEmbedder(events, page, screenScraper, templater),
+                tagger,
+                comm,
+                eUtilsApi,
+                userInputHandler;
+
             if (screenScraper.isSupportedPlatform()) {
+                tagger = Tagger(events, templater);
+                comm =  Comm(events, LoadingScreen, notifier, SERVER);
+                eUtilsApi = EUtilsApi(comm, events, page, screenScraper);
 
-                var events = Events(),
-                    notifier = Notifier(DEBUG),
-                    templater = Templater(IMAGE_PATH),
-                    tagger = Tagger(events, templater),
-                    comm =  Comm(events, LoadingScreen, notifier, SERVER),
-                    userInputHandler,
-
-                    // TODO: Use this! It returns all the metadata we need.
-                    eUtilsApi = EUtilsApi(comm, page, screenScraper);
-
-                UiEmbedder(events, page, screenScraper, templater);
+                eUtilsApi.init();
+                uiEmbedder.embed();
                 userInputHandler = UserInputHandler(comm, events, notifier, screenScraper, tagger);
                 ModalBox(events, tagger, templater, userInputHandler);
 
                 events.fire('g2eLoaded');
+            } else {
+                uiEmbedder.abort();
+
             }
         });
     }

@@ -3,22 +3,33 @@
  */
 function UiEmbedder(events, page, screenScraper, templater) {
 
-    (function embed() {
+    function embed(platformNotSupported) {
         var $modalButtonParent = screenScraper.getModalButtonParent();
         if (page.isGds()) {
-            embedInGdsPage($modalButtonParent);
+            embedInGdsPage($modalButtonParent, platformNotSupported);
         } else {
             var $metadataTableParent = screenScraper.getMetadataTableParent();
-            embedInGsePage($modalButtonParent, $metadataTableParent);
+            embedInGsePage($modalButtonParent, $metadataTableParent, platformNotSupported);
         }
-    })();
+    }
 
-    function embedInGsePage($modalButtonParent, $metadataTableParent) {
-        var $openModalButtonHtml = templater.get('openModalButton', 'gse');
-        $modalButtonParent.append($openModalButtonHtml);
-        $openModalButtonHtml.click(function() {
-            events.fire('openModalBox');
-        });
+    function abort() {
+        embed(true);
+    }
+
+    function embedInGsePage($modalButtonParent, $metadataTableParent, platformNotSupported) {
+        var $openModalButtonHtml;
+        if (platformNotSupported) {
+            $openModalButtonHtml = templater.get('platformNotSupported');
+            $modalButtonParent.append($openModalButtonHtml);
+            return;
+        } else {
+            $openModalButtonHtml = templater.get('openModalButton', 'gse');
+            $modalButtonParent.append($openModalButtonHtml);
+            $openModalButtonHtml.click(function() {
+                events.fire('openModalBox');
+            });
+        }
 
         $metadataTableParent.find('tr').each(function(i, tr) {
             if ($(tr)
@@ -46,11 +57,22 @@ function UiEmbedder(events, page, screenScraper, templater) {
             .before(templater.get('thead', 'gse'));
     }
 
-    function embedInGdsPage($modalButtonParent) {
-        var $openModalButtonHtml = templater.get('openModalButton', 'gds');
-        $modalButtonParent.children().last().after($openModalButtonHtml);
-        $openModalButtonHtml.click(function() {
-            events.fire('openModalBox');
-        });
+    function embedInGdsPage($modalButtonParent, platformNotSupported) {
+        var $openModalButtonHtml;
+        if (platformNotSupported) {
+            $openModalButtonHtml = templater.get('platformNotSupported');
+            $modalButtonParent.children().last().after($openModalButtonHtml);
+        } else {
+            $openModalButtonHtml = templater.get('openModalButton', 'gds');
+            $modalButtonParent.children().last().after($openModalButtonHtml);
+            $openModalButtonHtml.click(function() {
+                events.fire('openModalBox');
+            });
+        }
     }
+
+    return {
+        embed: embed,
+        abort: abort
+    };
 }

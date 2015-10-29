@@ -1,33 +1,41 @@
 
 /* Wrapper for making calls to the EUtils API.
  */
-function EUtilsApi(comm, page, screenScraper) {
+function EUtilsApi(comm, events, page, screenScraper) {
 
-    var metadata = {},
-        accession = getAccessionId();
+    var accession = getAccession(),
+        BASE_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/{0}.fcgi?db=gds&retmax=1&retmode=json';
 
-    function getUrl() {
-        var BASE_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?&retmax=1&retmode=json',
-            db = page.isGds() ? 'gds' : 'geoprofiles';
-        return [BASE_URL, 'db=' + db, 'id=' + accession].join('&');
+    function init() {
+        var searchUrl;
+        if (!page.isGds()) {
+            searchUrl = BASE_URL.replace('{0}', 'esearch') + '&term=' + accession;
+            comm.get(searchUrl, function(data) {
+                getDataFromGdsAccessionId(data.esearchresult.idlist[0]);
+            });
+        } else {
+            getDataFromGdsAccessionId(accession.slice(3));
+        }
     }
 
-    function getAccessionId() {
-        return screenScraper.getDataset().slice(3);
+    function getDataFromGdsAccessionId(accessionId) {
+        var summaryUrl = BASE_URL.replace('{0}', 'esummary') + '&id=' + accessionId,
+            metadata = {};
+        comm.get(summaryUrl, function(data) {
+            data = data.result[accessionId];
+            metadata.title = data.title;
+            metadata.summary = data.summary;
+            metadata.platform = 'GPL' + data.gpl;
+            metadata.organism = data.taxon;
+            events.fire('eutilsApiFetched', metadata);
+        });
     }
 
-    function getMetadata(callback) {
-        var url = getUrl();
-        comm.get(url, callback);
+    function getAccession() {
+        return screenScraper.getDataset();
     }
-
-    getMetadata(function(response) {
-        metadata = response.result[accession];
-    });
 
     return {
-        getMetadata: function() {
-            return metadata;
-        }
+        init: init
     };
 }

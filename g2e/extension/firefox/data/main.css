@@ -128,24 +128,24 @@
   margin: 0;
   padding: 0;
 }
-#g2e-overlay #g2e-title {
+#g2e-overlay #g2e-app-title {
   float: left;
 }
-#g2e-overlay #g2e-title a {
+#g2e-overlay #g2e-app-title a {
   color: black;
 }
-#g2e-overlay #g2e-title a:hover {
+#g2e-overlay #g2e-app-title a:hover {
   color: black;
   cursor: pointer;
   text-decoration: none;
 }
-#g2e-overlay #g2e-title img {
+#g2e-overlay #g2e-app-title img {
   width: 22px;
 }
-#g2e-overlay #g2e-title span:first-of-type {
+#g2e-overlay #g2e-app-title span:first-of-type {
   margin-left: 10px;
 }
-#g2e-overlay #g2e-title span {
+#g2e-overlay #g2e-app-title span {
   font-size: 30px;
   font-family: 'Open Sans', arial, sans-serif;
   font-weight: bold;
@@ -199,7 +199,7 @@
   vertical-align: middle;
   word-wrap: break-word;
 }
-#g2e-overlay #g2e-confirm .g2e-confirm-tbl td.g2e-title {
+#g2e-overlay #g2e-confirm .g2e-confirm-tbl td.g2e-key {
   font-weight: bold;
   width: 210px;
 }
@@ -217,7 +217,7 @@
 #g2e-overlay #g2e-footer {
   clear: both;
 }
-#g2e-overlay #g2e-footer table .g2e-title {
+#g2e-overlay #g2e-footer table .g2e-key {
   width: 130px;
 }
 #g2e-overlay #g2e-footer > table {
@@ -267,6 +267,7 @@
   font-size: 13px;
   font-style: italic;
   padding-bottom: 5px;
+  text-align: left;
 }
 #g2e-overlay #g2e-target-app {
   color: #d90000;

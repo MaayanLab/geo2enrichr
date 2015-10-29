@@ -123,22 +123,33 @@ function Page() {
  */
 function UiEmbedder(events, page, screenScraper, templater) {
 
-    (function embed() {
+    function embed(platformNotSupported) {
         var $modalButtonParent = screenScraper.getModalButtonParent();
         if (page.isGds()) {
-            embedInGdsPage($modalButtonParent);
+            embedInGdsPage($modalButtonParent, platformNotSupported);
         } else {
             var $metadataTableParent = screenScraper.getMetadataTableParent();
-            embedInGsePage($modalButtonParent, $metadataTableParent);
+            embedInGsePage($modalButtonParent, $metadataTableParent, platformNotSupported);
         }
-    })();
+    }
 
-    function embedInGsePage($modalButtonParent, $metadataTableParent) {
-        var $openModalButtonHtml = templater.get('openModalButton', 'gse');
-        $modalButtonParent.append($openModalButtonHtml);
-        $openModalButtonHtml.click(function() {
-            events.fire('openModalBox');
-        });
+    function abort() {
+        embed(true);
+    }
+
+    function embedInGsePage($modalButtonParent, $metadataTableParent, platformNotSupported) {
+        var $openModalButtonHtml;
+        if (platformNotSupported) {
+            $openModalButtonHtml = templater.get('platformNotSupported');
+            $modalButtonParent.append($openModalButtonHtml);
+            return;
+        } else {
+            $openModalButtonHtml = templater.get('openModalButton', 'gse');
+            $modalButtonParent.append($openModalButtonHtml);
+            $openModalButtonHtml.click(function() {
+                events.fire('openModalBox');
+            });
+        }
 
         $metadataTableParent.find('tr').each(function(i, tr) {
             if ($(tr)
@@ -166,45 +177,64 @@ function UiEmbedder(events, page, screenScraper, templater) {
             .before(templater.get('thead', 'gse'));
     }
 
-    function embedInGdsPage($modalButtonParent) {
-        var $openModalButtonHtml = templater.get('openModalButton', 'gds');
-        $modalButtonParent.children().last().after($openModalButtonHtml);
-        $openModalButtonHtml.click(function() {
-            events.fire('openModalBox');
-        });
+    function embedInGdsPage($modalButtonParent, platformNotSupported) {
+        var $openModalButtonHtml;
+        if (platformNotSupported) {
+            $openModalButtonHtml = templater.get('platformNotSupported');
+            $modalButtonParent.children().last().after($openModalButtonHtml);
+        } else {
+            $openModalButtonHtml = templater.get('openModalButton', 'gds');
+            $modalButtonParent.children().last().after($openModalButtonHtml);
+            $openModalButtonHtml.click(function() {
+                events.fire('openModalBox');
+            });
+        }
     }
+
+    return {
+        embed: embed,
+        abort: abort
+    };
 }
 
 /* Wrapper for making calls to the EUtils API.
  */
-function EUtilsApi(comm, page, screenScraper) {
+function EUtilsApi(comm, events, page, screenScraper) {
 
-    var metadata = {},
-        accession = getAccessionId();
+    var accession = getAccession(),
+        BASE_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/{0}.fcgi?db=gds&retmax=1&retmode=json';
 
-    function getUrl() {
-        var BASE_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?&retmax=1&retmode=json',
-            db = page.isGds() ? 'gds' : 'geoprofiles';
-        return [BASE_URL, 'db=' + db, 'id=' + accession].join('&');
+    function init() {
+        var searchUrl;
+        if (!page.isGds()) {
+            searchUrl = BASE_URL.replace('{0}', 'esearch') + '&term=' + accession;
+            comm.get(searchUrl, function(data) {
+                getDataFromGdsAccessionId(data.esearchresult.idlist[0]);
+            });
+        } else {
+            getDataFromGdsAccessionId(accession.slice(3));
+        }
     }
 
-    function getAccessionId() {
-        return screenScraper.getDataset().slice(3);
+    function getDataFromGdsAccessionId(accessionId) {
+        var summaryUrl = BASE_URL.replace('{0}', 'esummary') + '&id=' + accessionId,
+            metadata = {};
+        comm.get(summaryUrl, function(data) {
+            data = data.result[accessionId];
+            metadata.title = data.title;
+            metadata.summary = data.summary;
+            metadata.platform = 'GPL' + data.gpl;
+            metadata.organism = data.taxon;
+            events.fire('eutilsApiFetched', metadata);
+        });
     }
 
-    function getMetadata(callback) {
-        var url = getUrl();
-        comm.get(url, callback);
+    function getAccession() {
+        return screenScraper.getDataset();
     }
-
-    getMetadata(function(response) {
-        metadata = response.result[accession];
-    });
 
     return {
-        getMetadata: function() {
-            return metadata;
-        }
+        init: init
     };
 }
 
@@ -437,6 +467,8 @@ var Tagger = function(events, templater) {
         var $crowdsourcingElements = $('.g2e-crowdsourcing'),
             $metadataTable = $('#g2e-metadata');
 
+        $crowdsourcingElements.hide();
+
         $input.tagit({
             singleField: true,
             caseSensitive: false,
@@ -510,7 +542,7 @@ var Tagger = function(events, templater) {
 
 var Templater = function(IMAGE_PATH) {
 
-    var G2E_TITLE = 'g2e-title',
+    var G2E_KEY = 'g2e-key',
         G2E_VALUE = 'g2e-value',
         G2E_SELECT = 'g2e-select',
         G2E_TEXT = 'g2e-text';
@@ -518,7 +550,7 @@ var Templater = function(IMAGE_PATH) {
     var modal = '' +
         '<div id="g2e-overlay">' +
             '<div id="g2e-modal">' +
-                '<div id="' + G2E_TITLE + '">' +
+                '<div id="g2e-app-title">' +
                     '<a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">' +
                         '<img src="' + IMAGE_PATH + '">' +
                         '<span>GEO2</span>' +
@@ -535,30 +567,30 @@ var Templater = function(IMAGE_PATH) {
                             '<table class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please verify that your data is correct.</caption>' +
                                 '<tr id="g2e-dataset">' +
-                                    '<td class="' + G2E_TITLE + '">Accession num.</td>' +
+                                    '<td class="' + G2E_KEY + '">Accession num.</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
-                                '<tr id="g2e-platform">' +
-                                    '<td class="' + G2E_TITLE + '">Platform</td>' +
+                                '<tr id="g2e-title">' +
+                                    '<td class="' + G2E_KEY + '">Title</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-organism">' +
-                                    '<td class="' + G2E_TITLE + '">Organism</td>' +
+                                    '<td class="' + G2E_KEY + '">Organism</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-A_cols">' +
-                                    '<td class="' + G2E_TITLE + '">Control samples</td>' +
+                                    '<td class="' + G2E_KEY + '">Control samples</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                                 '<tr id="g2e-B_cols" class="g2e-last">' +
-                                    '<td class="' + G2E_TITLE + '">Treatment or condition samples</td>' +
+                                    '<td class="' + G2E_KEY + '">Treatment or condition samples</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '"></td>' +
                                 '</tr>' +
                             '</table>' +
                             '<table class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please select differential expression analysis options.</caption>' +
                                 '<tr id="g2e-diffexp">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Differential expression method' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -569,7 +601,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-cutoff">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Cutoff' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -581,7 +613,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-correction-method" class="g2e-ttest">'+
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Correction method' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -592,7 +624,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-threshold" class="g2e-ttest">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Threshold' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -603,7 +635,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-normalize">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Transform and normalize if necessary&#42;' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' ' + G2E_SELECT + '">' +
@@ -617,7 +649,7 @@ var Templater = function(IMAGE_PATH) {
                             '<table id="g2e-metadata" class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please fill out these optional annotations.</caption>' +
                                 '<tr id="g2e-cell">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Cell type or tissue' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
@@ -625,7 +657,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-perturbation">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Perturbation' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
@@ -633,7 +665,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-gene" class="ui-widget">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         '<label for="g2e-geneList">Manipulated gene</label>' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
@@ -641,7 +673,7 @@ var Templater = function(IMAGE_PATH) {
                                     '</td>' +
                                 '</tr>' +
                                 '<tr id="g2e-disease" class="ui-widget g2e-last">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         '<label for="g2e-diseaseList">Relevant disease</label>' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + ' g2e-last">' +
@@ -652,7 +684,7 @@ var Templater = function(IMAGE_PATH) {
                             '<table class="g2e-confirm-tbl g2e-top">' +
                                 '<caption>Please apply metadata tags.</caption>' +
                                 '<tr id="g2e-cell">' +
-                                    '<td class="' + G2E_TITLE + '">' +
+                                    '<td class="' + G2E_KEY + '">' +
                                         'Metadata Tags' +
                                     '</td>' +
                                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
@@ -734,7 +766,8 @@ var Templater = function(IMAGE_PATH) {
                 '<td>' +
                     '<input class="g2e-chkbx g2e-experimental" type="checkbox" />' +
                 '</td>'
-        }
+        },
+        platformNotSupported: '<p>This platform is not supported.</p>'
     };
 
     return {
@@ -750,7 +783,7 @@ var Templater = function(IMAGE_PATH) {
         getTableRow: function(value, id) {
             return $('' +
                 '<tr id="' + id + '">' +
-                    '<td class="' + G2E_TITLE + '">' + value + '</td>' +
+                    '<td class="' + G2E_KEY + '">' + value + '</td>' +
                     '<td class="' + G2E_VALUE + ' ' + G2E_TEXT + '">' +
                         '<input placeholder="...">' +
                     '</td>' +
@@ -805,11 +838,14 @@ var Notifier = function(DEBUG) {
  * object is a mixin of the general functionality with a context-dependent
  * scraper.
  */
-function ScreenScraper(page, SUPPORTED_PLATFORMS, onConstructedCallback) {
+function ScreenScraper(events, page, SUPPORTED_PLATFORMS, onConstructedCallback) {
 
     var modeScraper,
         $modalButtonParent,
-        $metadataTableParent;
+        $metadataTableParent,
+
+        // Globally accessible metadata from API.
+        eUtilsApiMetadata = {};
 
     var scraper = {
 
@@ -822,7 +858,8 @@ function ScreenScraper(page, SUPPORTED_PLATFORMS, onConstructedCallback) {
         },
 
         isSupportedPlatform: function() {
-            var platform = this.getPlatform();
+            // We don't expect the eUtilsApi to return in time. Get the platform by scraping.
+            var platform = this._getPlatform();
             // TODO: These two branches should be in an $.ajax callback.
             if (platform && $.inArray(platform, SUPPORTED_PLATFORMS) === -1) {
                 return false;
@@ -838,8 +875,10 @@ function ScreenScraper(page, SUPPORTED_PLATFORMS, onConstructedCallback) {
             data.A_cols = samples.A_cols;
             data.B_cols = samples.B_cols;
             data.dataset  = this.getDataset();
-            data.organism = this.getOrganism();
-            data.platform = this.getPlatform();
+            data.title = eUtilsApiMetadata.title || '';
+            data.summary = eUtilsApiMetadata.summary || '';
+            data.organism = eUtilsApiMetadata.organism || this._getOrganism();
+            data.platform = eUtilsApiMetadata.platform || this._getPlatform();
             return data;
         },
 
@@ -856,6 +895,10 @@ function ScreenScraper(page, SUPPORTED_PLATFORMS, onConstructedCallback) {
             return el.replace(/\s/g, '').toLowerCase();
         }
     };
+
+    events.on('eutilsApiFetched', function(data) {
+        eUtilsApiMetadata = data;
+    });
 
     /* This function is async because GDS pages do not load all at once. This
      * Why the ScreenScraper constructor does not return an instance immediately.
@@ -898,11 +941,11 @@ var GdsScraper = function($metadataTableParent, $modalButtonParent) {
             return re.exec(record_caption)[0];
         },
 
-        getOrganism: function() {
+        _getOrganism: function() {
             return this.getByName('organism');
         },
 
-        getPlatform: function() {
+        _getPlatform: function() {
             return this.getByName('platform');
         },
 
@@ -998,11 +1041,11 @@ var GseScraper = function($metadataTableParent) {
             }
         },
 
-        getOrganism: function() {
+        _getOrganism: function() {
             return this.getByName('organism');
         },
 
-        getPlatform: function() {
+        _getPlatform: function() {
             return this.getByName('platforms');
         },
 
@@ -1391,27 +1434,35 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
 var main = function() {
 
-    var page = Page();
+    var events = Events(),
+        page = Page();
 
     if (page.isDataset()) {
-        ScreenScraper(page, SUPPORTED_PLATFORMS, function(screenScraper) {
+        ScreenScraper(events, page, SUPPORTED_PLATFORMS, function(screenScraper) {
+
+            //events, page, screenScraper, templater
+            var notifier = Notifier(DEBUG),
+                templater = Templater(IMAGE_PATH),
+                uiEmbedder = UiEmbedder(events, page, screenScraper, templater),
+                tagger,
+                comm,
+                eUtilsApi,
+                userInputHandler;
+
             if (screenScraper.isSupportedPlatform()) {
+                tagger = Tagger(events, templater);
+                comm =  Comm(events, LoadingScreen, notifier, SERVER);
+                eUtilsApi = EUtilsApi(comm, events, page, screenScraper);
 
-                var events = Events(),
-                    notifier = Notifier(DEBUG),
-                    templater = Templater(IMAGE_PATH),
-                    tagger = Tagger(events, templater),
-                    comm =  Comm(events, LoadingScreen, notifier, SERVER),
-                    userInputHandler,
-
-                    // TODO: Use this! It returns all the metadata we need.
-                    eUtilsApi = EUtilsApi(comm, page, screenScraper);
-
-                UiEmbedder(events, page, screenScraper, templater);
+                eUtilsApi.init();
+                uiEmbedder.embed();
                 userInputHandler = UserInputHandler(comm, events, notifier, screenScraper, tagger);
                 ModalBox(events, tagger, templater, userInputHandler);
 
                 events.fire('g2eLoaded');
+            } else {
+                uiEmbedder.abort();
+
             }
         });
     }

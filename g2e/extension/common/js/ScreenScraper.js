@@ -3,11 +3,14 @@
  * object is a mixin of the general functionality with a context-dependent
  * scraper.
  */
-function ScreenScraper(page, SUPPORTED_PLATFORMS, onConstructedCallback) {
+function ScreenScraper(events, page, SUPPORTED_PLATFORMS, onConstructedCallback) {
 
     var modeScraper,
         $modalButtonParent,
-        $metadataTableParent;
+        $metadataTableParent,
+
+        // Globally accessible metadata from API.
+        eUtilsApiMetadata = {};
 
     var scraper = {
 
@@ -20,7 +23,8 @@ function ScreenScraper(page, SUPPORTED_PLATFORMS, onConstructedCallback) {
         },
 
         isSupportedPlatform: function() {
-            var platform = this.getPlatform();
+            // We don't expect the eUtilsApi to return in time. Get the platform by scraping.
+            var platform = this._getPlatform();
             // TODO: These two branches should be in an $.ajax callback.
             if (platform && $.inArray(platform, SUPPORTED_PLATFORMS) === -1) {
                 return false;
@@ -36,8 +40,10 @@ function ScreenScraper(page, SUPPORTED_PLATFORMS, onConstructedCallback) {
             data.A_cols = samples.A_cols;
             data.B_cols = samples.B_cols;
             data.dataset  = this.getDataset();
-            data.organism = this.getOrganism();
-            data.platform = this.getPlatform();
+            data.title = eUtilsApiMetadata.title || '';
+            data.summary = eUtilsApiMetadata.summary || '';
+            data.organism = eUtilsApiMetadata.organism || this._getOrganism();
+            data.platform = eUtilsApiMetadata.platform || this._getPlatform();
             return data;
         },
 
@@ -54,6 +60,10 @@ function ScreenScraper(page, SUPPORTED_PLATFORMS, onConstructedCallback) {
             return el.replace(/\s/g, '').toLowerCase();
         }
     };
+
+    events.on('eutilsApiFetched', function(data) {
+        eUtilsApiMetadata = data;
+    });
 
     /* This function is async because GDS pages do not load all at once. This
      * Why the ScreenScraper constructor does not return an instance immediately.

@@ -198,6 +198,8 @@ var Tagger = function(events, templater) {
         var $crowdsourcingElements = $('.g2e-crowdsourcing'),
             $metadataTable = $('#g2e-metadata');
 
+        $crowdsourcingElements.hide();
+
         $input.tagit({
             singleField: true,
             caseSensitive: false,

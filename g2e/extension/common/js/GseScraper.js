@@ -39,11 +39,11 @@ var GseScraper = function($metadataTableParent) {
             }
         },
 
-        getOrganism: function() {
+        _getOrganism: function() {
             return this.getByName('organism');
         },
 
-        getPlatform: function() {
+        _getPlatform: function() {
             return this.getByName('platforms');
         },
 

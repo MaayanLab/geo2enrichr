@@ -1,6 +1,10 @@
 #index-page {
   margin-top: 30px;
 }
+#index-page table {
+  table-layout: fixed;
+  width: 100%;
+}
 #index-page table.extensions tr:first-child {
   padding-bottom: 10px;
 }

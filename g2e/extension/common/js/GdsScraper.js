@@ -9,11 +9,11 @@ var GdsScraper = function($metadataTableParent, $modalButtonParent) {
             return re.exec(record_caption)[0];
         },
 
-        getOrganism: function() {
+        _getOrganism: function() {
             return this.getByName('organism');
         },
 
-        getPlatform: function() {
+        _getPlatform: function() {
             return this.getByName('platform');
         },
 
