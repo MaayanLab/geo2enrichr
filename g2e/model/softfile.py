@@ -76,6 +76,8 @@ class SoftFile(db.Model):
                 title=title,
                 summary=summary
             )
+        else:
+            print 'Dataset %s already exists!' % accession
 
         a_cols = get_param_as_list(args, 'A_cols')
         b_cols = get_param_as_list(args, 'B_cols')

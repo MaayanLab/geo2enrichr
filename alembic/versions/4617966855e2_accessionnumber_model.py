@@ -78,10 +78,11 @@ def _create_accession_numbers():
 def _load_geo_record(session, soft_file):
     data = _load_data_from_gds(soft_file)
     accession = soft_file.name
-    platform = data['gpl'] if 'gpl' in data else soft_file.platform
     title = data['title'] if 'title' in data else None
+    summary = data['summary'] if 'summary' in data else None
+    platform = data['gpl'] if 'gpl' in data else soft_file.platform
     organism = data['taxon'] if 'taxon' in data else None
-    return _get_or_create_geo_record(session, accession, title, platform, organism, None)
+    return _get_or_create_geo_record(session, accession, title, summary, platform, organism)
 
 
 def _load_data_from_gds(soft_file):
@@ -122,7 +123,7 @@ def _get_gse_search_url(acc_full):
 # Data accessors
 # --------------
 
-def _get_or_create_geo_record(session, accession, title, platform, organism, summary):
+def _get_or_create_geo_record(session, accession, title, summary, platform, organism):
     instance = session.query(GeoDataset).filter_by(accession=accession).first()
     if not instance:
         instance = GeoDataset(

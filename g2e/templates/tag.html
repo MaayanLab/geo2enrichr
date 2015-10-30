@@ -14,6 +14,8 @@
                     <tr>
                         <th></th>
                         <th>Results</th>
+                        <th>Title</th>
+                        <th>Summary</th>
                         <th>Organism</th>
                         <th>Platform</th>
                         <th>Optional Metadata</th>
@@ -22,6 +24,7 @@
                 </thead>
                 <tbody>
                     {% for gene_signature in tag.gene_signatures %}
+                        {% set dataset = gene_signature.soft_file.dataset %}
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>
@@ -29,8 +32,9 @@
                                     <i class="fa fa-file-o"></i>
                                 </a>
                             </td>
+                            <td>{{ dataset.title }}</td>
+                            <td>{{ dataset.summary }}</td>
                             <td>
-                                {% set dataset = gene_signature.soft_file.dataset %}
                                 {% if dataset.organism %}
                                     <a href="{{ dataset.organism|c_metadata_value_url('organism') }}">
                                         {{ dataset.organism }}

@@ -40,7 +40,7 @@
             {% if sf.dataset.record_type == 'geo' %}
                 <tr>
                     <td>Accession</td>
-                    <td><a href="{{ geo_url }}" target="_blank">{{ sf.dataset.accession }}</a></td>
+                    <td><a href="{{ sf.dataset.accession|c_geo_url }}" target="_blank">{{ sf.dataset.accession }}</a></td>
                 </tr>
                 {% if sf.dataset.summary %}
                     <tr>
