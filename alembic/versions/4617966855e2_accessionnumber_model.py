@@ -28,35 +28,30 @@ from g2e.model.genesignature import GeneSignature
 Session = sessionmaker()
 
 
+# 5174 - GSE63415 - bb32c4fa32
+
+
 def upgrade():
 
-    # op.create_table(
-    #     'dataset',
-    #     sa.Column('id', sa.Integer, primary_key=True),
-    #     sa.Column('title', sa.Text),
-    #     sa.Column('record_type', sa.String(32), nullable=False),
-    #     sa.Column('organism', sa.String(255)),
-    #
-    #     # GEO specific columns.
-    #     sa.Column('accession', sa.String(255)),
-    #     sa.Column('platform', sa.String(32)),
-    #     sa.Column('summary', sa.Text)
-    # )
-    #
-    # op.add_column('soft_file',
-    #     sa.Column('dataset_fk', sa.Integer)
-    # )
-    #
-    # op.create_foreign_key(None, 'soft_file', 'dataset', ['dataset_fk'], ['id'])
+    op.create_table(
+        'dataset',
+        sa.Column('id', sa.Integer, primary_key=True),
+        sa.Column('title', sa.Text),
+        sa.Column('record_type', sa.String(32), nullable=False),
+        sa.Column('organism', sa.String(255)),
 
-    # TODO:
-    #op.drop_column('soft_file', 'is_geo')
-    #op.drop_column('soft_file', 'name')
-    #op.drop_column('soft_file', 'platform')
+        # GEO specific columns.
+        sa.Column('accession', sa.String(255)),
+        sa.Column('platform', sa.String(32)),
+        sa.Column('summary', sa.Text)
+    )
 
-    #_create_accession_numbers()
+    op.add_column('soft_file',
+        sa.Column('dataset_fk', sa.Integer)
+    )
 
-    raise Exception('Don\'t finish!')
+    op.create_foreign_key(None, 'soft_file', 'dataset', ['dataset_fk'], ['id'])
+    _create_accession_numbers()
 
 
 def _create_accession_numbers():
@@ -64,19 +59,24 @@ def _create_accession_numbers():
     """
     conn = op.get_bind()
     session = Session(bind=conn)
-    for idx, sig in enumerate(session.query(GeneSignature)):
-        if sig.soft_file.is_geo == 1:
-            dataset_id = _load_geo_record(session, sig.soft_file)
-        else:
-            dataset_id = _load_custom(session, sig.soft_file)
+    with open('log.txt', 'w+') as error_log:
+        for idx, sig in enumerate(session.query(GeneSignature)):
+            msg = '%s - %s - %s' % (idx, sig.soft_file.name, sig.extraction_id)
+            print msg
+            try:
+                if sig.soft_file.is_geo == 1:
+                    dataset_id = _load_geo_record(session, sig.soft_file)
+                else:
+                    dataset_id = _load_custom(session, sig.soft_file)
+            except:
+                error_log.write(msg)
 
-        sig.soft_file.dataset_fk = dataset_id
-        print '%s - %s' % (idx, sig.soft_file.name)
-        session.commit()
+            sig.soft_file.dataset_fk = dataset_id
+            session.commit()
 
 
 def _load_geo_record(session, soft_file):
-    data = _load_data_from_gds(session, soft_file)
+    data = _load_data_from_gds(soft_file)
     accession = soft_file.name
     platform = data['gpl'] if 'gpl' in data else soft_file.platform
     title = data['title'] if 'title' in data else None
@@ -84,7 +84,7 @@ def _load_geo_record(session, soft_file):
     return _get_or_create_geo_record(session, accession, title, platform, organism, None)
 
 
-def _load_data_from_gds(session, soft_file):
+def _load_data_from_gds(soft_file):
     accession = soft_file.name
     http_session = requests.session()
     if 'GDS' in accession:
@@ -147,58 +147,3 @@ def _load_custom(session, soft_file):
     session.add(instance)
     session.flush()
     return instance.id
-
-
-
-# def _transfer_data():
-#
-#     conn = op.get_bind()
-#     session = Session(bind=conn)
-#
-#     an_tbl = AccessionNumber.__table__
-#     gs_tbl = GeneSignature.__table__
-#
-#     for sig in session.query(GeneSignature):
-#         is_geo = sig.soft_file.is_geo == 1
-#         if is_geo:
-#             geo_id = sig.soft_file.name
-
-    # sql = 'SELECT gene_signature.id, soft_file.name, soft_file.is_geo ' \
-    #       '  FROM gene_signature ' \
-    #       'JOIN soft_file ON soft_file.gene_signature_fk = gene_signature.id'
-
-    # results = conn.execute(sql).fetchall()
-    #
-    # data_to_transfer = []
-    # for r in results:
-    #     gene_signature_id = r[0]
-    #     name = r[1]
-    #     is_geo = r[2]
-    #     if is_geo == 1:
-    #         data_to_transfer.append({
-    #             'geo_id': name
-    #         })
-    #
-    # op.bulk_insert(an_tbl, data_to_transfer)
-
-    # data_to_transfer = []
-    # idx_to_fk = [None, 1, 2, 3]
-    # for r in results:
-    #     for i in [1,2,3]:
-    #         if _is_not_empty(r[i]):
-    #             data_to_transfer.append({
-    #                 'target_app_fk': idx_to_fk[i],
-    #                 'gene_list_fk': r[0],
-    #                 'link': r[i]
-    #             })
-    #
-    # # I get a connection timeout when I try to bulk insert all the data.
-    # cutoff = int(round(len(data_to_transfer) / 2))
-    # data_to_transfer1 = data_to_transfer[:cutoff]
-    # data_to_transfer2 = data_to_transfer[cutoff:]
-    # op.bulk_insert(link_tbl, data_to_transfer1)
-    # op.bulk_insert(link_tbl, data_to_transfer2)
-
-
-if __name__ == '__main__':
-    upgrade()

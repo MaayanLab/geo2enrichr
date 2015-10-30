@@ -728,7 +728,7 @@ var Templater = function(IMAGE_PATH) {
     var BUTTON_TEXT = 'Extract knowledge with <strong class="g2e-strong">GEO2Enrichr</strong>';
 
     var EMBED_BTN_ID ="g2e-embedded-button";
-
+    
     var templates = {
         modal: modal,
         gds: {

@@ -1,4 +1,4 @@
-"""Handles all API requests.
+"""Jinja2 templating filters.
 
 __authors__ = "Gregory Gundersen"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
@@ -16,11 +16,23 @@ from g2e.config import Config
 jinjafilters = Blueprint('filters', __name__)
 
 
+# String utils
+# ----------------------------------------------------------------------------
+
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_urlencode')
 def c_urlencode(context, value):
     return urllib.quote_plus(value)
 
+
+@jinja2.contextfilter
+@jinjafilters.app_template_filter('c_replace_underscores')
+def c_replace_underscores(context, value):
+    return value.replace('_', ' ')
+
+
+# Data filters
+# ----------------------------------------------------------------------------
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_filter_organism')
@@ -55,6 +67,9 @@ def c_filter_empty(context, value):
     return value
 
 
+# URL builders
+# ----------------------------------------------------------------------------
+
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_tag_url')
 def c_tag_url(context, value):
@@ -80,6 +95,9 @@ def c_metadata_value_url(context, value, name):
 
 
 @jinja2.contextfilter
-@jinjafilters.app_template_filter('c_replace_underscores')
-def c_replace_underscores(context, value):
-    return value.replace('_', ' ')
+@jinjafilters.app_template_filter('c_geo_url')
+def c_geo_url(context, value):
+    if 'GDS' in value:
+        geo_url = 'http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=' + value
+    else:
+        geo_url = 'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=' + value

@@ -116,25 +116,31 @@ def get_statistics():
         num_gene_signatures = session.query(GeneSignature).count()
         num_gene_lists = session.query(GeneList).count()
         num_tags = session.query(Tag).count()
-        platforms = session.query(sa.func.distinct(SoftFile.platform))
+        platforms = session.query(sa.func.distinct(GeoDataset.platform))
 
-    platform_counts = []
-    num_platforms = platforms.count()
-    for platform in platforms:
-        platform = platform[0]
-        count = session.query(GeneSignature, SoftFile)\
-            .filter(SoftFile.gene_signature_fk == GeneSignature.id)\
-            .filter(SoftFile.platform == platform)\
-            .count()
-        platform_counts.append({
-            'platform': platform,
-            'count': count
-        })
+        platform_counts = []
+        num_platforms = platforms.count()
+        for tpl in platforms:
+            platform = tpl[0]
+            count = session.query(GeneSignature, SoftFile, GeoDataset)\
+                .filter(SoftFile.dataset_fk == GeoDataset.id)\
+                .filter(SoftFile.gene_signature_fk == GeneSignature.id)\
+                .filter(GeoDataset.platform == platform)\
+                .count()
+            platform_counts.append({
+                'platform': platform,
+                'count': count
+            })
 
-    return {
-        'num_gene_signatures': num_gene_signatures,
-        'num_gene_lists': num_gene_lists,
-        'num_tags': num_tags,
-        'num_platforms': num_platforms,
-        'platform_counts': platform_counts
-    }
+        sum_ = 0
+        for c in platform_counts:
+            sum_ += c['count']
+        print sum_
+
+        return {
+            'num_gene_signatures': num_gene_signatures,
+            'num_gene_lists': num_gene_lists,
+            'num_tags': num_tags,
+            'num_platforms': num_platforms,
+            'platform_counts': platform_counts
+        }

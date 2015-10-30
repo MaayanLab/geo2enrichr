@@ -11,6 +11,10 @@
 
     <script>
     $(function () {
+        // TODO: This is a *hack* and should be removed. I'm doing it for now
+        // because I don't expect this page to exist for much longer.
+        $('#page').css('margin-top', 50);
+
         plotPCA({{ pca_data|safe }});
     });
     </script>
