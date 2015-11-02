@@ -50,10 +50,11 @@ class TestRoundTrip(unittest.TestCase):
         # Test response from round-trip.
         self.assertTrue(resp_dict['required_metadata']['diff_exp_method'] == 'chdir')
         self.assertTrue(resp_dict['required_metadata']['cutoff'] == 500)
-        self.assertTrue(resp_dict['soft_file']['name'] == 'GDS5077')
+        self.assertTrue(resp_dict['soft_file']['accession'] == 'GDS5077')
+        self.assertTrue(resp_dict['soft_file']['title'] == 'Transmembrane protein 88 depletion effect on stem cell cardiac differentiation in vitro')
         self.assertTrue('static/softfile/clean/GDS5077_' in resp_dict['soft_file']['text_file'])
         self.assertTrue(resp_dict['soft_file']['platform'] == 'GPL10558')
-        self.assertTrue(resp_dict['optional_metadata']['organism'] == 'Homo sapiens')
+        self.assertTrue(resp_dict['soft_file']['organism'] == 'Homo sapiens')
         self.assertTrue(resp_dict['soft_file']['normalize'] == True)
         self.assertTrue(resp_dict['soft_file']['is_geo'])
 
@@ -79,7 +80,7 @@ class TestRoundTrip(unittest.TestCase):
         self.resp = self.app.post('/g2e/api/extract/geo', data=dict(
             is_geo = 'True',
             dataset = 'GDS5077',
-            organism = 'Mus musculus',
+            organism = 'Homo sapiens',
 
             # Both of these arguments are misnamed--or haven't been updated
             # because I don't want to release a new version of the extensions
@@ -105,10 +106,11 @@ class TestRoundTrip(unittest.TestCase):
         self.assertTrue(resp_dict['required_metadata']['ttest_correction_method'] == 'BH')
         self.assertTrue(resp_dict['required_metadata']['threshold'] == 0.05)
 
-        self.assertTrue(resp_dict['soft_file']['name'] == 'GDS5077')
+        self.assertTrue(resp_dict['soft_file']['accession'] == 'GDS5077')
+        self.assertTrue(resp_dict['soft_file']['title'] == 'Transmembrane protein 88 depletion effect on stem cell cardiac differentiation in vitro')
         self.assertTrue('static/softfile/clean/GDS5077_' in resp_dict['soft_file']['text_file'])
         self.assertTrue(resp_dict['soft_file']['platform'] == 'GPL10558')
-        self.assertTrue(resp_dict['optional_metadata']['organism'] == 'Mus musculus')
+        self.assertTrue(resp_dict['soft_file']['organism'] == 'Homo sapiens')
         self.assertTrue(resp_dict['soft_file']['is_geo'])
 
         for gl in resp_dict['gene_lists']:
@@ -136,6 +138,7 @@ class TestRoundTrip(unittest.TestCase):
         resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
         resp_dict = json.loads(resp.data.decode())
 
+        self.assertTrue(resp_dict['soft_file']['title'], 'ExampleData')
         genelist = resp_dict['gene_lists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'MBTPS1') == -0.0185085)
         self.assertTrue(get_gene_value(genelist, 'SPRED2') == 0.0537715)

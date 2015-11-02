@@ -132,20 +132,27 @@ class SoftFile(db.Model):
 
     @property
     def serialize(self):
-       """Return serialized object.
-       """
-       if hasattr(self.dataset, 'platform'):
-           platform = self.dataset.platform
-       else:
-           platform = None
+        """Return serialized object.
+        """
+        if hasattr(self.dataset, 'platform'):
+            platform = self.dataset.platform
+        else:
+            platform = None
 
-       return {
-           'name': self.name,
-           'normalize': self.normalize,
-           'is_geo': self.is_geo,
-           'platform': platform,
-           'text_file': self.text_file
-       }
+        if hasattr(self.dataset, 'accession'):
+            accession = self.dataset.accession
+        else:
+            accession = None
+
+        return {
+            'title': self.dataset.title,
+            'accession': accession,
+            'normalize': self.normalize,
+            'is_geo': self.dataset.record_type == 'geo',
+            'platform': platform,
+            'organism': self.dataset.organism,
+            'text_file': self.text_file
+        }
 
     def get_raw_data(self):
         """Returns the raw data a two-dimensional array.
