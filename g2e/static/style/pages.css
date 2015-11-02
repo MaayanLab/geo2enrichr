@@ -107,6 +107,12 @@ table .optional-metadata-content table td:first-child {
 .metadata-page .platform {
   width: 4%;
 }
+.tag-page .note,
+.metadata-page .note {
+  font-size: 12px;
+  font-weight: normal;
+  margin-left: 15px;
+}
 .tag-page .title {
   width: 10%;
 }
