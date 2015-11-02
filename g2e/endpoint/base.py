@@ -17,7 +17,9 @@ base = Blueprint('base', __name__, url_prefix=Config.BASE_URL)
 
 @base.route('/')
 def index_page():
-    return render_template('index.html')
+    stats = dataaccess.get_statistics()
+    stats_json = json.dumps(stats)
+    return render_template('index.html', stats=stats, stats_json=stats_json)
 
 
 @base.route('/documentation')

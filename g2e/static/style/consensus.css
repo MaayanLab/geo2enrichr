@@ -27,3 +27,7 @@
   display: none;
   margin-top: 20px;
 }
+.data-table {
+  /* JS shows table when it's ready. */
+  display: none;
+}

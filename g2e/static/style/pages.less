@@ -30,7 +30,12 @@
         }
     }
     #intro-text {
-        font-size: 16px;
+        p {
+            font-size: 16px;
+            &:first-child {
+                font-style: italic;
+            }
+        }
     }
     #example-file {
         a {
@@ -124,9 +129,7 @@ table {
     .index {
         width: 2%;
     }
-    .results {
-        width: 4%;
-    }
+    .results,
     .select-box,
     .organism,
     .platform {
@@ -138,16 +141,15 @@ table {
         margin-left: 15px;
     }
 }
-
 .tag-page {
     .title {
         width: 10%;
     }
     .summary {
-        width: 40%;
+        width: 37%;
     }
     .optional-metadata {
-        width: 40%;
+        width: 35%;
     }
 }
 .metadata-page {
@@ -155,13 +157,13 @@ table {
         width: 10%;
     }
     .summary {
-        width: 35%;
+        width: 30%;
     }
     .optional-metadata {
         width: 30%;
     }
     .tags {
-        width: 15%;
+        width: 12%;
     }
 }
 

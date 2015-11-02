@@ -20,8 +20,11 @@
 #index-page table.extensions tr td:first-child {
   width: 15%;
 }
-#index-page #intro-text {
+#index-page #intro-text p {
   font-size: 16px;
+}
+#index-page #intro-text p:first-child {
+  font-style: italic;
 }
 #index-page #example-file a {
   position: relative;
@@ -96,9 +99,7 @@ table .optional-metadata-content table td:first-child {
   width: 2%;
 }
 .tag-page .results,
-.metadata-page .results {
-  width: 4%;
-}
+.metadata-page .results,
 .tag-page .select-box,
 .metadata-page .select-box,
 .tag-page .organism,
@@ -117,22 +118,22 @@ table .optional-metadata-content table td:first-child {
   width: 10%;
 }
 .tag-page .summary {
-  width: 40%;
+  width: 37%;
 }
 .tag-page .optional-metadata {
-  width: 40%;
+  width: 35%;
 }
 .metadata-page .title {
   width: 10%;
 }
 .metadata-page .summary {
-  width: 35%;
+  width: 30%;
 }
 .metadata-page .optional-metadata {
   width: 30%;
 }
 .metadata-page .tags {
-  width: 15%;
+  width: 12%;
 }
 .metadata-page th,
 .tag-page th {

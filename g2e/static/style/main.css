@@ -209,24 +209,21 @@ caption {
   cursor: inherit;
   display: block;
 }
-.badge {
+.label {
   background-color: #777;
   border-radius: 0;
-  padding: 2px 4px;
-  margin-left: 2px;
-  margin-right: 2px;
 }
-.badge a {
+.label a {
   color: white;
   font-weight: bold;
 }
-.badge a:hover,
-.badge a:active,
-.badge a:focus {
+.label a:hover,
+.label a:active,
+.label a:focus {
   color: white;
   text-decoration: none;
 }
-.badge:hover {
+.label:hover {
   background-color: #444444;
 }
 /* Main structural elements:

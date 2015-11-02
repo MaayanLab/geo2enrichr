@@ -15,7 +15,7 @@
     <div class="metadata-page">
         <h1>{{ metadata_name }} <span class="note">{{ num_tags }} gene signatures</span></h1>
         <div class="table-responsive">
-            <table class="table">
+            <table class="table data-table">
                 <thead>
                     <tr>
                         <th></th>
@@ -67,12 +67,7 @@
                                 {% endif %}
                             </td>
                             <td class="platform">
-                                {% set platform = dataset.platform|c_filter_empty %}
-                                {% if platform %}
-                                    <a href="{{ platform|c_metadata_value_url('platform') }}">
-                                        {{ platform }}
-                                    </a>
-                                {% endif %}
+                                {{ dataset.platform|c_filter_empty }}
                             </td>
                             <td class="optional-metadata">
                                 <div class="optional-metadata-content">
@@ -92,7 +87,7 @@
                             </td>
                             <td class="tags">
                                 {% for tag in sig.tags %}
-                                    <span class="badge">
+                                    <span class="label">
                                         <a href="{{ tag.name|c_tag_url }}">{{ tag.name }}</a>
                                     </span>
                                 {% endfor %}

@@ -27,6 +27,14 @@ $(function() {
         }
     };
 
+    var $dataTables = $('.data-table');
+    $dataTables.dataTable({
+        bPaginate: true,
+        fnInitComplete: function() {
+            $dataTables.fadeIn();
+        }
+    });
+
     $('#consensus .options button').click(visualizeGeneSignatures);
 
     function visualizeGeneSignatures() {
