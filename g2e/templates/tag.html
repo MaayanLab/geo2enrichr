@@ -8,78 +8,76 @@
 
     <div class="tag-page">
         <h1>{{ tag.name }}<span class="note">{{ num_tags }} gene signatures</span></h1>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
+        <table class="table data-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Results</th>
+                    <th>Title</th>
+                    <th>Summary</th>
+                    <th>Organism</th>
+                    <th>Platform</th>
+                    <th>Optional Metadata</th>
+                    <th><i class="fa fa-check"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gene_signature in tag.gene_signatures %}
+                    {% set dataset = gene_signature.soft_file.dataset %}
                     <tr>
-                        <th></th>
-                        <th>Results</th>
-                        <th>Title</th>
-                        <th>Summary</th>
-                        <th>Organism</th>
-                        <th>Platform</th>
-                        <th>Optional Metadata</th>
-                        <th><i class="fa fa-check"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for gene_signature in tag.gene_signatures %}
-                        {% set dataset = gene_signature.soft_file.dataset %}
-                        <tr>
-                            <td class="index">{{ loop.index }}</td>
-                            <td class="results" >
-                                <a href="{{ gene_signature.extraction_id|c_results_url }}">
-                                    <i class="fa fa-file-o" data-toggle="tooltip" title="Results page for the processed gene signature."></i>
-                                </a>
-                            </td>
-                            <td class="title">
-                                {% if dataset.title|c_filter_empty|length > 50 %}
-                                    <span data-toggle="tooltip" title="{{ dataset.title }}">
-                                        {{ dataset.title|c_filter_empty|truncate(50) }}
-                                    </span>
-                                {% else %}
+                        <td class="index">{{ loop.index }}</td>
+                        <td class="results" >
+                            <a href="{{ gene_signature.extraction_id|c_results_url }}">
+                                <i class="fa fa-file-o" data-toggle="tooltip" title="Results page for the processed gene signature."></i>
+                            </a>
+                        </td>
+                        <td class="title">
+                            {% if dataset.title|c_filter_empty|length > 50 %}
+                                <span data-toggle="tooltip" title="{{ dataset.title }}">
                                     {{ dataset.title|c_filter_empty|truncate(50) }}
-                                {% endif %}
-                            </td>
-                            <td class="summary">
-                                {% if dataset.summary|c_filter_empty|length > 200 %}
-                                    <span data-toggle="tooltip" title="{{ dataset.summary }}">
-                                        {{ dataset.summary|c_filter_empty|truncate(200) }}
-                                    </span>
-                                {% else %}
-                                    {{ dataset.summary|c_filter_empty }}
-                                {% endif %}
-                            </td>
-                            <td class="organism">
-                                {{ dataset.organism|c_filter_empty }}
-                            </td>
-                            <td class="platform">{{ dataset.platform|c_filter_empty }}</td>
-                            <td class="optional-metadata">
-                                {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
-                                    <div class="optional-metadata-content">
-                                        <table>
-                                        {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
-                                            <tr>
-                                                <td>{{ opt_meta.name|capitalize }}</td>
-                                                <td>
-                                                    <a href="{{ opt_meta.value|c_metadata_value_url(opt_meta.name) }}">
-                                                        {{ opt_meta.value }}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                        </table>
-                                    </div>
-                                {% endif %}
-                            </td>
-                            <td class="select-box">
-                                <input type="checkbox" class="consensus" name="{{ gene_signature.extraction_id }}">
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                                </span>
+                            {% else %}
+                                {{ dataset.title|c_filter_empty|truncate(50) }}
+                            {% endif %}
+                        </td>
+                        <td class="summary">
+                            {% if dataset.summary|c_filter_empty|length > 200 %}
+                                <span data-toggle="tooltip" title="{{ dataset.summary }}">
+                                    {{ dataset.summary|c_filter_empty|truncate(200) }}
+                                </span>
+                            {% else %}
+                                {{ dataset.summary|c_filter_empty }}
+                            {% endif %}
+                        </td>
+                        <td class="organism">
+                            {{ dataset.organism|c_filter_empty }}
+                        </td>
+                        <td class="platform">{{ dataset.platform|c_filter_empty }}</td>
+                        <td class="optional-metadata">
+                            {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
+                                <div class="optional-metadata-content">
+                                    <table>
+                                    {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                                        <tr>
+                                            <td>{{ opt_meta.name|capitalize }}</td>
+                                            <td>
+                                                <a href="{{ opt_meta.value|c_metadata_value_url(opt_meta.name) }}">
+                                                    {{ opt_meta.value }}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </table>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td class="select-box">
+                            <input type="checkbox" class="consensus" name="{{ gene_signature.extraction_id }}">
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 {% endblock %}

@@ -14,92 +14,90 @@
 
     <div class="metadata-page">
         <h1>{{ metadata_name }} <span class="note">{{ num_tags }} gene signatures</span></h1>
-        <div class="table-responsive">
-            <table class="table data-table">
-                <thead>
+        <table class="table data-table table-responsive">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Results</th>
+                    <th>Title</th>
+                    <th>Summary</th>
+                    <th>Organism</th>
+                    <th>Platform</th>
+                    <th>Optional Metadata</th>
+                    <th>Tags</th>
+                    <th><i class="fa fa-check"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in metadata %}
+                    {% set sig = row.gene_signature %}
+                    {% set dataset = sig.soft_file.dataset %}
                     <tr>
-                        <th></th>
-                        <th>Results</th>
-                        <th>Title</th>
-                        <th>Summary</th>
-                        <th>Organism</th>
-                        <th>Platform</th>
-                        <th>Optional Metadata</th>
-                        <th>Tags</th>
-                        <th><i class="fa fa-check"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in metadata %}
-                        {% set sig = row.gene_signature %}
-                        {% set dataset = sig.soft_file.dataset %}
-                        <tr>
-                            <td class="index">{{ loop.index }}</td>
-                            <td class="results">
-                                <a href="{{ sig.extraction_id|c_results_url }}">
-                                    <i class="fa fa-file-o"></i>
-                                </a>
-                            </td>
-                            <td class="title">
-                                {% if dataset.title|c_filter_empty|length > 50 %}
-                                    <span data-toggle="tooltip" title="{{ dataset.title }}">
-                                        {{ dataset.title|c_filter_empty|truncate(50) }}
-                                    </span>
-                                {% else %}
+                        <td class="index">{{ loop.index }}</td>
+                        <td class="results">
+                            <a href="{{ sig.extraction_id|c_results_url }}">
+                                <i class="fa fa-file-o"></i>
+                            </a>
+                        </td>
+                        <td class="title">
+                            {% if dataset.title|c_filter_empty|length > 50 %}
+                                <span data-toggle="tooltip" title="{{ dataset.title }}">
                                     {{ dataset.title|c_filter_empty|truncate(50) }}
-                                {% endif %}
-                            </td>
-                            <td class="summary">
-                                {% if dataset.summary|c_filter_empty|length > 150 %}
-                                    <span data-toggle="tooltip" title="{{ dataset.summary }}">
-                                        {{ dataset.summary|c_filter_empty|truncate(150) }}
-                                    </span>
-                                {% else %}
-                                    {{ dataset.summary|c_filter_empty }}
-                                {% endif %}
-                            </td>
-                            <td class="organism">
-                                {% set organism = sig.optional_metadata|c_filter_organism|c_filter_empty %}
-                                {% if organism %}
-                                    <a href="{{ organism|c_metadata_value_url('organism') }}">
-                                        {{ organism }}
-                                    </a>
-                                {% endif %}
-                            </td>
-                            <td class="platform">
-                                {{ dataset.platform|c_filter_empty }}
-                            </td>
-                            <td class="optional-metadata">
-                                <div class="optional-metadata-content">
-                                    <table>
-                                    {% for opt_meta in sig.optional_metadata|c_filter_optional_metadata %}
-                                        <tr>
-                                            <td>{{ opt_meta.name|capitalize }}</td>
-                                            <td>
-                                                <a href="{{ opt_meta.value|c_metadata_value_url(opt_meta.name) }}">
-                                                    {{ opt_meta.value }}
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </table>
-                                </div>
-                            </td>
-                            <td class="tags">
-                                {% for tag in sig.tags %}
-                                    <span class="label">
-                                        <a href="{{ tag.name|c_tag_url }}">{{ tag.name }}</a>
-                                    </span>
+                                </span>
+                            {% else %}
+                                {{ dataset.title|c_filter_empty|truncate(50) }}
+                            {% endif %}
+                        </td>
+                        <td class="summary">
+                            {% if dataset.summary|c_filter_empty|length > 150 %}
+                                <span data-toggle="tooltip" title="{{ dataset.summary }}">
+                                    {{ dataset.summary|c_filter_empty|truncate(150) }}
+                                </span>
+                            {% else %}
+                                {{ dataset.summary|c_filter_empty }}
+                            {% endif %}
+                        </td>
+                        <td class="organism">
+                            {% set organism = sig.optional_metadata|c_filter_organism|c_filter_empty %}
+                            {% if organism %}
+                                <a href="{{ organism|c_metadata_value_url('organism') }}">
+                                    {{ organism }}
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td class="platform">
+                            {{ dataset.platform|c_filter_empty }}
+                        </td>
+                        <td class="optional-metadata">
+                            <div class="optional-metadata-content">
+                                <table>
+                                {% for opt_meta in sig.optional_metadata|c_filter_optional_metadata %}
+                                    <tr>
+                                        <td>{{ opt_meta.name|capitalize }}</td>
+                                        <td>
+                                            <a href="{{ opt_meta.value|c_metadata_value_url(opt_meta.name) }}">
+                                                {{ opt_meta.value }}
+                                            </a>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
-                            </td>
-                            <td class="select-box">
-                                <input type="checkbox" class="consensus" name="{{ sig.extraction_id }}">
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                                </table>
+                            </div>
+                        </td>
+                        <td class="tags">
+                            {% for tag in sig.tags %}
+                                <span class="label">
+                                    <a href="{{ tag.name|c_tag_url }}">{{ tag.name }}</a>
+                                </span>
+                            {% endfor %}
+                        </td>
+                        <td class="select-box">
+                            <input type="checkbox" class="consensus" name="{{ sig.extraction_id }}">
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 {% endblock %}

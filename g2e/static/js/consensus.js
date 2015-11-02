@@ -29,7 +29,9 @@ $(function() {
 
     var $dataTables = $('.data-table');
     $dataTables.dataTable({
+        bSort: false,
         bPaginate: true,
+        bAutoWidth: false,
         fnInitComplete: function() {
             $dataTables.fadeIn();
         }
