@@ -119,14 +119,11 @@ class SoftFile(db.Model):
         experimental = [SoftFileSample(x[0], False) for x in samples if x[1] == '1']
         samples = control + experimental
 
-        # TODO: Remove this from the web user interface?
-        platform = args['platform'] if 'platform' in args else None
         organism = args['organism'] if 'organism' in args else None
 
         dataset = CustomDataset(
             title=title,
-            organism=organism,
-            platform=platform
+            organism=organism
         )
         return cls(samples, dataset, text_file, genes, a_vals, b_vals)
 

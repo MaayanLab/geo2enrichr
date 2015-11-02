@@ -34,7 +34,7 @@
             <caption>SOFT file</caption>
 
             <tr>
-                <td>Title</td>
+                <td>Title / Description</td>
                 <td>{{ sf.dataset.title }}</td>
             </tr>
             {% if sf.dataset.record_type == 'geo' %}
@@ -45,7 +45,7 @@
                 {% if sf.dataset.summary %}
                     <tr>
                         <td>Summary</td>
-                        <td>{{ sf.data_record.summary }}</td>
+                        <td>{{ sf.dataset.summary }}</td>
                     </tr>
                 {% endif %}
             {% endif %}
@@ -55,11 +55,12 @@
                     <td>{{ sf.dataset.organism }}</td>
                 </tr>
             {% endif %}
-
-            <tr>
-                <td>Platform</td>
-                <td>{{ gene_signature.soft_file.dataset.platform }}</td>
-            </tr>
+            {% if gene_signature.soft_file.dataset.platform %}
+                <tr>
+                    <td>Platform</td>
+                    <td>{{ gene_signature.soft_file.dataset.platform }}</td>
+                </tr>
+            {% endif %}
             <tr>
                 <td>Normalized</td>
                 <td>{{ gene_signature.soft_file.normalize }}</td>
