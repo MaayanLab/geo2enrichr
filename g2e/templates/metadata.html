@@ -40,8 +40,24 @@
                                     <i class="fa fa-file-o"></i>
                                 </a>
                             </td>
-                            <td class="title">{{ dataset.title|c_filter_empty }}</td>
-                            <td class="summary">{{ dataset.summary|c_filter_empty }}</td>
+                            <td class="title">
+                                {% if dataset.title|c_filter_empty|length > 50 %}
+                                    <span data-toggle="tooltip" title="{{ dataset.title }}">
+                                        {{ dataset.title|c_filter_empty|truncate(50) }}
+                                    </span>
+                                {% else %}
+                                    {{ dataset.title|c_filter_empty|truncate(50) }}
+                                {% endif %}
+                            </td>
+                            <td class="summary">
+                                {% if dataset.summary|c_filter_empty|length > 150 %}
+                                    <span data-toggle="tooltip" title="{{ dataset.summary }}">
+                                        {{ dataset.summary|c_filter_empty|truncate(150) }}
+                                    </span>
+                                {% else %}
+                                    {{ dataset.summary|c_filter_empty }}
+                                {% endif %}
+                            </td>
                             <td class="organism">
                                 {% set organism = sig.optional_metadata|c_filter_organism|c_filter_empty %}
                                 {% if organism %}
@@ -63,7 +79,7 @@
                                     <table>
                                     {% for opt_meta in sig.optional_metadata|c_filter_optional_metadata %}
                                         <tr>
-                                            <td>{{ opt_meta.name|c_replace_underscores|capitalize }}</td>
+                                            <td>{{ opt_meta.name|capitalize }}</td>
                                             <td>
                                                 <a href="{{ opt_meta.value|c_metadata_value_url(opt_meta.name) }}">
                                                     {{ opt_meta.value }}

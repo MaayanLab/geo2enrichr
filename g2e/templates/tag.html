@@ -27,32 +27,40 @@
                         {% set dataset = gene_signature.soft_file.dataset %}
                         <tr>
                             <td class="index">{{ loop.index }}</td>
-                            <td class="results">
+                            <td class="results" >
                                 <a href="{{ gene_signature.extraction_id|c_results_url }}">
-                                    <i class="fa fa-file-o"></i>
+                                    <i class="fa fa-file-o" data-toggle="tooltip" title="Results page for the processed gene signature."></i>
                                 </a>
                             </td>
-                            <td class="title">{{ dataset.title|c_filter_empty }}</td>
-                            <td class="summary">{{ dataset.summary|c_filter_empty }}</td>
-                            <td class="organism">
-                                {% if dataset.organism %}
-                                    <a href="{{ dataset.organism|c_metadata_value_url('organism') }}">
-                                        {{ dataset.organism }}
-                                    </a>
+                            <td class="title">
+                                {% if dataset.title|c_filter_empty|length > 50 %}
+                                    <span data-toggle="tooltip" title="{{ dataset.title }}">
+                                        {{ dataset.title|c_filter_empty|truncate(50) }}
+                                    </span>
+                                {% else %}
+                                    {{ dataset.title|c_filter_empty|truncate(50) }}
                                 {% endif %}
                             </td>
-                            <td class="platform">
-                                <a href="{{ gene_signature.soft_file.platform|c_metadata_value_url('platform') }}">
-                                    {{ gene_signature.soft_file.platform|c_filter_empty }}
-                                </a>
+                            <td class="summary">
+                                {% if dataset.summary|c_filter_empty|length > 200 %}
+                                    <span data-toggle="tooltip" title="{{ dataset.summary }}">
+                                        {{ dataset.summary|c_filter_empty|truncate(200) }}
+                                    </span>
+                                {% else %}
+                                    {{ dataset.summary|c_filter_empty }}
+                                {% endif %}
                             </td>
+                            <td class="organism">
+                                {{ dataset.organism|c_filter_empty }}
+                            </td>
+                            <td class="platform">{{ dataset.platform|c_filter_empty }}</td>
                             <td class="optional-metadata">
                                 {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
                                     <div class="optional-metadata-content">
                                         <table>
                                         {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
                                             <tr>
-                                                <td>{{ opt_meta.name|c_replace_underscores|capitalize }}</td>
+                                                <td>{{ opt_meta.name|capitalize }}</td>
                                                 <td>
                                                     <a href="{{ opt_meta.value|c_metadata_value_url(opt_meta.name) }}">
                                                         {{ opt_meta.value }}

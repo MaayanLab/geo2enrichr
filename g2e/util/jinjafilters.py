@@ -25,10 +25,10 @@ def c_urlencode(context, value):
     return urllib.quote_plus(value)
 
 
-@jinja2.contextfilter
-@jinjafilters.app_template_filter('c_replace_underscores')
-def c_replace_underscores(context, value):
-    return value.replace('_', ' ')
+# @jinja2.contextfilter
+# @jinjafilters.app_template_filter('c_replace_underscores')
+# def c_replace_underscores(context, value):
+#     return value.replace('_', ' ')
 
 
 # Data filters

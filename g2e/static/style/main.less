@@ -125,7 +125,7 @@ pre {
     .modal {
         background: @color-lightyellow;
         border: 1px solid @color-yellow;
-        color: @color-darkgray;
+        color: @color-black-almost;
         font-size: 12px;
         font-weight: bold;
         margin: 0 auto;
@@ -157,19 +157,34 @@ caption {
     margin-top: 10px;
     padding: 0;
 }
-.ui-tooltip {
-    background: @color-lightyellow;
-    border: 1px solid @color-yellow;
-    border-radius: 0;
-    -webkit-box-shadow: none;
-	box-shadow: none;
-    color: @color-darkgray;
-    font-family: @font-family-base;
-    font-size: 12px;
-    /*font-weight: bold;*/
-    radius: 0;
-    padding: 5px;
+.tooltip {
+    opacity: 1 !important;
+    .tooltip-inner {
+        background: @color-lightyellow;
+        border: 1px solid @color-yellow;
+        color: @color-black-almost;
+        font-weight: bold;
+        border-radius: 0;
+        text-align: left;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        max-width: 400px;
+    }
+    /* This is the color of the arrow: http://stackoverflow.com/a/15383656/1830334 */
+    &.top .tooltip-arrow {
+        border-top-color: @color-yellow !important;
+    }
+    &.right .tooltip-arrow {
+        border-right-color: @color-yellow !important;
+    }
+    &.bottom .tooltip-arrow {
+        border-bottom-color: @color-yellow !important;
+    }
+    &.left .tooltip-arrow {
+        border-left-color: @color-yellow !important;
+    }
 }
+
 .instruction {
     font-size: @font-size-base;
     font-style: italic;

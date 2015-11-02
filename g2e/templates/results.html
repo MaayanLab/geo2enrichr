@@ -79,7 +79,13 @@
             <caption>Metadata</caption>
             <tr>
                 <td>Differential expression method</td>
-                <td>{{ gene_signature.required_metadata.diff_exp_method }}</td>
+                <td>
+                    {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                        <a href="http://maayanlab.net/CD/" target="_blank">Characteristic Direction</a>
+                    {% else %}
+                        T-test
+                    {% endif %}
+                </td>
             </tr>
 
             {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
@@ -133,11 +139,21 @@
             <thead>
                 <tr>
                     <td></td>
-                    <td title="Text file containing a gene list resulting from differential expression analysis.">Gene lists</td>
-                    <td title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Enrichr</td>
+                    <td>
+                        <span data-toggle="tooltip" title="Text file containing a gene list resulting from differential expression analysis.">Gene lists</span>
+                    </td>
+                    <td>
+                        <span data-toggle="tooltip" title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Enrichr</span>
+                    </td>
                     {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
-                        <td title="Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.">L1000CDS2</td>
-                        <td title="Perform principle angle enrichment analysis against over 70 gene set libraries.">PAEA</td>
+                        <td>
+                            <span data-toggle="tooltip" title="Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.">L1000CDS2</span>
+                        </td>
+                        <td>
+                            <span data-toggle="tooltip" title="Perform principle angle enrichment analysis against over 70 gene set libraries.">
+                                PAEA
+                            </span>
+                        </td>
                     {% endif %}
                     {% if use_crowdsourcing %}
                         <td title="Crowdsourcing">Crowdsourcing</td>

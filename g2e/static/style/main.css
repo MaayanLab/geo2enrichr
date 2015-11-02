@@ -156,18 +156,32 @@ caption {
   margin-top: 10px;
   padding: 0;
 }
-.ui-tooltip {
+.tooltip {
+  opacity: 1 !important;
+  /* This is the color of the arrow: http://stackoverflow.com/a/15383656/1830334 */
+}
+.tooltip .tooltip-inner {
   background: #fffac7;
   border: 1px solid #fff169;
+  color: #444444;
+  font-weight: bold;
   border-radius: 0;
+  text-align: left;
   -webkit-box-shadow: none;
   box-shadow: none;
-  color: #444444;
-  font-family: arial, sans-serif;
-  font-size: 12px;
-  /*font-weight: bold;*/
-  radius: 0;
-  padding: 5px;
+  max-width: 400px;
+}
+.tooltip.top .tooltip-arrow {
+  border-top-color: #fff169 !important;
+}
+.tooltip.right .tooltip-arrow {
+  border-right-color: #fff169 !important;
+}
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #fff169 !important;
+}
+.tooltip.left .tooltip-arrow {
+  border-left-color: #fff169 !important;
 }
 .instruction {
   font-size: 13px;
