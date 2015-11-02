@@ -49,6 +49,8 @@ def c_filter_optional_metadata(context, value):
     results = []
     for metadata in value:
         if (
+            metadata.value == None or
+            metadata.value.strip() == '' or
             #metadata.name == 'organism' or
             metadata.name == 'user_key' or
             metadata.name == 'userKey' or

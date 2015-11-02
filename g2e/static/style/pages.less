@@ -105,7 +105,7 @@ table {
     td {
         vertical-align: middle !important;
     }
-    .optional-metadata {
+    .optional-metadata-content {
         background-color: @color-lightgray1;
         padding: 10px;
         table {
@@ -119,33 +119,51 @@ table {
     }
 }
 
-.metadata,
-.tag {
+.tag-page,
+.metadata-page {
+    .index {
+        width: 2%;
+    }
+    .results {
+        width: 4%;
+    }
+    .select-box,
+    .organism,
+    .platform {
+        width: 4%;
+    }
+}
+
+.tag-page {
+    .title {
+        width: 10%;
+    }
+    .summary {
+        width: 40%;
+    }
+    .optional-metadata {
+        width: 40%;
+    }
+}
+.metadata-page {
+    .title {
+        width: 10%;
+    }
+    .summary {
+        width: 35%;
+    }
+    .optional-metadata {
+        width: 30%;
+    }
+    .tags {
+        width: 15%;
+    }
+}
+
+.metadata-page,
+.tag-page {
     th {
         border-bottom: 2px solid @color-lightgray3;
         text-align: left;
-    }
-    td:first-child {
-        font-weight: normal !important;
-    }
-    .note {
-        font-size: 12px;
-        font-weight: normal;
-        margin-left: 15px;
-    }
-    dl {
-        margin: 0;
-        overflow: hidden;
-        width: 100%;
-    }
-    dt {
-        float: left;
-        font-weight: normal;
-        width: 20%;
-    }
-    dd {
-        float: left;
-        margin: 0;
-        width: 80%;
     }
 }

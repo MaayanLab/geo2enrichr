@@ -6,7 +6,7 @@
 
     {% include 'partial/consensus.html' %}
 
-    <div class="tag">
+    <div class="tag-page">
         <h1>{{ tag.name }}<span class="note">{{ num_tags }} gene signatures</span></h1>
         <div class="table-responsive">
             <table class="table">
@@ -26,15 +26,15 @@
                     {% for gene_signature in tag.gene_signatures %}
                         {% set dataset = gene_signature.soft_file.dataset %}
                         <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>
+                            <td class="index">{{ loop.index }}</td>
+                            <td class="results">
                                 <a href="{{ gene_signature.extraction_id|c_results_url }}">
                                     <i class="fa fa-file-o"></i>
                                 </a>
                             </td>
-                            <td>{{ dataset.title }}</td>
-                            <td>{{ dataset.summary }}</td>
-                            <td>
+                            <td class="title">{{ dataset.title|c_filter_empty }}</td>
+                            <td class="summary">{{ dataset.summary|c_filter_empty }}</td>
+                            <td class="organism">
                                 {% if dataset.organism %}
                                     <a href="{{ dataset.organism|c_metadata_value_url('organism') }}">
                                         {{ dataset.organism }}
@@ -46,9 +46,9 @@
                                     {{ gene_signature.soft_file.platform|c_filter_empty }}
                                 </a>
                             </td>
-                            <td>
+                            <td class="optional-metadata">
                                 {% if gene_signature.optional_metadata|c_filter_optional_metadata %}
-                                    <div class="optional-metadata">
+                                    <div class="optional-metadata-content">
                                         <table>
                                         {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
                                             <tr>
@@ -64,7 +64,7 @@
                                     </div>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="select-box">
                                 <input type="checkbox" class="consensus" name="{{ gene_signature.extraction_id }}">
                             </td>
                         </tr>

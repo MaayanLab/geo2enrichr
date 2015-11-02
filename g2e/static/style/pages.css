@@ -79,48 +79,57 @@
 table td {
   vertical-align: middle !important;
 }
-table .optional-metadata {
+table .optional-metadata-content {
   background-color: #f5f5f5;
   padding: 10px;
 }
-table .optional-metadata table {
+table .optional-metadata-content table {
   width: 100%;
 }
-table .optional-metadata table td:first-child {
+table .optional-metadata-content table td:first-child {
   font-weight: bold !important;
   padding-right: 10px;
   width: 30%;
 }
-.metadata th,
-.tag th {
+.tag-page .index,
+.metadata-page .index {
+  width: 2%;
+}
+.tag-page .results,
+.metadata-page .results {
+  width: 4%;
+}
+.tag-page .select-box,
+.metadata-page .select-box,
+.tag-page .organism,
+.metadata-page .organism,
+.tag-page .platform,
+.metadata-page .platform {
+  width: 4%;
+}
+.tag-page .title {
+  width: 10%;
+}
+.tag-page .summary {
+  width: 40%;
+}
+.tag-page .optional-metadata {
+  width: 40%;
+}
+.metadata-page .title {
+  width: 10%;
+}
+.metadata-page .summary {
+  width: 35%;
+}
+.metadata-page .optional-metadata {
+  width: 30%;
+}
+.metadata-page .tags {
+  width: 15%;
+}
+.metadata-page th,
+.tag-page th {
   border-bottom: 2px solid #eeeeee;
   text-align: left;
-}
-.metadata td:first-child,
-.tag td:first-child {
-  font-weight: normal !important;
-}
-.metadata .note,
-.tag .note {
-  font-size: 12px;
-  font-weight: normal;
-  margin-left: 15px;
-}
-.metadata dl,
-.tag dl {
-  margin: 0;
-  overflow: hidden;
-  width: 100%;
-}
-.metadata dt,
-.tag dt {
-  float: left;
-  font-weight: normal;
-  width: 20%;
-}
-.metadata dd,
-.tag dd {
-  float: left;
-  margin: 0;
-  width: 80%;
 }

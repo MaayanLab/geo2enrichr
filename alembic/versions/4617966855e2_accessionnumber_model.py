@@ -31,6 +31,10 @@ Session = sessionmaker()
 # 5174 - GSE63415 - bb32c4fa32
 
 
+def downgrade():
+    pass
+
+
 def upgrade():
 
     op.create_table(
