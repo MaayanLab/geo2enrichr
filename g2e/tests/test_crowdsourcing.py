@@ -5,6 +5,7 @@ from g2e.model.optionalmetadata import OptionalMetadata
 from g2e.model.gene import Gene
 from g2e.model.rankedgene import RankedGene
 from g2e.model.softfile import SoftFile
+from g2e.model.geodataset import GeoDataset
 from g2e.model.softfilesample import SoftFileSample
 from g2e.model.tag import Tag
 
@@ -36,7 +37,12 @@ class TestCrowdsourcing(unittest.TestCase):
             RankedGene(Gene('ZNF331'), -15.22)
         ]
 
-        self.soft_file = SoftFile('fake_name', self.samples, [], None, None, 'fake_platform', None)
+        dataset = GeoDataset(
+            accession='XXX',
+            title='fake_title',
+            platform='fake_platform'
+        )
+        self.soft_file = SoftFile(self.samples, dataset, self.genes, None, None, False)
 
     def testWithOneTag(self):
         self.optional_metadata += [
@@ -54,11 +60,3 @@ class TestCrowdsourcing(unittest.TestCase):
             link,
             'http://maayanlab.net/crowdsourcing/microtask_leaderboard.php#task5'
         )
-
-    # def testErrorHandling(self):
-    #     tag_name = 'AGING_BD2K_LINCS_DCIC_COURSERA'
-    #     tags = [Tag(tag_name)]
-    #     response = crowdsourcing.get_link(
-    #         self.genes, self.optional_metadata, self.soft_file, tags
-    #     )
-    #     self.assertEqual(response['message'], 'Authentication Failed.')

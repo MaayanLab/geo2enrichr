@@ -134,7 +134,7 @@ class SoftFile(db.Model):
            'name': self.name,
            'normalize': self.normalize,
            'is_geo': self.is_geo,
-           'platform': self.platform,
+           'platform': self.dataset.platform,
            'text_file': self.text_file
        }
 

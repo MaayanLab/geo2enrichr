@@ -78,8 +78,8 @@ def _post(genes, optional_metadata, soft_file, tag):
 
     payload = {
         'hashtag': '#' + tag.name,
-        'geo_id': soft_file.name,
-        'platform': soft_file.platform,
+        'geo_id': soft_file.dataset.title,
+        'platform': soft_file.dataset.platform,
         'ctrl_ids': ctrl_ids,
         'pert_ids': ','.join([x.name for x in soft_file.samples if not x.is_control]),
         'up_genes': ','.join([x.gene.name for x in genes if x.value > 0]),
