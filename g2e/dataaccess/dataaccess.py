@@ -119,7 +119,6 @@ def get_statistics():
         platforms = session.query(sa.func.distinct(GeoDataset.platform))
 
         platform_counts = []
-        num_platforms = platforms.count()
         for tpl in platforms:
             platform = tpl[0]
             count = session.query(GeneSignature, SoftFile, GeoDataset)\
@@ -132,15 +131,10 @@ def get_statistics():
                 'count': count
             })
 
-        sum_ = 0
-        for c in platform_counts:
-            sum_ += c['count']
-        print sum_
-
         return {
             'num_gene_signatures': num_gene_signatures,
             'num_gene_lists': num_gene_lists,
             'num_tags': num_tags,
-            'num_platforms': num_platforms,
+            'num_platforms': len(platform_counts),
             'platform_counts': platform_counts
         }
