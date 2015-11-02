@@ -11,6 +11,7 @@ def get_file_contents_as_string(genelist):
     """Writes the contents of a GeneList to disk and returns a relative path.
     """
     req_metadata = genelist.gene_signature.required_metadata
+    dataset = genelist.gene_signature.soft_file.dataset
     contents = ''
     contents += __line('direction', genelist.direction)
     contents += __line('num_genes', len(genelist.ranked_genes))
@@ -18,6 +19,7 @@ def get_file_contents_as_string(genelist):
     contents += __line('cutoff', req_metadata.cutoff)
     contents += __line('correction_method', req_metadata.ttest_correction_method)
     contents += __line('threshold', req_metadata.threshold)
+    contents += __line('organism', dataset.organism)
 
     opt_metadata = genelist.gene_signature.optional_metadata
     for om in opt_metadata:
