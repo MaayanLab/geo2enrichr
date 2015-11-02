@@ -103,38 +103,47 @@ class SoftFile(db.Model):
     def from_file(cls, file_obj, args):
         """Constructs a SoftFile from a user uploaded file.
         """
+        # We support name and title for historical reasons, i.e. Firefox
+        # support since we won't be releasing new versions of the add on.
         if 'name' in args and args['name'] != '':
-            name = args['name']
+            title = args['name']
+        elif 'title' in args and args['title'] != '':
+            title = args['title']
         else:
-            name = str(time.time())[:10]
-        text_file = softfilemanager.save(name, file_obj)
-        genes, a_vals, b_vals, samples = softparser.parse(name, is_geo=False)
+            title = str(time.time())[:10]
+
+        text_file = softfilemanager.save(title, file_obj)
+        genes, a_vals, b_vals, samples = softparser.parse(title, is_geo=False)
 
         control =      [SoftFileSample(x[0], True)  for x in samples if x[1] == '0']
         experimental = [SoftFileSample(x[0], False) for x in samples if x[1] == '1']
         samples = control + experimental
 
         # TODO: Remove this from the web user interface?
-        #platform = args['platform'] if 'platform' in args else None
-
+        platform = args['platform'] if 'platform' in args else None
         organism = args['organism'] if 'organism' in args else None
 
         dataset = CustomDataset(
-            title=name,
-            organism=organism
+            title=title,
+            organism=organism,
+            platform=platform
         )
-
         return cls(samples, dataset, text_file, genes, a_vals, b_vals)
 
     @property
     def serialize(self):
        """Return serialized object.
        """
+       if hasattr(self.dataset, 'platform'):
+           platform = self.dataset.platform
+       else:
+           platform = None
+
        return {
            'name': self.name,
            'normalize': self.normalize,
            'is_geo': self.is_geo,
-           'platform': self.dataset.platform,
+           'platform': platform,
            'text_file': self.text_file
        }
 

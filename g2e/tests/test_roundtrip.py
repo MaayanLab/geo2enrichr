@@ -122,13 +122,13 @@ class TestRoundTrip(unittest.TestCase):
         self.assertTrue(get_gene_value(genelist, 'PDZRN3') == -0.0375523)
         print time.time() - s
 
-
     def test_file_upload(self):
         self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
             file = (file('g2e/tests/data/example_input.txt'), 'test.txt'),
-            name = 'ExampleData',
+            title = 'ExampleData',
             cutoff = 'none'
         ))
+
         self.resp_dict = json.loads(self.resp.data.decode())
         self.assertEquals(self.resp.status_code, 200)
         self.assertTrue('extraction_id' in self.resp_dict)
