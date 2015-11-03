@@ -221,8 +221,10 @@ caption {
   display: block;
 }
 .label {
-  background-color: #777;
+  background-color: #009dff;
   border-radius: 0;
+  font-size: 11px;
+  margin-right: 4px;
 }
 .label a {
   color: white;
@@ -235,7 +237,7 @@ caption {
   text-decoration: none;
 }
 .label:hover {
-  background-color: #444444;
+  background-color: #006eb3;
 }
 /* Main structural elements:
  * header, content, footer

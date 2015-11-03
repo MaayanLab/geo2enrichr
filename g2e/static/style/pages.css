@@ -94,46 +94,11 @@ table .optional-metadata-content table td:first-child {
   padding-right: 10px;
   width: 30%;
 }
-.tag-page .index,
-.metadata-page .index {
-  width: 2%;
-}
-.tag-page .results,
-.metadata-page .results,
-.tag-page .select-box,
-.metadata-page .select-box,
-.tag-page .organism,
-.metadata-page .organism,
-.tag-page .platform,
-.metadata-page .platform {
-  width: 4%;
-}
 .tag-page .note,
 .metadata-page .note {
   font-size: 12px;
   font-weight: normal;
   margin-left: 15px;
-}
-.tag-page .title {
-  width: 10%;
-}
-.tag-page .summary {
-  width: 37%;
-}
-.tag-page .optional-metadata {
-  width: 35%;
-}
-.metadata-page .title {
-  width: 10%;
-}
-.metadata-page .summary {
-  width: 30%;
-}
-.metadata-page .optional-metadata {
-  width: 30%;
-}
-.metadata-page .tags {
-  width: 12%;
 }
 .metadata-page th,
 .tag-page th {
