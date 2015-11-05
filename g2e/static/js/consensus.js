@@ -74,25 +74,44 @@ $(function() {
     }
 
     function requestClustergrammer() {
-        var geneSignatures = [];
+        var geneSignatures = [],
+            titles = {};
         $.each(arguments, function(i, response) {
-            var signature = response[0];
+            var signature = response[0],
+                sf = signature.soft_file,
+                colTitle = sf.title,
+                newNumTitles;
+
+            if (sf.is_geo) {
+                colTitle = sf.accession + ': ' + colTitle;
+            }
+
+            if (titles[colTitle]) {
+                newNumTitles = titles[colTitle] + 1;
+                titles[colTitle] = newNumTitles;
+                colTitle = colTitle + newNumTitles;
+            } else {
+                titles[colTitle] = 1;
+            }
+
             geneSignatures.push({
-                col_title: signature.extraction_id,
+                col_title: colTitle,
                 link: RESULTS_PAGE_BASE + signature.extraction_id,
                 genes: getCombinedList(signature.gene_lists)
             });
         });
 
+        var data = JSON.stringify({
+            description: 'TODO',
+            link: window.location.href,
+            gene_signatures: geneSignatures
+        });
+        console.log(data);
         $.ajax({
             url: 'http://amp.pharm.mssm.edu/clustergrammer/g2e/',
             method: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({
-                description: 'TODO',
-                link: window.location.href,
-                gene_signatures: geneSignatures
-            }),
+            data: data,
             success: embedIframe,
             complete: function() {
                 loader.stop();

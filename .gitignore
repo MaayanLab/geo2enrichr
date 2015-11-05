@@ -16,10 +16,11 @@ g2e/extension/firefox/geo2enrichr.xpi
 # Chrome Extension zip file
 *.zip
 
-# JS build files and dependencies
+# JS build files, dependencies, analysis
 resources/
 scripts/node_modules/
 misc/
+analysis/
 
 # Python
 *.pyc

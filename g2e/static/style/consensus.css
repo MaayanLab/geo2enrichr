@@ -21,11 +21,14 @@
   border: 1px solid #eeeeee;
   height: 1000px;
   margin-top: 20px;
-  width: 1000px;
+  width: 100%;
 }
 #consensus #pca-container {
   display: none;
   margin-top: 20px;
+}
+table .optional-metadata {
+  min-width: 300px;
 }
 .data-table {
   /* JS shows table when it's ready. */
