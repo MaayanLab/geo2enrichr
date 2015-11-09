@@ -66,6 +66,8 @@ class SoftFile(db.Model):
         dataset = datasetdal.get(accession)
         if dataset == None:
             platform = args['platform']
+            if platform.index('GPL') == 0:
+                platform = platform[3:]
             organism = args['organism'] if 'organism' in args else 'TODO'
             title = args['title']       if 'title'    in args else 'TODO'
             summary = args['summary']   if 'summary'  in args else 'TODO'
@@ -141,6 +143,11 @@ class SoftFile(db.Model):
         else:
             accession = None
 
+        if self.samples:
+            selected_samples = [{'name':x.name, 'is_control':x.is_control} for x in self.samples]
+        else:
+            selected_samples = 'na'
+
         return {
             'title': self.dataset.title,
             'accession': accession,
@@ -148,7 +155,8 @@ class SoftFile(db.Model):
             'is_geo': self.dataset.record_type == 'geo',
             'platform': platform,
             'organism': self.dataset.organism,
-            'text_file': self.text_file
+            'text_file': self.text_file,
+            'selected_samples': selected_samples
         }
 
     def get_raw_data(self):
