@@ -1,50 +1,87 @@
 $(function() {
 
     var loader = Loader(),
-        FADE_IN_SPEED = 600,
-        FADE_OUT_SPEED = 600,
-        vizTool2Func,
-        RESULTS_PAGE_BASE = 'http://amp.pharm.mssm.edu/g2e/results/';
+        FADE_IN_OUT_SPEED = 600,
+        vizToolConfig;
 
-    vizTool2Func = {
-        'clustergrammer': function() {
-            var chbxs = getSelectedCheckboxes(),
-                promises;
-            if (isValidSelection(chbxs)) {
-                loader.start();
-                promises = buildPromises(chbxs);
-                $.when.apply($, promises).done(requestClustergrammer);
+    vizToolConfig = {
+        enrichr: {
+            init: function() {
+                var chbxs = getSelectedCheckboxes(),
+                    promises;
+                if (isValidSelection(chbxs)) {
+                    loader.start();
+                    requestEnrichmentResults(chbxs);
+                }
             }
         },
-        'pca': function() {
-            var chbxs = getSelectedCheckboxes(),
-                extractionIds;
-            if (isValidSelection(chbxs, 'pca')) {
-                loader.start();
-                extractionIds = getExtractionIds(chbxs);
-                requestPca(extractionIds);
+        clustergrammer: {
+            init:  function() {
+                var chbxs = getSelectedCheckboxes(),
+                    promises;
+                if (isValidSelection(chbxs)) {
+                    loader.start();
+                    promises = buildPromises(chbxs);
+                    $.when.apply($, promises).done(requestClustergrammer);
+                }
+            }
+        },
+        pca: {
+            init: function() {
+                var chbxs = getSelectedCheckboxes(),
+                    extractionIds;
+                if (isValidSelection(chbxs, 'pca')) {
+                    loader.start();
+                    extractionIds = getExtractionIds(chbxs);
+                    requestPca(extractionIds);
+                }
             }
         }
     };
 
-    var $dataTables = $('.data-table');
-    $dataTables.dataTable({
-        bSort: false,
-        bPaginate: true,
-        fnInitComplete: function() {
-            $dataTables.fadeIn();
-        }
-    });
+    setupDataTables();
+    setupConsensusAnalysisListener();
+    setupSelectAll();
 
-    $('#consensus .options button').click(visualizeGeneSignatures);
+    function setupSelectAll() {
+        $('#select-all').click(function(evt) {
+            if ($(evt.target).prop('checked')) {
+                $('input.consensus').prop('checked', true);
+            } else {
+                $('input.consensus').prop('checked', false);
+            }
+        });
+    }
 
-    function visualizeGeneSignatures() {
-        var app = $('#consensus select').find(":selected").attr('data-app');
-        if (typeof vizTool2Func[app] === 'function') {
-            vizTool2Func[app]();
-        } else {
-            alert('No visualization tool selected.');
-        }
+    function setupDataTables() {
+        var $dataTables = $('.data-table');
+        $dataTables.dataTable({
+            bSort: false,
+            bPaginate: true,
+            fnInitComplete: function() {
+                $dataTables.fadeIn();
+            }
+        });
+    }
+
+    function setupConsensusAnalysisListener() {
+        var appOptions = $('.app-options');
+        $('#analysis-tool').change(function(evt) {
+            var app = $(evt.target).find(':selected').attr('data-app'),
+                $selectedOpts = $('#consensus select[data-app-option=' + app + ']'),
+                $allOpts = $('select[data-app-option]');
+
+            $allOpts.addClass('hidden');
+            $selectedOpts.removeClass('hidden');
+        });
+        $('#consensus .options button').click(function() {
+            var app = $('#consensus select').find(":selected").attr('data-app');
+            if (typeof vizToolConfig[app].init === 'function') {
+                vizToolConfig[app].init();
+            } else {
+                alert('No visualization tool selected.');
+            }
+        });
     }
 
     /* Clustergrammer
@@ -73,6 +110,21 @@ $(function() {
         return [];
     }
 
+    function requestEnrichmentResults(chbxs) {
+        $.ajax({
+            url: 'enrichr',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                signatures: chbxs,
+                backgroundType: $('#enrichr-background').val()
+            }),
+            success: function(data) {
+                debugger;
+            }
+        });
+    }
+
     function requestClustergrammer() {
         var geneSignatures = [],
             titles = {};
@@ -96,7 +148,7 @@ $(function() {
 
             geneSignatures.push({
                 col_title: colTitle,
-                link: RESULTS_PAGE_BASE + signature.extraction_id,
+                link: 'http://amp.pharm.mssm.edu/g2e/results/' + signature.extraction_id,
                 genes: getCombinedList(signature.gene_lists)
             });
         });
@@ -106,7 +158,6 @@ $(function() {
             link: window.location.href,
             gene_signatures: geneSignatures
         });
-        console.log(data);
         $.ajax({
             url: 'http://amp.pharm.mssm.edu/clustergrammer/g2e/',
             method: 'POST',
@@ -121,11 +172,11 @@ $(function() {
 
     function embedIframe(data) {
         var $cg = $('#clustergrammer-preview');
-        $cg.fadeIn(FADE_IN_SPEED);
+        $cg.fadeIn(FADE_IN_OUT_SPEED);
         $cg.find('iframe').attr('src', data.preview_link);
         $cg.find('a').attr('href', data.link);
         $cg.find('button').click(function() {
-            $cg.fadeOut(FADE_OUT_SPEED);
+            $cg.fadeOut(FADE_IN_OUT_SPEED);
         });
     }
 
@@ -150,10 +201,10 @@ $(function() {
         function tooltipFormatter() {
             return '<a href="results/' + this.key + '" target="_blank">' + this.key + '</a>';
         }
-        $container.fadeIn(FADE_IN_SPEED);
+        $container.fadeIn(FADE_IN_OUT_SPEED);
         plotPCA(data, 'pca-visualization', tooltipFormatter);
         $container.find('button').click(function() {
-            $container.fadeOut(FADE_OUT_SPEED);
+            $container.fadeOut(FADE_IN_OUT_SPEED);
         });
     }
 
@@ -188,7 +239,7 @@ $(function() {
         var isValid,
             platform;
         if (chbxs.length === 0) {
-            alert('Heyo, no selection.');
+            alert('Please select a gene signature.');
             return false;
         }
         if (vizType === 'pca' && chbxs.length < 3) {
@@ -196,18 +247,20 @@ $(function() {
             return false;
         }
 
-        isValid = true;
-        platform = chbxs[0].platform;
-        $.each(chbxs, function(i, obj) {
-            if (obj.platform !== platform) {
-                isValid = false;
-                return false; // Early return.
-            }
-        });
-
-        if (!isValid) {
-            alert('Every gene signature must come from the same platform.');
-        }
+        // Disable for now in favor of select all!
+        // ---------------------------------------
+        //isValid = true;
+        //platform = chbxs[0].platform;
+        //$.each(chbxs, function(i, obj) {
+        //    if (obj.platform !== platform) {
+        //        isValid = false;
+        //        return false; // Early return.
+        //    }
+        //});
+        //
+        //if (!isValid) {
+        //    alert('Every gene signature must come from the same platform.');
+        //}
 
         return isValid;
     }

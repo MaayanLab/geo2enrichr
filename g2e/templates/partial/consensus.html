@@ -12,19 +12,47 @@
 
 <div id="consensus">
     <div class="description">
-        <h4>Visualize consensus signatures</h4>
-        <ol>
-            <li>Using the drop down below, select a visualization tool.</li>
-            <li>Using the checkboxes in the right-most column, select gene signatures to visualize.</li>
-            <li>Click <strong>Visualize</strong></li>
-        </ol>
-        <div class="options">
-            <select>
-                <option>(Select visualization tool)</option>
-                <option data-app="clustergrammer">Clustergrammer</option>
-                <option data-app="pca">Principal Component Analysis</option>
-            </select>
-            <button class="btn btn-default">Visualize</button>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Analyze consensus signatures</h4>
+                <ol>
+                    <li>Using the drop down below, select a visualization tool.</li>
+                    <li>Using the checkboxes in the right-most column, select gene signatures to visualize.</li>
+                    <li>Click <strong>Visualize</strong></li>
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 options">
+                <select id="analysis-tool">
+                    <option>(Select visualization tool)</option>
+                    <option data-app="enrichr">Enrichr - Gene Set Enrichment Analysis</option>
+                    <option data-app="l1000cds2">L1000CDS2 - Characteristic Search Engine</option>
+                    <option data-app="clustergrammer">Clustergrammer - Hierarchical Clustering</option>
+                    <option data-app="pca">Principal Component Analysis</option>
+                </select>
+                <button class="btn btn-default">Analyze</button>
+            </div>
+            <div class="col-md-6 optional-options">
+                <!--
+                    http://amp.pharm.mssm.edu/Enrichr/datasetStatistics
+                -->
+                <select id="enrichr-background" data-app-option="enrichr" class="app-options hidden">
+                    <option>(Select gene set library)</option>
+                    <option>ChEA</option>
+                    <option>ENCODE_TF_ChIP-seq_2015</option>
+                    <option>Epigenomics_Roadmap_HM_ChIP-seq</option>
+                    <option>KEGG_2015</option>
+                    <option>PPI_Hub_Proteins</option>
+                    <option>GO_Biological_Process</option>
+                    <option>MGI_Mammalian_Phenotype_Level_4</option>
+                </select>
+                <select data-app-option="l1000cds2" class="app-options hidden">
+                    <option>(Select to mimic or reverse expression)</option>
+                    <option>Mimic</option>
+                    <option>Reverse</option>
+                </select>
+            </div>
         </div>
     </div>
     <div id="clustergrammer-preview">
