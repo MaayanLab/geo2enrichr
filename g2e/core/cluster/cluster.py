@@ -35,6 +35,7 @@ def from_soft_file(gene_signature):
         column = sf.ix[:,col_idx].tolist()
         column = [float(x) for x in column]
         genes = zip(sf.ix[:,0], column)
+
         # Clustergrammer expects a list of lists, rather than tuples.
         genes = [[x,y] for x,y in genes]
         gsm = gene_signature.soft_file.samples[col_idx-1]
@@ -52,10 +53,13 @@ def from_soft_file(gene_signature):
     }
 
     headers = { 'content-type': 'application/json' }
-    sess = requests.session()
-    resp = sess.post(CLUSTERGRAMMER_URL, data=json.dumps(payload), headers=headers)
+    resp = requests.post(CLUSTERGRAMMER_URL, data=json.dumps(payload), headers=headers)
 
     if resp.ok:
         print json.loads(resp.text)['link']
         return json.loads(resp.text)['link']
     return None
+
+
+def from_l1000cds_data():
+    pass

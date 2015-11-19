@@ -47,7 +47,7 @@
                     <option>GO_Biological_Process</option>
                     <option>MGI_Mammalian_Phenotype_Level_4</option>
                 </select>
-                <select data-app-option="l1000cds2" class="app-options hidden">
+                <select id="l1000cds2-mode" data-app-option="l1000cds2" class="app-options hidden">
                     <option>(Select to mimic or reverse expression)</option>
                     <option>Mimic</option>
                     <option>Reverse</option>
@@ -65,5 +65,11 @@
     <div id="pca-container">
         <div id="pca-visualization"></div>
         <button class="btn btn-default">Close</button>
+    </div>
+    <div id="l1000cds2-preview">
+        <iframe></iframe>
+        <p>
+            <button class="btn btn-default">Close</button>
+        </p>
     </div>
 </div>

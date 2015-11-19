@@ -20,8 +20,12 @@
         margin-top: 10px;
         padding-left: 20px;
     }
-    #clustergrammer-preview {
+    #pca-container,
+    #clustergrammer-preview,
+    #l1000cds2-preview {
         display: none;
+    }
+    #clustergrammer-preview {
         iframe {
             border: 1px solid @color-lightgray3;
             height: @dim-page-width;
@@ -30,7 +34,6 @@
         }
     }
     #pca-container {
-        display: none;
         margin-top: 20px;
     }
 }
@@ -43,8 +46,8 @@ table {
 
 .data-table {
     /* JS shows table when it's ready. */
-    display: none;
-    overflow: scroll;
+    //display: none;
+    //overflow: scroll;
 }
 .dataTables_wrapper {
     .dataTables_filter {

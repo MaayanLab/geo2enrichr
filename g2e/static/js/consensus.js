@@ -2,16 +2,25 @@ $(function() {
 
     var loader = Loader(),
         FADE_IN_OUT_SPEED = 600,
-        vizToolConfig;
+        vizToolConfig,
+        $dataTable;
 
     vizToolConfig = {
         enrichr: {
             init: function() {
-                var chbxs = getSelectedCheckboxes(),
-                    promises;
+                var chbxs = getSelectedCheckboxes();
                 if (isValidSelection(chbxs)) {
                     loader.start();
-                    requestEnrichmentResults(chbxs);
+                    requestClustergramOfEnrichrResults(chbxs, loader.stop);
+                }
+            }
+        },
+        l1000cds2: {
+            init: function() {
+                var chbxs = getSelectedCheckboxes();
+                if (isValidSelection(chbxs)) {
+                    loader.start();
+                    requestClustergramOfL1000CDS2Results(chbxs, loader.stop);
                 }
             }
         },
@@ -44,23 +53,20 @@ $(function() {
     setupSelectAll();
 
     function setupSelectAll() {
+        var $checkboxes = $($dataTable.cells().nodes()).find('input.consensus');
         $('#select-all').click(function(evt) {
             if ($(evt.target).prop('checked')) {
-                $('input.consensus').prop('checked', true);
+                $checkboxes.prop('checked', true);
             } else {
-                $('input.consensus').prop('checked', false);
+                $checkboxes.prop('checked', false);
             }
         });
     }
 
     function setupDataTables() {
-        var $dataTables = $('.data-table');
-        $dataTables.dataTable({
-            bSort: false,
+        $dataTable = $('.data-table').eq(0).DataTable({
             bPaginate: true,
-            fnInitComplete: function() {
-                $dataTables.fadeIn();
-            }
+            iDisplayLength: 20
         });
     }
 
@@ -110,9 +116,9 @@ $(function() {
         return [];
     }
 
-    function requestEnrichmentResults(chbxs) {
+    function requestClustergramOfEnrichrResults(chbxs, cb) {
         $.ajax({
-            url: 'enrichr',
+            url: 'cluster/enrichr',
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
@@ -120,8 +126,26 @@ $(function() {
                 backgroundType: $('#enrichr-background').val()
             }),
             success: function(data) {
-                debugger;
-            }
+                console.log('enrichr');
+                console.log(data);
+            },
+            complete: cb
+        });
+    }
+
+    function requestClustergramOfL1000CDS2Results(chbxs, cb) {
+        $.ajax({
+            url: 'cluster/l1000cds2',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                signatures: chbxs,
+                mode: $('#l1000cds2-mode').val()
+            }),
+            success: function(data) {
+                showClustergrammerPreview('#l1000cds2-preview', data);
+            },
+            complete: cb
         });
     }
 
@@ -163,17 +187,19 @@ $(function() {
             method: 'POST',
             contentType: 'application/json',
             data: data,
-            success: embedIframe,
+            success: function() {
+                showClustergrammerPreview('#clustergrammer-preview', data);
+            },
             complete: function() {
                 loader.stop();
             }
         });
     }
 
-    function embedIframe(data) {
-        var $cg = $('#clustergrammer-preview');
+    function showClustergrammerPreview(selector, data) {
+        var $cg = $(selector);
         $cg.fadeIn(FADE_IN_OUT_SPEED);
-        $cg.find('iframe').attr('src', data.preview_link);
+        $cg.find('iframe').attr('src', data.preview_link || data.link);
         $cg.find('a').attr('href', data.link);
         $cg.find('button').click(function() {
             $cg.fadeOut(FADE_IN_OUT_SPEED);
@@ -219,8 +245,9 @@ $(function() {
     /* Helper function for collecting data from selected checkboxes.
      */
     function getSelectedCheckboxes() {
-        var selected = [];
-        $('input.consensus').each(function(i, checkbox) {
+        var selected = [],
+            $checkboxes = $($dataTable.cells().nodes()).find('input.consensus');
+        $checkboxes.each(function(i, checkbox) {
             var $checkbox = $(checkbox);
             if ($checkbox.is(':checked')) {
                 selected.push({
@@ -247,9 +274,10 @@ $(function() {
             return false;
         }
 
+        isValid = true;
+
         // Disable for now in favor of select all!
         // ---------------------------------------
-        //isValid = true;
         //platform = chbxs[0].platform;
         //$.each(chbxs, function(i, obj) {
         //    if (obj.platform !== platform) {

@@ -14,7 +14,9 @@
   margin-top: 10px;
   padding-left: 20px;
 }
-#consensus #clustergrammer-preview {
+#consensus #pca-container,
+#consensus #clustergrammer-preview,
+#consensus #l1000cds2-preview {
   display: none;
 }
 #consensus #clustergrammer-preview iframe {
@@ -24,7 +26,6 @@
   width: 100%;
 }
 #consensus #pca-container {
-  display: none;
   margin-top: 20px;
 }
 table .optional-metadata {
@@ -32,8 +33,6 @@ table .optional-metadata {
 }
 .data-table {
   /* JS shows table when it's ready. */
-  display: none;
-  overflow: scroll;
 }
 .dataTables_wrapper .dataTables_filter input {
   border-radius: 0;
