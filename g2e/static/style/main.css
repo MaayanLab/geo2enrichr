@@ -358,3 +358,7 @@ caption {
   border-radius: 0;
   padding: 4px 8px;
 }
+/* See: http://stackoverflow.com/a/33809511/1830334 */
+.table-responsive {
+  overflow-x: inherit;
+}
