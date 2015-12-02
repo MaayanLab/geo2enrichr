@@ -1,4 +1,4 @@
-"""Handles all application configurations.
+"""Handles global configurations.
 
 __authors__ = "Gregory Gundersen"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"

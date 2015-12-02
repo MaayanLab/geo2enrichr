@@ -1,4 +1,4 @@
-"""Jinja2 templating filters.
+"""Custom filters for Jinja2 templates.
 
 __authors__ = "Gregory Gundersen"
 __credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
