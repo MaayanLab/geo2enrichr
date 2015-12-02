@@ -16,7 +16,8 @@
 }
 #consensus #pca-container,
 #consensus #clustergrammer-preview,
-#consensus #l1000cds2-preview {
+#consensus #l1000cds2-preview,
+#consensus #enrichr-preview {
   display: none;
 }
 #consensus #clustergrammer-preview iframe {

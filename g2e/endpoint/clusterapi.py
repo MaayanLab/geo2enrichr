@@ -21,7 +21,10 @@ from g2e.dataaccess.util import get_or_create
 cluster_blueprint = Blueprint('cluster', __name__, url_prefix=Config.BASE_URL + '/cluster')
 
 
-CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/g2e/'
+BASE_URL = 'http://amp.pharm.mssm.edu/clustergrammer/'
+CG_G2E_URL = BASE_URL + 'g2e'
+CG_ENRICHR_URL = BASE_URL + 'load_Enrichr_gene_lists'
+JSON_HEADERS = {'content-type': 'application/json'}
 
 
 @cluster_blueprint.route('/<extraction_id>', methods=['GET'])
@@ -72,10 +75,24 @@ def enrichr_to_clustergrammer():
                 'user_list_id': new_id
             })
 
-    return jsonify({
-        'background_type': request.json['backgroundType'],
-        'user_list_ids': user_list_ids
-    })
+    if 'backgroundType' in request.json:
+        background_type = request.json['backgroundType']
+    else:
+        background_type = 'ChEA_2015'
+
+    payload = {
+        'user_list_ids': user_list_ids,
+        'background_type': background_type
+    }
+    resp = requests.post(CG_ENRICHR_URL, data=json.dumps(payload), headers=JSON_HEADERS)
+    if resp.ok:
+        return jsonify({
+            'link': json.loads(resp.text)['link']
+        })
+    else:
+        return jsonify({
+            'link': 'error'
+        })
 
 
 @cluster_blueprint.route('/l1000cds2', methods=['POST'])
@@ -93,7 +110,6 @@ def l1000cds2_to_clustergrammer():
 
             sig = dataaccess.fetch_gene_signature(obj['extractionId'])
             url = 'http://amp.pharm.mssm.edu/L1000CDS2/query'
-            headers = { 'content-type': 'application/json' }
             payload = {
                 'data': {
                     'genes': [rg.gene.name for rg in sig.gene_lists[2].ranked_genes],
@@ -108,7 +124,7 @@ def l1000cds2_to_clustergrammer():
                 },
                 'metadata': []
             }
-            resp = requests.post(url, data=json.dumps(payload), headers=headers)
+            resp = requests.post(url, data=json.dumps(payload), headers=JSON_HEADERS)
             perts = []
             scores = []
             for obj in json.loads(resp.text)['topMeta']:
@@ -140,9 +156,7 @@ def l1000cds2_to_clustergrammer():
         'gene_signatures': samples
     }
 
-    headers = { 'content-type': 'application/json' }
-    sess = requests.session()
-    resp = sess.post(CLUSTERGRAMMER_URL, data=json.dumps(payload), headers=headers)
+    resp = requests.post(CG_G2E_URL, data=json.dumps(payload), headers=JSON_HEADERS)
     if resp.ok:
         return jsonify({
             'link': json.loads(resp.text)['link']

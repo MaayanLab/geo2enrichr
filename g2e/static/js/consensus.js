@@ -128,6 +128,7 @@ $(function() {
             success: function(data) {
                 console.log('enrichr');
                 console.log(data);
+                showClustergrammerPreview('#enrichr-preview', data);
             },
             complete: cb
         });
@@ -187,7 +188,7 @@ $(function() {
             method: 'POST',
             contentType: 'application/json',
             data: data,
-            success: function() {
+            success: function(data) {
                 showClustergrammerPreview('#clustergrammer-preview', data);
             },
             complete: function() {
