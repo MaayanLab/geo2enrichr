@@ -1,4 +1,4 @@
-# platforms
+# Platforms
 
 These scripts handle mapping platform probe IDs to canonical human gene symbols. The scripts are run by following steps:
 

@@ -1,6 +1,6 @@
-# Deploy:
+# Deploy
 
-#### To prod:
+#### To prod
 - bash scripts/deploy.sh
 
 #### To dev:
@@ -9,7 +9,7 @@
 #### To skip tests
 - bash scripts/deploy.sh dev skip
 
-# Run Grunt:
+# Run Grunt
 - grunt --gruntfile=/Users/gwg/g2e/scripts/gruntfile.js watch
 
 # Run unit tests 
