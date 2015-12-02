@@ -20,7 +20,9 @@
 #consensus #enrichr-preview {
   display: none;
 }
-#consensus #clustergrammer-preview iframe {
+#consensus #clustergrammer-preview iframe,
+#consensus #enrichr-preview iframe,
+#consensus #l1000cds2-preview iframe {
   border: 1px solid #eeeeee;
   height: 1000px;
   margin-top: 20px;

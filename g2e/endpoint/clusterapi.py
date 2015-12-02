@@ -56,8 +56,10 @@ def enrichr_to_clustergrammer():
     columns = {}
     for obj in request.json['signatures']:
         sig = dataaccess.fetch_gene_signature(obj['extractionId'])
+        gene_list_str = '\n'.join([rg.gene.name + ',' + str(rg.value) for rg in sig.gene_lists[2].ranked_genes])
+        print(obj['extractionId'])
         payload = {
-            'list': '\n'.join([rg.gene.name for rg in sig.gene_lists[2].ranked_genes]),
+            'list': gene_list_str,
             'description': ''
         }
         resp = requests.post('http://amp.pharm.mssm.edu/Enrichr/addList', files=payload)
@@ -86,8 +88,10 @@ def enrichr_to_clustergrammer():
     }
     resp = requests.post(CG_ENRICHR_URL, data=json.dumps(payload), headers=JSON_HEADERS)
     if resp.ok:
+        link_base = json.loads(resp.text)['link']
+        link = '%s&row_label=Enriched terms from %s&col_label=Gene signatures' % (link_base, background_type)
         return jsonify({
-            'link': json.loads(resp.text)['link']
+            'link': link
         })
     else:
         return jsonify({
