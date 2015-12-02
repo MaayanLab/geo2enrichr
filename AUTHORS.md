@@ -7,6 +7,14 @@ various contributors:
 
 #### Permanent Contact
 
-- Avi Ma'ayan, avi.maayan@mssm.edu
+- Avi Ma'ayan <avi.maayan@mssm.edu>
 
 #### Contributors
+
+- Edward Chen
+- Qiaonan Duan
+- Alex Feldmann
+- Kevin Hu
+- Yan Kou
+- Andrew Rouillard
+- Zichen Wang
