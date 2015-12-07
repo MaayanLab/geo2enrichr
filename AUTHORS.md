@@ -1,5 +1,5 @@
-GEO2Enrichr is written and maintained by Gregory Gundersen and
-various contributors:
+*GEO2Enrichr is written and maintained by Gregory Gundersen and
+various contributors:*
 
 ####  Development Lead
 
@@ -7,7 +7,7 @@ various contributors:
 
 #### Permanent Contact
 
-- Avi Ma'ayan <avi.maayan@mssm.edu>
+- Avi Ma'ayan - <avi.maayan@mssm.edu>
 
 #### Contributors
 
