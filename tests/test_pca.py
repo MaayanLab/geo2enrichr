@@ -8,7 +8,7 @@ import g2e.core.pca.pca as pca
 class TestPca(unittest.TestCase):
 
     def setUp(self):
-        f = file('g2e/tests/data/example_input.txt')
+        f = file('tests/data/example_input.txt')
         self.soft_file = SoftFile.from_file(f, {
             'title': 'example_input'
         })

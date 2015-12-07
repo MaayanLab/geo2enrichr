@@ -12,7 +12,7 @@ class ExtractEndpoint(unittest.TestCase):
     def test_tags(self):
         print 'Testing tags'
         self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
-            file = (file('g2e/tests/data/example_input.txt'), 'test.txt'),
+            file = (file('tests/data/example_input.txt'), 'test.txt'),
             diffexp_method = 'ttest',
             tags = ['food', 'cats', 'beer'],
             skip_target_apps = True
@@ -29,7 +29,7 @@ class ExtractEndpoint(unittest.TestCase):
     def test_adding_empty_tags(self):
         print 'Testing tags'
         self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
-            file = (file('g2e/tests/data/example_input.txt'), 'test.txt'),
+            file = (file('tests/data/example_input.txt'), 'test.txt'),
             diffexp_method = 'ttest',
             tags = ['', '  ', '     '],
             skip_target_apps = True

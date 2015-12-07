@@ -15,7 +15,7 @@ class TestSoftParser(unittest.TestCase):
         ]
 
         genes, a_vals, b_vals, selections, stats = softparser._parse_geo(
-            'g2e/tests/data/GDS5077.txt', 'GPL10558', samples
+            'tests/data/GDS5077.txt', 'GPL10558', samples
         )
 
         self.assertEqual(len(genes), 31115)
@@ -28,7 +28,7 @@ class TestSoftParser(unittest.TestCase):
 
     def test_custom_soft_file_parser(self):
         genes, a_vals, b_vals, samples = softparser._parse_file(
-            'g2e/tests/data/example_input.txt'
+            'tests/data/example_input.txt'
         )
 
         self.assertEqual(len(genes), 978)
