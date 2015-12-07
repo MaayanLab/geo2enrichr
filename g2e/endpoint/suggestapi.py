@@ -4,8 +4,9 @@
 
 from flask import Blueprint
 import json
+
+from g2e.db import dataaccess
 from g2e.config import Config
-from g2e.dataaccess import dataaccess
 
 
 suggest_api_blueprint = Blueprint('suggestapi', __name__, url_prefix=Config.BASE_API_URL + '/suggest')

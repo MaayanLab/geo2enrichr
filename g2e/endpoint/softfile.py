@@ -3,8 +3,9 @@
 
 
 from flask import Blueprint, Response
+
+from g2e.db import dataaccess
 from g2e.config import Config
-from g2e.dataaccess import dataaccess
 
 
 soft_file = Blueprint('soft_file', __name__, url_prefix=Config.SOFT_FILE_URL)

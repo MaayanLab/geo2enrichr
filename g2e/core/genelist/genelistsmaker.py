@@ -6,7 +6,7 @@ from flask import request
 
 from g2e.core.genelist.diffexp import diffexp
 from g2e.core.targetapp.targetappsmaker import target_all_apps
-from g2e.model.genelist import GeneList
+from substrate import GeneList
 
 
 def genelists_maker(soft_file, required_metadata, optional_metadata, tags):

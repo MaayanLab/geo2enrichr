@@ -4,7 +4,7 @@
 
 from contextlib import contextmanager
 
-from g2e import db
+from substrate import db
 
 
 @contextmanager

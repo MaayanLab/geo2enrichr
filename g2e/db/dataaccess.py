@@ -4,15 +4,15 @@ and their relationships and saves them accordingly.
 
 
 import sqlalchemy as sa
-from sqlalchemy.sql import text
 
-from g2e.dataaccess.util import session_scope
-from g2e.model.genelist import GeneList
-from g2e.model.genesignature import GeneSignature
-from g2e.model.softfile import SoftFile
-from g2e.model.tag import Tag
-from g2e.model.geodataset import GeoDataset
-from g2e.model.optionalmetadata import OptionalMetadata
+from substrate import GeneList
+from substrate import GeneSignature
+from substrate import SoftFile
+from substrate import Tag
+from substrate import GeoDataset
+from substrate import OptionalMetadata
+
+from g2e.db.util import session_scope
 
 
 def fetch_all(klass):

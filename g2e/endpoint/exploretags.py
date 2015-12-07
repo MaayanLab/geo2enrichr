@@ -3,9 +3,10 @@
 
 
 from flask import Blueprint, render_template
+
 from g2e.config import Config
-from g2e.model.tag import Tag
-import g2e.dataaccess.dataaccess as dataaccess
+from substrate import Tag
+from g2e.db import dataaccess
 
 
 explore_tags = Blueprint('explore_tags', __name__, url_prefix=Config.BASE_TAGS_URL)

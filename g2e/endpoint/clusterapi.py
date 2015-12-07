@@ -6,12 +6,13 @@ import requests
 import json
 from flask import Blueprint, redirect, request, jsonify
 
+from substrate import TargetApp
+from substrate import TargetAppLink
+
+from g2e.db import dataaccess
+from g2e.db.util import get_or_create
 from g2e.core.cluster import cluster
 from g2e.config import Config
-from g2e.dataaccess import dataaccess
-from g2e.model.targetapp import TargetApp
-from g2e.model.targetapplink import TargetAppLink
-from g2e.dataaccess.util import get_or_create
 
 
 cluster_blueprint = Blueprint('cluster', __name__, url_prefix=Config.BASE_URL + '/cluster')

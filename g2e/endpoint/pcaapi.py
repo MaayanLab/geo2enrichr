@@ -5,9 +5,9 @@
 from flask import Blueprint, render_template, request, jsonify
 import json
 
+from g2e.db import dataaccess
 from g2e.core.pca import pca
 from g2e.config import Config
-from g2e.dataaccess import dataaccess
 
 
 pca_blueprint = Blueprint('pca', __name__, url_prefix=Config.BASE_URL + '/pca')

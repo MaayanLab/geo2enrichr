@@ -3,8 +3,9 @@
 
 
 from flask import Blueprint, Response
+
+from g2e.db import dataaccess
 from g2e.config import Config
-from g2e.dataaccess import dataaccess
 from g2e.core.genelist import filemaker
 
 

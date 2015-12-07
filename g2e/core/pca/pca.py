@@ -6,7 +6,7 @@ import pandas
 import numpy as np
 from sklearn import decomposition
 
-import g2e.dataaccess.dataaccess as dataaccess
+from g2e.db import dataaccess
 from g2e.core.softfile.softcleaner import avg_dups
 
 

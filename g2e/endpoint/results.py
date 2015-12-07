@@ -3,8 +3,9 @@
 
 
 from flask import Blueprint, request, render_template
+
+from g2e.db import dataaccess
 from g2e.config import Config
-from g2e.dataaccess import dataaccess
 from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS
 
 

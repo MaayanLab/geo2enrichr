@@ -10,7 +10,7 @@ import g2e.core.softfile.softcleaner as softcleaner
 
 
 BASE_DIR = 'g2e/static/softfile/'
-TESTS_DATA_DIR = 'g2e/tests/data/'
+TESTS_DATA_DIR = 'g2e/static/softfile/example/'
 CLEANED_DIR = BASE_DIR + 'clean/'
 EXAMPLE_FILE = 'example_input.txt'
 EXT = '.txt'
