@@ -73,6 +73,14 @@ def fetch_metadata_by_value(metadata_name, metadata_value):
             .all()
 
 
+def get_dataset(accession):
+    with session_scope() as session:
+        instance = session.query(GeoDataset)\
+            .filter_by(accession=accession)\
+            .first()
+        return instance
+
+
 def get_suggestions(query):
     suggestions = []
     suggestions += _get_optional_metadata_suggestions(query) or []

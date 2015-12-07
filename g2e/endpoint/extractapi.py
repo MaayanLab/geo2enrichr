@@ -8,6 +8,7 @@ from flask.ext.cors import cross_origin
 from substrate import GeneSignature
 
 from g2e.db import dataaccess
+from g2e.transformations import genesignature
 from g2e.config import Config
 import g2e.core.softfile.softfilemanager as softfilemanager
 
@@ -63,7 +64,7 @@ def example_file():
     args = request.form
     response = {}
     file_obj = softfilemanager.get_example_file()
-    gene_signature = GeneSignature.from_file(file_obj, args)
+    gene_signature = genesignature.from_file(file_obj, args)
     dataaccess.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)

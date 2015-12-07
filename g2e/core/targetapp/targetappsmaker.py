@@ -2,13 +2,14 @@
 """
 
 
-from g2e.model.targetapplink import TargetAppLink
-from g2e.model.targetapp import TargetApp
+from substrate import TargetAppLink
+from substrate import TargetApp
+
 from g2e.core.targetapp import enrichr
 from g2e.core.targetapp import l1000cds2
 from g2e.core.targetapp import paea
 from g2e.core.targetapp import crowdsourcing
-from g2e.dataaccess.util import get_or_create
+from g2e.db.util import get_or_create
 
 
 # Granular control of how many genes are sent to each downstream application.

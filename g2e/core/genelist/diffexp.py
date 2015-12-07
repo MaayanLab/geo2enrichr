@@ -3,11 +3,12 @@ method depending on user options and defaults to the characteristic direction.
 """
 
 
+from substrate import Gene
+from substrate import RankedGene
+
 from g2e.core.genelist import chdir
 from g2e.core.genelist import ttest
-from g2e.model.gene import Gene
-from g2e.model.rankedgene import RankedGene
-from g2e.dataaccess.util import get_or_create
+from g2e.db.util import get_or_create
 
 
 def diffexp(a_vals, b_vals, genes, metadata):
