@@ -12,6 +12,7 @@ alembic.ini
 g2e/extension/chrome/g2e.js
 g2e/extension/firefox/g2e.js
 g2e/extension/firefox/geo2enrichr.xpi
+*.css
 
 # Chrome Extension zip file
 *.zip
