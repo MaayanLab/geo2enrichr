@@ -14,7 +14,8 @@ RUN apt-get install -y \
     liblapack-dev \
     r-base \
     r-base-dev \
-    python-rpy2
+    python-rpy2 \
+    git
 
 RUN pip install \
     mod_wsgi \
@@ -33,7 +34,8 @@ RUN pip install \
     six==1.9.0 \
     sklearn==0.0 \
     wsgiref==0.1.2 \
-    --allow-external mysql-connector-python
+    --allow-external mysql-connector-python \
+    git+git://github.com/MaayanLab/substrate.git@master
 
 RUN apt-get clean
 
