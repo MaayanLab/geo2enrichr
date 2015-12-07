@@ -1,9 +1,5 @@
-"""POSTs data to crowdsourcing project:
-http://www.maayanlab.net/crowdsourcing/
-https://www.coursera.org/course/bd2klincs
-
-__authors__ = "Gregory Gundersen, Zichen Wang"
-__contact__ = "avi.maayan@mssm.edu"
+"""Handles crowdsourcing API.
+See http://www.maayanlab.net/crowdsourcing/
 """
 
 

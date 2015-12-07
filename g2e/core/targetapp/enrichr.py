@@ -1,7 +1,5 @@
 """Handles Enrichr's API.
-
-__authors__ = "Gregory Gundersen, Qiaonan Duan"
-__contact__ = "avi.maayan@mssm.edu"
+See http://amp.pharm.mssm.edu/Enrichr/
 """
 
 

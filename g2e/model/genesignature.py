@@ -1,9 +1,5 @@
 """Creates a GeneSignature, which represents a single instance of a user's
 processed data, with links to the SOFT file, gene lists, and metadata.
-
-__authors__ = "Gregory Gundersen"
-__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
-__contact__ = "avi.maayan@mssm.edu"
 """
 
 

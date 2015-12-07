@@ -1,10 +1,6 @@
 """Calculates the characteristic direction with regulization. This code
 differs from the published code in small ways in order to be more
 modular. The notation "! CHANGED !" is used to denote any differences.
-
-__authors__ = "Qiaonan Duan, Edward Chen, Gregory Gundersen"
-__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
-__contact__ = "avi.maayan@mssm.edu"
 """
 
 
@@ -54,7 +50,7 @@ def _chdir(A, B, genes, r=1):
 #  r: regulaized term. A parameter that smooths the covariance matrix and reduces
 #     potential noise in the dataset.
 
-# * CHANGED *
+# ! CHANGED !
 # 1. All validation happens in a common function that validates data for all
 #    differential expression methods.
 # 2. Use numpy to concatenate A and B.

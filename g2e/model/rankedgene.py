@@ -1,9 +1,5 @@
 """Gene symbol with an associated rank. This does not have to be unique
 and has a many-to-many db.relationship with a GeneList.
-
-__authors__ = "Gregory Gundersen"
-__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
-__contact__ = "avi.maayan@mssm.edu"
 """
 
 

@@ -1,7 +1,4 @@
-"""Handles delegating to all target applications.
-
-__authors__ = "Gregory Gundersen"
-__contact__ = "avi.maayan@mssm.edu"
+"""Delegates to target applications.
 """
 
 

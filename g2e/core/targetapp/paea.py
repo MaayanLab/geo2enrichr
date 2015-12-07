@@ -1,8 +1,5 @@
-"""Handles the Principle Angle Enrichment Analysis (PAEA) API. For more
-information, see: http://amp.pharm.mssm.edu/PAEA/.
-
-__authors__ = "Gregory Gundersen, Zichen Wang"
-__contact__ = "avi.maayan@mssm.edu"
+"""Handles the Principle Angle Enrichment Analysis (PAEA) API.
+See http://amp.pharm.mssm.edu/PAEA/
 """
 
 

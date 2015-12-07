@@ -1,9 +1,5 @@
 """Identifies differentially expressed genes. It delegates to the appropriate
 method depending on user options and defaults to the characteristic direction.
-
-__authors__ = "Gregory Gundersen"
-__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
-__contact__ = "avi.maayan@mssm.edu"
 """
 
 

@@ -1,8 +1,4 @@
 """Groups the Extraction class's various experimental metadata as user inputs.
-
-__authors__ = "Gregory Gundersen"
-__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
-__contact__ = "avi.maayan@mssm.edu"
 """
 
 

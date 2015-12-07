@@ -9,7 +9,7 @@ __contact__ = "avi.maayan@mssm.edu"
 import time
 
 from g2e import db
-import g2e.core.softfile.softparser as softparser
+import g2e.core.softfile.softfileparser as softparser
 import g2e.core.softfile.softcleaner as softcleaner
 import g2e.core.softfile.softfilemanager as softfilemanager
 from g2e.model.softfilesample import SoftFileSample

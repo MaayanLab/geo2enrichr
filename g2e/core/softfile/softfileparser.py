@@ -1,8 +1,4 @@
-"""This module contains functions for parsing SOFT files.
-
-__authors__ = "Gregory Gundersen, Andrew Rouillard, Axel Feldmann, Kevin Hu"
-__credits__ = "Avi Ma'ayan"
-__contact__ = "gregory.gundersen@mssm.edu"
+"""Parses SOFT files.
 """
 
 

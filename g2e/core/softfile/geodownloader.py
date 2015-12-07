@@ -1,10 +1,4 @@
-"""This module is responsible for downloading GEO SOFT files. SOFT file URLs
-depend on whether the file type is GDS or GSE. This module abstracts that
-conditional away.
-
-__authors__ = "Gregory Gundersen, Axel Feldmann, Kevin Hu"
-__credits__ = "Andrew Rouillard, Matthew Jones, Avi Ma'ayan"
-__contact__ = "avi.maayan@mssm.edu"
+"""Downloads GEO SOFT files.
 """
 
 

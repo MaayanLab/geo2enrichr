@@ -1,6 +1,6 @@
 import unittest
 
-import g2e.core.softfile.softparser as softparser
+import g2e.core.softfile.softfileparser as softparser
 from g2e.model.softfilesample import SoftFileSample
 
 

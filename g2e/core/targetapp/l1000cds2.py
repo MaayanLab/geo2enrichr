@@ -1,8 +1,5 @@
-"""Handles L1000CDS2's API. For more information, see:
-http://amp.pharm.mssm.edu/L1000CDS2/help/
-
-__authors__ = "Gregory Gundersen, Qiaonan Duan"
-__contact__ = "avi.maayan@mssm.edu"
+"""Handles L1000CDS2's API.
+See http://amp.pharm.mssm.edu/L1000CDS2/
 """
 
 

@@ -1,8 +1,4 @@
 """Delegates to principal component analysis module.
-
-__authors__ = "Gregory Gundersen, Zichen Wang"
-__credits__ = "Ma'ayan Lab, Icahn School of Medicine at Mount Sinai"
-__contact__ = "avi.maayan@mssm.edu"
 """
 
 
