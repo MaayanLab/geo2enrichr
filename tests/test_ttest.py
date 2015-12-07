@@ -6,7 +6,6 @@ from g2e.core.genelist.ttest import _get_pvalues
 
 class TestTtest(unittest.TestCase):
 
-
     def setUp(self):
         # Get ordered list of values.
         answers = []
@@ -33,7 +32,6 @@ class TestTtest(unittest.TestCase):
         genes, values = _get_pvalues(A, B, genes)
         self.genes = np.array(genes)
         self.values = np.array(values)
-
 
     def test_pvalue_answers(self):
         # Neil uses a one-tail t-test, while we use a two-tail t-test.

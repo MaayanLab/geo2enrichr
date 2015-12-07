@@ -1,8 +1,7 @@
 import unittest
 
 from g2e.core.targetapp.enrichr import get_link, convert_ranked_genes_to_tuples, get_genes_as_string
-from g2e.model.gene import Gene
-from g2e.model.rankedgene import RankedGene
+from substrate import Gene, RankedGene
 
 
 class TestEnrichr(unittest.TestCase):

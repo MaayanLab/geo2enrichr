@@ -6,7 +6,7 @@ from g2e.core.targetapp.targetappsmaker import _apply_cutoff
 class TestApplyCutoff(unittest.TestCase):
 
     def setUp(self):
-        self.ranked_genes  = [
+        self.ranked_genes = [
             ('A', 0.4),
             ('B', 0.6),
             ('C', -0.44),

@@ -37,7 +37,7 @@ def post_from_geo():
     """
     args = request.form
     response = {}
-    gene_signature = GeneSignature.from_geo(args)
+    gene_signature = genesignature.from_geo(args)
     dataaccess.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
@@ -50,7 +50,7 @@ def post_file():
     """
     args = request.form
     response = {}
-    gene_signature = GeneSignature.from_file(request.files['file'], args)
+    gene_signature = genesignature.from_file(request.files['file'], args)
     dataaccess.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)

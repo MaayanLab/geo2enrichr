@@ -6,7 +6,6 @@ from g2e.core.genelist.chdir import _throw_away_rows_without_variance
 
 class TestThrowAwayRowsWithoutVarianece(unittest.TestCase):
 
-
     def test_all_zeros(self):
         A = np.array([
             [1,2],
@@ -26,7 +25,6 @@ class TestThrowAwayRowsWithoutVarianece(unittest.TestCase):
         self.assertTrue(len(genes) is 3)
         self.assertTrue(np.array_equal(A[2], [0,0]))
         self.assertTrue(np.array_equal(B[2], [0,1]))
-
 
     def test_all_constants(self):
         A = np.array([

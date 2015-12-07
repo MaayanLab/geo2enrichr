@@ -2,10 +2,8 @@
 See http://amp.pharm.mssm.edu/L1000CDS2/
 """
 
-
 import json
 import requests
-
 
 L1000CDS2_URL = 'http://amp.pharm.mssm.edu/L1000CDS2/'
 
@@ -16,7 +14,7 @@ def get_link(genes, metadata):
     print 'Calculating cosine distance'
 
     url = L1000CDS2_URL + 'query'
-    headers = { 'content-type': 'application/json' }
+    headers = {'content-type': 'application/json'}
     payload = {
         'data': {
             'genes': [rg.gene.name for rg in genes],
@@ -29,7 +27,7 @@ def get_link(genes, metadata):
             'combination': False,
             'db-version': 'latest'
         },
-        'metadata': metadata.to_L1000CDS2_data_format()
+        'metadata': _to_L1000CDS2_data_format(metadata)
     }
     sess = requests.session()
     resp = sess.post(url, data=json.dumps(payload), headers=headers)
@@ -42,3 +40,15 @@ def get_link(genes, metadata):
     else:
         print 'Error with L1000CDS2'
         return None
+
+
+def _to_L1000CDS2_data_format(metadata):
+    """Formats the metadata for L1000CDS2 target application.
+    """
+    result = []
+    for key, val in metadata.serialize.items():
+        result.append({
+            'key': key,
+            'value': val
+        })
+    return result

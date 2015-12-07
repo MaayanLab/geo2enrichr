@@ -1,7 +1,8 @@
 import unittest
 
+from substrate import SoftFileSample
+
 import g2e.core.softfile.softfileparser as softparser
-from g2e.model.softfilesample import SoftFileSample
 
 
 class TestSoftParser(unittest.TestCase):

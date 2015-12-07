@@ -1,13 +1,8 @@
 import unittest
 
 import g2e.core.targetapp.crowdsourcing as crowdsourcing
-from g2e.model.optionalmetadata import OptionalMetadata
-from g2e.model.gene import Gene
-from g2e.model.rankedgene import RankedGene
-from g2e.model.softfile import SoftFile
-from g2e.model.geodataset import GeoDataset
-from g2e.model.softfilesample import SoftFileSample
-from g2e.model.tag import Tag
+from substrate import Gene, GeoDataset, OptionalMetadata, RankedGene,\
+    SoftFile, SoftFileSample, Tag
 
 
 class TestCrowdsourcing(unittest.TestCase):

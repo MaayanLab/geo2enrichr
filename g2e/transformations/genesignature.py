@@ -27,7 +27,7 @@ def create(soft_file, args):
 def from_geo(args):
     """Creates an extraction from GEO data.
     """
-    soft_file = SoftFile.from_geo(args)
+    soft_file = softfile.from_geo(args)
     return create(soft_file, args)
 
 

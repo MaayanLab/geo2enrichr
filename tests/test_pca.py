@@ -1,7 +1,6 @@
 import unittest
-import numpy as np
 
-from g2e.model.softfile import SoftFile
+from g2e.transformations import softfile
 import g2e.core.pca.pca as pca
 
 
@@ -9,7 +8,7 @@ class TestPca(unittest.TestCase):
 
     def setUp(self):
         f = file('tests/data/example_input.txt')
-        self.soft_file = SoftFile.from_file(f, {
+        self.soft_file = softfile.from_file(f, {
             'title': 'example_input'
         })
         self.maxDiff = 10000
