@@ -5,7 +5,7 @@
 from flask import Blueprint, render_template
 
 from g2e.config import Config
-import g2e.db as dataaccess
+import g2e.db.dataaccess as dataaccess
 import g2e.util.urlcodex as urlcodex
 
 

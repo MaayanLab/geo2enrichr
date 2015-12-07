@@ -1,7 +1,6 @@
 """Configures the application at server startup.
 """
 
-
 import logging
 import sys
 
@@ -11,10 +10,14 @@ from flask.ext.cors import CORS
 from g2e.config import Config
 from substrate import db
 
-
 app = Flask(__name__, static_url_path='/g2e/static', static_folder='static')
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_POOL_RECYCLE'] = Config.SQLALCHEMY_POOL_RECYCLE
+
+# My understanding is that track changes just uses up unnecessary resources
+# and will be set to False by default in a future release of Flask-SQLAlchemy.
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db.init_app(app)
 cors = CORS(app)
 
