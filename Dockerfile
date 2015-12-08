@@ -42,6 +42,5 @@ RUN apt-get clean
 EXPOSE 80
 
 ADD . /g2e
-ADD g2e/static
 
 CMD /g2e/boot.sh

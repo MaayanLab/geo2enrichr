@@ -97,9 +97,6 @@ fi
 # -----------------------------------------------------------------------------
 DOCKER_IMAGE='maayanlab/g2e:latest'
 if [[ $3 = 'build' ]]; then
-    boot2docker init
-    boot2docker up
-    boot2docker shellinit
     docker build -t $DOCKER_IMAGE .
 fi
 
