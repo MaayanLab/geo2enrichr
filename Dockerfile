@@ -1,8 +1,7 @@
 FROM debian:stable
 
-RUN apt-get update
-
-RUN apt-get install -y \
+RUN apt-get update \
+ && apt-get install -y \
     python \
     python-dev \
     python-pip \
@@ -15,7 +14,8 @@ RUN apt-get install -y \
     r-base \
     r-base-dev \
     python-rpy2 \
-    git
+    python-mysqldb \
+    git-core
 
 RUN pip install \
     mod_wsgi \
@@ -42,5 +42,6 @@ RUN apt-get clean
 EXPOSE 80
 
 ADD . /g2e
+ADD g2e/static
 
 CMD /g2e/boot.sh

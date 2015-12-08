@@ -26,7 +26,6 @@ def results_page(results_id):
         if tag.name in CROWDSOURCING_TAGS:
             use_crowdsourcing = True
 
-    import pdb; pdb.set_trace()
     if gene_signature.soft_file.samples:
         show_viz = True
     else:
