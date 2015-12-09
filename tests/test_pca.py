@@ -1,6 +1,6 @@
 import unittest
 
-from g2e.transformations import softfile
+from g2e.core.transformations import softfile
 import g2e.core.pca.pca as pca
 
 

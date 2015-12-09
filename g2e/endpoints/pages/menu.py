@@ -1,22 +1,24 @@
 """Serves home page and miscellaneous pages.
 """
 
-
 from flask import Blueprint, render_template
 import json
 
-from g2e.db import dataaccess
 from g2e.config import Config
+from g2e.db import dataaccess
 
-
-menu_pages = Blueprint('base', __name__, url_prefix=Config.BASE_URL)
+menu_pages = Blueprint('base',
+                       __name__,
+                       url_prefix=Config.BASE_URL)
 
 
 @menu_pages.route('/')
 def index_page():
     stats = dataaccess.get_statistics()
     stats_json = json.dumps(stats)
-    return render_template('index.html', stats=stats, stats_json=stats_json)
+    return render_template('index.html',
+                           stats=stats,
+                           stats_json=stats_json)
 
 
 @menu_pages.route('/documentation')

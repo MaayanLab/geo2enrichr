@@ -28,25 +28,23 @@ else:
 
 # Import these after connecting to the DB.
 from g2e.endpoints.pages.menu import menu_pages
+from g2e.endpoints.pages.results import results_page
+
 from g2e.endpoints.api.extract import extract_api
-from g2e.endpoints.api.genelist import genelist_api
+from g2e.endpoints.api.genelist import gene_list_api
 from g2e.endpoints.api.pca import pca_api
-from g2e.endpoints.api.cluster import cluster_blueprint
-from g2e.endpoints.api.softfile import soft_file
-from g2e.endpoints.pages.results import results
-from g2e.endpoints.api.suggest import suggest_api
+from g2e.endpoints.api.cluster import cluster_api
+from g2e.endpoints.api.softfile import soft_file_api
+
 from g2e.util.jinjafilters import jinjafilters
 
 app.register_blueprint(menu_pages)
+app.register_blueprint(results_page)
 
-app.register_blueprint(cluster_blueprint)
+app.register_blueprint(cluster_api)
 app.register_blueprint(extract_api)
-app.register_blueprint(genelist_api)
+app.register_blueprint(gene_list_api)
 app.register_blueprint(pca_api)
-
-app.register_blueprint(soft_file)
-app.register_blueprint(results)
-
-app.register_blueprint(suggest_api)
+app.register_blueprint(soft_file_api)
 
 app.register_blueprint(jinjafilters)

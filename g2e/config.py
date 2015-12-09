@@ -22,13 +22,15 @@ class Config(object):
     SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 
     BASE_URL = '/g2e'
-    BASE_RESULTS_URL = BASE_URL + '/results'
+
+    RESULTS_PAGE_URL = BASE_URL + '/results'
     BASE_API_URL = BASE_URL + '/api'
     BASE_PCA_URL = BASE_URL + '/pca'
     BASE_CLUSTER_URL = BASE_URL + '/cluster'
 
     GENE_LIST_URL = BASE_URL + '/gene_list'
     SOFT_FILE_URL = BASE_URL + '/soft_file'
+    SUGGEST_API = BASE_URL + '/suggest'
 
     SQLALCHEMY_POOL_RECYCLE = 3600
     SQLALCHEMY_DATABASE_URI = lines[0]

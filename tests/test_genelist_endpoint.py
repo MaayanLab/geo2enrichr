@@ -33,7 +33,7 @@ class TestGeneListEndpoint(unittest.TestCase):
         self.up_gene_list = response['gene_lists'][self.direction]
 
     def testEndpoint(self):
-        url = '/g2e/genelist/' + str(self.direction) + '/' + self.extraction_id
+        url = '/g2e/gene_list/' + str(self.direction) + '/' + self.extraction_id
         response = self.app.get(url)
         self.assertEqual(response.mimetype, 'text/plain')
 

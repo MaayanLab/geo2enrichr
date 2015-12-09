@@ -1,4 +1,4 @@
-"""Performs PCA.
+"""API for performing principal component analysis.
 """
 
 from flask import Blueprint, render_template, request, jsonify
@@ -8,7 +8,9 @@ from g2e.db import dataaccess
 from g2e.core.pca import pca
 from g2e.config import Config
 
-pca_api = Blueprint('pca', __name__, url_prefix=Config.BASE_URL + '/pca')
+pca_api = Blueprint('pca_api',
+                    __name__,
+                    url_prefix='%s/pca' % Config.BASE_URL)
 
 
 @pca_api.route('/<extraction_id>', methods=['GET'])
@@ -21,5 +23,5 @@ def perform_soft_file_pca(extraction_id):
         pca_json = json.dumps(pca_data)
         return render_template('pca.html',
                                pca_data=pca_json,
-                               results_url=Config.BASE_RESULTS_URL,
+                               results_url=Config.RESULTS_PAGE_URL,
                                extraction_id=gene_signature.extraction_id)

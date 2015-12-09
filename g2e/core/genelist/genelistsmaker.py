@@ -1,12 +1,11 @@
 """Creates up, down, and combined gene lists.
 """
 
-
 from flask import request
 
-from g2e.core.genelist.diffexp import diffexp
-from g2e.core.targetapp.targetappsmaker import target_all_apps
 from substrate import GeneList
+from g2e.core.genelist.diffexp import diffexp
+from g2e.core.targetapps.targetappsmaker import target_all_apps
 
 
 def genelists_maker(soft_file, required_metadata, optional_metadata, tags):

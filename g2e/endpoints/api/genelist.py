@@ -1,4 +1,4 @@
-"""Builds a GeneList file upon request.
+"""API for building/fetching gene list file.
 """
 
 from flask import Blueprint, Response
@@ -7,12 +7,12 @@ from g2e.db import dataaccess
 from g2e.config import Config
 from g2e.core.genelist import filemaker
 
-genelist_api = Blueprint('genelist',
+gene_list_api = Blueprint('gene_list_api',
                          __name__,
-                         url_prefix='%s/genelist' % Config.BASE_URL)
+                         url_prefix=Config.GENE_LIST_URL)
 
 
-@genelist_api.route('/<direction>/<extraction_id>')
+@gene_list_api.route('/<direction>/<extraction_id>')
 def get_genelist(direction, extraction_id):
     """Handles GET request based on extraction ID.
     """

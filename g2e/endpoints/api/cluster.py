@@ -1,4 +1,4 @@
-"""Delegates to hierarchical clustering module.
+"""API for hierarchical clustering.
 """
 
 import requests
@@ -13,23 +13,19 @@ from g2e.db.util import get_or_create
 from g2e.core.cluster import cluster
 from g2e.config import Config
 
-cluster_blueprint = Blueprint('cluster', __name__, url_prefix=Config.BASE_URL + '/cluster')
-
-BASE_URL = 'http://amp.pharm.mssm.edu/clustergrammer/'
-CG_G2E_URL = BASE_URL + 'g2e'
-CG_ENRICHR_URL = BASE_URL + 'load_Enrichr_gene_lists'
-JSON_HEADERS = {'content-type': 'application/json'}
+cluster_api = Blueprint('cluster_api',
+                        __name__,
+                        url_prefix='%s/cluster' % Config.BASE_URL)
 
 
-# TODO: This isn't really an API. Probably should return JSON.
-@cluster_blueprint.route('/<extraction_id>', methods=['GET'])
+@cluster_api.route('/<extraction_id>', methods=['GET'])
 def perform_hierarchical_clustering(extraction_id):
     """Performs hierarchical clustering on a SOFT file.
     """
     gene_signature = dataaccess.fetch_gene_signature(extraction_id)
     target_app_link = _get_clustergrammer_link(gene_signature)
 
-    # Ensure we only create the link from Clustergrammer once.
+    # Only create the link from Clustergrammer once.
     if not target_app_link:
         link = cluster.from_soft_file(gene_signature)
         target_app = get_or_create(TargetApp, name='clustergrammer')
