@@ -95,6 +95,7 @@ fi
 
 # Run Docker
 # -----------------------------------------------------------------------------
+docker-machine start default
 DOCKER_IMAGE='maayanlab/g2e:latest'
 if [[ $3 = 'build' ]]; then
     docker build -t $DOCKER_IMAGE .
