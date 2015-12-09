@@ -72,14 +72,14 @@ printf 'var IMAGE_PATH = self.options.logoUrl;' >> $FIREFOX_JS_CONFIG
 printf '%s\n' 'Building front-end'
 grunt --gruntfile=scripts/gruntfile.js build > /dev/null
 
-# Configure DB. Do this *after* running the unit tests, so tests don't get
-# logged in production.
-# -----------------------------------------------------------------------------
-
+# Run Docker
+# =============================================================================
 # Even if Docker fails at this point, we want the script to finish. Otherwise,
 # we may have a dev.conf file pointing to the production DB.
 set +e
 
+# Configure DB. Do this *after* running the unit tests, so tests don't get
+# logged in production.
 printf '%s\n' 'Configuring the database.'
 dbconf='g2e/app.conf'
 if [[ $1 = 'dev' ]]; then
@@ -92,9 +92,8 @@ else
     printf '%s\n%s' $credentials $debug > $dbconf
 fi
 
-# Run Docker
-# =============================================================================
 docker-machine start default
+eval "$(docker-machine env default)"
 DOCKER_IMAGE='maayanlab/g2e:latest'
 if [[ $3 = 'build' ]]; then
     docker build -t $DOCKER_IMAGE .
