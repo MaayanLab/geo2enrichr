@@ -6,7 +6,6 @@ import sys
 
 from flask import Flask
 from flask.ext.cors import CORS
-
 from g2e.config import Config
 from substrate import db
 
@@ -28,24 +27,26 @@ else:
     print 'Starting in DEBUG mode'
 
 # Import these after connecting to the DB.
-from g2e.endpoint.base import base
-from g2e.endpoint.error import error
-from g2e.endpoint.extractapi import extract_api
-from g2e.endpoint.genelistapi import genelist
-from g2e.endpoint.pcaapi import pca_blueprint
-from g2e.endpoint.clusterapi import cluster_blueprint
-from g2e.endpoint.softfile import soft_file
-from g2e.endpoint.results import results
-from g2e.endpoint.suggestapi import suggest_api_blueprint
+from g2e.endpoints.pages.menu import menu_pages
+from g2e.endpoints.api.extract import extract_api
+from g2e.endpoints.api.genelist import genelist_api
+from g2e.endpoints.api.pca import pca_api
+from g2e.endpoints.api.cluster import cluster_blueprint
+from g2e.endpoints.api.softfile import soft_file
+from g2e.endpoints.pages.results import results
+from g2e.endpoints.api.suggest import suggest_api
 from g2e.util.jinjafilters import jinjafilters
 
-app.register_blueprint(base)
+app.register_blueprint(menu_pages)
+
 app.register_blueprint(cluster_blueprint)
-app.register_blueprint(error)
 app.register_blueprint(extract_api)
-app.register_blueprint(genelist)
-app.register_blueprint(pca_blueprint)
+app.register_blueprint(genelist_api)
+app.register_blueprint(pca_api)
+
 app.register_blueprint(soft_file)
 app.register_blueprint(results)
-app.register_blueprint(suggest_api_blueprint)
+
+app.register_blueprint(suggest_api)
+
 app.register_blueprint(jinjafilters)

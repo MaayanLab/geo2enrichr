@@ -32,8 +32,8 @@ def results_page(results_id):
         show_viz = False
 
     return render_template('results.html',
-                            tags_url=Config.BASE_TAGS_URL,
-                            metadata_url=Config.BASE_METADATA_URL,
+                            geneva_report_url=Config.GENEVA_REPORT_URL,
+                            metadata_url=Config.GENEVA_METADATA_URL,
                             show_viz=show_viz,
                             pca_url=Config.BASE_PCA_URL,
                             cluster_url=Config.BASE_CLUSTER_URL,

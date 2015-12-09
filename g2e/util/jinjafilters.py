@@ -71,7 +71,7 @@ def c_filter_empty(context, value):
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_tag_url')
 def c_tag_url(context, value):
-    return '%s/%s' % (Config.BASE_TAGS_URL, value)
+    return '%s/%s' % (Config.GENEVA_REPORT_URL, value)
 
 
 @jinja2.contextfilter
@@ -83,13 +83,13 @@ def c_results_url(context, value):
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_metadata_url')
 def c_metadata_url(context, value):
-    return '%s/%s' % (Config.BASE_METADATA_URL, value)
+    return '%s/%s' % (Config.GENEVA_METADATA_URL, value)
 
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_metadata_value_url')
 def c_metadata_value_url(context, value, name):
-    return '%s/%s/%s' % (Config.BASE_METADATA_URL, name, value)
+    return '%s/%s/%s' % (Config.GENEVA_METADATA_URL, name, value)
 
 
 @jinja2.contextfilter
@@ -103,7 +103,4 @@ def c_geo_url(context, value):
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_geneva_url')
 def c_geneva_url(context, value):
-    if Config.DEBUG:
-        return 'http://localhost:8084/geneva'
-    else:
-        return 'http://amp.pharm.mssm.edu/geneva'
+    return Config.GENEVA_URL

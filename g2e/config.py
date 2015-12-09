@@ -30,5 +30,5 @@ class Config(object):
     else:
         GENEVA_URL = 'http://amp.pharm.mssm.edu/geneva'
 
-    BASE_TAGS_URL = GENEVA_URL + '/tags'
-    BASE_METADATA_URL = GENEVA_URL + '/metadata'
+    GENEVA_REPORT_URL = GENEVA_URL + '/report'
+    GENEVA_METADATA_URL = GENEVA_URL + '/metadata'

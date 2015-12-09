@@ -16,11 +16,11 @@
 
         {% if gene_signature.tags|length > 0 %}
             <section>
-                <h5>Tags</h5>
+                <h5>GENEVA Reports for these tags</h5>
                 <p>
                     {% for tag in gene_signature.tags %}
                         <span class="label">
-                            <a href="{{ tags_url }}/{{ tag.name }}">{{ tag.name }}</a>
+                            <a href="{{ geneva_report_url }}/{{ tag.name }}" target="_blank">{{ tag.name }}</a>
                         </span>
                     {% endfor %}
                 </p>

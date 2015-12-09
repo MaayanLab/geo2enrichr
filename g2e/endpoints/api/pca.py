@@ -1,6 +1,5 @@
-"""Performs PCA on a list of gene signatures or a SOFT file.
+"""Performs PCA.
 """
-
 
 from flask import Blueprint, render_template, request, jsonify
 import json
@@ -9,19 +8,10 @@ from g2e.db import dataaccess
 from g2e.core.pca import pca
 from g2e.config import Config
 
-
-pca_blueprint = Blueprint('pca', __name__, url_prefix=Config.BASE_URL + '/pca')
-
-
-@pca_blueprint.route('', methods=['POST'])
-def perform_gene_signatures_pca():
-    """Performs PCA on a list of gene signatures, referenced by extraction_id.
-    """
-    pca_data = pca.from_gene_signatures(request.json)
-    return jsonify(pca_data)
+pca_api = Blueprint('pca', __name__, url_prefix=Config.BASE_URL + '/pca')
 
 
-@pca_blueprint.route('/<extraction_id>', methods=['GET'])
+@pca_api.route('/<extraction_id>', methods=['GET'])
 def perform_soft_file_pca(extraction_id):
     """Performs PCA on a SOFT file, referenced by extraction_id.
     """
