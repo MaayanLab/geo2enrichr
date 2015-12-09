@@ -1,21 +1,18 @@
 #!/bin/bash
 
-# This script takes 1-4 arguments
-# $1 'dev' or 'prod'
-# $2 'skip'  [optional]
-# $3 'build' [optional - use any other string to skip]
-# $4 'push'  [optional - use any other string to skip]
+# ARGUMENTS:
+# $1 dev | prod [required - configure for development or production]
+# $2 skip       [optional - skip unit tests]
+# $3 build      [optional - use any other string to skip]
+# $4 push       [optional - use any other string to skip]
 
-# Any subsequent(*) commands which fail will cause the shell script to exit immediately
+# Any subsequent(*) commands which fail will cause the shell script to exit
+# immediately:
 # http://www.gnu.org/software/bash/manual/bashref.html#The-Set-Builtin
 set -e
 
-# Run unit tests
-# =============================================================================
-
 # Setup virtual environment
-# -----------------------------------------------------------------------------
-
+# =============================================================================
 if hash deactivate 2 > /dev/null; then
     deactivate
     source venv/bin/activate
@@ -23,6 +20,8 @@ else
     source venv/bin/activate
 fi
 
+# Run unit tests
+# =============================================================================
 if [[ $2 = 'skip' ]]; then
     printf '%s\n' 'Skipping Python unit tests'
 else
@@ -68,7 +67,7 @@ printf 'var IMAGE_PATH = "chrome-extension://'$extId'/logo-50x50.png";' >> $CHRO
 # http://stackoverflow.com/a/16848890/1830334
 printf 'var IMAGE_PATH = self.options.logoUrl;' >> $FIREFOX_JS_CONFIG
 
-# Then build with grunt
+# Build with grunt
 # -----------------------------------------------------------------------------
 printf '%s\n' 'Building front-end'
 grunt --gruntfile=scripts/gruntfile.js build > /dev/null
@@ -77,8 +76,8 @@ grunt --gruntfile=scripts/gruntfile.js build > /dev/null
 # logged in production.
 # -----------------------------------------------------------------------------
 
-# Even if Docker files at this point, we want the script to finish. Otherwise,
-# we may have a dev.config file pointing to the production DB.
+# Even if Docker fails at this point, we want the script to finish. Otherwise,
+# we may have a dev.conf file pointing to the production DB.
 set +e
 
 printf '%s\n' 'Configuring the database.'
@@ -94,26 +93,23 @@ else
 fi
 
 # Run Docker
-# -----------------------------------------------------------------------------
+# =============================================================================
 docker-machine start default
 DOCKER_IMAGE='maayanlab/g2e:latest'
 if [[ $3 = 'build' ]]; then
     docker build -t $DOCKER_IMAGE .
 fi
 
-# Critical step! We need to reset the DB credentials so we can keep developing locally.
+# Critical step! We need to reset the DB credentials so we can keep developing
+# locally.
 reset_credentials=$(head -n 1 g2e/dev.conf)
 reset_debug=$(tail -n +2 g2e/dev.conf)
 printf 'Reseting credentials\n'
 printf '%s\n%s' $reset_credentials $reset_debug > $dbconf
 
 # Push to private docker repo if asked
-# -----------------------------------------------------------------------------
+# =============================================================================
 if [[ $4 = 'push' ]]; then
-    # We use an insecure, private registry. If this script errors, run the
-    # following command to tell Docker to go ahead anyway.
-    #
-    # boot2docker ssh "echo $'EXTRA_ARGS=\"--insecure-registry 146.203.54.165:5000\"' | sudo tee -a /var/lib/boot2docker/profile && sudo /etc/init.d/docker restart"
     printf '%s\n' 'Pushing to Docker repo'
     docker push $DOCKER_IMAGE
 else
