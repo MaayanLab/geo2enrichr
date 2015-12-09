@@ -1,12 +1,10 @@
 import unittest
-import numpy as np
 
-from g2e.core.genelist.chdir import chdir
-from g2e.core.genelist.chdir import _sort_by_coefficients
+import numpy as np
+from g2e.core.analysis.chdir import chdir, _sort_by_coefficients
 
 
 class TestChdir(unittest.TestCase):
-
 
     def setUp(self):
         # Get ordered list of values.
@@ -32,18 +30,15 @@ class TestChdir(unittest.TestCase):
 
         self.genes, self.values = chdir(A, B, genes)
 
-
     def testSumSquares(self):
         s = np.sum(np.square(self.values))
         close_enough = np.isclose(1,s)
         self.assertTrue(close_enough)
 
-
     def testChdir(self):
         delta = (self.answers - self.values) / self.answers
         close_enough = np.any(np.absolute(delta) < 0.0025)
         self.assertTrue(close_enough)
-
 
     def test_sort(self):
         genes, values = _sort_by_coefficients(

@@ -1,7 +1,6 @@
 """Utility methods for interacting with the database.
 """
 
-
 from contextlib import contextmanager
 
 from substrate import db

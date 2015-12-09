@@ -4,10 +4,10 @@
 from substrate import TargetAppLink
 from substrate import TargetApp
 
-from g2e.core.targetapps import enrichr
-from g2e.core.targetapps import l1000cds2
-from g2e.core.targetapps import paea
-from g2e.core.targetapps import crowdsourcing
+from g2e.core.targetapp import enrichr
+from g2e.core.targetapp import l1000cds2
+from g2e.core.targetapp import paea
+from g2e.core.targetapp import crowdsourcing
 from g2e.db.util import get_or_create
 
 
@@ -22,7 +22,7 @@ PAEA_CUTOFF = 2000
 # Do you see how if-else this code is? Highly conditional code often indicates
 # that it can be refactored by proper data structures. Refactor this when you
 # have a chance.
-def target_all_apps(ranked_genes, direction, required_metadata, optional_metadata=None, soft_file=None, tags=None):
+def get_links(ranked_genes, direction, required_metadata, optional_metadata=None, soft_file=None, tags=None):
     """Returns a dictionary of app-to-link key-value pairs.
     """
     links = []

@@ -1,10 +1,9 @@
 """Parses SOFT files.
 """
 
-
 import csv
 
-import g2e.core.softfile.softfilemanager as softfilemanager
+from . import filemanager
 
 
 def parse(name, is_geo=True, platform=None, samples=None):
@@ -12,7 +11,7 @@ def parse(name, is_geo=True, platform=None, samples=None):
     delegates to a function that makes some basic assumptions about GEO files.
     """
     print('Parsing SOFT file.')
-    full_name = softfilemanager.path(name)
+    full_name = filemanager.path(name)
     if is_geo:
         return _parse_geo(full_name, platform, samples)
     return _parse_file(full_name)
@@ -35,7 +34,7 @@ def _parse_file(filename):
         # Convert to a string so we can use rindex next.
         indices = ''.join(samples)
         # +1 to account for the leftmost gene symbol column.
-        idx = indices.index('1')+1
+        idx = indices.index('1') + 1
 
         for line in reader:
             genes.append(line[0])
@@ -52,7 +51,7 @@ def _parse_geo(filename, platform, samples):
     """
     a_cols = [x.name for x in samples if x.is_control]
     b_cols = [x.name for x in samples if not x.is_control]
-    
+
     # COL_OFFSET changes because GDS files are "curated", meaning that they
     # have their gene symbols included. GSE files do not and are 1 column
     # thinner. That said, we do not trust the DGS mapping and do the probe-to-
@@ -106,19 +105,18 @@ def _parse_geo(filename, platform, samples):
                 if split_line[0] == EOF or split_line[1] == '--Control':
                     continue
 
-                probe  = split_line[0]
+                probe = split_line[0]
                 values = split_line[COL_OFFSET:]
 
                 # Perform a conservative cleanup by ignoring any rows that
                 # have null values or an atypical number of columns.
                 line_count += 1
                 if ('' in values or
-                    'null' in values or
-                    'NULL' in values or
-                    len(values) != line_length or
+                            'null' in values or
+                            'NULL' in values or
+                            len(values) != line_length or
                     # Slashes denote multiple genes.
-                    '\\' in probe):
-
+                            '\\' in probe):
                     discarded_lines += 1
                     continue
 
@@ -188,9 +186,8 @@ def build_probe_dict(platform_probesetid_genesym_file):
             if platform in platform_dict:
                 platform_dict[platform][probesetid] = genesym
             else:
-                platform_dict[platform] = {probesetid:genesym}
+                platform_dict[platform] = {probesetid: genesym}
     return platform_dict
 
-
 # Loads a dictionary into memory for the duration of the application.
-PROBE2GENE = build_probe_dict('g2e/core/softfile/probe2gene.txt')
+PROBE2GENE = build_probe_dict('g2e/core/softutils/probe2gene.txt')

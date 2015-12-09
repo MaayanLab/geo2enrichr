@@ -26,11 +26,11 @@ def get_file_contents_as_string(genelist):
     for rg in genelist.ranked_genes:
         value_string = '%0.6f' % rg.value
         gene_string = rg.gene.name + '\t' + value_string + '\n'
-        contents +=  gene_string
+        contents += gene_string
     return contents
 
 
 def __line(key, val):
     """Handles line formatting.
     """
-    return ('!%s\t%s\n') % (key, str(val))
+    return '!%s\t%s\n' % (key, str(val))

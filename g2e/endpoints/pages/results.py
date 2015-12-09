@@ -5,7 +5,7 @@ from flask import Blueprint, request, render_template
 
 from g2e.db import dataaccess
 from g2e.config import Config
-from g2e.core.targetapps.crowdsourcing import CROWDSOURCING_TAGS
+from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS
 
 results_page = Blueprint('results_page',
                          __name__,
@@ -18,7 +18,7 @@ def results(results_id):
     """
     gene_signature = dataaccess.fetch_gene_signature(results_id)
     if gene_signature is None:
-        return render_template('404.html')
+        return render_template('pages/404.html')
     gene_signature = __process_extraction_for_view(gene_signature)
 
     use_crowdsourcing = False
@@ -31,7 +31,7 @@ def results(results_id):
     else:
         show_viz = False
 
-    return render_template('results.html',
+    return render_template('pages/results.html',
                            geneva_report_url=Config.GENEVA_REPORT_URL,
                            metadata_url=Config.GENEVA_METADATA_URL,
                            show_viz=show_viz,

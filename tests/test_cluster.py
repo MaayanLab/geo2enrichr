@@ -34,6 +34,4 @@ class TestCluster(unittest.TestCase):
         print(self.extraction_id)
         url = '/g2e/cluster/' + self.extraction_id
         response = self.app.get(url)
-        redirect_message = 'You should be redirected automatically to target ' \
-                           'URL: <a href="http://amp.pharm.mssm.edu/clustergrammer/viz/'
-        self.assertTrue(redirect_message in response.data)
+        self.assertTrue('http://amp.pharm.mssm.edu/clustergrammer/viz/' in response.data)

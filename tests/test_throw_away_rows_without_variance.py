@@ -1,7 +1,7 @@
 import unittest
-import numpy as np
 
-from g2e.core.genelist.chdir import _throw_away_rows_without_variance
+import numpy as np
+from g2e.core.analysis.chdir import _throw_away_rows_without_variance
 
 
 class TestThrowAwayRowsWithoutVarianece(unittest.TestCase):

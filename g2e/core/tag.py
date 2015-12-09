@@ -1,11 +1,9 @@
 """
 """
 
-
 from substrate import Tag
-
 from g2e.db.util import get_or_create
-from g2e.util.requestutil import get_param_as_list
+from g2e.utils.requestutil import get_param_as_list
 
 
 def from_args(args):

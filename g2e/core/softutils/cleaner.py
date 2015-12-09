@@ -1,7 +1,6 @@
 """Cleans SOFT files depending on user options.
 """
 
-
 import numpy as np
 
 
@@ -19,8 +18,8 @@ def clean(genes, A, B, normalize_data):
     # Average duplicates no matter what.
     genes, values = avg_dups(genes, values)
 
-    A = values[:,:idx].tolist()
-    B = values[:,idx:].tolist()
+    A = values[:, :idx].tolist()
+    B = values[:, idx:].tolist()
 
     return (genes, A, B)
 
@@ -75,17 +74,17 @@ def _remove_negatives(genes, values):
     """
     # Join data so gene symbols are removed along with negative values.
     X = np.column_stack([genes, values])
-    
+
     # Boolean index, keeping only positive values.
     X = X[(values > 0).all(axis=1)]
 
     # Remove gene list. This should be smaller if we removed any negatives.
-    genes = X[:,0]
+    genes = X[:, 0]
 
     # GG: I don't love changing the type from float to string to float again,
     # but (1) this isn't code for the space shuttle and (2) it doesn't seem to
     # have a deleterious effect on the data. 
-    values = X[:,1:].astype(np.float)
+    values = X[:, 1:].astype(np.float)
     return (genes, values)
 
 

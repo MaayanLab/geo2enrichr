@@ -1,13 +1,11 @@
+"""Transforms user input to SOFT file.
 """
-"""
-
 
 import time
 
 from substrate import CustomDataset, GeoDataset, SoftFile, SoftFileSample
-
-from g2e.util.requestutil import get_param_as_list
-from g2e.core.softfile import softfileparser, softcleaner, softfilemanager
+from g2e.utils.requestutil import get_param_as_list
+from . import parser, cleaner, filemanager
 from g2e.db.util import get_or_create
 from g2e.db import dataaccess
 
@@ -17,23 +15,20 @@ def from_geo(args):
     """
     accession = args['dataset']
 
-    if not softfilemanager.file_exists(accession):
-        softfilemanager.download(accession)
+    if not filemanager.file_exists(accession):
+        filemanager.download(accession)
 
     dataset = dataaccess.get_dataset(accession)
     if dataset == None:
         platform = args['platform']
         if platform.index('GPL') == 0:
             platform = platform[3:]
-        organism = args['organism'] if 'organism' in args else 'TODO'
-        title = args['title']       if 'title'    in args else 'TODO'
-        summary = args['summary']   if 'summary'  in args else 'TODO'
         dataset = GeoDataset(
             accession=accession,
             platform=platform,
-            organism=organism,
-            title=title,
-            summary=summary
+            organism=args['organism'],
+            title=args['title'],
+            summary=args['summary']
         )
     else:
         print 'Dataset %s already exists!' % accession
@@ -42,15 +37,29 @@ def from_geo(args):
     b_cols = get_param_as_list(args, 'B_cols')
 
     # Use get_or_create to track GSMs. We don't do this for custom files.
-    control      = [get_or_create(SoftFileSample, name=sample, is_control=True)  for sample in a_cols]
-    experimental = [get_or_create(SoftFileSample, name=sample, is_control=False) for sample in b_cols]
+    control = [get_or_create(SoftFileSample,
+                             name=sample,
+                             is_control=True) for sample in a_cols]
+    experimental = [get_or_create(SoftFileSample,
+                                  name=sample,
+                                  is_control=False) for sample in b_cols]
     samples = control + experimental
 
-    genes, a_vals, b_vals, selections, stats = softfileparser.parse(accession, True, dataset.platform, samples)
-    normalize = True if ('normalize' not in args or args['normalize'] == 'True') else False
-    genes, a_vals, b_vals = softcleaner.clean(genes, a_vals, b_vals, normalize)
+    genes, a_vals, b_vals, selections, stats = parser.parse(accession,
+                                                                True,
+                                                                dataset.platform,
+                                                                samples)
 
-    text_file = softfilemanager.write(accession, dataset.platform, normalize, genes, a_vals, b_vals, samples, selections, stats)
+    if 'normalize' not in args or args['normalize'] == 'True':
+        normalize = True
+    else:
+        normalize = False
+
+    genes, a_vals, b_vals = cleaner.clean(genes, a_vals, b_vals, normalize)
+
+    text_file = filemanager.write(accession, dataset.platform, normalize,
+                                  genes, a_vals, b_vals, samples, selections,
+                                  stats)
 
     return SoftFile(
         samples, dataset, text_file,
@@ -71,10 +80,10 @@ def from_file(file_obj, args):
     else:
         title = str(time.time())[:10]
 
-    text_file = softfilemanager.save(title, file_obj)
-    genes, a_vals, b_vals, samples = softfileparser.parse(title, is_geo=False)
+    text_file = filemanager.save(title, file_obj)
+    genes, a_vals, b_vals, samples = parser.parse(title, is_geo=False)
 
-    control =      [SoftFileSample(x[0], True)  for x in samples if x[1] == '0']
+    control = [SoftFileSample(x[0], True) for x in samples if x[1] == '0']
     experimental = [SoftFileSample(x[0], False) for x in samples if x[1] == '1']
     samples = control + experimental
 

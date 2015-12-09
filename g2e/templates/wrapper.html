@@ -43,13 +43,13 @@
     </head>
     <body>
         {% with use_simple_header = use_simple_header %}
-            {% include 'partial/header.html' %}
+            {% include 'partials/header.html' %}
         {% endwith %}
         <div class="container-full">
             <div id="page" class="container">
                 {% block body %}{% endblock %}
             </div>
         </div>
-        {% include 'partial/footer.html' %}
+        {% include 'partials/footer.html' %}
     </body>
 </html>

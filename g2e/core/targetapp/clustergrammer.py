@@ -6,10 +6,32 @@ import json
 import pandas
 import requests
 
+from substrate import TargetApp
+from substrate import TargetAppLink
+from g2e.db.util import get_or_create
+from g2e.db import dataaccess
+
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/g2e/'
 
 
 def from_soft_file(gene_signature):
+    target_app_link = __get_clustergrammer_link(gene_signature)
+
+    # Only create the link from Clustergrammer once.
+    # TODO: Move into targetapp module. API should not know about this.
+    if not target_app_link:
+        link = __from_soft_file(gene_signature)
+        target_app = get_or_create(TargetApp, name='clustergrammer')
+        target_app_link = TargetAppLink(target_app, link)
+        gene_signature.gene_lists[2].target_app_links.append(
+            target_app_link
+        )
+        dataaccess.save_gene_signature(gene_signature)
+
+    return target_app_link.link
+
+
+def __from_soft_file(gene_signature):
     data = _get_raw_data(gene_signature.soft_file)
     sf = pandas.DataFrame(data)
 
@@ -52,6 +74,12 @@ def from_soft_file(gene_signature):
         print json.loads(resp.text)['link']
         return json.loads(resp.text)['link']
     return None
+
+
+def __get_clustergrammer_link(gene_signature):
+    for target_app_link in gene_signature.gene_lists[2].target_app_links:
+        if target_app_link.target_app.name == 'clustergrammer':
+            return target_app_link
 
 
 def _get_raw_data(soft_file):

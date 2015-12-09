@@ -5,9 +5,9 @@ from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
 
 from g2e.db import dataaccess
-from g2e.core.transformations import genesignature
+from g2e.core import genesignature
 from g2e.config import Config
-import g2e.core.softfile.softfilemanager as softfilemanager
+import g2e.core.softutils.filemanager as softfilemanager
 
 extract_api = Blueprint('extract_api',
                         __name__,

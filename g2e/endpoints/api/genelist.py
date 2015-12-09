@@ -5,7 +5,7 @@ from flask import Blueprint, Response
 
 from g2e.db import dataaccess
 from g2e.config import Config
-from g2e.core.genelist import filemaker
+from g2e.core.genelistutils import filemanager
 
 gene_list_api = Blueprint('gene_list_api',
                          __name__,
@@ -18,7 +18,7 @@ def get_genelist(direction, extraction_id):
     """
     gene_signature = dataaccess.fetch_gene_signature(extraction_id)
     genelist = __get_genelist_by_direction(gene_signature, int(direction))
-    genelist_str = filemaker.get_file_contents_as_string(genelist)
+    genelist_str = filemanager.get_file_contents_as_string(genelist)
     response = Response(genelist_str, mimetype='text/plain')
     return response
 

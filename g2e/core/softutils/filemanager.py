@@ -5,8 +5,8 @@
 import os.path
 import time
 
-import g2e.core.softfile.geodownloader as geodownloader
-import g2e.core.softfile.softcleaner as softcleaner
+from . import geodownloader
+from . import cleaner
 
 
 BASE_DIR = 'g2e/static/softfile/'
@@ -21,7 +21,7 @@ def write(name, platform, normalize, genes, a_vals, b_vals, samples, selections,
     """
     print 'Writing clean SOFT file.'
 
-    ab_vals = softcleaner.concat(a_vals, b_vals)
+    ab_vals = cleaner.concat(a_vals, b_vals)
     gene_values_dict = { k:v for (k,v) in zip(genes, ab_vals) }
 
     # We add the time to the cleaned SOFT file name because not all SOFT files

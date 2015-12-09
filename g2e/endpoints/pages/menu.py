@@ -23,19 +23,19 @@ def index_page():
 
 @menu_pages.route('/documentation')
 def documentation_page():
-    return render_template('documentation.html')
+    return render_template('menu/../../templates/pages/documentation.html')
 
 
 @menu_pages.route('/manual')
 def manual_page():
-    return render_template('manual.html')
+    return render_template('menu/../../templates/pages/manual.html')
 
 
 @menu_pages.route('/pipeline')
 def pipeline_page():
-    return render_template('pipeline.html')
+    return render_template('menu/../../templates/pages/pipeline.html')
 
 
 @menu_pages.route('/about')
 def about_page():
-    return render_template('about.html')
+    return render_template('menu/../../templates/pages/about.html')

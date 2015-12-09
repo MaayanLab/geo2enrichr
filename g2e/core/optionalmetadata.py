@@ -1,6 +1,5 @@
+"""Transforms user input to list of OptionalMetadata instances.
 """
-"""
-
 
 from substrate import OptionalMetadata
 
