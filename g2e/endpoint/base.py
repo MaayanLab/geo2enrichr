@@ -34,13 +34,6 @@ def pipeline_page():
     return render_template('pipeline.html')
 
 
-@base.route('/stats')
-def stats_page():
-    stats = dataaccess.get_statistics()
-    stats_json = json.dumps(stats)
-    return render_template('stats.html', stats=stats, stats_json=stats_json)
-
-
 @base.route('/about')
 def about_page():
     return render_template('about.html')

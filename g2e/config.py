@@ -13,16 +13,22 @@ class Config(object):
     DEBUG = lines[1] == 'True'
     SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 
-    BASE_URL          = '/g2e'
-    BASE_RESULTS_URL  = BASE_URL + '/results'
-    BASE_API_URL      = BASE_URL + '/api'
-    BASE_PCA_URL      = BASE_URL + '/pca'
-    BASE_CLUSTER_URL  = BASE_URL + '/cluster'
-    BASE_TAGS_URL     = BASE_URL + '/explore/tags'
-    BASE_METADATA_URL = BASE_URL + '/explore/metadata'
+    BASE_URL  = '/g2e'
+    BASE_RESULTS_URL = BASE_URL + '/results'
+    BASE_API_URL = BASE_URL + '/api'
+    BASE_PCA_URL = BASE_URL + '/pca'
+    BASE_CLUSTER_URL = BASE_URL + '/cluster'
 
     GENE_LIST_URL = BASE_URL + '/gene_list'
     SOFT_FILE_URL = BASE_URL + '/soft_file'
 
     SQLALCHEMY_POOL_RECYCLE = 3600
     SQLALCHEMY_DATABASE_URI = lines[0]
+
+    if DEBUG:
+        GENEVA_URL = 'http://localhost:8084/geneva'
+    else:
+        GENEVA_URL = 'http://amp.pharm.mssm.edu/geneva'
+
+    BASE_TAGS_URL = GENEVA_URL + '/tags'
+    BASE_METADATA_URL = GENEVA_URL + '/metadata'

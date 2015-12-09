@@ -98,3 +98,12 @@ def c_geo_url(context, value):
     if 'GDS' in value:
         return 'http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=' + value
     return 'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=' + value
+
+
+@jinja2.contextfilter
+@jinjafilters.app_template_filter('c_geneva_url')
+def c_geneva_url(context, value):
+    if Config.DEBUG:
+        return 'http://localhost:8084/geneva'
+    else:
+        return 'http://amp.pharm.mssm.edu/geneva'

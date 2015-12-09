@@ -30,8 +30,6 @@ else:
 # Import these after connecting to the DB.
 from g2e.endpoint.base import base
 from g2e.endpoint.error import error
-from g2e.endpoint.exploremetadata import explore_metadata
-from g2e.endpoint.exploretags import explore_tags
 from g2e.endpoint.extractapi import extract_api
 from g2e.endpoint.genelistapi import genelist
 from g2e.endpoint.pcaapi import pca_blueprint
@@ -48,8 +46,6 @@ app.register_blueprint(extract_api)
 app.register_blueprint(genelist)
 app.register_blueprint(pca_blueprint)
 app.register_blueprint(soft_file)
-app.register_blueprint(explore_metadata)
-app.register_blueprint(explore_tags)
 app.register_blueprint(results)
 app.register_blueprint(suggest_api_blueprint)
 app.register_blueprint(jinjafilters)
