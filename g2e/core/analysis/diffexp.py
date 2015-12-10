@@ -7,7 +7,7 @@ from substrate import Gene
 from substrate import RankedGene
 
 from . import chdir, ttest
-from g2e.db.util import get_or_create
+from g2e.db.utils import get_or_create
 
 
 def diffexp(a_vals, b_vals, genes, metadata):

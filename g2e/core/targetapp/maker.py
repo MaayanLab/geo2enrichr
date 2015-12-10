@@ -8,7 +8,7 @@ from g2e.core.targetapp import enrichr
 from g2e.core.targetapp import l1000cds2
 from g2e.core.targetapp import paea
 from g2e.core.targetapp import crowdsourcing
-from g2e.db.util import get_or_create
+from g2e.db.utils import get_or_create
 
 
 # Granular control of how many genes are sent to each downstream application.

@@ -8,7 +8,7 @@ import requests
 
 from substrate import TargetApp
 from substrate import TargetAppLink
-from g2e.db.util import get_or_create
+from g2e.db.utils import get_or_create
 from g2e.db import dataaccess
 
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/g2e/'

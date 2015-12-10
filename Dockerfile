@@ -23,7 +23,6 @@ RUN pip install \
     SQLAlchemy==0.9.9 \
     flask-cors==2.0.1 \
     flask-sqlalchemy==2.0 \
-    alembic==0.8.0 \
     mysql-connector-python==2.0.3 \
     nose==1.3.4 \
     numpy==1.9.2 \
@@ -34,7 +33,6 @@ RUN pip install \
     six==1.9.0 \
     sklearn==0.0 \
     wsgiref==0.1.2 \
-    --allow-external mysql-connector-python \
     git+git://github.com/MaayanLab/substrate.git@master
 
 RUN apt-get clean

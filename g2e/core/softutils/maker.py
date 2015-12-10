@@ -6,7 +6,7 @@ import time
 from substrate import CustomDataset, GeoDataset, SoftFile, SoftFileSample
 from g2e.utils.requestutil import get_param_as_list
 from . import parser, cleaner, filemanager
-from g2e.db.util import get_or_create
+from g2e.db.utils import get_or_create
 from g2e.db import dataaccess
 
 

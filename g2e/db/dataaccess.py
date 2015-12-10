@@ -12,7 +12,7 @@ from substrate import Tag
 from substrate import GeoDataset
 from substrate import OptionalMetadata
 
-from g2e.db.util import session_scope
+from g2e.db.utils import session_scope
 
 
 def fetch_all(klass):
