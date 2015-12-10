@@ -8,12 +8,12 @@ class Config(object):
     """Global configurations.
     """
 
-    # g2e/app.conf un-version controlled, two-line file.
+    # g2e/app.conf is an un-version controlled, two-line file.
     #
-    # First line - DB connection:
+    # First line specifies DB connection:
     #   mysql://<USER>:<PASSWORD>@<IP ADDRESS>:<PORT | 3306>/<DB>
     #
-    # Second line - DEBUG mode:
+    # Second line specifies debug mode:
     #   True | False
     with open('g2e/app.conf') as f:
         lines = [x for x in f.read().split('\n')]
