@@ -13,7 +13,8 @@
 - Compress the Firefox extension by running `cfx xpi` after entering the Firefox `virtualenv`.
 - Move the compiled `xpi` file into `g2e/static`.
 - Resubmit the Firefox add-on for approval.
-\***Firefox is deprecated because the approval process is too strict and the requirements would require almost separate codebases for the two extensions. This was not the case when GEO2Enrichr was first published.**
+
+\* **Firefox is deprecated because the approval process is too strict and the requirements would require almost separate codebases for the two extensions. This was not the case when GEO2Enrichr was first published.**
 
 ### To deploy the web application
 - Run `build.sh` with these arguments:
