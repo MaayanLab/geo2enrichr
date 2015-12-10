@@ -26,7 +26,7 @@ if [[ $2 = 'skip' ]]; then
     printf '%s\n' 'Skipping Python unit tests'
 else
     printf '%s\n' 'Running Python unit tests'
-    nosetests --exe -v --pdb
+    bash test.sh
 fi
 
 # Create front end (if tests pass)
