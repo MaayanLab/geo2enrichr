@@ -15,9 +15,7 @@ depends_on = None
 from alembic import op
 import sqlalchemy as sa
 
-from g2e.model.optionalmetadata import OptionalMetadata
-from g2e.model.requiredmetadata import RequiredMetadata
-from g2e.model.softfile import SoftFile
+from substrate import OptionalMetadata, RequiredMetadata, SoftFile
 
 
 def upgrade():

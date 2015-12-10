@@ -20,9 +20,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
 import requests
 
-from g2e.model.geodataset import GeoDataset
-from g2e.model.customdataset import CustomDataset
-from g2e.model.genesignature import GeneSignature
+from substrate import GeoDataset, CustomDataset, GeneSignature
 
 
 Session = sessionmaker()
