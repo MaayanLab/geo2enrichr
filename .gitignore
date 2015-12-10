@@ -20,7 +20,6 @@ g2e/extension/firefox/geo2enrichr.xpi
 resources/
 scripts/node_modules/
 misc/
-analysis/
 
 # Python
 *.pyc
