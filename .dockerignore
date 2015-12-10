@@ -1,6 +1,5 @@
-# Ignore non-code directories.
+alembic/
 scripts/
-misc/
-
+tests/
 .git
 .gitignore
