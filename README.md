@@ -16,7 +16,6 @@ GEO2Enrichr is a browser extension and web application for extracting gene sets 
 
 #### How do I deploy GEO2Enrichr?
 
-- Run `bash build.sh` to build the Docker container. See that script for argument details.
-- Restart or deploy the application on Marathon. The POST request configuration is in `marathon-deployments` on GitLab.
+- See `Deploy.md`.
 
 (c) 2015. Ma'ayan Laboratory for Systems Biology - Icahn School of Medicine at Mount Sinai.
