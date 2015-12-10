@@ -12,10 +12,10 @@ GEO2Enrichr is a browser extension and web application for extracting gene sets 
 
 #### How do I test GEO2Enrichr?
 
-- Run `bash test.sh`
+Run `bash test.sh`
 
 #### How do I deploy GEO2Enrichr?
 
-- See `Deploy.md`.
+See `DEPLOY.md`.
 
 (c) 2015. Ma'ayan Laboratory for Systems Biology - Icahn School of Medicine at Mount Sinai.
