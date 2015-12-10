@@ -17,9 +17,9 @@
 
 ### To deploy the web application
 - Run `build.sh` with these arguments:
-    `$1` - 'prod' for production, 'dev' for development
-    `$2` - 'skip' to skip tests
-    `$3` - 'build' to build the Docker container.
-    `$4` - 'push' to push to the Docker repo.
+    - `$1` - 'prod' for production, 'dev' for development
+    - `$2` - 'skip' to skip tests
+    - `$3` - 'build' to build the Docker container.
+    - `$4` - 'push' to push to the Docker repo.
 - Restart G2E on Marathon.
 - To redeploy completely, see `g2e.json` in the `marathon-deployments` repo on our GitLab.
