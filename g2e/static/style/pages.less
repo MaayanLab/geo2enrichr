@@ -1,6 +1,10 @@
 @import '../../extension/common/less/common.less';
 @import 'variable.less';
 
+#page {
+    padding-bottom: 50px;
+}
+
 #index-page {
     margin-top: 30px;
     table {
@@ -96,6 +100,19 @@
 #pipeline-page {
     img {
         width: 700px;
+    }
+}
+
+#cluster-page,
+#pca-page {
+    margin-top: 50px;
+}
+
+#cluster-page {
+    iframe {
+        border: 1px solid @color-lightgray3;
+        height: 1000px;
+        width: 100%;
     }
 }
 

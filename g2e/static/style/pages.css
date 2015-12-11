@@ -1,3 +1,6 @@
+#page {
+  padding-bottom: 50px;
+}
 #index-page {
   margin-top: 30px;
 }
@@ -75,6 +78,15 @@
 #manual-page img,
 #pipeline-page img {
   width: 700px;
+}
+#cluster-page,
+#pca-page {
+  margin-top: 50px;
+}
+#cluster-page iframe {
+  border: 1px solid #eeeeee;
+  height: 1000px;
+  width: 100%;
 }
 table td {
   vertical-align: middle !important;
