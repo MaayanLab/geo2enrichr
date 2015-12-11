@@ -83,13 +83,13 @@ def c_results_url(context, value):
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_metadata_url')
 def c_metadata_url(context, value):
-    return '%s/%s' % (Config.GENEVA_METADATA_URL, value)
+    return '%s/%s' % (Config.GEN3VA_METADATA_URL, value)
 
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_metadata_value_url')
 def c_metadata_value_url(context, value, name):
-    return '%s/%s/%s' % (Config.GENEVA_METADATA_URL, name, value)
+    return '%s/%s/%s' % (Config.GEN3VA_METADATA_URL, name, value)
 
 
 @jinja2.contextfilter
@@ -101,6 +101,6 @@ def c_geo_url(context, value):
 
 
 @jinja2.contextfilter
-@jinjafilters.app_template_filter('c_geneva_url')
-def c_geneva_url(context, value):
-    return Config.GENEVA_URL
+@jinjafilters.app_template_filter('c_gen3va_url')
+def c_gen3va_url(context, value):
+    return Config.GEN3VA_URL

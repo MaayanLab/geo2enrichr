@@ -32,8 +32,8 @@ def results(results_id):
         show_viz = False
 
     return render_template('pages/results.html',
-                           geneva_report_url=Config.GENEVA_REPORT_URL,
-                           metadata_url=Config.GENEVA_METADATA_URL,
+                           gen3va_report_url=Config.GEN3VA_REPORT_URL,
+                           metadata_url=Config.GEN3VA_METADATA_URL,
                            show_viz=show_viz,
                            pca_url=Config.BASE_PCA_URL,
                            gene_list_url=Config.GENE_LIST_URL,

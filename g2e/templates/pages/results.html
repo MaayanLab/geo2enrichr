@@ -16,11 +16,11 @@
 
         {% if gene_signature.tags|length > 0 %}
             <section>
-                <h5>GENEVA Reports for these tags</h5>
+                <h5>GEN3VA Reports for these tags</h5>
                 <p>
                     {% for tag in gene_signature.tags %}
                         <span class="label">
-                            <a href="{{ geneva_report_url }}/{{ tag.name }}" target="_blank">{{ tag.name }}</a>
+                            <a href="{{ gen3va_report_url }}/{{ tag.name }}" target="_blank">{{ tag.name }}</a>
                         </span>
                     {% endfor %}
                 </p>
@@ -126,7 +126,7 @@
                 <tr>
                     <td>Hierarchical clustering</td>
                     <td>
-                        <a href="{{ cluster_url }}/{{ gene_signature.extraction_id }}" target="_blank">
+                        <a href="{{ cluster_url }}/{{ gene_signature.extraction_id }}">
                             <i class="fa fa-map-o"></i>
                         </a>
                     </td>

@@ -36,9 +36,9 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = lines[0]
 
     if DEBUG:
-        GENEVA_URL = 'http://localhost:8084/geneva'
+        GEN3VA_URL = 'http://localhost:8084/gen3va'
     else:
-        GENEVA_URL = 'http://amp.pharm.mssm.edu/geneva'
+        GEN3VA_URL = 'http://amp.pharm.mssm.edu/gen3va'
 
-    GENEVA_REPORT_URL = GENEVA_URL + '/report'
-    GENEVA_METADATA_URL = GENEVA_URL + '/metadata'
+    GEN3VA_REPORT_URL = GEN3VA_URL + '/report'
+    GEN3VA_METADATA_URL = GEN3VA_URL + '/metadata'
