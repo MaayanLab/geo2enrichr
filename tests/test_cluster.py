@@ -28,6 +28,5 @@ class TestCluster(unittest.TestCase):
     def testEndpoint(self):
         print(self.extraction_id)
         url = '/g2e/cluster/' + self.extraction_id
-        import pdb; pdb.set_trace()
         response = self.app.get(url)
         self.assertTrue('http://amp.pharm.mssm.edu/clustergrammer/viz/' in response.data)
