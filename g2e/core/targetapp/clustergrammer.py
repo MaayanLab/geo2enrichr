@@ -11,16 +11,19 @@ from substrate import TargetAppLink
 from g2e.db.utils import get_or_create
 from g2e.db import dataaccess
 
-CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/g2e/'
+CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
 
 
 def from_soft_file(gene_signature):
+    """Performs hierarchical clustering on SOFT file.
+    """
     target_app_link = __get_clustergrammer_link(gene_signature)
 
     # Only create the link from Clustergrammer once.
     # TODO: Move into targetapp module. API should not know about this.
     if not target_app_link:
         link = __from_soft_file(gene_signature)
+        link = '{0}?preview=true'.format(link)
         target_app = get_or_create(TargetApp, name='clustergrammer')
         target_app_link = TargetAppLink(target_app, link)
         gene_signature.gene_lists[2].target_app_links.append(
@@ -43,7 +46,7 @@ def __from_soft_file(gene_signature):
     # analysis.
     sf = sf.loc[sf[0].isin(ranked_genes)]
 
-    samples = []
+    columns = []
     for col_idx in sf.columns:
         if col_idx == 0:
             continue
@@ -54,17 +57,17 @@ def __from_soft_file(gene_signature):
         # Clustergrammer expects a list of lists, rather than tuples.
         genes = [[x, y] for x, y in genes]
         gsm = gene_signature.soft_file.samples[col_idx - 1]
-        samples.append({
+        columns.append({
             'col_title': gsm.name,
             'is_control': gsm.is_control,
             'link': 'todo',
-            'genes': genes,
+            'vector': genes,
             'name': 'todo'
         })
 
     payload = {
         'link': 'todo',
-        'gene_signatures': samples
+        'columns': columns
     }
 
     headers = {'content-type': 'application/json'}
@@ -80,6 +83,7 @@ def __get_clustergrammer_link(gene_signature):
     for target_app_link in gene_signature.gene_lists[2].target_app_links:
         if target_app_link.target_app.name == 'clustergrammer':
             return target_app_link
+    return None
 
 
 def _get_raw_data(soft_file):
