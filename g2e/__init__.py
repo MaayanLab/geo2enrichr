@@ -28,7 +28,7 @@ else:
     print 'Starting in DEBUG mode'
 
 # Import these after connecting to the DB.
-from g2e.endpoints.pages.menu import menu_pages
+from g2e.endpoints.pages.menupages import menu_pages
 from g2e.endpoints.pages.results import results_page
 
 from g2e.endpoints.api.extract import extract_api
