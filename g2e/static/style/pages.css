@@ -77,6 +77,7 @@
 }
 #manual-page img,
 #pipeline-page img {
+  border: 1px solid #eee;
   width: 700px;
 }
 #cluster-page,

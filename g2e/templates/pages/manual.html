@@ -5,16 +5,16 @@
 {% block body %}
 
     <div id="manual-page">
-        <section>
+        <section id="use" name="use">
             <h1>Use</h1>
             <p>GEO2Enrichr can be used via either this website or a browser extension.</p>
         </section>
 
         <!-- Website -->
 
-        <section>
+        <section id="upload" name="upload">
             <h1>Upload a dataset for analysis</h1>
-            <p>GEO data is saved as <a href="http://www.ncbi.nlm.nih.gov/geo/info/soft.html" target="_blank">Simple Omnibus Format in Text (SOFT)</a> files. These are just tab-separated, plain text files of raw expression data. This website can be used to upload custom "SOFT"-like files. The file should be a tab-separated <span class="mono">.txt</span> file. The first row contains the column names; the second row contains 0s and 1s, indicating whether the column is control or condition, respectively. Every subsequent row contains a gene symbol and some expression data in columns. Here is an example:</p>
+            <p>GEO data is saved as <a href="http://www.ncbi.nlm.nih.gov/geo/info/soft.html" target="_blank">Simple Omnibus Format in Text (SOFT)</a> files. These are just tab-separated, plain text files of raw expression data. This website can be used to upload custom "SOFT-like" files. The file should be a tab-separated <span class="mono">.txt</span> file. The first row contains the column names; the second row contains 0s and 1s, indicating whether the column is control or condition, respectively. Every subsequent row contains a gene symbol and some expression data in columns. Here is an example:</p>
         <pre>
             a	b	c	d
             0	0	1	1
@@ -32,7 +32,7 @@
             <p>You can use the web form linked to above to upload your file, attach any relevant metadata, and submit it to our servers for processing. After the processing is finished, GEO2Enrichr will redirect you to your results page.</p>
         </section>
 
-        <section>
+        <section id="extensions" name="extensions">
             <h1>Use a browser extension</h1>
             <p>GEO2Enrichr's two browser extensions function the same in both Chrome and Firefox; this tutorial is for both.</p>
             <p>Each extension works by embedding additional functionality into relevant GEO pages that you visit. For example, after installing an extension, visiting the page <a href="http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS5077" target="_blank">GDS5077</a> and clicking "Compare 2 sets of samples", you should see a new hypertext that says <strong>"Extract knowledge with GEO2Enrichr"</strong> (Fig. 1).</p>
@@ -50,6 +50,16 @@
             <img src="static/image/screenshot-results.png" class="center"/>
             <p class="caption">Fig. 4 Screenshot of a results page.</p>
             <p>These results pages are permanent. You can reference a previous analysis at any time via the page"s link.</p>
+        </section>
+
+        <section id="tags" name="tags">
+            <h1>Tags</h1>
+            <p>A <em>tag</em> is a plain text term that you can use to associate multiple signatures from different studies. These tags are non-hierarchical keywords assigned to a gene signature. In social media, the equivalent idea is a "hashtag", which is a tag preceded by a "#" or hash symbol. These tags enable the creation of collections of gene signatures around common themes. A gene signature can have multiple tags.</p>
+            <p>Tags can be added to signatures extracted from either GEO (Fig. 5) or custom datasets. Tags are case insensitive and space-delimited, but capitalization can be used for visual clarity.
+            </p>
+            <img src="static/image/screenshot-tags.png" class="center"/>
+            <p class="caption">Fig. 5 Screenshot that shows how three tags applied to a GEO dataset before processing.</p>
+            <p>Any tags associated with an extracted gene signature will appear on the signature's results page. Clicking on the tag will direct you to <a href="http://amp.pharm.mssm.edu/gen3va/" target="_blank">GEN3VA</a>, another Ma'ayan Lab web tool that performs aggregated analysis of gene signatures collected via tags around common biological themes.</p>
         </section>
 
         <section id="firefox_update" name="firefox_update" class="last">

@@ -162,6 +162,7 @@ pre {
 .highlight {
   color: #d90000;
 }
+.caption,
 caption {
   font-style: italic;
   margin-top: 10px;
