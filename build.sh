@@ -96,7 +96,7 @@ docker-machine start default
 eval "$(docker-machine env default)"
 DOCKER_IMAGE='maayanlab/g2e:latest'
 if [[ $3 = 'build' ]]; then
-    docker build --no-cache -t $DOCKER_IMAGE .
+    docker build -t $DOCKER_IMAGE .
 fi
 
 # Critical step! We need to reset the DB credentials so we can keep developing
