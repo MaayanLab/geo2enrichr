@@ -17,5 +17,3 @@ Run `bash test.sh`
 #### How do I deploy GEO2Enrichr?
 
 See `DEPLOY.md`.
-
-*(c) 2015. Ma'ayan Laboratory for Computational Systems Biology - Icahn School of Medicine at Mount Sinai.*
