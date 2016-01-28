@@ -27,24 +27,16 @@ else:
     print 'Starting in DEBUG mode'
 
 # Import these after connecting to the DB.
-from g2e.endpoints.pages.menupages import menu_pages
-from g2e.endpoints.pages.resultspage import results_page
+from g2e import endpoints
 
-from g2e.endpoints.api.extractapi import extract_api
-from g2e.endpoints.api.genelistapi import gene_list_api
-from g2e.endpoints.api.pcaapi import pca_api
-from g2e.endpoints.pages.clusterpage import cluster_page
-from g2e.endpoints.api.softfileapi import soft_file_api
+app.register_blueprint(endpoints.menu_pages)
+app.register_blueprint(endpoints.results_page)
+app.register_blueprint(endpoints.cluster_page)
 
-from g2e.utils.jinjafilters import jinjafilters
+app.register_blueprint(endpoints.check_api)
+app.register_blueprint(endpoints.extract_api)
+app.register_blueprint(endpoints.gene_list_api)
+app.register_blueprint(endpoints.pca_api)
+app.register_blueprint(endpoints.soft_file_api)
 
-app.register_blueprint(menu_pages)
-app.register_blueprint(results_page)
-app.register_blueprint(cluster_page)
-
-app.register_blueprint(extract_api)
-app.register_blueprint(gene_list_api)
-app.register_blueprint(pca_api)
-app.register_blueprint(soft_file_api)
-
-app.register_blueprint(jinjafilters)
+app.register_blueprint(endpoints.jinjafilters)

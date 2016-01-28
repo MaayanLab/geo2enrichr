@@ -6,9 +6,10 @@ from flask import Blueprint, Response
 from g2e.db import dataaccess
 from g2e.config import Config
 
+
 soft_file_api = Blueprint('soft_file_api',
-                      __name__,
-                      url_prefix=Config.SOFT_FILE_URL)
+                          __name__,
+                          url_prefix=Config.SOFT_FILE_URL)
 
 
 @soft_file_api.route('/<extraction_id>')
