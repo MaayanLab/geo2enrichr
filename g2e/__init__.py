@@ -7,7 +7,7 @@ import sys
 from flask import Flask
 from flask.ext.cors import CORS
 from g2e.config import Config
-from substrate import db
+from substrate import db as substrate_db
 
 app = Flask(__name__, static_url_path='/g2e/static', static_folder='static')
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_POOL_RECYCLE'] = Config.SQLALCHEMY_POOL_RECYCLE
 # and will be set to False by default in a future release of Flask-SQLAlchemy.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
+substrate_db.init_app(app)
 cors = CORS(app)
 
 if not Config.DEBUG:

@@ -3,7 +3,7 @@
 
 from flask import Blueprint, Response
 
-from g2e.db import dataaccess
+from g2e import db
 from g2e.config import Config
 
 
@@ -13,16 +13,14 @@ soft_file_api = Blueprint('soft_file_api',
 
 
 @soft_file_api.route('/<extraction_id>')
-def get_genelist(extraction_id):
-    """Handles GET request based on extraction ID.
+def get_soft_file(extraction_id):
+    """Returns SOFT file in plain text file based on gene signature ID.
     """
-    gene_signature = dataaccess.fetch_gene_signature(extraction_id)
+    gene_signature = db.get_gene_signature(extraction_id)
     soft_file = gene_signature.soft_file.actual_text_file
-
     soft_file_str = ''
     for line in soft_file:
         print line
         soft_file_str += line
-
     response = Response(soft_file_str, mimetype='text/plain')
     return response

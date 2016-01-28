@@ -1,4 +1,4 @@
-"""Endpoints interface.
+"""Interface for endpoints module.
 """
 
 from jinjafilters import jinjafilters

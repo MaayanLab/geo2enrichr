@@ -3,9 +3,10 @@
 
 from flask import Blueprint, request, render_template
 
-from g2e.db import dataaccess
+from g2e import db
 from g2e.config import Config
 from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS
+
 
 results_page = Blueprint('results_page',
                          __name__,
@@ -16,7 +17,7 @@ results_page = Blueprint('results_page',
 def results(results_id):
     """Single entry point for extracting a gene list from a SOFT file.
     """
-    gene_signature = dataaccess.fetch_gene_signature(results_id)
+    gene_signature = db.get_gene_signature(results_id)
     if gene_signature is None:
         return render_template('pages/404.html')
     gene_signature = __process_extraction_for_view(gene_signature)

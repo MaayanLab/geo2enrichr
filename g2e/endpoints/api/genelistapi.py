@@ -3,9 +3,10 @@
 
 from flask import Blueprint, Response
 
-from g2e.db import dataaccess
+from g2e import db
 from g2e.config import Config
 from g2e.core.genelistutils import filemanager
+
 
 gene_list_api = Blueprint('gene_list_api',
                          __name__,
@@ -13,18 +14,18 @@ gene_list_api = Blueprint('gene_list_api',
 
 
 @gene_list_api.route('/<direction>/<extraction_id>')
-def get_genelist(direction, extraction_id):
-    """Handles GET request based on extraction ID.
+def get_gene_list(direction, extraction_id):
+    """Returns gene list in plain text file based on gene signature ID.
     """
-    gene_signature = dataaccess.fetch_gene_signature(extraction_id)
-    genelist = __get_genelist_by_direction(gene_signature, int(direction))
+    gene_signature = db.get_gene_signature(extraction_id)
+    genelist = _get_gene_list_by_direction(gene_signature, int(direction))
     genelist_str = filemanager.get_file_contents_as_string(genelist)
     response = Response(genelist_str, mimetype='text/plain')
     return response
 
 
-def __get_genelist_by_direction(gene_signature, direction):
-    """
+def _get_gene_list_by_direction(gene_signature, direction):
+    """Return a gene list based on integer-signifying direction.
     """
     for gene_list in gene_signature.gene_lists:
         if gene_list.direction == direction:

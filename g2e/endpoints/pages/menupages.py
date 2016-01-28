@@ -2,10 +2,9 @@
 """
 
 from flask import Blueprint, render_template
-import json
 
 from g2e.config import Config
-from g2e.db import dataaccess
+from g2e import db
 
 menu_pages = Blueprint('base',
                        __name__,
@@ -14,11 +13,9 @@ menu_pages = Blueprint('base',
 
 @menu_pages.route('/')
 def index_page():
-    stats = dataaccess.get_statistics()
-    stats_json = json.dumps(stats)
+    num_gene_signatures = db.get_num_gene_signatures()
     return render_template('index.html',
-                           stats=stats,
-                           stats_json=stats_json)
+                           num_gene_signatures=num_gene_signatures)
 
 
 @menu_pages.route('/documentation')

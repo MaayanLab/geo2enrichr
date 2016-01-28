@@ -6,8 +6,7 @@ import time
 from substrate import CustomDataset, GeoDataset, SoftFile, SoftFileSample
 from g2e.utils.requestutil import get_param_as_list
 from . import parser, cleaner, filemanager
-from g2e.db.utils import get_or_create
-from g2e.db import dataaccess
+from g2e import db
 
 
 def from_geo(args):
@@ -18,7 +17,7 @@ def from_geo(args):
     if not filemanager.file_exists(accession):
         filemanager.download(accession)
 
-    dataset = dataaccess.get_dataset(accession)
+    dataset = db.get_geo_dataset(accession)
     if dataset == None:
         platform = args['platform']
         if platform.index('GPL') == 0:
@@ -37,12 +36,12 @@ def from_geo(args):
     b_cols = get_param_as_list(args, 'B_cols')
 
     # Use get_or_create to track GSMs. We don't do this for custom files.
-    control = [get_or_create(SoftFileSample,
-                             name=sample,
-                             is_control=True) for sample in a_cols]
-    experimental = [get_or_create(SoftFileSample,
-                                  name=sample,
-                                  is_control=False) for sample in b_cols]
+    control = [db.get_or_create(SoftFileSample,
+                                name=sample,
+                                is_control=True) for sample in a_cols]
+    experimental = [db.get_or_create(SoftFileSample,
+                                     name=sample,
+                                     is_control=False) for sample in b_cols]
     samples = control + experimental
 
     genes, a_vals, b_vals, selections, stats = parser.parse(accession,

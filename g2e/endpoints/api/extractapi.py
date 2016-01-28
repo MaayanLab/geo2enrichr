@@ -4,7 +4,7 @@
 from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
 
-from g2e.db import dataaccess
+from g2e import db
 from g2e.core import genesignature
 from g2e.config import Config
 import g2e.core.softutils.filemanager as softfilemanager
@@ -19,7 +19,7 @@ extract_api = Blueprint('extract_api',
 def get_extraction(extraction_id):
     """Handles GET request based on extraction ID.
     """
-    gene_signature = dataaccess.fetch_gene_signature(extraction_id)
+    gene_signature = db.get_gene_signature(extraction_id)
     if gene_signature is None:
         return jsonify({
             'error': 'No gene signatures with ID %s found' % extraction_id
@@ -36,7 +36,7 @@ def post_from_geo():
     args = request.form
     response = {}
     gene_signature = genesignature.from_geo(args)
-    dataaccess.save_gene_signature(gene_signature)
+    db.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
 
@@ -49,7 +49,7 @@ def post_file():
     args = request.form
     response = {}
     gene_signature = genesignature.from_file(request.files['file'], args)
-    dataaccess.save_gene_signature(gene_signature)
+    db.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
 
@@ -63,6 +63,6 @@ def example_file():
     response = {}
     file_obj = softfilemanager.get_example_file()
     gene_signature = genesignature.from_file(file_obj, args)
-    dataaccess.save_gene_signature(gene_signature)
+    db.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)

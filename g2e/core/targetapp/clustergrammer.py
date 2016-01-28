@@ -8,8 +8,7 @@ import requests
 
 from substrate import TargetApp
 from substrate import TargetAppLink
-from g2e.db.utils import get_or_create
-from g2e.db import dataaccess
+from g2e import db
 
 CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
 
@@ -24,12 +23,12 @@ def from_soft_file(gene_signature):
     if not target_app_link:
         link = __from_soft_file(gene_signature)
         link = '{0}?preview=true'.format(link)
-        target_app = get_or_create(TargetApp, name='clustergrammer')
+        target_app = db.get_or_create(TargetApp, name='clustergrammer')
         target_app_link = TargetAppLink(target_app, link)
         gene_signature.gene_lists[2].target_app_links.append(
             target_app_link
         )
-        dataaccess.save_gene_signature(gene_signature)
+        db.save_gene_signature(gene_signature)
 
     return target_app_link.link
 
