@@ -240,6 +240,9 @@ caption {
 .label:hover {
   background-color: #006eb3;
 }
+.form-control {
+  border-radius: 0;
+}
 /* Main structural elements:
  * header, content, footer
  * ----------------------------- */
@@ -305,6 +308,28 @@ caption {
 }
 #header h1 a {
   font-size: 40px;
+}
+#header .user-options {
+  display: inline-block;
+  margin-left: 40px;
+  /* Make logout button, which uses an HTML form to POST, look like a link. */
+}
+#header .user-options span,
+#header .user-options form button {
+  color: #444444;
+  font-size: 14px;
+}
+#header .user-options form {
+  display: inline-block;
+}
+#header .user-options form button {
+  border: none;
+  display: inline;
+  background-color: transparent;
+  font-size: 14px;
+}
+#header .user-options form button:hover {
+  text-decoration: underline;
 }
 #footer {
   border-top: 3px solid #253238;

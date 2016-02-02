@@ -1,0 +1,22 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}About{% endblock %}
+
+{% block body %}
+
+    <div class='row'>
+        <h1 class='col-md-12'>Login</h1>
+        <div class='col-md-4'>
+            <form action='login' method='POST'>
+                <div class='form-group'>
+                    <input type='text' class='form-control' name='username' placeholder='Username' autocomplete='off'>
+                </div>
+                <div class='form-group'>
+                    <input type='password' class='form-control' name='password' placeholder='Password' autocomplete='off'>
+                </div>
+                <button type='submit' class='btn btn-default'>Log in</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

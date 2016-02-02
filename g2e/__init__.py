@@ -36,6 +36,8 @@ else:
 # Import these after connecting to the DB.
 from g2e import endpoints
 
+app.register_blueprint(endpoints.account_page)
+app.register_blueprint(endpoints.auth_pages)
 app.register_blueprint(endpoints.menu_pages)
 app.register_blueprint(endpoints.results_page)
 app.register_blueprint(endpoints.cluster_page)
@@ -52,7 +54,7 @@ app.register_blueprint(endpoints.jinjafilters)
 # User authentication
 login_manager = LoginManager()
 login_manager.init_app(app)
-#login_manager.login_view = 'auth.login'
+#login_manager.login_view = 'auth_pages.login'
 
 
 @login_manager.user_loader
