@@ -13,7 +13,7 @@ import sys
 # Parse user arguments and set defaults
 # ============================================================================
 ap = argparse.ArgumentParser()
-ap.add_argument('--dev',
+ap.add_argument('--prod',
                 help='deploy debug or production version',
                 action='store_false')
 ap.add_argument('--skiptests',
@@ -29,6 +29,7 @@ ap.add_argument('--deploy',
                 help='push Docker container',
                 action='store_true')
 opts = ap.parse_args()
+print(opts)
 
 
 # Run unit tests
@@ -63,16 +64,16 @@ CHROME_JS_CONFIG = 'g2e/extension/common/js/config-chrome.js'
 
 with open(CHROME_JS_CONFIG, 'w+') as f:
     f.write('// This file is built by deploy.sh in the root directory.\n')
-    if opts.dev:
-        mode = 'dev'
-        debug = 'true'
-        server = 'http://localhost:8083/g2e/'
-        id_ = 'omkofmggjapmpfpijnnnnpclfejpfpmd'
-    else:
+    if opts.prod:
         mode = 'prod'
         debug = 'false'
         server = 'http://amp.pharm.mssm.edu/g2e/'
         id_ = 'pcbdeobileclecleblcnadplfcicfjlp'
+    else:
+        mode = 'dev'
+        debug = 'true'
+        server = 'http://localhost:8083/g2e/'
+        id_ = 'omkofmggjapmpfpijnnnnpclfejpfpmd'
 
     print('--------------------- %s ---------------------' % mode)
     f.write('var DEBUG = %s;\n' % debug)
@@ -101,12 +102,12 @@ config_out.add_section('cookies')
 
 # Configuration, primarily database connection string.
 # ----------------------------------------------------------------------------
-if opts.dev:
-    config_in.read('g2e/dev.ini')
-    config_out.set('mode', 'debug', True)
-else:
+if opts.prod:
     config_in.read('g2e/prod.ini')
     config_out.set('mode', 'debug', False)
+else:
+    config_in.read('g2e/dev.ini')
+    config_out.set('mode', 'debug', True)
 
 config_out.set('db', 'uri', config_in.get('db', 'uri'))
 config_out.set('cookies', 'secret_key',
