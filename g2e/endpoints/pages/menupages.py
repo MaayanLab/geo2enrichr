@@ -3,12 +3,11 @@
 
 from flask import Blueprint, render_template
 
-from g2e.config import Config
-from g2e import db
+from g2e import config, db
 
 menu_pages = Blueprint('base',
                        __name__,
-                       url_prefix=Config.BASE_URL)
+                       url_prefix=config.BASE_URL)
 
 
 @menu_pages.route('/')

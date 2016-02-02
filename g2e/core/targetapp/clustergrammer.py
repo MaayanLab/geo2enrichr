@@ -10,12 +10,11 @@ from substrate import TargetApp
 from substrate import TargetAppLink
 from g2e import db
 
-CLUSTERGRAMMER_URL = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
-
 
 def from_soft_file(gene_signature):
     """Performs hierarchical clustering on SOFT file.
     """
+    import pdb; pdb.set_trace()
     target_app_link = __get_clustergrammer_link(gene_signature)
 
     # Only create the link from Clustergrammer once.
@@ -60,17 +59,17 @@ def __from_soft_file(gene_signature):
             'col_title': gsm.name,
             'is_control': gsm.is_control,
             'link': 'todo',
-            'vector': genes,
-            'name': 'todo'
+            'vector': genes
         })
 
+    link = '%s' % gene_signature.extraction_id
     payload = {
-        'link': 'todo',
+        'link': link,
         'columns': columns
     }
-
     headers = {'content-type': 'application/json'}
-    resp = requests.post(CLUSTERGRAMMER_URL, data=json.dumps(payload), headers=headers)
+    url = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
+    resp = requests.post(url, data=json.dumps(payload), headers=headers)
 
     if resp.ok:
         print json.loads(resp.text)['link']

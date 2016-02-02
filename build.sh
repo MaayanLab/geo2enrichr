@@ -84,8 +84,9 @@ printf '%s\n' 'Configuring the database.'
 dbconf='g2e/app.conf'
 if [[ $1 = 'dev' ]]; then
     credentials=$(head -n 1 g2e/dev.conf)
+    sed -i 'Ns/.*/uri=%s/' $credentials $dbconf
     debug=$(tail -n +2 g2e/dev.conf)
-    printf '%s\n%s' $credentials $debug > $dbconf
+    sed -i 'Ns/.*/debug=%s/' $debug $dbconf
 else
     credentials=$(head -n 1 g2e/prod.conf)
     debug=$(tail -n +2 g2e/prod.conf)

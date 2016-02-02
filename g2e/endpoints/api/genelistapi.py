@@ -3,14 +3,13 @@
 
 from flask import Blueprint, Response
 
-from g2e import db
-from g2e.config import Config
+from g2e import config, db
 from g2e.core.genelistutils import filemanager
 
 
 gene_list_api = Blueprint('gene_list_api',
                          __name__,
-                         url_prefix=Config.GENE_LIST_URL)
+                         url_prefix=config.GENE_LIST_URL)
 
 
 @gene_list_api.route('/<direction>/<extraction_id>')

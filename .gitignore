@@ -1,5 +1,6 @@
 # DB connection configs. Do *NOT* version control these.
-*.conf
+dev.ini
+prod.ini
 alembic.ini
 
 # IntelliJ

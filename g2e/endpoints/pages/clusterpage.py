@@ -4,13 +4,12 @@
 from flask import Blueprint, render_template
 
 from g2e.core.targetapp import clustergrammer
-from g2e.config import Config
-from g2e import db
+from g2e import config, db
 
 
 cluster_page = Blueprint('cluster_api',
                         __name__,
-                        url_prefix='%s/cluster' % Config.BASE_URL)
+                        url_prefix='%s/cluster' % config.BASE_URL)
 
 
 @cluster_page.route('/<extraction_id>', methods=['GET'])
@@ -22,5 +21,5 @@ def perform_hierarchical_clustering(extraction_id):
     link = link + '&preview=true'
     return render_template('pages/clustergrammer.html',
                            clustergrammer_link=link,
-                           results_url=Config.RESULTS_PAGE_URL,
+                           results_url=config.RESULTS_PAGE_URL,
                            extraction_id=gene_signature.extraction_id)

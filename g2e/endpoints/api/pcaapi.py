@@ -4,14 +4,13 @@
 import json
 
 from flask import Blueprint, render_template
-from g2e import db
+from g2e import config, db
 from g2e.core import analysis
-from g2e.config import Config
 
 
 pca_api = Blueprint('pca_api',
                     __name__,
-                    url_prefix='%s/pca' % Config.BASE_URL)
+                    url_prefix='%s/pca' % config.BASE_URL)
 
 
 @pca_api.route('/<extraction_id>', methods=['GET'])
@@ -24,5 +23,5 @@ def perform_soft_file_pca(extraction_id):
         pca_json = json.dumps(pca_data)
         return render_template('pages/pca.html',
                                pca_data=pca_json,
-                               results_url=Config.RESULTS_PAGE_URL,
+                               results_url=config.RESULTS_PAGE_URL,
                                extraction_id=gene_signature.extraction_id)

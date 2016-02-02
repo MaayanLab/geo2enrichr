@@ -4,14 +4,13 @@
 from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
 
-from g2e import db
+from g2e import config, db
 from g2e.core import genesignature
-from g2e.config import Config
 import g2e.core.softutils.filemanager as softfilemanager
 
 extract_api = Blueprint('extract_api',
                         __name__,
-                        url_prefix='%s/extract' % Config.BASE_API_URL)
+                        url_prefix='%s/extract' % config.BASE_API_URL)
 
 
 @extract_api.route('/<extraction_id>')
