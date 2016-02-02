@@ -1,8 +1,9 @@
 """Transforms user input to GeneSignature instance.
 """
 
-from substrate import GeneSignature
+from substrate import GeneSignature, Resource
 from g2e.core import genelistutils, optionalmetadata, softutils, requiredmetadata, tag
+from g2e import db
 
 
 def create(soft_file, args):
@@ -22,7 +23,9 @@ def create(soft_file, args):
         soft_file,
         gene_lists,
         required_metadata,
-        optional_metadata, tags
+        optional_metadata,
+        tags,
+        db.get_or_create(Resource, code='geo')
     )
 
 

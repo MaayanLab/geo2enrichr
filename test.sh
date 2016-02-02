@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-nosetests --exe -v --pdb
+nosetests --exe --nocapture -v

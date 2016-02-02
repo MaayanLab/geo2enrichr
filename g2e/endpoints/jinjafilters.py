@@ -6,7 +6,7 @@ from flask import Blueprint
 import jinja2
 import urllib
 
-from g2e.config import Config
+from g2e import config
 
 
 jinjafilters = Blueprint('filters', __name__)
@@ -19,12 +19,6 @@ jinjafilters = Blueprint('filters', __name__)
 @jinjafilters.app_template_filter('c_urlencode')
 def c_urlencode(context, value):
     return urllib.quote_plus(value)
-
-
-# @jinja2.contextfilter
-# @jinjafilters.app_template_filter('c_replace_underscores')
-# def c_replace_underscores(context, value):
-#     return value.replace('_', ' ')
 
 
 # Data filters
@@ -71,25 +65,25 @@ def c_filter_empty(context, value):
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_tag_url')
 def c_tag_url(context, value):
-    return '%s/%s' % (Config.GENEVA_REPORT_URL, value)
+    return '%s/%s' % (config.GENEVA_REPORT_URL, value)
 
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_results_url')
 def c_results_url(context, value):
-    return '%s/%s' % (Config.RESULTS_PAGE_URL, value)
+    return '%s/%s' % (config.RESULTS_PAGE_URL, value)
 
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_metadata_url')
 def c_metadata_url(context, value):
-    return '%s/%s' % (Config.GEN3VA_METADATA_URL, value)
+    return '%s/%s' % (config.GEN3VA_METADATA_URL, value)
 
 
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_metadata_value_url')
 def c_metadata_value_url(context, value, name):
-    return '%s/%s/%s' % (Config.GEN3VA_METADATA_URL, name, value)
+    return '%s/%s/%s' % (config.GEN3VA_METADATA_URL, name, value)
 
 
 @jinja2.contextfilter
@@ -103,4 +97,4 @@ def c_geo_url(context, value):
 @jinja2.contextfilter
 @jinjafilters.app_template_filter('c_gen3va_url')
 def c_gen3va_url(context, value):
-    return Config.GEN3VA_URL
+    return config.GEN3VA_URL

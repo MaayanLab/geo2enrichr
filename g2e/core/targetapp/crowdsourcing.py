@@ -2,13 +2,11 @@
 See http://www.maayanlab.net/crowdsourcing/
 """
 
-
-import json
 import time
 
 import requests
 
-from g2e.config import Config
+from g2e import config
 
 
 CROWDSOURCING_POST_URL = 'http://maayanlab.net/crowdsourcing/g2e.php'
@@ -67,7 +65,7 @@ def _post(genes, optional_metadata, soft_file, tag):
     # the crowdsourcing app rejects the study. For testing purposes, we want
     # to verify that the endpoint works. So we just generate a random string
     # for the control GSMs.
-    if Config.DEBUG:
+    if config.DEBUG:
         ctrl_ids = str(time.time())
     else:
         ctrl_ids = ','.join([x.name for x in soft_file.samples if x.is_control])

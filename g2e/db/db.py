@@ -2,8 +2,7 @@
 and their relationships and saves them accordingly.
 """
 
-from substrate import GeneSignature
-from substrate import GeoDataset
+from substrate import GeneSignature, GeoDataset, SoftFile
 
 from g2e.db.utils import session_scope
 
@@ -42,3 +41,15 @@ def get_num_gene_signatures():
     """
     with session_scope() as session:
         return session.query(GeneSignature).count()
+
+
+def get_soft_files_by_accession(accession):
+    """Returns a list of SOFT files based on a GEO dataset accession ID.
+    """
+    with session_scope() as session:
+        return session\
+            .query(SoftFile)\
+            .filter(SoftFile.dataset_fk == GeoDataset.id)\
+            .filter(GeoDataset.accession == accession)\
+            .all()
+

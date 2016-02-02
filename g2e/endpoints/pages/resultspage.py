@@ -3,14 +3,13 @@
 
 from flask import Blueprint, request, render_template
 
-from g2e import db
-from g2e.config import Config
+from g2e import config, db
 from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS
 
 
 results_page = Blueprint('results_page',
                          __name__,
-                         url_prefix=Config.RESULTS_PAGE_URL)
+                         url_prefix=config.RESULTS_PAGE_URL)
 
 
 @results_page.route('/<results_id>')
@@ -33,12 +32,12 @@ def results(results_id):
         show_viz = False
 
     return render_template('pages/results.html',
-                           gen3va_report_url=Config.GEN3VA_REPORT_URL,
-                           metadata_url=Config.GEN3VA_METADATA_URL,
+                           gen3va_report_url=config.GEN3VA_REPORT_URL,
+                           metadata_url=config.GEN3VA_METADATA_URL,
                            show_viz=show_viz,
-                           pca_url=Config.BASE_PCA_URL,
-                           gene_list_url=Config.GENE_LIST_URL,
-                           cluster_url=Config.BASE_CLUSTER_URL,
+                           pca_url=config.BASE_PCA_URL,
+                           gene_list_url=config.GENE_LIST_URL,
+                           cluster_url=config.BASE_CLUSTER_URL,
                            use_simple_header=True,
                            permanent_link=request.url,
                            gene_signature=gene_signature,
