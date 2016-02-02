@@ -6,14 +6,11 @@ extension, building the Docker container, and pushing the container.
 
 import argparse
 from ConfigParser import ConfigParser
-import json
 import subprocess
 import sys
 
-import requests
 
-
-# Setup default arguments
+# Parse user arguments and set defaults
 # ============================================================================
 ap = argparse.ArgumentParser()
 ap.add_argument('--dev',
@@ -32,11 +29,6 @@ ap.add_argument('--deploy',
                 help='push Docker container',
                 action='store_true')
 opts = ap.parse_args()
-print(opts)
-
-
-# Setup virtual environment
-# ============================================================================
 
 
 # Run unit tests
@@ -48,7 +40,18 @@ else:
     return_code = subprocess.call('source venv/bin/activate && bash test.sh',
                                   shell=True)
     if return_code != 0:
-        raise Exception('Unit tests failed')
+        raise Warning('Unit tests failed')
+
+# Check for debugger statements.
+# ----------------------------------------------------------------------------
+try:
+    has_pdb_statements = True
+    output = subprocess.check_output('grep -r "import pdb" g2e/*', shell=True)
+except subprocess.CalledProcessError:
+    has_pdb_statements = False
+if has_pdb_statements:
+    print(output)
+    raise Warning('pdb statement(s) found')
 
 
 # Create front end (if tests pass)
@@ -56,8 +59,6 @@ else:
 
 # Configure JS
 # ----------------------------------------------------------------------------
-
-# Write configuration variables into config file.
 CHROME_JS_CONFIG = 'g2e/extension/common/js/config-chrome.js'
 
 with open(CHROME_JS_CONFIG, 'w+') as f:
@@ -79,19 +80,16 @@ with open(CHROME_JS_CONFIG, 'w+') as f:
     f.write('var IMAGE_PATH = "chrome-extension://%s/logo-50x50.png";\n' %
             id_)
 
-# Build with grunt
+# Build JS with Grunt
 # ----------------------------------------------------------------------------
 print('Building front-end')
 return_code = subprocess.call('grunt --gruntfile=scripts/gruntfile.js build > '
                               '/dev/null', shell=True)
 if return_code != 0:
-    raise Exception('Grunt build failed')
+    raise Warning('Grunt build failed')
 
 # Manage Docker
 # ============================================================================
-
-# Configure DB. Do this *after* running the unit tests, so tests don't get
-# logged in production.
 print('Creating config.ini file.\n')
 
 config_in = ConfigParser()
@@ -141,7 +139,7 @@ with open('g2e/config.ini', 'wb') as configfile:
     config_out.write(configfile)
 
 
-# Deploy if configured.
+# Deploy
 # =============================================================================
 if not opts.deploy:
     print('Not deploying')
@@ -150,48 +148,4 @@ if not opts.deploy:
 # Push to Docker repo.
 # ----------------------------------------------------------------------------
 print('Pushing to Docker repo')
-subprocess.call('docker push $DOCKER_IMAGE', shell=True)
-
-# PUT request to update Marathon.
-# ----------------------------------------------------------------------------
-payload = {
-    'instances': 1,
-    'cpus': 1,
-    'mem': 2048,
-    'constraints': [
-        ['hostname', 'CLUSTER', 'charlotte.1425mad.mssm.edu']
-    ],
-    'container': {
-        'type': 'DOCKER',
-        'docker': {
-            'image': opts.image,
-            'forcePullImage': True,
-            'network': 'BRIDGE',
-            'portMappings': [
-                {
-                    'containerPort': 80,
-                    'hostPort': 0,
-                    'protocol': 'tcp'
-                }
-            ]
-        },
-        'volumes': [
-            {
-                'containerPath': '/g2e/g2e/static/genelist',
-                'hostPath': '/data/g2e/static/genelist',
-                'mode': 'RW'
-            },
-            {
-                'containerPath': '/g2e/g2e/static/softfile',
-                'hostPath': '/data/g2e/static/softfile',
-                'mode': 'RW'
-            }
-        ]
-    },
-    'labels': {
-        'public': 'true'
-    }
-}
-
-resp = requests.put('maayanlab:systemsbiology@elizabeth:8080/v2/apps/g2e',
-                    json.dumps(payload))
+subprocess.call('docker push %s' % opts.image, shell=True)

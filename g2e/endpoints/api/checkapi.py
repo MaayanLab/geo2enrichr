@@ -26,7 +26,6 @@ def check_combination():
         soft_files = db.get_soft_files_by_accession(accession)
         any_matches = False
         for sf in soft_files:
-            import pdb; pdb.set_trace()
             tag_matches = _tag_matches(sf.gene_signatures, tag)
             controls_match = _samples_match(controls, sf.samples, True)
             conditions_match = _samples_match(conditions, sf.samples, False)

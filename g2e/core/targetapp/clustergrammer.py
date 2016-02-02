@@ -14,7 +14,6 @@ from g2e import db
 def from_soft_file(gene_signature):
     """Performs hierarchical clustering on SOFT file.
     """
-    import pdb; pdb.set_trace()
     target_app_link = __get_clustergrammer_link(gene_signature)
 
     # Only create the link from Clustergrammer once.
