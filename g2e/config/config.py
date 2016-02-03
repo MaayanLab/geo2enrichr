@@ -12,7 +12,7 @@ config = ConfigParser()
 # 'mode.debug' specifies the application debug mode.
 # 'db.uri' specifies which database to connect to:
 #    mysql://<USER>:<PASSWORD>@<IP ADDRESS>:<PORT | 3306>/<DB>
-config.read('g2e/config.ini')
+config.read('g2e/config/config.ini')
 
 DEBUG = config.getboolean('mode', 'debug')
 SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
