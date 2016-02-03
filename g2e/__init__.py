@@ -99,6 +99,6 @@ app.config.update({
     'GEN3VA_URL': config.GEN3VA_URL,
     'GEN3VA_REPORT_URL': config.GEN3VA_REPORT_URL,
     'PCA_URL': config.PCA_URL,
-    'RESULTS_PAGE_URL': config.RESULTS_PAGE_URL,
+    'RESULTS_URL': config.RESULTS_URL,
     'SOFT_FILE_URL': config.SOFT_FILE_URL,
 })

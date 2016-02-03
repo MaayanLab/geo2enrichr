@@ -12,7 +12,7 @@ from config import \
     API_URL, \
     PCA_URL, \
     CLUSTER_URL, \
-    RESULTS_PAGE_URL, \
+    RESULTS_URL, \
     GENE_LIST_URL, \
     SOFT_FILE_URL, \
     \

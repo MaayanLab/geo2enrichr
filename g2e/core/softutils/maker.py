@@ -73,10 +73,13 @@ def from_file(file_obj, args):
     # We support name and title for historical reasons, i.e. Firefox
     # support since we won't be releasing new versions of the add on.
     if 'name' in args and args['name'] != '':
+        print('using NAME')
         title = args['name']
     elif 'title' in args and args['title'] != '':
+        print('using TITLE')
         title = args['title']
     else:
+        print('NO NAME')
         title = str(time.time())[:10]
 
     text_file = filemanager.save(title, file_obj)

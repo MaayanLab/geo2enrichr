@@ -1,7 +1,7 @@
 """Results page for an extracted gene signature.
 """
 
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, redirect, url_for
 from flask.ext.login import current_user
 
 from g2e import config, db
@@ -10,14 +10,14 @@ from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS
 
 results_page = Blueprint('results_page',
                          __name__,
-                         url_prefix=config.RESULTS_PAGE_URL)
+                         url_prefix=config.RESULTS_URL)
 
 
-@results_page.route('/<results_id>')
-def results(results_id):
-    """Single entry point for extracting a gene list from a SOFT file.
+@results_page.route('/<extraction_id>', methods=['GET'])
+def view_result(extraction_id):
+    """Renders extracted gene signature and associated metadata.
     """
-    gene_signature = db.get_gene_signature(results_id)
+    gene_signature = db.get_gene_signature(extraction_id)
     if gene_signature is None:
         return render_template('pages/404.html')
     gene_signature = __process_extraction_for_view(gene_signature)
@@ -42,6 +42,15 @@ def results(results_id):
                            use_crowdsourcing=use_crowdsourcing,
                            use_simple_header=True,
                            permanent_link=request.url)
+
+
+@results_page.route('/delete', methods=['POST'])
+def delete_result():
+    """Deletes gene signature by extraction ID.
+    """
+    extraction_id = request.form.get('extraction_id')
+    db.delete_gene_signature(extraction_id)
+    return redirect(url_for('menu_pages.index_page'))
 
 
 def __get_direction_as_string(direction):

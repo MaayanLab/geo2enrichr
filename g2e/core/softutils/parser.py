@@ -10,6 +10,7 @@ def parse(name, is_geo=True, platform=None, samples=None):
     """Entry point for all file parsing. If the dataset is from GEO, this
     delegates to a function that makes some basic assumptions about GEO files.
     """
+    import pdb; pdb.set_trace()
     print('Parsing SOFT file.')
     full_name = filemanager.path(name)
     if is_geo:
