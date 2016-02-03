@@ -14,17 +14,30 @@ from g2e import config
 
 app = Flask(__name__, static_url_path='/g2e/static', static_folder='static')
 
-# Cookies for user login sessions.
+
+# User authentication and sessioning.
+# ----------------------------------------------------------------------------
+# Change this SECRET_KEY to force all users to re-authenticate.
 app.secret_key = config.SECRET_KEY
 
+
+@app.before_request
+def make_session_permanent():
+    """Sets Flask session to 'permanent', meaning 31 days.
+    """
+    flask_session.permanent = True
+
+
+# Database configurations.
+# ----------------------------------------------------------------------------
 app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_POOL_RECYCLE'] = config.SQLALCHEMY_POOL_RECYCLE
-
-# My understanding is that track changes just uses up unnecessary resources
-# and will be set to False by default in a future release of Flask-SQLAlchemy.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 substrate_db.init_app(app)
+
+# Cross origin requests.
+# ----------------------------------------------------------------------------
 cors = CORS(app)
 
 if not config.DEBUG:
@@ -33,6 +46,9 @@ if not config.DEBUG:
 else:
     print 'Starting in DEBUG mode'
 
+
+# Setup endpoints (Flask Blueprints)
+# ----------------------------------------------------------------------------
 # Import these after connecting to the DB.
 from g2e import endpoints
 
@@ -52,9 +68,10 @@ app.register_blueprint(endpoints.jinjafilters)
 
 
 # User authentication
+# ----------------------------------------------------------------------------
 login_manager = LoginManager()
 login_manager.init_app(app)
-#login_manager.login_view = 'auth_pages.login'
+login_manager.login_view = 'auth_pages.login'
 
 
 @login_manager.user_loader
@@ -65,7 +82,6 @@ def load_user(user_id):
     app.config.user = user
     return user
 
-
 @user_logged_out.connect_via(app)
 def unset_current_user(sender, user):
     """When the user logs out, we need to unset this global variable.
@@ -73,8 +89,16 @@ def unset_current_user(sender, user):
     app.config.user = None
 
 
-@app.before_request
-def make_session_permanent():
-    """Sets Flask session to 'permanent', meaning 31 days.
-    """
-    flask_session.permanent = True
+# Setup global variables that are available in Jinja2 templates
+# ----------------------------------------------------------------------------
+app.config.update({
+    'BASE_URL': config.BASE_URL,
+    'API_URL': config.API_URL,
+    'CLUSTER_URL': config.CLUSTER_URL,
+    'GENE_LIST_URL': config.GENE_LIST_URL,
+    'GEN3VA_URL': config.GEN3VA_URL,
+    'GEN3VA_REPORT_URL': config.GEN3VA_REPORT_URL,
+    'PCA_URL': config.PCA_URL,
+    'RESULTS_PAGE_URL': config.RESULTS_PAGE_URL,
+    'SOFT_FILE_URL': config.SOFT_FILE_URL,
+})

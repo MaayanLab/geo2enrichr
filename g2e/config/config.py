@@ -21,9 +21,9 @@ SECRET_KEY = config.get('cookies', 'secret_key')
 BASE_URL = '/g2e'
 
 RESULTS_PAGE_URL = BASE_URL + '/results'
-BASE_API_URL = BASE_URL + '/api'
-BASE_PCA_URL = BASE_URL + '/pca'
-BASE_CLUSTER_URL = BASE_URL + '/cluster'
+API_URL = BASE_URL + '/api'
+PCA_URL = BASE_URL + '/pca'
+CLUSTER_URL = BASE_URL + '/cluster'
 
 GENE_LIST_URL = BASE_URL + '/gene_list'
 SOFT_FILE_URL = BASE_URL + '/soft_file'

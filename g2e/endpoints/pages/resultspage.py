@@ -2,6 +2,7 @@
 """
 
 from flask import Blueprint, request, render_template
+from flask.ext.login import current_user
 
 from g2e import config, db
 from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS
@@ -26,22 +27,21 @@ def results(results_id):
         if tag.name in CROWDSOURCING_TAGS:
             use_crowdsourcing = True
 
-    if gene_signature.soft_file.samples:
-        show_viz = True
-    else:
-        show_viz = False
+    show_viz = True if gene_signature.soft_file.samples else False
 
-    return render_template('pages/results.html',
-                           gen3va_report_url=config.GEN3VA_REPORT_URL,
-                           metadata_url=config.GEN3VA_METADATA_URL,
-                           show_viz=show_viz,
-                           pca_url=config.BASE_PCA_URL,
-                           gene_list_url=config.GENE_LIST_URL,
-                           cluster_url=config.BASE_CLUSTER_URL,
-                           use_simple_header=True,
-                           permanent_link=request.url,
+    # First check if the user is anonymous, because anonymous users, i.e. the
+    # default user if not logged in, has no "name" attribute.
+    if current_user.is_authenticated and current_user.name == 'admin':
+        template = 'pages/results-admin.html'
+    else:
+        template = 'pages/results.html'
+
+    return render_template(template,
                            gene_signature=gene_signature,
-                           use_crowdsourcing=use_crowdsourcing)
+                           show_viz=show_viz,
+                           use_crowdsourcing=use_crowdsourcing,
+                           use_simple_header=True,
+                           permanent_link=request.url)
 
 
 def __get_direction_as_string(direction):
