@@ -15,7 +15,7 @@ import sys
 ap = argparse.ArgumentParser()
 ap.add_argument('--prod',
                 help='deploy debug or production version',
-                action='store_false')
+                action='store_true')
 ap.add_argument('--skiptests',
                 help='skip unit tests',
                 action='store_true')
@@ -103,17 +103,17 @@ config_out.add_section('cookies')
 # Configuration, primarily database connection string.
 # ----------------------------------------------------------------------------
 if opts.prod:
-    config_in.read('g2e/prod.ini')
+    config_in.read('g2e/config/prod.ini')
     config_out.set('mode', 'debug', False)
 else:
-    config_in.read('g2e/dev.ini')
+    config_in.read('g2e/config/dev.ini')
     config_out.set('mode', 'debug', True)
 
 config_out.set('db', 'uri', config_in.get('db', 'uri'))
 config_out.set('cookies', 'secret_key',
                config_in.get('cookies', 'secret_key'))
 
-with open('g2e/config.ini', 'wb') as configfile:
+with open('g2e/config/config.ini', 'wb') as configfile:
     config_out.write(configfile)
 
 subprocess.call('docker-machine start default', shell=True)
@@ -125,7 +125,7 @@ if opts.build:
 # Reset DB credentials so we can keep developing locally.
 # ----------------------------------------------------------------------------
 config_in = ConfigParser()
-config_in.read('g2e/dev.ini')
+config_in.read('g2e/config/dev.ini')
 
 config_out = ConfigParser()
 config_out.add_section('mode')
@@ -136,7 +136,7 @@ config_out.set('mode', 'debug', True)
 config_out.set('cookies', 'secret_key',
                config_in.get('cookies', 'secret_key'))
 
-with open('g2e/config.ini', 'wb') as configfile:
+with open('g2e/config/config.ini', 'wb') as configfile:
     config_out.write(configfile)
 
 
