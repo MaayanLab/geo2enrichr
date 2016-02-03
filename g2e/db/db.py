@@ -7,6 +7,16 @@ from substrate import GeneSignature, GeoDataset, SoftFile
 from g2e.db.utils import session_scope
 
 
+def get_gene_signature(extraction_id):
+    """Returns gene signature based on extraction ID.
+    """
+    with session_scope() as session:
+        return session\
+            .query(GeneSignature)\
+            .filter(GeneSignature.extraction_id == extraction_id)\
+            .first()
+
+
 def save_gene_signature(gene_signature):
     """Saves a gene signature and returns the extraction ID.
     """
@@ -16,14 +26,14 @@ def save_gene_signature(gene_signature):
         return gene_signature.extraction_id
 
 
-def get_gene_signature(extraction_id):
-    """Returns gene signature based on extraction ID.
+def delete_gene_signature(extraction_id):
+    """Deletes a gene signature by extraction ID.
     """
     with session_scope() as session:
-        return session\
+        session\
             .query(GeneSignature)\
             .filter(GeneSignature.extraction_id == extraction_id)\
-            .first()
+            .delete()
 
 
 def get_geo_dataset(accession):

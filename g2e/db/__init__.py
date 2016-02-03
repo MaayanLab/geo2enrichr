@@ -6,7 +6,8 @@ from db import \
     get_gene_signature, \
     get_geo_dataset, \
     get_num_gene_signatures, \
-    get_soft_files_by_accession
+    get_soft_files_by_accession, \
+    delete_gene_signature
 
 from utils import \
     session_scope, \

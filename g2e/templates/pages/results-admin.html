@@ -186,4 +186,12 @@
             {% endfor %}
         </table>
     </div>
+
+    <div>
+        <form action='{{ config.RESULTS_URL }}/delete' method='POST'>
+            <input type='hidden' name='extraction_id' value='{{ gene_signature.extraction_id }}'>
+            <input class='btn btn-danger' type='submit' value='Delete' name='submit'>
+        </form>
+    </div>
+
 {% endblock %}
