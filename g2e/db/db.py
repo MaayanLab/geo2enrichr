@@ -2,7 +2,7 @@
 and their relationships and saves them accordingly.
 """
 
-from substrate import GeneSignature, GeoDataset, SoftFile
+from substrate import GeneSignature, GeoDataset, OptionalMetadata, SoftFile
 
 from g2e.db.utils import session_scope
 
@@ -34,6 +34,38 @@ def delete_gene_signature(extraction_id):
             .query(GeneSignature)\
             .filter(GeneSignature.extraction_id == extraction_id)\
             .delete()
+
+
+def delete_metadata(extraction_id, metadata_name):
+    """Deletes metadata based on extraction ID.
+    """
+    with session_scope() as session:
+        opt = session\
+            .query(OptionalMetadata)\
+            .join(GeneSignature)\
+            .filter(GeneSignature.extraction_id == extraction_id)\
+            .filter(OptionalMetadata.name == metadata_name)\
+            .one()
+
+        # No idea why I cannot just chain a delete() call a la
+        # delete_gene_signature().
+        session.delete(opt)
+
+
+def edit_metadata(extraction_id, metadata_name):
+    """Edits metadata based on extraction ID.
+    """
+    with session_scope() as session:
+        opt = session\
+            .query(OptionalMetadata)\
+            .join(GeneSignature)\
+            .filter(GeneSignature.extraction_id == extraction_id)\
+            .filter(OptionalMetadata.name == metadata_name)\
+            .one()
+
+        import pdb; pdb.set_trace()
+        session.merge(opt)
+
 
 
 def get_geo_dataset(accession):

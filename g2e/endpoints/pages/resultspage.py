@@ -2,7 +2,7 @@
 """
 
 from flask import Blueprint, request, render_template, redirect, url_for
-from flask.ext.login import current_user
+from flask.ext.login import current_user, login_required
 
 from g2e import config, db
 from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS
@@ -44,13 +44,26 @@ def view_result(extraction_id):
                            permanent_link=request.url)
 
 
-@results_page.route('/delete', methods=['POST'])
-def delete_result():
+@results_page.route('/<extraction_id>/delete', methods=['POST'])
+@login_required
+def delete_result(extraction_id):
     """Deletes gene signature by extraction ID.
     """
-    extraction_id = request.form.get('extraction_id')
     db.delete_gene_signature(extraction_id)
     return redirect(url_for('menu_pages.index_page'))
+
+
+@results_page.route('/<extraction_id>/edit', methods=['POST'])
+@login_required
+def edit_result(extraction_id):
+    """Deletes gene signature by extraction ID.
+    """
+    import pdb; pdb.set_trace()
+    extraction_id = request.form.get('extraction_id')
+    metadata_name = request.form.get('metadata_name')
+    db.edit_metadata(extraction_id, metadata_name)
+    return redirect(url_for('results_page.view_result',
+                            extraction_id=extraction_id))
 
 
 def __get_direction_as_string(direction):

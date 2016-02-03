@@ -6,7 +6,40 @@
 
     <script src="static/js/results.js"></script>
 
-    <div id="results-page">
+    <div id="results-page" class="page">
+
+        <div id="admin-controls">
+            <div class="instruction">
+                <p>Leave a metadata field blank and then click <strong>Edit</strong> to delete just a field.</p>
+                <p><strong>Delete</strong> will delete the entire gene signature.</p>
+            </div>
+
+            <form action="{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}/edit" method="POST">
+                <ul class="list-unstyled">
+                    {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                        <li>
+                            <label>{{ opt_meta.name|capitalize }}</label>
+                            <input type="text"
+                                   class="form-control input-sm"
+                                   name="{{ opt_meta.name }}"
+                                   value="{{ opt_meta.value }}"/>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <input id='edit-gene-signature' class='btn btn-primary' type='submit' value='Edit' name='submit'>
+            </form>
+
+            <form id='delete-gene-signature' action='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}/delete'
+                  method='POST'>
+                <input type='hidden' name='extraction_id' value='{{ gene_signature.extraction_id }}'>
+                <input class='btn btn-danger'
+                       type='submit'
+                       value='Delete signature'
+                       name='submit'
+                       onclick='return confirm("Are you sure you want to delete this signature?");'>
+            </form>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <h1>Results</h1>
@@ -24,7 +57,6 @@
                         </span>
                     {% endfor %}
                 </p>
-
             </section>
         {% endif %}
 
@@ -75,40 +107,42 @@
             </tr>
         </table>
 
-        <table class="table">
-            <caption>Metadata</caption>
-            <tr>
-                <td>Differential expression method</td>
-                <td>
-                    {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
-                        <a href="http://maayanlab.net/CD/" target="_blank">Characteristic Direction</a>
-                    {% else %}
-                        T-test
-                    {% endif %}
-                </td>
-            </tr>
-
-            {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
-            <tr>
-                <td>Cutoff</td>
-                <td>{{ gene_signature.required_metadata.cutoff }}</td>
-            </tr>
-            {% endif %}
-
-            {% if gene_signature.required_metadata.diff_exp_method == 'ttest' %}
-            <tr>
-                <td>Correction method</td>
-                <td>{{ gene_signature.required_metadata.ttest_correction_method }}</td>
-            </tr>
-            {% endif %}
-
-            {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+        <form action='{{ config.RESULTS_URL }}/edit' method='POST'>
+            <table class="table">
+                <caption>Metadata</caption>
                 <tr>
-                    <td>{{ opt_meta.name|capitalize }}</td>
-                    <td>{{ opt_meta.value }}</td>
+                    <td>Differential expression method</td>
+                    <td>
+                        {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                            <a href="http://maayanlab.net/CD/" target="_blank">Characteristic Direction</a>
+                        {% else %}
+                            T-test
+                        {% endif %}
+                    </td>
                 </tr>
-            {% endfor %}
-        </table>
+
+                {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                <tr>
+                    <td>Cutoff</td>
+                    <td>{{ gene_signature.required_metadata.cutoff }}</td>
+                </tr>
+                {% endif %}
+
+                {% if gene_signature.required_metadata.diff_exp_method == 'ttest' %}
+                <tr>
+                    <td>Correction method</td>
+                    <td>{{ gene_signature.required_metadata.ttest_correction_method }}</td>
+                </tr>
+                {% endif %}
+
+                {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                    <tr>
+                        <td>{{ opt_meta.name|capitalize }}</td>
+                        <td>{{ opt_meta.value }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </form>
 
         {% if show_viz %}
             <table class="table">
@@ -185,13 +219,6 @@
                 </tr>
             {% endfor %}
         </table>
-    </div>
-
-    <div>
-        <form action='{{ config.RESULTS_URL }}/delete' method='POST'>
-            <input type='hidden' name='extraction_id' value='{{ gene_signature.extraction_id }}'>
-            <input class='btn btn-danger' type='submit' value='Delete' name='submit'>
-        </form>
     </div>
 
 {% endblock %}
