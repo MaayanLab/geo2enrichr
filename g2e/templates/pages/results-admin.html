@@ -20,7 +20,7 @@
                 <p>
                     {% for tag in gene_signature.tags %}
                         <span class="label">
-                            <a href="{{ gen3va_report_url }}/{{ tag.name }}" target="_blank">{{ tag.name }}</a>
+                            <a href="{{ config.GEN3VA_REPORT_URL }}/{{ tag.name }}" target="_blank">{{ tag.name }}</a>
                         </span>
                     {% endfor %}
                 </p>
@@ -105,9 +105,7 @@
             {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
                 <tr>
                     <td>{{ opt_meta.name|capitalize }}</td>
-                    <td>
-                        <a href="{{ metadata_url }}/{{ opt_meta.name }}/{{ opt_meta.value }}">{{ opt_meta.value }}</a>
-                    </td>
+                    <td>{{ opt_meta.value }}</td>
                 </tr>
             {% endfor %}
         </table>
@@ -118,7 +116,7 @@
                 <tr>
                     <td>Principal Component Analysis</td>
                     <td>
-                        <a href="{{ pca_url }}/{{ gene_signature.extraction_id }}">
+                        <a href="{{ config.PCA_URL }}/{{ gene_signature.extraction_id }}">
                             <i class="fa fa-cube"></i>
                         </a>
                     </td>
@@ -126,7 +124,7 @@
                 <tr>
                     <td>Hierarchical clustering</td>
                     <td>
-                        <a href="{{ cluster_url }}/{{ gene_signature.extraction_id }}">
+                        <a href="{{ config.CLUSTER_URL }}/{{ gene_signature.extraction_id }}">
                             <i class="fa fa-map-o"></i>
                         </a>
                     </td>
@@ -164,7 +162,7 @@
                 <tr>
                     <td>{{ gene_list.direction_as_string }}</td>
                     <td>
-                        <a href="{{ gene_list_url }}/{{ gene_list.direction }}/{{ gene_signature.extraction_id }}" target="_blank">
+                        <a href="{{ config.GENE_LIST_URL }}/{{ gene_list.direction }}/{{ gene_signature.extraction_id }}" target="_blank">
                             <i class="fa fa-download"></i>
                         </a>
                     </td>

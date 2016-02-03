@@ -9,7 +9,7 @@ from g2e import config, db
 
 check_api = Blueprint('check_api',
                       __name__,
-                      url_prefix=config.BASE_API_URL)
+                      url_prefix=config.API_URL)
 
 
 @check_api.route('/check', methods=['GET'])
