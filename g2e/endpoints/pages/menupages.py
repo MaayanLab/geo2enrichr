@@ -5,7 +5,7 @@ from flask import Blueprint, render_template
 
 from g2e import config, db
 
-menu_pages = Blueprint('base',
+menu_pages = Blueprint('menu_pages',
                        __name__,
                        url_prefix=config.BASE_URL)
 

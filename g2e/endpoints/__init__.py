@@ -3,6 +3,8 @@
 
 from jinjafilters import jinjafilters
 
+from pages.accountpage import account_page
+from pages.authpages import auth_pages
 from pages.clusterpage import cluster_page
 from pages.menupages import menu_pages
 from pages.resultspage import results_page

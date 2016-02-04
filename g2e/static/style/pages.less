@@ -2,150 +2,179 @@
 @import 'variable.less';
 
 #page {
-    padding-bottom: 50px;
+  margin-top: 20px;
+  padding-bottom: 50px;
 }
 
 #index-page {
-    margin-top: 30px;
-    table {
-        table-layout: fixed;
-        width: 100%;
-        &.extensions {
-            tr {
-                &:first-child {
-                    padding-bottom: 10px;
-                }
-                &.last {
-                    td {
-                        border: none;
-                    }
-                }
-                td {
-                    vertical-align: top;
-                    p {
-                        margin: 0;
-                    }
-                    &:first-child {
-                        width: 15%;
-                    }
-                }
-            }
+  margin-top: 30px;
+  table {
+    table-layout: fixed;
+    width: 100%;
+    &.extensions {
+      tr {
+        &:first-child {
+          padding-bottom: 10px;
         }
-    }
-    #intro-text {
-        p {
-            font-size: 16px;
-            &:first-child {
-                font-style: italic;
-            }
+        &.last {
+          td {
+            border: none;
+          }
         }
-    }
-    #example-file {
-        a {
-            position: relative;
-            left: 10px;
+        td {
+          vertical-align: top;
+          p {
+            margin: 0;
+          }
+          &:first-child {
+            width: 15%;
+          }
         }
+      }
     }
+  }
+  #intro-text {
+    p {
+      font-size: 16px;
+      &:first-child {
+        font-style: italic;
+      }
+    }
+  }
+  #example-file {
+    a {
+      position: relative;
+      left: 10px;
+    }
+  }
 }
 
 #index-page,
 #results-page {
-    table {
-        caption {
-            border-bottom: 1px solid @color-lightgray3;
+  table {
+    caption {
+      border-bottom: 1px solid @color-lightgray3;
+    }
+    vertical-align: middle;
+    tr {
+      th,
+      td {
+        border-top: 1px solid @color-lightgray3;
+        padding: 4px;
+      }
+      td {
+        &:first-child {
+          font-weight: bold;
+          width: 30%;
         }
-        vertical-align: middle;
-        tr {
-            th,
-            td {
-                border-top: 1px solid @color-lightgray3;
-                padding: 4px;
-            }
-            td {
-                &:first-child {
-                    font-weight: bold;
-                    width: 30%;
-                }
-            }
+      }
 
-        }
     }
-    .gene-lists {
-        table-layout: fixed;
-    }
+  }
+  .gene-lists {
+    table-layout: fixed;
+  }
 }
 
 #results-page {
-    ul {
-        padding-left: 15px;
+  .gene-lists {
+    img {
+      width: 15px;
+      &:hover {
+        opacity: .5;
+      }
     }
-    .gene-lists {
-        img {
-            width: 15px;
-            &:hover {
-                opacity: .5;
-            }
-        }
-        td {
-            height: 20px;
-        }
-        /* This over-selects but we don't care since the table is filled with images. */
-        tr {
-            font-weight: bold;
-        }
+    td {
+      height: 20px;
     }
+    /* This over-selects but we don't care since the table is filled with images. */
+    tr {
+      font-weight: bold;
+    }
+  }
+  #admin-controls {
+    background-color: @color-lightgray1;
+    padding: 20px;
+    .instruction {
+      margin-bottom: 20px;
+      p {
+        margin: 0;
+      }
+    }
+    h3 {
+      margin-top: 0;
+    }
+    #optional-metadata {
+      li {
+        margin-top: 10px;
+      }
+      #new-metadata {
+        input {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+      }
+    }
+    #delete-gene-signature {
+      border-top: 1px solid @color-gray;
+      margin-top: 50px;
+      padding-top: 10px;
+    }
+  }
 }
 
 #manual-page,
 #pipeline-page {
-    img {
-        border: 1px solid #eee;
-        width: 700px;
-    }
+  img {
+    border: 1px solid #eee;
+    width: 700px;
+  }
 }
 
 #cluster-page,
 #pca-page {
-    margin-top: 50px;
+  margin-top: 50px;
 }
 
 #cluster-page {
-    iframe {
-        border: 1px solid @color-lightgray3;
-        height: 1000px;
-        width: 100%;
-    }
+  iframe {
+    border: 1px solid @color-lightgray3;
+    height: 1000px;
+    width: 100%;
+  }
 }
 
 table {
-    td {
-        vertical-align: middle !important;
+  td {
+    vertical-align: middle !important;
+  }
+  .optional-metadata-content {
+    background-color: @color-lightgray1;
+    padding: 10px;
+    table {
+      width: 100%;
+      td:first-child {
+        font-weight: bold !important;
+        padding-right: 10px;
+        width: 30%;
+      }
     }
-    .optional-metadata-content {
-        background-color: @color-lightgray1;
-        padding: 10px;
-        table {
-            width: 100%;
-            td:first-child {
-                font-weight: bold !important;
-                padding-right: 10px;
-                width: 30%;
-            }
-        }
-    }
+  }
 }
+
 .tag-page,
 .metadata-page {
-    .note {
-        font-size: 12px;
-        font-weight: normal;
-        margin-left: 15px;
-    }
+  .note {
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: 15px;
+  }
 }
+
 .metadata-page,
 .tag-page {
-    th {
-        border-bottom: 2px solid @color-lightgray3;
-        text-align: left;
-    }
+  th {
+    border-bottom: 2px solid @color-lightgray3;
+    text-align: left;
+  }
 }

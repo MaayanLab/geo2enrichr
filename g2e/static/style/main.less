@@ -5,364 +5,423 @@
  * ----- */
 html,
 body {
-    margin: 0;
+  margin: 0;
 }
 
 /* Sticky Footer. Do not change.
  * ----------------------------- */
 html {
-    position: relative;
-    min-height: 100%;
+  position: relative;
+  min-height: 100%;
 }
+
 body {
-    margin-bottom: @dim-footer-height; /* bottom = footer height */
+  margin-bottom: @dim-footer-height; /* bottom = footer height */
 }
+
 #footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: @dim-footer-height;
-    width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: @dim-footer-height;
+  width: 100%;
 }
 
 /* Class and tag selectors.
  * ------------------------ */
 body {
-    font-family: @font-family-base;
-    font-size: 13px;
+  font-family: @font-family-base;
+  font-size: 13px;
 }
+
 input {
-    border: none;
-    font-size: 13px;
+  border: none;
+  font-size: 13px;
 }
+
 a {
-    color: @color-blue;
+  color: @color-blue;
+  text-decoration: none;
+  &:hover {
+    color: @color-blue-dark;
     text-decoration: none;
-    &:hover {
-        color: @color-blue-dark;
-        text-decoration: none;
-    }
+  }
 }
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-    color: @color-black-almost;
-    font-family: @font-family-accent;
-    font-weight: bold;
+  color: @color-black-almost;
+  font-family: @font-family-accent;
+  font-weight: bold;
 }
+
 h1 {
-    font-size: 25px;
+  font-size: 25px;
 }
+
 img {
-    max-width: 100%;
-    vertical-align: inherit; /* Bootstrap override */
-    &.center {
-        display: block;
-        margin: 0 auto;
-    }
+  max-width: 100%;
+  vertical-align: inherit; /* Bootstrap override */
+  &.center {
+    display: block;
+    margin: 0 auto;
+  }
 }
+
 form {
-    button.submit {
-        font-size: 14px;
+  button.submit {
+    font-size: 14px;
+  }
+  .description {
+    background: @color-lightgray1;
+    margin-top: 10px;
+    padding: 5px;
+    p {
+      margin: 10px;
     }
-    .description {
-        background: @color-lightgray1;
-        margin-top: 10px;
-        padding: 5px;
-        p {
-            margin: 10px;
-        }
-    }
+  }
 }
+
 table {
-    padding-bottom: 0;
-    td {
-        border: none;
-    }
+  padding-bottom: 0;
+  td {
+    border: none;
+  }
 }
+
 section {
-    margin-bottom: 20px;
-    border-bottom: 1px solid @color-lightgray3;
-    &.last {
-        border: none;
-    }
+  margin-bottom: 20px;
+  border-bottom: 1px solid @color-lightgray3;
+  &.last {
+    border: none;
+  }
 }
-select {
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    background-position: right 50% !important;
-    background-repeat: no-repeat !important;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=) !important;
-    padding: .5em !important;
-    padding-right: 1.5em !important;
-    border-radius: 0 !important;
-    line-height: inherit !important;
-}
+
 pre,
 .code {
-    border-radius: 0;
-    background: @color-lightgray2;
-    font-family: @font-family-mono;
-    /* Example links overflow the pre tag if the text is too large. */
-    font-size: 12px;
+  border-radius: 0;
+  background: @color-lightgray2;
+  font-family: @font-family-mono;
+  /* Example links overflow the pre tag if the text is too large. */
+  font-size: 12px;
 }
+
 pre {
-    border: none;
-    white-space: pre-wrap;      /* CSS 3 */
-    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    white-space: -pre-wrap;     /* Opera 4-6 */
-    white-space: -o-pre-wrap;   /* Opera 7 */
-    word-wrap: break-word;      /* Internet Explorer 5.5+ */
+  border: none;
+  white-space: pre-wrap; /* CSS 3 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
+
 .fa {
-    color: @color-black-almost;
-    &:hover {
-        color: @color-gray;
-    }
+  color: @color-black-almost;
+  &:hover {
+    color: @color-gray;
+  }
 }
+
 .loader {
-    background-color:rgba(255,255,255,0.75);
-    cursor: wait;
-    height: 100%;
+  background-color: rgba(255, 255, 255, 0.75);
+  cursor: wait;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  .modal {
+    background: @color-lightyellow;
+    border: 1px solid @color-yellow;
+    color: @color-black-almost;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 auto;
+    position: absolute;
     left: 0;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 9999;
-    .modal {
-        background: @color-lightyellow;
-        border: 1px solid @color-yellow;
-        color: @color-black-almost;
-        font-size: 12px;
-        font-weight: bold;
-        margin: 0 auto;
-        position: absolute;
-        left: 0;
-        text-align: center;
-        right: 0;
-        top: 200px;
-        width: 75px;
-    }
+    text-align: center;
+    right: 0;
+    top: 200px;
+    width: 75px;
+  }
 }
+
 .mono {
-    font-family: monospace;
+  font-family: monospace;
 }
+
 .left {
-    float: left;
+  float: left;
 }
+
 .right {
-    float: right;
+  float: right;
 }
+
 .clear {
-    clear: both;
+  clear: both;
 }
+
 .highlight {
-    color: @color-red;
+  color: @color-red;
 }
+
 .caption,
 caption {
-    font-style: italic;
-    margin-top: 10px;
-    padding: 0;
+  font-style: italic;
+  margin-top: 10px;
+  padding: 0;
 }
+
 .tooltip {
-    opacity: 1 !important;
-    .tooltip-inner {
-        background: @color-lightyellow;
-        border: 1px solid @color-yellow;
-        color: @color-black-almost;
-        font-weight: bold;
-        border-radius: 0;
-        text-align: left;
-        -webkit-box-shadow: none;
-        box-shadow: none;
-        max-width: 400px;
-    }
-    /* This is the color of the arrow: http://stackoverflow.com/a/15383656/1830334 */
-    &.top .tooltip-arrow {
-        border-top-color: @color-yellow !important;
-    }
-    &.right .tooltip-arrow {
-        border-right-color: @color-yellow !important;
-    }
-    &.bottom .tooltip-arrow {
-        border-bottom-color: @color-yellow !important;
-    }
-    &.left .tooltip-arrow {
-        border-left-color: @color-yellow !important;
-    }
+  opacity: 1 !important;
+  .tooltip-inner {
+    background: @color-lightyellow;
+    border: 1px solid @color-yellow;
+    color: @color-black-almost;
+    font-weight: bold;
+    border-radius: 0;
+    text-align: left;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    max-width: 400px;
+  }
+  /* This is the color of the arrow: http://stackoverflow.com/a/15383656/1830334 */
+  &.top .tooltip-arrow {
+    border-top-color: @color-yellow !important;
+  }
+  &.right .tooltip-arrow {
+    border-right-color: @color-yellow !important;
+  }
+  &.bottom .tooltip-arrow {
+    border-bottom-color: @color-yellow !important;
+  }
+  &.left .tooltip-arrow {
+    border-left-color: @color-yellow !important;
+  }
 }
 
 .instruction {
-    font-size: @font-size-base;
-    font-style: italic;
+  font-size: @font-size-base;
+  font-style: italic;
 }
+
 .capitalize-initial:first-letter {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
+
 .btn-file {
-    position: relative;
-    overflow: hidden;
-    input[type=file] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        font-size: 100px;
-        text-align: right;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        outline: none;
-        background: white;
-        cursor: inherit;
-        display: block;
-    }
+  position: relative;
+  overflow: hidden;
+  input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+  }
 }
+
 .label {
-    background-color: @color-blue;
-    border-radius: 0;
-    font-size: 11px;
-    margin-right: 4px;
-    a {
-        color: white;
-        font-weight: bold;
-        &:hover,
-        &:active,
-        &:focus {
-            color: white;
-            text-decoration: none;
-        }
+  background-color: @color-purple;
+  font-size: 13px;
+  margin-right: 4px;
+  a {
+    color: white;
+    font-weight: normal;
+    &:hover,
+    &:active,
+    &:focus {
+      color: white;
+      text-decoration: none;
     }
-    &:hover {
-        background-color: @color-blue-dark;
-    }
+  }
+  &:hover {
+    background-color: @color-blue-dark;
+  }
+}
+
+.form-control {
+  border-radius: 0;
 }
 
 /* Main structural elements:
  * header, content, footer
  * ----------------------------- */
 #header {
+  border-bottom: 1px solid @color-lightgray3;
+  #logo {
+    background: @color-lightgray1; /* Old browsers */
+    background: -moz-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @color-lightgray1), color-stop(100%, @color-lightgray2)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* IE10+ */
+    background: linear-gradient(to bottom, @color-lightgray1 0%, @color-lightgray2 100%); /* W3C */
     border-bottom: 1px solid @color-lightgray3;
-    #logo {
-        background: @color-lightgray1; /* Old browsers */
-        background: -moz-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* FF3.6+ */
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @color-lightgray1), color-stop(100%, @color-lightgray2)); /* Chrome,Safari4+ */
-        background: -webkit-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* Chrome10+,Safari5.1+ */
-        background: -o-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* Opera 11.10+ */
-        background: -ms-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* IE10+ */
-        background: linear-gradient(to bottom, @color-lightgray1 0%, @color-lightgray2 100%); /* W3C */
-        border-bottom: 1px solid @color-lightgray3;
-        padding: 10px 0;
-        a {
-            &:hover {
-                text-decoration: none;
-            }
-        }
-    }
+    padding: 10px 0;
     a {
-        border: none;
-        color: @color-black-almost;
-        font-family: @font-family-accent;
-        font-size: 16px;
-        font-weight: bold;
+      &:hover {
         text-decoration: none;
+      }
+    }
+  }
+  a {
+    border: none;
+    color: @color-black-almost;
+    font-family: @font-family-accent;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    &:hover {
+      cursor: pointer;
+      color: @color-black-almost;
+    }
+  }
+  ul.nav {
+    li {
+      border-right: 1px solid @color-lightgray3;
+      a {
+        font-size: 12px;
+        line-height: inherit;
+        padding-top: 10px;
+        padding-bottom: 10px;
         &:hover {
-            cursor: pointer;
-            color: @color-black-almost;
+          transition: background-color .25s ease-in-out;
+          -moz-transition: background-color .25s ease-in-out;
+          -webkit-transition: background-color .25s ease-in-out;
         }
+      }
+      &.last {
+        border-right: none;
+      }
     }
-    ul.nav {
-        li {
-            border-right: 1px solid @color-lightgray3;
-            a {
-                font-size: 12px;
-                line-height: inherit;
-                padding-top: 10px;
-                padding-bottom: 10px;
-                &:hover {
-                    transition: background-color .25s ease-in-out;
-                    -moz-transition: background-color .25s ease-in-out;
-                    -webkit-transition: background-color .25s ease-in-out;
-                }
-            }
-            &.last {
-                border-right: none;
-            }
-        }
-    }
-    img {
-        width: 30px;
-    }
-    h1 {
-        display: inline;
-        margin-left: 10px;
-        a {
-            font-size: 40px;
-            &:hover {
+  }
+  img {
+    width: 30px;
+  }
+  h1 {
+    display: inline;
+    margin-left: 10px;
+    a {
+      font-size: 40px;
+      &:hover {
 
-            }
-        }
+      }
     }
+  }
+  .user-options {
+    display: inline-block;
+    margin-left: 40px;
+    span,
+    form button {
+      color: @color-black-almost;
+      font-size: 14px;
+    }
+    /* Make logout button, which uses an HTML form to POST, look like a link. */
+    form {
+      display: inline-block;
+      button {
+        border: none;
+        display: inline;
+        background-color: transparent;
+        font-size: 14px;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
 }
 
 #footer {
-    border-top: 3px solid @color-footer-dark;
-    background-color: @color-footer;
+  border-top: 3px solid @color-footer-dark;
+  background-color: @color-footer;
+  color: white;
+  h5 {
     color: white;
-    h5 {
-        color: white;
+  }
+  a,
+  p {
+    font-size: 12px;
+  }
+  a {
+    color: @color-blue-light;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
     }
-    a,
-    p {
-        font-size: 12px;
-    }
-    a {
-        color: @color-blue-light;
-        text-decoration: none;
+  }
+  .container {
+    margin-top: 20px;
+  }
+  #share {
+    padding-top: 10px;
+    .company {
+      img {
+        margin-left: 2px;
+        width: 25px;
         &:hover {
-            text-decoration: underline;
+          opacity: 0.75;
         }
+      }
     }
-    .container {
-        margin-top: 20px;
-    }
-    #share {
-        padding-top: 10px;
-        .company {
-            img {
-                margin-left: 2px;
-                width: 25px;
-                &:hover {
-                    opacity: 0.75;
-                }
-            }
-        }
-    }
+  }
 }
 
 /* Library Overrides
  * ----------------- */
 .ui-widget {
-    font-family: @font-family-base;
-    font-size: @font-size-base;
+  font-family: @font-family-base;
+  font-size: @font-size-base;
 }
+
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-    color: @color-black-almost;
+  color: @color-black-almost;
 }
+
 .hljs {
-    background-color: @color-lightgray2 !important;
+  background-color: @color-lightgray2 !important;
 }
-.btn-default {
-    border-radius: 0;
-    padding: 4px 8px;
+
+.btn {
+  border: none;
+  font-size: 12px;
+  font-family: @font-family-base;
+  padding: 4px 8px;
+  &.btn-primary {
+    color: white;
+    background-color: @color-blue;
+    &:hover{
+      background-color: @color-blue-dark;
+    }
+  }
+  &.btn-info {
+    color: white;
+    background-color: @color-purple;
+  }
+  &.btn-danger {
+    color: white;
+    background-color: @color-red;
+  }
 }
+
 /* See: http://stackoverflow.com/a/33809511/1830334 */
 .table-responsive {
-   overflow-x: inherit;
+  overflow-x: inherit;
 }

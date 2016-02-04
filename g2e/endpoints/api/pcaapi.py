@@ -23,5 +23,5 @@ def perform_soft_file_pca(extraction_id):
         pca_json = json.dumps(pca_data)
         return render_template('pages/pca.html',
                                pca_data=pca_json,
-                               results_url=config.RESULTS_PAGE_URL,
+                               results_url=config.RESULTS_URL,
                                extraction_id=gene_signature.extraction_id)

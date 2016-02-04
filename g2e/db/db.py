@@ -2,9 +2,19 @@
 and their relationships and saves them accordingly.
 """
 
-from substrate import GeneSignature, GeoDataset, SoftFile
+from substrate import GeneSignature, GeoDataset, OptionalMetadata, SoftFile
 
 from g2e.db.utils import session_scope
+
+
+def get_gene_signature(extraction_id):
+    """Returns gene signature based on extraction ID.
+    """
+    with session_scope() as session:
+        return session\
+            .query(GeneSignature)\
+            .filter(GeneSignature.extraction_id == extraction_id)\
+            .first()
 
 
 def save_gene_signature(gene_signature):
@@ -16,14 +26,28 @@ def save_gene_signature(gene_signature):
         return gene_signature.extraction_id
 
 
-def get_gene_signature(extraction_id):
-    """Returns gene signature based on extraction ID.
+def delete_gene_signature(extraction_id):
+    """Deletes a gene signature by extraction ID.
     """
     with session_scope() as session:
-        return session\
+        session\
             .query(GeneSignature)\
             .filter(GeneSignature.extraction_id == extraction_id)\
-            .first()
+            .delete()
+
+
+def delete_object(obj):
+    """Deletes object provided.
+    """
+    with session_scope() as session:
+        session.delete(obj)
+
+
+def update_object(obj):
+    """Update object, i.e. saves any edits.
+    """
+    with session_scope() as session:
+        session.merge(obj)
 
 
 def get_geo_dataset(accession):

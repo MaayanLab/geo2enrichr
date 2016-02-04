@@ -13,9 +13,9 @@ import sys
 # Parse user arguments and set defaults
 # ============================================================================
 ap = argparse.ArgumentParser()
-ap.add_argument('--dev',
+ap.add_argument('--prod',
                 help='deploy debug or production version',
-                action='store_false')
+                action='store_true')
 ap.add_argument('--skiptests',
                 help='skip unit tests',
                 action='store_true')
@@ -29,6 +29,7 @@ ap.add_argument('--deploy',
                 help='push Docker container',
                 action='store_true')
 opts = ap.parse_args()
+print(opts)
 
 
 # Run unit tests
@@ -63,16 +64,16 @@ CHROME_JS_CONFIG = 'g2e/extension/common/js/config-chrome.js'
 
 with open(CHROME_JS_CONFIG, 'w+') as f:
     f.write('// This file is built by deploy.sh in the root directory.\n')
-    if opts.dev:
-        mode = 'dev'
-        debug = 'true'
-        server = 'http://localhost:8083/g2e/'
-        id_ = 'omkofmggjapmpfpijnnnnpclfejpfpmd'
-    else:
+    if opts.prod:
         mode = 'prod'
         debug = 'false'
         server = 'http://amp.pharm.mssm.edu/g2e/'
         id_ = 'pcbdeobileclecleblcnadplfcicfjlp'
+    else:
+        mode = 'dev'
+        debug = 'true'
+        server = 'http://localhost:8083/g2e/'
+        id_ = 'omkofmggjapmpfpijnnnnpclfejpfpmd'
 
     print('--------------------- %s ---------------------' % mode)
     f.write('var DEBUG = %s;\n' % debug)
@@ -101,18 +102,18 @@ config_out.add_section('cookies')
 
 # Configuration, primarily database connection string.
 # ----------------------------------------------------------------------------
-if opts.dev:
-    config_in.read('g2e/dev.ini')
-    config_out.set('mode', 'debug', True)
-else:
-    config_in.read('g2e/prod.ini')
+if opts.prod:
+    config_in.read('g2e/config/prod.ini')
     config_out.set('mode', 'debug', False)
+else:
+    config_in.read('g2e/config/dev.ini')
+    config_out.set('mode', 'debug', True)
 
 config_out.set('db', 'uri', config_in.get('db', 'uri'))
 config_out.set('cookies', 'secret_key',
                config_in.get('cookies', 'secret_key'))
 
-with open('g2e/config.ini', 'wb') as configfile:
+with open('g2e/config/config.ini', 'wb') as configfile:
     config_out.write(configfile)
 
 subprocess.call('docker-machine start default', shell=True)
@@ -124,7 +125,7 @@ if opts.build:
 # Reset DB credentials so we can keep developing locally.
 # ----------------------------------------------------------------------------
 config_in = ConfigParser()
-config_in.read('g2e/dev.ini')
+config_in.read('g2e/config/dev.ini')
 
 config_out = ConfigParser()
 config_out.add_section('mode')
@@ -135,7 +136,7 @@ config_out.set('mode', 'debug', True)
 config_out.set('cookies', 'secret_key',
                config_in.get('cookies', 'secret_key'))
 
-with open('g2e/config.ini', 'wb') as configfile:
+with open('g2e/config/config.ini', 'wb') as configfile:
     config_out.write(configfile)
 
 

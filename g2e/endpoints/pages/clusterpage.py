@@ -21,5 +21,5 @@ def perform_hierarchical_clustering(extraction_id):
     link = link + '&preview=true'
     return render_template('pages/clustergrammer.html',
                            clustergrammer_link=link,
-                           results_url=config.RESULTS_PAGE_URL,
+                           results_url=config.RESULTS_URL,
                            extraction_id=gene_signature.extraction_id)

@@ -1,22 +1,27 @@
 """Results page for an extracted gene signature.
 """
 
-from flask import Blueprint, request, render_template
+import json
 
+from flask import Blueprint, request, render_template, redirect, url_for
+from flask.ext.login import current_user, login_required
+
+from substrate import OptionalMetadata, Tag
 from g2e import config, db
+from g2e.utils import requestutil
 from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS
 
 
 results_page = Blueprint('results_page',
                          __name__,
-                         url_prefix=config.RESULTS_PAGE_URL)
+                         url_prefix=config.RESULTS_URL)
 
 
-@results_page.route('/<results_id>')
-def results(results_id):
-    """Single entry point for extracting a gene list from a SOFT file.
+@results_page.route('/<extraction_id>', methods=['GET'])
+def view_result(extraction_id):
+    """Renders extracted gene signature and associated metadata.
     """
-    gene_signature = db.get_gene_signature(results_id)
+    gene_signature = db.get_gene_signature(extraction_id)
     if gene_signature is None:
         return render_template('pages/404.html')
     gene_signature = __process_extraction_for_view(gene_signature)
@@ -26,22 +31,75 @@ def results(results_id):
         if tag.name in CROWDSOURCING_TAGS:
             use_crowdsourcing = True
 
-    if gene_signature.soft_file.samples:
-        show_viz = True
+    show_viz = True if gene_signature.soft_file.samples else False
+
+    if current_user.is_authenticated and current_user.name == 'admin':
+        show_admin_controls = True
+        tag_names = [t.name for t in gene_signature.tags]
     else:
-        show_viz = False
+        show_admin_controls = False
+        tag_names = None
 
     return render_template('pages/results.html',
-                           gen3va_report_url=config.GEN3VA_REPORT_URL,
-                           metadata_url=config.GEN3VA_METADATA_URL,
-                           show_viz=show_viz,
-                           pca_url=config.BASE_PCA_URL,
-                           gene_list_url=config.GENE_LIST_URL,
-                           cluster_url=config.BASE_CLUSTER_URL,
-                           use_simple_header=True,
-                           permanent_link=request.url,
+                           show_admin_controls=show_admin_controls,
+                           tag_names=json.dumps(tag_names),
                            gene_signature=gene_signature,
-                           use_crowdsourcing=use_crowdsourcing)
+                           show_viz=show_viz,
+                           use_crowdsourcing=use_crowdsourcing,
+                           use_simple_header=True,
+                           permanent_link=request.url)
+
+
+@results_page.route('/<extraction_id>/delete', methods=['POST'])
+@login_required
+def delete_result(extraction_id):
+    """Deletes gene signature by extraction ID.
+    """
+    db.delete_gene_signature(extraction_id)
+    return redirect(url_for('menu_pages.index_page'))
+
+
+@results_page.route('/<extraction_id>/edit', methods=['POST'])
+@login_required
+def edit_result(extraction_id):
+    """Edits gene signature, removing fields that are empty and adding new ones.
+    """
+    extraction_id = request.form.get('extraction_id')
+    gene_signature = db.get_gene_signature(extraction_id)
+
+    for opt_meta in gene_signature.optional_metadata:
+        value = request.form.get(opt_meta.name)
+        if not value:
+            db.delete_object(opt_meta)
+            continue
+        opt_meta.value = value
+        db.update_object(opt_meta)
+
+    # Generate a new optional metadata field is requested.
+    new_meta_name = request.form.get('new_metadata_name')
+    new_meta_value = request.form.get('new_metadata_value')
+    if new_meta_name and new_meta_value:
+        new_opt_meta = OptionalMetadata(new_meta_name, new_meta_value)
+        gene_signature.optional_metadata.append(new_opt_meta)
+        db.update_object(gene_signature)
+
+    # Update existing tags.
+    tag_names = requestutil.get_param_as_list(request.form, 'tags')
+    for tag in gene_signature.tags:
+        if tag.name not in tag_names:
+            db.delete_object(tag)
+        else:
+            tag_names.remove(tag.name)
+
+    # Cretae any new tags. Note that any leftover tags are new ones.
+    if len(tag_names) > 0:
+        for tag_name in tag_names:
+            tag = Tag(tag_name)
+            gene_signature.tags.append(tag)
+        db.update_object(gene_signature)
+
+    return redirect(url_for('results_page.view_result',
+                            extraction_id=extraction_id))
 
 
 def __get_direction_as_string(direction):

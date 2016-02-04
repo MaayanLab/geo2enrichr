@@ -12,7 +12,7 @@ config = ConfigParser()
 # 'mode.debug' specifies the application debug mode.
 # 'db.uri' specifies which database to connect to:
 #    mysql://<USER>:<PASSWORD>@<IP ADDRESS>:<PORT | 3306>/<DB>
-config.read('g2e/config.ini')
+config.read('g2e/config/config.ini')
 
 DEBUG = config.getboolean('mode', 'debug')
 SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
@@ -20,10 +20,10 @@ SECRET_KEY = config.get('cookies', 'secret_key')
 
 BASE_URL = '/g2e'
 
-RESULTS_PAGE_URL = BASE_URL + '/results'
-BASE_API_URL = BASE_URL + '/api'
-BASE_PCA_URL = BASE_URL + '/pca'
-BASE_CLUSTER_URL = BASE_URL + '/cluster'
+RESULTS_URL = BASE_URL + '/results'
+API_URL = BASE_URL + '/api'
+PCA_URL = BASE_URL + '/pca'
+CLUSTER_URL = BASE_URL + '/cluster'
 
 GENE_LIST_URL = BASE_URL + '/gene_list'
 SOFT_FILE_URL = BASE_URL + '/soft_file'

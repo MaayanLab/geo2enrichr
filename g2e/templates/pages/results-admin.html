@@ -1,0 +1,224 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}Results - {{ gene_signature.extraction_id }}{% endblock %}
+
+{% block body %}
+
+    <script src="static/js/results.js"></script>
+
+    <div id="results-page" class="page">
+
+        <div id="admin-controls">
+            <div class="instruction">
+                <p>Leave a metadata field blank and then click <strong>Edit</strong> to delete just a field.</p>
+                <p><strong>Delete</strong> will delete the entire gene signature.</p>
+            </div>
+
+            <form action="{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}/edit" method="POST">
+                <ul class="list-unstyled">
+                    {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                        <li>
+                            <label>{{ opt_meta.name|capitalize }}</label>
+                            <input type="text"
+                                   class="form-control input-sm"
+                                   name="{{ opt_meta.name }}"
+                                   value="{{ opt_meta.value }}"/>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <input id='edit-gene-signature' class='btn btn-primary' type='submit' value='Edit' name='submit'>
+            </form>
+
+            <form id='delete-gene-signature' action='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}/delete'
+                  method='POST'>
+                <input type='hidden' name='extraction_id' value='{{ gene_signature.extraction_id }}'>
+                <input class='btn btn-danger'
+                       type='submit'
+                       value='Delete signature'
+                       name='submit'
+                       onclick='return confirm("Are you sure you want to delete this signature?");'>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Results</h1>
+                <p class="instruction">This is a permanent results page for your analyzed data. Please save the link in your browser's address bar.</p>
+            </div>
+        </div>
+
+        {% if gene_signature.tags|length > 0 %}
+            <section>
+                <h5>GEN3VA Reports for these tags</h5>
+                <p>
+                    {% for tag in gene_signature.tags %}
+                        <span class="label">
+                            <a href="{{ config.GEN3VA_REPORT_URL }}/{{ tag.name }}" target="_blank">{{ tag.name }}</a>
+                        </span>
+                    {% endfor %}
+                </p>
+            </section>
+        {% endif %}
+
+
+        {% set sf = gene_signature.soft_file %}
+        <table class="table">
+            <caption>SOFT file</caption>
+
+            <tr>
+                <td>Title / Description</td>
+                <td>{{ sf.dataset.title }}</td>
+            </tr>
+            {% if sf.dataset.record_type == 'geo' %}
+                <tr>
+                    <td>Accession</td>
+                    <td><a href="{{ sf.dataset.accession|c_geo_url }}" target="_blank">{{ sf.dataset.accession }}</a></td>
+                </tr>
+                {% if sf.dataset.summary %}
+                    <tr>
+                        <td>Summary</td>
+                        <td>{{ sf.dataset.summary }}</td>
+                    </tr>
+                {% endif %}
+            {% endif %}
+            {% if sf.dataset.organism %}
+                <tr>
+                    <td>Organism</td>
+                    <td>{{ sf.dataset.organism }}</td>
+                </tr>
+            {% endif %}
+            {% if gene_signature.soft_file.dataset.platform %}
+                <tr>
+                    <td>Platform</td>
+                    <td>{{ gene_signature.soft_file.dataset.platform }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td>Normalized</td>
+                <td>{{ gene_signature.soft_file.normalize }}</td>
+            </tr>
+            <tr title="Parsed and cleaned SOFT file, with GEO metadata removed and only the control and samples listed.">
+                <td>Parsed SOFT file</td>
+                <td>
+                    <a href="{{ gene_signature.soft_file.text_file }}" target="_blank">
+                        <i class="fa fa-file-o"></i>
+                    </a>
+                </td>
+            </tr>
+        </table>
+
+        <form action='{{ config.RESULTS_URL }}/edit' method='POST'>
+            <table class="table">
+                <caption>Metadata</caption>
+                <tr>
+                    <td>Differential expression method</td>
+                    <td>
+                        {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                            <a href="http://maayanlab.net/CD/" target="_blank">Characteristic Direction</a>
+                        {% else %}
+                            T-test
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                <tr>
+                    <td>Cutoff</td>
+                    <td>{{ gene_signature.required_metadata.cutoff }}</td>
+                </tr>
+                {% endif %}
+
+                {% if gene_signature.required_metadata.diff_exp_method == 'ttest' %}
+                <tr>
+                    <td>Correction method</td>
+                    <td>{{ gene_signature.required_metadata.ttest_correction_method }}</td>
+                </tr>
+                {% endif %}
+
+                {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                    <tr>
+                        <td>{{ opt_meta.name|capitalize }}</td>
+                        <td>{{ opt_meta.value }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </form>
+
+        {% if show_viz %}
+            <table class="table">
+                <caption>Visualizations</caption>
+                <tr>
+                    <td>Principal Component Analysis</td>
+                    <td>
+                        <a href="{{ config.PCA_URL }}/{{ gene_signature.extraction_id }}">
+                            <i class="fa fa-cube"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Hierarchical clustering</td>
+                    <td>
+                        <a href="{{ config.CLUSTER_URL }}/{{ gene_signature.extraction_id }}">
+                            <i class="fa fa-map-o"></i>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        {% endif %}
+
+        <table class="table gene-lists">
+            <caption>External Links and Downloads</caption>
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>
+                        <span data-toggle="tooltip" title="Text file containing a gene list resulting from differential expression analysis.">Gene lists</span>
+                    </td>
+                    <td>
+                        <span data-toggle="tooltip" title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Enrichr</span>
+                    </td>
+                    {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                        <td>
+                            <span data-toggle="tooltip" title="Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.">L1000CDS2</span>
+                        </td>
+                        <td>
+                            <span data-toggle="tooltip" title="Perform principle angle enrichment analysis against over 70 gene set libraries.">
+                                PAEA
+                            </span>
+                        </td>
+                    {% endif %}
+                    {% if use_crowdsourcing %}
+                        <td title="Crowdsourcing">Crowdsourcing</td>
+                    {% endif %}
+                </tr>
+            </thead>
+            {% for gene_list in gene_signature.gene_lists %}
+                <tr>
+                    <td>{{ gene_list.direction_as_string }}</td>
+                    <td>
+                        <a href="{{ config.GENE_LIST_URL }}/{{ gene_list.direction }}/{{ gene_signature.extraction_id }}" target="_blank">
+                            <i class="fa fa-download"></i>
+                        </a>
+                    </td>
+                    {% set num_apps = 2 if use_crowdsourcing else 1 %}
+                    {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                        {% set num_apps = num_apps + 2 %}
+                    {% endif %}
+                    {% for i in range(num_apps) %}
+                        {% set target_app_link = gene_list.target_app_links[i] %}
+                        {% if target_app_link %}
+                            <td>
+                                <a href="{{ target_app_link.link }}" target="_blank">
+                                    <img src="static/image/targetapp/{{ target_app_link.target_app.name }}.png">
+                                </a>
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}
