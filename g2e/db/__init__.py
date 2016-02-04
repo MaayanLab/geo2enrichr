@@ -8,8 +8,8 @@ from db import \
     get_num_gene_signatures, \
     get_soft_files_by_accession, \
     delete_gene_signature, \
-    delete_metadata, \
-    edit_metadata
+    delete_object, \
+    update_object
 
 from utils import \
     session_scope, \

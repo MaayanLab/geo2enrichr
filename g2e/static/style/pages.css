@@ -83,9 +83,19 @@
 #results-page #admin-controls .instruction p {
   margin: 0;
 }
+#results-page #admin-controls h3 {
+  margin-top: 0;
+}
+#results-page #admin-controls #optional-metadata li {
+  margin-top: 10px;
+}
+#results-page #admin-controls #optional-metadata #new-metadata input {
+  margin-bottom: 10px;
+  width: 100%;
+}
 #results-page #admin-controls #delete-gene-signature {
   border-top: 1px solid #aaaaaa;
-  margin-top: 20px;
+  margin-top: 50px;
   padding-top: 10px;
 }
 #manual-page img,
