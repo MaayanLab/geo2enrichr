@@ -10,7 +10,7 @@ import g2e.core.softutils.filemanager as softfilemanager
 
 extract_api = Blueprint('extract_api',
                         __name__,
-                        url_prefix='%s/extract' % config.BASE_API_URL)
+                        url_prefix='%s/extract' % config.API_URL)
 
 
 @extract_api.route('/<extraction_id>')

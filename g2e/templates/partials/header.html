@@ -5,6 +5,14 @@
             <h1>
                 <a href=""><span>GEO2</span><span class="highlight">Enrichr</span></a>
             </h1>
+            {% if config.user %}
+                <div class='user-options'>
+                    <span>{{ config.user.name|capitalize }}</span>
+                    <form action='logout' method='POST'>
+                        <button name='logout' type='submit'>Logout</button>
+                    </form>
+                </div>
+            {% endif %}
         </div>
     </div>
     {% if not use_simple_header %}

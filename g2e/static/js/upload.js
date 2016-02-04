@@ -20,7 +20,8 @@ $(function() {
     function submit(evt) {
         evt.preventDefault();
 
-        var $forms = $('form'),
+        // There are other forms on the page.
+        var $forms = $('#upload-form form'),
             formData = new FormData($forms[0]),
             loader = Loader();
         

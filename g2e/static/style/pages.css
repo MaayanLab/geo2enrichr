@@ -1,4 +1,5 @@
 #page {
+  margin-top: 20px;
   padding-bottom: 50px;
 }
 #index-page {
@@ -57,9 +58,6 @@
 #results-page .gene-lists {
   table-layout: fixed;
 }
-#results-page ul {
-  padding-left: 15px;
-}
 #results-page .gene-lists {
   /* This over-selects but we don't care since the table is filled with images. */
 }
@@ -74,6 +72,31 @@
 }
 #results-page .gene-lists tr {
   font-weight: bold;
+}
+#results-page #admin-controls {
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+#results-page #admin-controls .instruction {
+  margin-bottom: 20px;
+}
+#results-page #admin-controls .instruction p {
+  margin: 0;
+}
+#results-page #admin-controls h3 {
+  margin-top: 0;
+}
+#results-page #admin-controls #optional-metadata li {
+  margin-top: 10px;
+}
+#results-page #admin-controls #optional-metadata #new-metadata input {
+  margin-bottom: 10px;
+  width: 100%;
+}
+#results-page #admin-controls #delete-gene-signature {
+  border-top: 1px solid #aaaaaa;
+  margin-top: 50px;
+  padding-top: 10px;
 }
 #manual-page img,
 #pipeline-page img {

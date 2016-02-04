@@ -1,0 +1,13 @@
+{% extends 'wrapper.html' %}
+
+{% block title %}About{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        {% if config.user %}
+            <h1>{{ config.user.name }}</h1>
+        {% endif %}
+    </div>
+
+{% endblock %}
