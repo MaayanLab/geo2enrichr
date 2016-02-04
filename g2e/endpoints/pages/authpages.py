@@ -27,7 +27,7 @@ def login():
         return render_template('pages/login.html',
                                error='Username or password is invalid')
 
-    login_user(registered_user)
+    login_user(registered_user, remember=True)
     return redirect(url_for('menu_pages.index_page'))
 
 
