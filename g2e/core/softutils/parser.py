@@ -4,6 +4,7 @@
 import csv
 
 from . import filemanager
+from g2e.exceptions import ParseException
 
 
 def parse(name, is_geo=True, platform=None, samples=None):
@@ -40,9 +41,14 @@ def _parse_file(filename):
             genes.append(line[0])
             a_row = line[1:idx]
             b_row = line[idx:]
-            a_vals.append([float(pv) for pv in a_row])
-            b_vals.append([float(pv) for pv in b_row])
-    return (genes, a_vals, b_vals, zip(names, samples))
+            try:
+                a_vals.append([float(pv) for pv in a_row])
+                b_vals.append([float(pv) for pv in b_row])
+            except ValueError as e:
+                msg = 'Error converting expression values to floats. ' \
+                      'Do you have null values?'
+                raise ParseException(msg, e)
+    return genes, a_vals, b_vals, zip(names, samples)
 
 
 def _parse_geo(filename, platform, samples):

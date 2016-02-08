@@ -4,12 +4,13 @@
 import logging
 import sys
 
-from flask import Flask, session as flask_session
+from flask import Flask, jsonify, session as flask_session
 from flask.ext.cors import CORS
 from flask.ext.login import LoginManager, user_logged_out
 
 from substrate import User, db as substrate_db
 from g2e import config
+from g2e.exceptions import AppException
 
 
 app = Flask(__name__, static_url_path='/g2e/static', static_folder='static')
@@ -87,6 +88,32 @@ def unset_current_user(sender, user):
     """When the user logs out, we need to unset this global variable.
     """
     app.config.user = None
+
+
+# Error handling
+# ----------------------------------------------------------------------------
+
+# The order of registering these error handlers matters!
+
+@app.errorhandler(AppException)
+def handle_app_exceptions(error):
+    """Custom error handling for application.
+    """
+    response = jsonify(error.serialize)
+    response.status_code = error.status_code
+    return response
+
+
+@app.errorhandler(Exception)
+def handle_any_exceptions(error):
+    """Generic error handling.
+    """
+    response = jsonify({
+        'error': 'Unknown error. Please contact the Ma\'ayan Lab.',
+        'original_message': error.message
+    })
+    response.status_code = 500
+    return response
 
 
 # Setup global variables that are available in Jinja2 templates
