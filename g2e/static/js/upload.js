@@ -48,7 +48,12 @@ $(function() {
                 window.location.replace('/g2e/results/' + data.extraction_id);
             },
             error: function(data) {
-                alert('Unknown error uploading data. Please contact the Ma\'ayan lab if this persists.');
+                var jsonResponse = JSON.parse(data.responseText);
+                if (jsonResponse.error) {
+                    alert(jsonResponse.error);
+                } else {
+                    alert('Unknown error uploading data. Please contact the Ma\'ayan lab if this persists.');
+                }
             },
             complete: function() {
                 loader.stop();

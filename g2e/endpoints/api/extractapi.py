@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
 
 from g2e import config, db
+from g2e.exceptions import ParseException
 from g2e.core import genesignature
 import g2e.core.softutils.filemanager as softfilemanager
 
