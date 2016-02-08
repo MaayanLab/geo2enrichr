@@ -92,6 +92,18 @@ def unset_current_user(sender, user):
 
 # Error handling
 # ----------------------------------------------------------------------------
+
+# The order of registering these error handlers matters!
+
+@app.errorhandler(AppException)
+def handle_app_exceptions(error):
+    """Custom error handling for application.
+    """
+    response = jsonify(error.serialize)
+    response.status_code = error.status_code
+    return response
+
+
 @app.errorhandler(Exception)
 def handle_any_exceptions(error):
     """Generic error handling.
@@ -101,16 +113,6 @@ def handle_any_exceptions(error):
         'original_message': error.message
     })
     response.status_code = 500
-    return response
-
-
-@app.errorhandler(AppException)
-def handle_app_exceptions(error):
-    """Custom error handling for application.
-    """
-    print(error)
-    response = jsonify(error.serialize)
-    response.status_code = error.status_code
     return response
 
 
