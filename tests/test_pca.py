@@ -1,7 +1,7 @@
 import unittest
 
-from g2e.core import softutils
-from g2e.core.analysis import pca
+from g2e.pipelines import softutils
+from g2e.pca import pca
 
 
 class TestPca(unittest.TestCase):

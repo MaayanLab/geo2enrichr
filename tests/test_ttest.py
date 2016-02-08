@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from g2e.core.analysis.ttest import _get_pvalues
+from g2e.diffexp.analysis import _get_pvalues
 
 
 class TestTtest(unittest.TestCase):

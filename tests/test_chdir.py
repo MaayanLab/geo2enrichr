@@ -1,7 +1,8 @@
 import unittest
 
 import numpy as np
-from g2e.core.analysis.chdir import chdir, _sort_by_coefficients
+from g2e.diffexp import chdir
+from g2e.diffexp.analysis import _sort_by_coefficients
 
 
 class TestChdir(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.core.softutils.cleaner import qnorm
+from g2e.pipelines.softutils.cleaner import qnorm
 
 
 class TestQnorm(unittest.TestCase):

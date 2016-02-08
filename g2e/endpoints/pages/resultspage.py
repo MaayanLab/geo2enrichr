@@ -5,11 +5,10 @@ import json
 
 from flask import Blueprint, request, render_template, redirect, url_for
 from flask.ext.login import current_user, login_required
-
-from substrate import OptionalMetadata, Tag
 from g2e import config, db
-from g2e.utils import requestutil
-from g2e.core.targetapp.crowdsourcing import CROWDSOURCING_TAGS
+from g2e.endpoints import requestutil
+from g2e.targetapps.crowdsourcing import CROWDSOURCING_TAGS
+from substrate import OptionalMetadata, Tag
 
 
 results_page = Blueprint('results_page',

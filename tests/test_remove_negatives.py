@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.core.softutils.cleaner import _remove_negatives
+from g2e.pipelines.softutils.cleaner import _remove_negatives
 
 
 class TestRemoveNegatives(unittest.TestCase):

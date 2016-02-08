@@ -21,13 +21,15 @@ SECRET_KEY = config.get('cookies', 'secret_key')
 BASE_URL = '/g2e'
 
 RESULTS_URL = BASE_URL + '/results'
-API_URL = BASE_URL + '/api'
 PCA_URL = BASE_URL + '/pca'
 CLUSTER_URL = BASE_URL + '/cluster'
 
 GENE_LIST_URL = BASE_URL + '/gene_list'
 SOFT_FILE_URL = BASE_URL + '/soft_file'
-SUGGEST_API = BASE_URL + '/suggest'
+
+API_URL = BASE_URL + '/api'
+EXTRACT_URL = API_URL + '/extract'
+UPLOAD_URL = API_URL + '/upload'
 
 SQLALCHEMY_POOL_RECYCLE = 3600
 SQLALCHEMY_DATABASE_URI = config.get('db', 'uri')

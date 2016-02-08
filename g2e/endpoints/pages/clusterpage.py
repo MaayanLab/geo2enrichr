@@ -2,9 +2,8 @@
 """
 
 from flask import Blueprint, render_template
-
-from g2e.core.targetapp import clustergrammer
 from g2e import config, db
+from g2e.targetapps import clustergrammer
 
 
 cluster_page = Blueprint('cluster_api',
