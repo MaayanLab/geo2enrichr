@@ -14,3 +14,4 @@ from api.extractapi import extract_api
 from api.genelistapi import gene_list_api
 from api.pcaapi import pca_api
 from api.softfileapi import soft_file_api
+from api.uploadapi import upload_api

@@ -37,6 +37,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 substrate_db.init_app(app)
 
+
 # Cross origin requests.
 # ----------------------------------------------------------------------------
 cors = CORS(app)
@@ -64,6 +65,7 @@ app.register_blueprint(endpoints.extract_api)
 app.register_blueprint(endpoints.gene_list_api)
 app.register_blueprint(endpoints.pca_api)
 app.register_blueprint(endpoints.soft_file_api)
+app.register_blueprint(endpoints.upload_api)
 
 app.register_blueprint(endpoints.jinjafilters)
 
@@ -82,6 +84,7 @@ def load_user(user_id):
     user = substrate_db.session.query(User).get(user_id)
     app.config.user = user
     return user
+
 
 @user_logged_out.connect_via(app)
 def unset_current_user(sender, user):
@@ -120,12 +123,16 @@ def handle_any_exceptions(error):
 # ----------------------------------------------------------------------------
 app.config.update({
     'BASE_URL': config.BASE_URL,
+
     'API_URL': config.API_URL,
+    'EXTRACT_URL': config.EXTRACT_URL,
+    'UPLOAD_URL': config.UPLOAD_URL,
+
     'CLUSTER_URL': config.CLUSTER_URL,
     'GENE_LIST_URL': config.GENE_LIST_URL,
     'GEN3VA_URL': config.GEN3VA_URL,
     'GEN3VA_REPORT_URL': config.GEN3VA_REPORT_URL,
     'PCA_URL': config.PCA_URL,
     'RESULTS_URL': config.RESULTS_URL,
-    'SOFT_FILE_URL': config.SOFT_FILE_URL,
+    'SOFT_FILE_URL': config.SOFT_FILE_URL
 })

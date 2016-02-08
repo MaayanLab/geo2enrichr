@@ -5,13 +5,12 @@ from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
 
 from g2e import config, db
-from g2e.exceptions import ParseException
-from g2e.core import genesignature
-import g2e.core.softutils.filemanager as softfilemanager
+from g2e import pipelines
+
 
 extract_api = Blueprint('extract_api',
                         __name__,
-                        url_prefix='%s/extract' % config.API_URL)
+                        url_prefix=config.EXTRACT_URL)
 
 
 @extract_api.route('/<extraction_id>')
@@ -35,7 +34,7 @@ def post_from_geo():
     """
     args = request.form
     response = {}
-    gene_signature = genesignature.from_geo(args)
+    gene_signature = pipelines.from_geo(args)
     db.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
@@ -48,7 +47,7 @@ def post_file():
     """
     args = request.form
     response = {}
-    gene_signature = genesignature.from_file(request.files['file'], args)
+    gene_signature = pipelines.from_file(request.files['file'], args)
     db.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
@@ -61,8 +60,8 @@ def example_file():
     """
     args = request.form
     response = {}
-    file_obj = softfilemanager.get_example_file()
-    gene_signature = genesignature.from_file(file_obj, args)
+    file_obj = pipelines.get_example_file()
+    gene_signature = pipelines.from_file(file_obj, args)
     db.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)

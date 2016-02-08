@@ -9,7 +9,11 @@ from config import \
     SECRET_KEY, \
     \
     BASE_URL, \
+    \
     API_URL, \
+    EXTRACT_URL, \
+    UPLOAD_URL, \
+    \
     PCA_URL, \
     CLUSTER_URL, \
     RESULTS_URL, \

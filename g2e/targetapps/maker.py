@@ -1,15 +1,13 @@
 """Delegates to target applications.
 """
 
-from substrate import TargetAppLink
-from substrate import TargetApp
-
-from g2e.core.targetapp import enrichr
-from g2e.core.targetapp import l1000cds2
-from g2e.core.targetapp import paea
-from g2e.core.targetapp import crowdsourcing
 from g2e.db.utils import get_or_create
-
+from g2e.targetapps import crowdsourcing
+from g2e.targetapps import enrichr
+from g2e.targetapps import l1000cds2
+from g2e.targetapps import paea
+from substrate import TargetApp
+from substrate import TargetAppLink
 
 # Granular control of how many genes are sent to each downstream application.
 # This is applied to every list.

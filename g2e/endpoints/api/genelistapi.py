@@ -4,7 +4,7 @@
 from flask import Blueprint, Response
 
 from g2e import config, db
-from g2e.core.genelistutils import filemanager
+from g2e.pipelines.genelistutils import filemanager
 
 
 gene_list_api = Blueprint('gene_list_api',

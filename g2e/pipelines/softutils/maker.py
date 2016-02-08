@@ -3,10 +3,10 @@
 
 import time
 
-from substrate import CustomDataset, GeoDataset, SoftFile, SoftFileSample
-from g2e.utils.requestutil import get_param_as_list
-from . import parser, cleaner, filemanager
 from g2e import db
+from g2e.endpoints.requestutil import get_param_as_list
+from substrate import CustomDataset, GeoDataset, SoftFile, SoftFileSample
+from . import parser, cleaner, filemanager
 
 
 def from_geo(args):

@@ -1,6 +1,6 @@
 import unittest
 
-import g2e.core.targetapp.crowdsourcing as crowdsourcing
+import g2e.targetapps.crowdsourcing as crowdsourcing
 from substrate import Gene, GeoDataset, OptionalMetadata, RankedGene,\
     SoftFile, SoftFileSample, Tag
 

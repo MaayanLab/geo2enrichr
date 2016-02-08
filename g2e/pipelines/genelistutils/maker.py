@@ -2,9 +2,9 @@
 """
 
 from flask import request
-
+from g2e import targetapps
+from g2e import diffexp
 from substrate import GeneList
-from g2e.core import analysis, targetapp
 
 
 def from_soft_file(soft_file, required_metadata, optional_metadata, tags):
@@ -14,7 +14,7 @@ def from_soft_file(soft_file, required_metadata, optional_metadata, tags):
     # 1. Perform differential expression analysis with no cutoff. We do
     #    perform the thresholding for the t-test since that is part of
     #    the analysis.
-    ranked_genes = analysis.diffexp(
+    ranked_genes = diffexp.diffexp(
         soft_file.a_vals,
         soft_file.b_vals,
         soft_file.genes,
@@ -29,9 +29,9 @@ def from_soft_file(soft_file, required_metadata, optional_metadata, tags):
     if 'skip_target_apps' in request.form:
         target_apps_up = target_apps_down = target_apps_combined = []
     else:
-        target_apps_up = targetapp.get_links(up_genes, 1, required_metadata)
-        target_apps_down = targetapp.get_links(down_genes, -1, required_metadata)
-        target_apps_combined = targetapp.get_links(
+        target_apps_up = targetapps.get_links(up_genes, 1, required_metadata)
+        target_apps_down = targetapps.get_links(down_genes, -1, required_metadata)
+        target_apps_combined = targetapps.get_links(
             ranked_genes, 0, required_metadata, optional_metadata, soft_file, tags
         )
 
