@@ -22,6 +22,7 @@ from config import \
     \
     GEN3VA_URL, \
     GEN3VA_REPORT_URL, \
+    GEN3VA_TAG_URL, \
     \
     SQLALCHEMY_DATABASE_URI, \
     SQLALCHEMY_POOL_RECYCLE

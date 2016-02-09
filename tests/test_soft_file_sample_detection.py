@@ -1,6 +1,6 @@
 import unittest
 
-from g2e.signature_factory.soft_file_utils.file_manager import _build_selections
+from g2e.signature_factory.soft_file_factory.file_manager import _build_selections
 
 
 class TestSoftFileSampleDetection(unittest.TestCase):

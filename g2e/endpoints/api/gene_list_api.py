@@ -4,7 +4,7 @@
 from flask import Blueprint, Response
 
 from g2e import config, database
-from g2e.signature_factory.gene_list_utils import file_manager
+from g2e.signature_factory.gene_list_factory import file_manager
 
 
 gene_list_api = Blueprint('gene_list_api',
