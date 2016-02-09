@@ -7,6 +7,7 @@ from config import \
     DEBUG, \
     SERVER_ROOT, \
     SECRET_KEY, \
+    SERVER_URL, \
     \
     BASE_URL, \
     \

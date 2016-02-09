@@ -36,8 +36,10 @@ SQLALCHEMY_DATABASE_URI = config.get('db', 'uri')
 
 if DEBUG:
     GEN3VA_URL = 'http://localhost:8084/gen3va'
+    SERVER_URL = 'http://localhost:8083'
 else:
     GEN3VA_URL = 'http://amp.pharm.mssm.edu/gen3va'
+    SERVER_URL = 'http://amp.pharm.mssm.edu'
 
 GEN3VA_REPORT_URL = GEN3VA_URL + '/report'
 GEN3VA_TAG_URL = GEN3VA_URL + '/tag'

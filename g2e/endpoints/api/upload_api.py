@@ -21,7 +21,10 @@ def upload_gene_signature():
     args = json.loads(request.data)
     gene_signature = signature_factory.from_gene_list(args)
     database.save_gene_signature(gene_signature)
+    link = '%s%s/%s' % (config.SERVER_URL,
+                         config.RESULTS_URL,
+                         gene_signature.extraction_id)
     return jsonify({
         'extraction_id': gene_signature.extraction_id,
-        'link': ''
+        'link': link
     })

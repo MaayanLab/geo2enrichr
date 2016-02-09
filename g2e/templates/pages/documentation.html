@@ -23,7 +23,7 @@
             <p>
                 Returns a JSON blob of data associated with a single user extraction, based on the <span class='mono'>id</span> parameter. The returned data has stable links to the SOFT file; up, down, and combined gene lists; and metadata from both the experiment and analysis.
             </p>
-            <h3>Resource URL</h3>
+            <h4>Resource URL</h4>
             <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api/extract</code></pre>
             <h3>Parameters</h3>
             <table class="table">
@@ -32,35 +32,55 @@
                     <td>The ID of the extraction for which to return results.</td>
                 </tr>
             </table>
-            <h3>Example request</h3>
-            <pre><code class="bash">http://amp.pharm.mssm.edu/g2e/api/extract/1</code></pre>
-            <h3>Example response</h3>
+            <h4>Example request</h4>
+            <pre><code class="bash">http://amp.pharm.mssm.edu/g2e/api/extract/e29766a757</code></pre>
+            <h4>Example response</h4>
             <pre><code class="json">{
-  "genelists": [
-    {
-      "direction": 1,
-      "enrichr_link": "http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=a61",
-      "text_file": "static/genelist/94035cf3c2e018705e310243a1b12bca87d66663.txt"
-    },
-    {
-      "direction": -1,
-      "enrichr_link": "http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=r0p",
-      "text_file": "static/genelist/817286622c4403eab0a222e707c1a6d98afd068d.txt"
-    },
+  "extraction_id": "e29766a757",
+  "gene_lists": [
     {
       "direction": 0,
-      "enrichr_link": "http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=z9h",
-      "text_file": "static/genelist/971ac562ef4501dcbd5f5ece5f0a014061ccee1b.txt"
-    }
+      "target_apps": {
+        "enrichr": "http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=a61"
+      },
+      "ranked_genes": [
+        [
+          "TOMM70A",
+          0.499472
+        ],
+        [
+          "SUN1",
+          0.00838146
+        ],
+        [
+          "DPP10",
+          0.0105129
+        ],
+        [
+          "MGA",
+          0.0152158
+        ],
+        [
+          "SYNJ1",
+          0.0181663
+        ],
+        ...
+      ]
+    },
+    ...
   ],
-  "metadata": {
-    "cell": null,
+  "required_metadata": {
     "cutoff": 500,
+    "method": "chdir",
+    "threshold": null,
+    "ttest_correction_method": null
+  },
+  "optional_metadata": {
+    "cell": null,
     "disease": null,
     "gene": null,
-    "method": "chdir",
     "perturbation": null
-  },
+  }
   "soft_file": {
     "is_geo": true,
     "accession": "GDS5077",
@@ -75,9 +95,9 @@
             <p>
                 Performs differential expression analysis on a GEO SOFT file based on the GEO accession number, platform, and selected samples.
             </p>
-            <h3>Resource URL</h3>
+            <h4>Resource URL</h4>
             <pre><code class="bash">http://amp.pharm.mssm.edu/g2e/api/extract/geo</code></pre>
-            <h3>Parameters</h3>
+            <h4>Parameters</h4>
             <table class="table">
                 <tr>
                     <td class='mono'>dataset</td>
@@ -96,7 +116,8 @@
                     <td>An array of GSM numbers to be used as in the treatment or condition group.<td>
                 </tr>
             </table>
-            <h3>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h3>
+            <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
+            <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
             <pre><code class="bash">curl -v http://amp.pharm.mssm.edu/g2e/api/extract/geo --data \
   "dataset=GDS5077&\
   platform=GPL10558&\
@@ -109,19 +130,19 @@
 &lt; Accept: */*
 &lt; Content-Length: 91
 &lt; Content-Type: application/x-www-form-urlencoded</code></pre>
-    <h3>Example response</h3>
+    <h4>Example response</h4>
 <pre><code class="bash">&lt; HTTP/1.0 200 OK
 {
   "extraction_id": 38
 }</code></pre>
         </section>
 
-        <section class='last'>
+        <section>
             <h1>POST /g2e/api/extract/custom</h1>
             <p>
                 Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
             </p>
-            <h3>Parameters</h3>
+            <h4>Parameters</h4>
             <table class="table">
                 <tr>
                     <td class='mono'>file</td>
@@ -132,7 +153,7 @@
                     <td>A description of your data.</td>
                 </tr>
             </table>
-            <h3>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h3>
+            <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
             <pre><code class="bash">$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload \
 --form "file=@input.txt" name=SyntheticData
 
@@ -143,7 +164,41 @@
 > Content-Length: 187810
 > Expect: 100-continue
 > Content-Type: multipart/form-data; boundary=------------------------1dcefa53b8e0b8ed</code></pre>
-    <h3>Example response</h3>
+    <h4>Example response</h4>
+    <pre><code class="bash">&lt; HTTP/1.0 200 OK
+{
+  "extraction_id": 38
+}</code></pre>
+        </section>
+
+        <section class='last'>
+            <h1>POST /g2e/api/extract/upload</h1>
+            <p>
+                Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
+            </p>
+            <h4>Parameters</h4>
+            <table class="table">
+                <tr>
+                    <td class='mono'>file</td>
+                    <td>The file to be processed.</td>
+                </tr>
+                <tr>
+                    <td class='mono'>name</td>
+                    <td>A description of your data.</td>
+                </tr>
+            </table>
+            <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
+            <pre><code class="bash">$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload \
+--form "file=@input.txt" name=SyntheticData
+
+> POST /g2e/api/extract/upload HTTP/1.1
+> User-Agent: curl/7.37.1
+> Host: http://amp.pharm.mssm.edu/
+> Accept: */*
+> Content-Length: 187810
+> Expect: 100-continue
+> Content-Type: multipart/form-data; boundary=------------------------1dcefa53b8e0b8ed</code></pre>
+    <h4>Example response</h4>
     <pre><code class="bash">&lt; HTTP/1.0 200 OK
 {
   "extraction_id": 38

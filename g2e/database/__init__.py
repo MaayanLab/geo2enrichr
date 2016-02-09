@@ -1,7 +1,7 @@
 """Interface for db module.
 """
 
-from db import \
+from database import \
     save_gene_signature, \
     get_gene_signature, \
     get_geo_dataset, \
