@@ -12,9 +12,7 @@ ap.add_argument('--branch',
                 help='branch from which to pull',
                 default='master')
 opts = ap.parse_args()
-print(opts)
 
 cmd = 'sudo pip install --upgrade --no-deps --force-reinstall git+git://' \
       'github.com/MaayanLab/substrate.git@%s' % opts.branch
-print(cmd)
 subprocess.call(cmd, shell=True)
