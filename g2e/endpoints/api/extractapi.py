@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
 
 from g2e import config, db
-from g2e import pipelines
+from g2e import signaturefactory
 
 
 extract_api = Blueprint('extract_api',
@@ -34,7 +34,7 @@ def post_from_geo():
     """
     args = request.form
     response = {}
-    gene_signature = pipelines.from_geo(args)
+    gene_signature = signaturefactory.from_geo(args)
     db.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
@@ -47,7 +47,7 @@ def post_file():
     """
     args = request.form
     response = {}
-    gene_signature = pipelines.from_file(request.files['file'], args)
+    gene_signature = signaturefactory.from_file(request.files['file'], args)
     db.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
@@ -60,8 +60,8 @@ def example_file():
     """
     args = request.form
     response = {}
-    file_obj = pipelines.get_example_file()
-    gene_signature = pipelines.from_file(file_obj, args)
+    file_obj = signaturefactory.get_example_file()
+    gene_signature = signaturefactory.from_file(file_obj, args)
     db.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)

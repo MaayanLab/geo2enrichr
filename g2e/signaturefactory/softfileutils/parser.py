@@ -196,4 +196,4 @@ def build_probe_dict(platform_probesetid_genesym_file):
     return platform_dict
 
 # Loads a dictionary into memory for the duration of the application.
-PROBE2GENE = build_probe_dict('g2e/core/softutils/probe2gene.txt')
+PROBE2GENE = build_probe_dict('g2e/signaturefactory/softfileutils/probe2gene.txt')

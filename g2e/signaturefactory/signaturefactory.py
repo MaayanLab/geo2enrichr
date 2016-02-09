@@ -6,11 +6,39 @@ from g2e.endpoints.requestutil import get_param_as_list
 from substrate import Tag
 
 from substrate import GeneSignature, OptionalMetadata, Resource, RequiredMetadata
-from g2e.pipelines import genelistutils, softutils
+from g2e.signaturefactory import genelistutils, softfileutils
 from g2e import db
 
 
-def create(soft_file, args):
+def from_geo(args):
+    """Creates gene signature from GEO data.
+    """
+    soft_file = softfileutils.maker.from_geo(args)
+    return _create_gene_signature(soft_file, args)
+
+
+def from_file(file_obj, args):
+    """Creates an extraction from a custom, uploaded SOFT file.
+    """
+    soft_file = softfileutils.maker.from_file(file_obj, args)
+    return _create_gene_signature(soft_file, args)
+
+
+def from_gene_list(ranked_genes):
+    """Creates gene signature from a pre-existing gene list, not expression
+    data.
+    """
+    return GeneSignature(
+        # soft_file,
+        # gene_lists,
+        # required_metadata,
+        # optional_metadata,
+        # tags,
+        # db.get_or_create(Resource, code='geo')
+    )
+
+
+def _create_gene_signature(soft_file, args):
     """Creates a new extraction, as opposed to an extraction from the
     database.
     """
@@ -31,35 +59,6 @@ def create(soft_file, args):
         tags,
         db.get_or_create(Resource, code='geo')
     )
-
-
-def from_geo(args):
-    """Creates gene signature from GEO data.
-    """
-    soft_file = softutils.maker.from_geo(args)
-    return create(soft_file, args)
-
-
-def from_file(file_obj, args):
-    """Creates an extraction from a custom, uploaded SOFT file.
-    """
-    soft_file = softutils.maker.from_file(file_obj, args)
-    return create(soft_file, args)
-
-
-def from_gene_list(ranked_genes):
-    """Creates gene signature from a pre-existing gene list, not expression
-    data.
-    """
-    return GeneSignature(
-        # soft_file,
-        # gene_lists,
-        # required_metadata,
-        # optional_metadata,
-        # tags,
-        # db.get_or_create(Resource, code='geo')
-    )
-
 
 def _get_optional_metadata_from_args(args):
     """Helper method for constructing known optional metadata.

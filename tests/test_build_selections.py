@@ -1,6 +1,6 @@
 import unittest
 
-from g2e.pipelines.softutils.filemanager import _build_selections
+from g2e.signaturefactory.softfileutils.filemanager import _build_selections
 
 
 class TestBuildSelections(unittest.TestCase):

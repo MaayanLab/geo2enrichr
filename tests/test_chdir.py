@@ -2,7 +2,6 @@ import unittest
 
 import numpy as np
 from g2e.diffexp import chdir
-from g2e.diffexp.analysis import _sort_by_coefficients
 
 
 class TestChdir(unittest.TestCase):
@@ -29,7 +28,7 @@ class TestChdir(unittest.TestCase):
                 A.append([float(pv) for pv in A_row])
                 B.append([float(pv) for pv in B_row])
 
-        self.genes, self.values = chdir(A, B, genes)
+        self.genes, self.values = chdir.chdir(A, B, genes)
 
     def testSumSquares(self):
         s = np.sum(np.square(self.values))
@@ -42,7 +41,7 @@ class TestChdir(unittest.TestCase):
         self.assertTrue(close_enough)
 
     def test_sort(self):
-        genes, values = _sort_by_coefficients(
+        genes, values = chdir._sort_by_coefficients(
             ['A', 'B', 'C', 'D', 'E', 'F'],
             [0.4, 0.6, -0.44, -0.1, 0.2, 0.3]
         )
