@@ -5,7 +5,7 @@ from substrate import SoftFileSample
 import g2e.signaturefactory.softfileutils.parser as softparser
 
 
-class TestSoftParser(unittest.TestCase):
+class TestSoftFileParser(unittest.TestCase):
 
     def test_geo_soft_file_parser(self):
         samples = [

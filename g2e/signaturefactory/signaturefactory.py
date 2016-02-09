@@ -2,7 +2,7 @@
 """
 
 from g2e.db.utils import get_or_create
-from g2e.endpoints.requestutil import get_param_as_list
+from g2e.endpoints.requestutils import get_param_as_list
 from substrate import Tag
 
 from substrate import GeneSignature, OptionalMetadata, Resource, RequiredMetadata

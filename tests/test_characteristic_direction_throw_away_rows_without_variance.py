@@ -4,7 +4,7 @@ import numpy as np
 from g2e.diffexp.chdir import _throw_away_rows_without_variance
 
 
-class TestThrowAwayRowsWithoutVarianece(unittest.TestCase):
+class TestCharacteristicDirectionThrowAwayRowsWithoutVarianece(unittest.TestCase):
 
     def test_all_zeros(self):
         A = np.array([

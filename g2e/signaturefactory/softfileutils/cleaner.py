@@ -16,7 +16,7 @@ def clean(genes, A, B, normalize_data):
         genes, values = normalize(genes, values)
 
     # Average duplicates no matter what.
-    genes, values = avg_dups(genes, values)
+    genes, values = average_duplicates(genes, values)
 
     A = values[:, :idx].tolist()
     B = values[:, idx:].tolist()
@@ -40,7 +40,7 @@ def normalize(genes, values):
 
     if not _is_norm(values):
         print 'Quantile normalizing the data.'
-        values = qnorm(values)
+        values = quantile_normalization(values)
 
     return genes, values
 
@@ -88,7 +88,7 @@ def _remove_negatives(genes, values):
     return (genes, values)
 
 
-def qnorm(values):
+def quantile_normalization(values):
     """Performs quantile normalization on two arrays of arrays.
     """
     # Quantile normalization is a 4 step algorithm to make two or more
@@ -150,7 +150,7 @@ def _is_norm(values):
     return True
 
 
-def avg_dups(genes, values):
+def average_duplicates(genes, values):
     """Finds duplicate genes and averages their expression data.
     """
     # See http://codereview.stackexchange.com/a/82020/59381 for details.

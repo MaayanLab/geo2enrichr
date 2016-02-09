@@ -5,7 +5,7 @@ from substrate import Gene, GeoDataset, OptionalMetadata, RankedGene,\
     SoftFile, SoftFileSample, Tag
 
 
-class TestCrowdsourcing(unittest.TestCase):
+class TestTargetAppsCrowdsourcing(unittest.TestCase):
 
     def setUp(self):
 
@@ -39,7 +39,7 @@ class TestCrowdsourcing(unittest.TestCase):
         )
         self.soft_file = SoftFile(self.samples, dataset, self.genes, None, None, False)
 
-    def testWithOneTag(self):
+    def test_get_link(self):
         self.optional_metadata += [
             OptionalMetadata('user_key', '52354fa2e3f22a788f82b6634a5ad548')
         ]

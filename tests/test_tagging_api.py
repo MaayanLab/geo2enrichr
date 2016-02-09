@@ -4,13 +4,12 @@ import unittest
 from g2e import app
 
 
-class ExtractEndpoint(unittest.TestCase):
+class TestTaggingAPI(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
 
     def test_tags(self):
-        print 'Testing tags'
         self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
             file = (file('tests/data/example_input.txt'), 'test.txt'),
             diffexp_method = 'ttest',
