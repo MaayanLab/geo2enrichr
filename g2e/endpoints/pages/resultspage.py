@@ -6,7 +6,7 @@ import json
 from flask import Blueprint, request, render_template, redirect, url_for
 from flask.ext.login import current_user, login_required
 from g2e import config, db
-from g2e.endpoints import requestutil
+from g2e.endpoints import requestutils
 from g2e.targetapps.crowdsourcing import CROWDSOURCING_TAGS
 from substrate import OptionalMetadata, Tag
 
@@ -83,7 +83,7 @@ def edit_result(extraction_id):
         db.update_object(gene_signature)
 
     # Update existing tags.
-    tag_names = requestutil.get_param_as_list(request.form, 'tags')
+    tag_names = requestutils.get_param_as_list(request.form, 'tags')
     for tag in gene_signature.tags:
         if tag.name not in tag_names:
             db.delete_object(tag)

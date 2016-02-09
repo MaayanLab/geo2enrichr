@@ -4,7 +4,7 @@ import numpy as np
 from g2e.diffexp import chdir
 
 
-class TestChdir(unittest.TestCase):
+class TestCharacteristicDirection(unittest.TestCase):
 
     def setUp(self):
         # Get ordered list of values.
@@ -30,17 +30,17 @@ class TestChdir(unittest.TestCase):
 
         self.genes, self.values = chdir.chdir(A, B, genes)
 
-    def testSumSquares(self):
-        s = np.sum(np.square(self.values))
-        close_enough = np.isclose(1,s)
-        self.assertTrue(close_enough)
-
-    def testChdir(self):
+    def test_characteristic_direction(self):
         delta = (self.answers - self.values) / self.answers
         close_enough = np.any(np.absolute(delta) < 0.0025)
         self.assertTrue(close_enough)
 
-    def test_sort(self):
+    def test_sum_of_squares_is_basically_one(self):
+        s = np.sum(np.square(self.values))
+        close_enough = np.isclose(1,s)
+        self.assertTrue(close_enough)
+
+    def test_output_order(self):
         genes, values = chdir._sort_by_coefficients(
             ['A', 'B', 'C', 'D', 'E', 'F'],
             [0.4, 0.6, -0.44, -0.1, 0.2, 0.3]

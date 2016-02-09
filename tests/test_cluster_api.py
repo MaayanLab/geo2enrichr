@@ -4,7 +4,7 @@ import unittest
 from g2e import app
 
 
-class TestCluster(unittest.TestCase):
+class TestClusterEndpoint(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
@@ -25,8 +25,7 @@ class TestCluster(unittest.TestCase):
         post_response = json.loads(temp.data.decode())
         self.extraction_id = post_response['extraction_id']
 
-    def testEndpoint(self):
-        print(self.extraction_id)
+    def test_endpoint(self):
         url = '/g2e/cluster/' + self.extraction_id
         response = self.app.get(url)
         self.assertTrue('http://amp.pharm.mssm.edu/clustergrammer/viz/' in response.data)

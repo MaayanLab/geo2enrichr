@@ -13,7 +13,7 @@ class TestPca(unittest.TestCase):
         })
         self.maxDiff = 10000
 
-    def testFromSoftFile(self):
+    def test_from_soft_file(self):
         pca_coords = pca.from_soft_file(self.soft_file)
         self.assertEqual(
             pca_coords['ranges'],

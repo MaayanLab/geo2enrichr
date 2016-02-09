@@ -4,9 +4,9 @@ import g2e.targetapps.l1000cds2 as l1000cds2
 from substrate import Gene, RankedGene, RequiredMetadata
 
 
-class TestL1000CDS2(unittest.TestCase):
+class TestTargetAppsL1000CDS2(unittest.TestCase):
 
-    def testL1000CDS2Link(self):
+    def test_get_link(self):
         md = RequiredMetadata(None, None, None, None)
 
         ranked_genes = [

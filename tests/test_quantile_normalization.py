@@ -1,10 +1,10 @@
 import unittest
 import numpy as np
 
-from g2e.signaturefactory.softfileutils.cleaner import qnorm
+from g2e.signaturefactory.softfileutils.cleaner import quantile_normalization
 
 
-class TestQnorm(unittest.TestCase):
+class TestQuantileNormalization(unittest.TestCase):
 
     def setUp(self):
         self.vals = np.array(
@@ -14,7 +14,7 @@ class TestQnorm(unittest.TestCase):
              [7.0, 20.0, 1.0, 1.0],
              [3.0, 79.0, 16.0, 11.0]])
 
-    def testQnorm(self):
+    def test_quantile_normalization(self):
         ans = np.array(
             [[1.0, 3.0, 3.0, 7.25],
              [36.0, 7.25, 36.0, 36.0],
@@ -22,12 +22,12 @@ class TestQnorm(unittest.TestCase):
              [13.5, 13.5, 1.0, 1.0],
              [7.25, 36, 13.5, 13.5]])
 
-        vals = qnorm(self.vals)
+        vals = quantile_normalization(self.vals)
         self.assertTrue(np.array_equal(vals, ans))
 
-    def testQnormOnNormalizedData(self):
-        vals = qnorm(self.vals)
+    def test_quantile_normalization_on_normalized_data(self):
+        vals = quantile_normalization(self.vals)
         # ans is the qnorm of normalized data; this should be the same as the
         # input.
-        ans = qnorm(vals)
+        ans = quantile_normalization(vals)
         self.assertTrue(np.array_equal(vals, ans))

@@ -6,7 +6,7 @@ import StringIO
 from g2e import app
 
 
-class TestGeneListEndpoint(unittest.TestCase):
+class TestGeneListAPI(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
@@ -32,7 +32,7 @@ class TestGeneListEndpoint(unittest.TestCase):
         self.direction = 0
         self.up_gene_list = response['gene_lists'][self.direction]
 
-    def testEndpoint(self):
+    def test_endpoint(self):
         url = '/g2e/gene_list/' + str(self.direction) + '/' + self.extraction_id
         response = self.app.get(url)
         self.assertEqual(response.mimetype, 'text/plain')

@@ -3,7 +3,7 @@ import unittest
 from g2e.targetapps.maker import _apply_cutoff
 
 
-class TestApplyCutoff(unittest.TestCase):
+class TestTargetAppsGeneListCutoff(unittest.TestCase):
 
     def setUp(self):
         self.ranked_genes = [
