@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.pipelines.softutils.cleaner import avg_dups
+from g2e.signaturefactory.softfileutils.cleaner import avg_dups
 
 
 class TestAvgDups(unittest.TestCase):

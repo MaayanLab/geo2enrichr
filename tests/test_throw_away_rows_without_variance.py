@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from g2e.diffexp.analysis import _throw_away_rows_without_variance
+from g2e.diffexp.chdir import _throw_away_rows_without_variance
 
 
 class TestThrowAwayRowsWithoutVarianece(unittest.TestCase):
@@ -41,4 +41,3 @@ class TestThrowAwayRowsWithoutVarianece(unittest.TestCase):
         self.assertTrue(len(genes) is 1)
         self.assertTrue(np.array_equal(A[0], [5,0]))
         self.assertTrue(np.array_equal(B[0], [0,1]))
-

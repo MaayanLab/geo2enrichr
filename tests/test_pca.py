@@ -1,6 +1,6 @@
 import unittest
 
-from g2e.pipelines import softutils
+from g2e.signaturefactory import softfileutils
 from g2e.pca import pca
 
 
@@ -8,7 +8,7 @@ class TestPca(unittest.TestCase):
 
     def setUp(self):
         f = file('tests/data/example_input.txt')
-        self.soft_file = softutils.maker.from_file(f, {
+        self.soft_file = softfileutils.maker.from_file(f, {
             'title': 'example_input'
         })
         self.maxDiff = 10000
