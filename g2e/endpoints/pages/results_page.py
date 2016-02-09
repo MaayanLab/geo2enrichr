@@ -5,9 +5,9 @@ import json
 
 from flask import Blueprint, request, render_template, redirect, url_for
 from flask.ext.login import current_user, login_required
-from g2e import config, db
-from g2e.endpoints import requestutils
-from g2e.targetapps.crowdsourcing import CROWDSOURCING_TAGS
+from g2e import config, database
+from g2e.endpoints import request_utils
+from g2e.target_applications.crowdsourcing import CROWDSOURCING_TAGS
 from substrate import OptionalMetadata, Tag
 
 
@@ -20,7 +20,7 @@ results_page = Blueprint('results_page',
 def view_result(extraction_id):
     """Renders extracted gene signature and associated metadata.
     """
-    gene_signature = db.get_gene_signature(extraction_id)
+    gene_signature = database.get_gene_signature(extraction_id)
     if gene_signature is None:
         return render_template('pages/404.html')
     gene_signature = __process_extraction_for_view(gene_signature)
@@ -54,7 +54,7 @@ def view_result(extraction_id):
 def delete_result(extraction_id):
     """Deletes gene signature by extraction ID.
     """
-    db.delete_gene_signature(extraction_id)
+    database.delete_gene_signature(extraction_id)
     return redirect(url_for('menu_pages.index_page'))
 
 
@@ -64,15 +64,15 @@ def edit_result(extraction_id):
     """Edits gene signature, removing fields that are empty and adding new ones.
     """
     extraction_id = request.form.get('extraction_id')
-    gene_signature = db.get_gene_signature(extraction_id)
+    gene_signature = database.get_gene_signature(extraction_id)
 
     for opt_meta in gene_signature.optional_metadata:
         value = request.form.get(opt_meta.name)
         if not value:
-            db.delete_object(opt_meta)
+            database.delete_object(opt_meta)
             continue
         opt_meta.value = value
-        db.update_object(opt_meta)
+        database.update_object(opt_meta)
 
     # Generate a new optional metadata field is requested.
     new_meta_name = request.form.get('new_metadata_name')
@@ -80,13 +80,13 @@ def edit_result(extraction_id):
     if new_meta_name and new_meta_value:
         new_opt_meta = OptionalMetadata(new_meta_name, new_meta_value)
         gene_signature.optional_metadata.append(new_opt_meta)
-        db.update_object(gene_signature)
+        database.update_object(gene_signature)
 
     # Update existing tags.
-    tag_names = requestutils.get_param_as_list(request.form, 'tags')
+    tag_names = request_utils.get_param_as_list(request.form, 'tags')
     for tag in gene_signature.tags:
         if tag.name not in tag_names:
-            db.delete_object(tag)
+            database.delete_object(tag)
         else:
             tag_names.remove(tag.name)
 
@@ -95,7 +95,7 @@ def edit_result(extraction_id):
         for tag_name in tag_names:
             tag = Tag(tag_name)
             gene_signature.tags.append(tag)
-        db.update_object(gene_signature)
+        database.update_object(gene_signature)
 
     return redirect(url_for('results_page.view_result',
                             extraction_id=extraction_id))

@@ -2,13 +2,13 @@
 method depending on user options and defaults to the characteristic direction.
 """
 
-from g2e.db.utils import get_or_create
-from .chdir import chdir
+from g2e.database.utils import get_or_create
+from .characteristic_direction import chdir
 from .ttest import ttest
 from substrate import Gene, RankedGene
 
 
-def diffexp(a_vals, b_vals, genes, metadata):
+def do(a_vals, b_vals, genes, metadata):
     """Delegates to the correct helper function based on client or default
     configuration.
     """

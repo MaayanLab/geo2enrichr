@@ -3,10 +3,10 @@
 
 import time
 
-from g2e import db
-from g2e.endpoints.requestutils import get_param_as_list
+from g2e import database
+from g2e.endpoints.request_utils import get_param_as_list
 from substrate import CustomDataset, GeoDataset, SoftFile, SoftFileSample
-from . import parser, cleaner, filemanager
+from . import parser, cleaner, file_manager
 
 
 def from_geo(args):
@@ -14,10 +14,10 @@ def from_geo(args):
     """
     accession = args['dataset']
 
-    if not filemanager.file_exists(accession):
-        filemanager.download(accession)
+    if not file_manager.file_exists(accession):
+        file_manager.download(accession)
 
-    dataset = db.get_geo_dataset(accession)
+    dataset = database.get_geo_dataset(accession)
     if dataset == None:
         platform = args['platform']
         if platform.index('GPL') == 0:
@@ -36,12 +36,12 @@ def from_geo(args):
     b_cols = get_param_as_list(args, 'B_cols')
 
     # Use get_or_create to track GSMs. We don't do this for custom files.
-    control = [db.get_or_create(SoftFileSample,
-                                name=sample,
-                                is_control=True) for sample in a_cols]
-    experimental = [db.get_or_create(SoftFileSample,
-                                     name=sample,
-                                     is_control=False) for sample in b_cols]
+    control = [database.get_or_create(SoftFileSample,
+                                      name=sample,
+                                      is_control=True) for sample in a_cols]
+    experimental = [database.get_or_create(SoftFileSample,
+                                           name=sample,
+                                           is_control=False) for sample in b_cols]
     samples = control + experimental
 
     genes, a_vals, b_vals, selections, stats = parser.parse(accession,
@@ -56,9 +56,9 @@ def from_geo(args):
 
     genes, a_vals, b_vals = cleaner.clean(genes, a_vals, b_vals, normalize)
 
-    text_file = filemanager.write(accession, dataset.platform, normalize,
-                                  genes, a_vals, b_vals, samples, selections,
-                                  stats)
+    text_file = file_manager.write(accession, dataset.platform, normalize,
+                                   genes, a_vals, b_vals, samples, selections,
+                                   stats)
 
     return SoftFile(
         samples, dataset, text_file,
@@ -79,7 +79,7 @@ def from_file(file_obj, args):
     else:
         title = str(time.time())[:10]
 
-    text_file = filemanager.save(title, file_obj)
+    text_file = file_manager.save(title, file_obj)
     genes, a_vals, b_vals, samples = parser.parse(title, is_geo=False)
 
     control = [SoftFileSample(x[0], True) for x in samples if x[1] == '0']

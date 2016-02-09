@@ -2,7 +2,7 @@ import unittest
 
 from flask import request
 from g2e import app
-from g2e.endpoints.requestutils import get_param_as_list
+from g2e.endpoints.request_utils import get_param_as_list
 
 
 class TestRequestUtils(unittest.TestCase):

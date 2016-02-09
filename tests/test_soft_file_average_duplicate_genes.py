@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.signaturefactory.softfileutils.cleaner import average_duplicates
+from g2e.signature_factory.soft_file_utils.cleaner import average_duplicates
 
 
 class TestSoftFileAverageDuplicateGenes(unittest.TestCase):

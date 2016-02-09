@@ -1,6 +1,6 @@
 import unittest
 
-from g2e.targetapps.maker import _apply_cutoff
+from g2e.target_applications.maker import _apply_cutoff
 
 
 class TestTargetAppsGeneListCutoff(unittest.TestCase):

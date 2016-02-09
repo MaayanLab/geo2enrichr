@@ -3,8 +3,8 @@
 
 from flask import Blueprint, Response
 
-from g2e import config, db
-from g2e.signaturefactory.genelistutils import filemanager
+from g2e import config, database
+from g2e.signature_factory.gene_list_utils import file_manager
 
 
 gene_list_api = Blueprint('gene_list_api',
@@ -16,9 +16,9 @@ gene_list_api = Blueprint('gene_list_api',
 def get_gene_list(direction, extraction_id):
     """Returns gene list in plain text file based on gene signature ID.
     """
-    gene_signature = db.get_gene_signature(extraction_id)
+    gene_signature = database.get_gene_signature(extraction_id)
     genelist = _get_gene_list_by_direction(gene_signature, int(direction))
-    genelist_str = filemanager.get_file_contents_as_string(genelist)
+    genelist_str = file_manager.get_file_contents_as_string(genelist)
     response = Response(genelist_str, mimetype='text/plain')
     return response
 

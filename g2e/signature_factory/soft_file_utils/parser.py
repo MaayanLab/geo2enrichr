@@ -3,7 +3,7 @@
 
 import csv
 
-from . import filemanager
+from . import file_manager
 from g2e.exceptions import ParseException
 
 
@@ -12,7 +12,7 @@ def parse(name, is_geo=True, platform=None, samples=None):
     delegates to a function that makes some basic assumptions about GEO files.
     """
     print('Parsing SOFT file.')
-    full_name = filemanager.path(name)
+    full_name = file_manager.path(name)
     if is_geo:
         return _parse_geo(full_name, platform, samples)
     return _parse_file(full_name)
@@ -149,7 +149,7 @@ def _parse_geo(filename, platform, samples):
     except IOError:
         raise IOError('Could not read SOFT file from local server.')
 
-    return (genes, a_vals, b_vals, selections, stats)
+    return genes, a_vals, b_vals, selections, stats
 
 
 def platform_supported(platform):
@@ -195,5 +195,8 @@ def build_probe_dict(platform_probesetid_genesym_file):
                 platform_dict[platform] = {probesetid: genesym}
     return platform_dict
 
+
 # Loads a dictionary into memory for the duration of the application.
-PROBE2GENE = build_probe_dict('g2e/signaturefactory/softfileutils/probe2gene.txt')
+PROBE2GENE = build_probe_dict(
+    'g2e/signature_factory/soft_file_utils/probe2gene.txt'
+)

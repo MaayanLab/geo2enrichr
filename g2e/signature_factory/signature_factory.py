@@ -1,26 +1,26 @@
 """Transforms user input to GeneSignature instance.
 """
 
-from g2e.db.utils import get_or_create
-from g2e.endpoints.requestutils import get_param_as_list
+from g2e.database.utils import get_or_create
+from g2e.endpoints.request_utils import get_param_as_list
 from substrate import Tag
 
 from substrate import GeneSignature, OptionalMetadata, Resource, RequiredMetadata
-from g2e.signaturefactory import genelistutils, softfileutils
-from g2e import db
+from g2e.signature_factory import gene_list_utils, soft_file_utils
+from g2e import database
 
 
 def from_geo(args):
     """Creates gene signature from GEO data.
     """
-    soft_file = softfileutils.maker.from_geo(args)
+    soft_file = soft_file_utils.maker.from_geo(args)
     return _create_gene_signature(soft_file, args)
 
 
 def from_file(file_obj, args):
     """Creates an extraction from a custom, uploaded SOFT file.
     """
-    soft_file = softfileutils.maker.from_file(file_obj, args)
+    soft_file = soft_file_utils.maker.from_file(file_obj, args)
     return _create_gene_signature(soft_file, args)
 
 
@@ -28,13 +28,14 @@ def from_gene_list(ranked_genes):
     """Creates gene signature from a pre-existing gene list, not expression
     data.
     """
+    gene_list = gene_list_utils.from_uploaded_ranked_genes(ranked_genes)
     return GeneSignature(
-        # soft_file,
-        # gene_lists,
+        None,
+        [gene_list],
         # required_metadata,
         # optional_metadata,
         # tags,
-        # db.get_or_create(Resource, code='geo')
+        database.get_or_create(Resource, code='geo')
     )
 
 
@@ -46,7 +47,7 @@ def _create_gene_signature(soft_file, args):
     optional_metadata = _get_optional_metadata_from_args(args)
     tags = _get_tags_from_args(args)
 
-    gene_lists = genelistutils.from_soft_file(
+    gene_lists = gene_list_utils.from_soft_file(
         soft_file,
         required_metadata,
         optional_metadata, tags
@@ -57,7 +58,7 @@ def _create_gene_signature(soft_file, args):
         required_metadata,
         optional_metadata,
         tags,
-        db.get_or_create(Resource, code='geo')
+        database.get_or_create(Resource, code='geo')
     )
 
 def _get_optional_metadata_from_args(args):

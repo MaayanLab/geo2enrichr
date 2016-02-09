@@ -1,11 +1,11 @@
 """Delegates to target applications.
 """
 
-from g2e.db.utils import get_or_create
-from g2e.targetapps import crowdsourcing
-from g2e.targetapps import enrichr
-from g2e.targetapps import l1000cds2
-from g2e.targetapps import paea
+from g2e.database.utils import get_or_create
+from g2e.target_applications import crowdsourcing
+from g2e.target_applications import enrichr
+from g2e.target_applications import l1000cds2
+from g2e.target_applications import paea
 from substrate import TargetApp
 from substrate import TargetAppLink
 

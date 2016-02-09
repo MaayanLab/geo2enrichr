@@ -2,8 +2,8 @@
 """
 
 from flask import Blueprint, render_template
-from g2e import config, db
-from g2e.targetapps import clustergrammer
+from g2e import config, database
+from g2e.target_applications import clustergrammer
 
 
 cluster_page = Blueprint('cluster_api',
@@ -15,7 +15,7 @@ cluster_page = Blueprint('cluster_api',
 def perform_hierarchical_clustering(extraction_id):
     """Performs hierarchical clustering on a SOFT file.
     """
-    gene_signature = db.get_gene_signature(extraction_id)
+    gene_signature = database.get_gene_signature(extraction_id)
     link = clustergrammer.from_soft_file(gene_signature)
     link = link + '&preview=true'
     return render_template('pages/clustergrammer.html',

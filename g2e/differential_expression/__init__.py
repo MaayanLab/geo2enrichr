@@ -1,4 +1,4 @@
 """Interface for diffexp module.
 """
 
-from diffexp import diffexp
+from differential_expression import do

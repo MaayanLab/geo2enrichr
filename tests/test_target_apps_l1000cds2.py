@@ -1,6 +1,6 @@
 import unittest
 
-import g2e.targetapps.l1000cds2 as l1000cds2
+import g2e.target_applications.l1000cds2 as l1000cds2
 from substrate import Gene, RankedGene, RequiredMetadata
 
 

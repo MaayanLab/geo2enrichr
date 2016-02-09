@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from g2e.diffexp.chdir import _throw_away_rows_without_variance
+from g2e.differential_expression.characteristic_direction import _throw_away_rows_without_variance
 
 
 class TestCharacteristicDirectionThrowAwayRowsWithoutVarianece(unittest.TestCase):
