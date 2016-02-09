@@ -5,7 +5,7 @@
 import os.path
 import time
 
-from . import geodownloader
+from . import geo_downloader
 from . import cleaner
 
 
@@ -78,7 +78,7 @@ def download(accession):
     """Downloads file from GEO.
     """
     file_path = path(accession)
-    geodownloader.download(accession, file_path)
+    geo_downloader.download(accession, file_path)
 
 
 def get(name):

@@ -2,7 +2,7 @@ import unittest
 
 from substrate import SoftFileSample
 
-import g2e.signaturefactory.softfileutils.parser as softparser
+import g2e.signature_factory.soft_file_utils.parser as softparser
 
 
 class TestSoftFileParser(unittest.TestCase):

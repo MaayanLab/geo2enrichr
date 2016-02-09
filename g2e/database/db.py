@@ -4,7 +4,7 @@ and their relationships and saves them accordingly.
 
 from substrate import GeneSignature, GeoDataset, OptionalMetadata, SoftFile
 
-from g2e.db.utils import session_scope
+from g2e.database.utils import session_scope
 
 
 def get_gene_signature(extraction_id):

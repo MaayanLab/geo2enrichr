@@ -4,7 +4,7 @@ already been processed.
 
 from flask import Blueprint, jsonify, request
 
-from g2e import config, db
+from g2e import config, database
 
 
 check_api = Blueprint('check_api',
@@ -23,7 +23,7 @@ def check_combination():
         controls = request.args.get('controls').split('-')
         conditions = request.args.get('conditions').split('-')
 
-        soft_files = db.get_soft_files_by_accession(accession)
+        soft_files = database.get_soft_files_by_accession(accession)
         any_matches = False
         for sf in soft_files:
             tag_matches = _tag_matches(sf.gene_signatures, tag)

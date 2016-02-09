@@ -3,7 +3,7 @@
 
 from flask import Blueprint, render_template
 
-from g2e import config, db
+from g2e import config, database
 
 menu_pages = Blueprint('menu_pages',
                        __name__,
@@ -12,7 +12,7 @@ menu_pages = Blueprint('menu_pages',
 
 @menu_pages.route('/')
 def index_page():
-    num_gene_signatures = db.get_num_gene_signatures()
+    num_gene_signatures = database.get_num_gene_signatures()
     return render_template('index.html',
                            num_gene_signatures=num_gene_signatures)
 

@@ -1,5 +1,5 @@
 import cleaner
-import filemanager
-import geodownloader
+import file_manager
+import geo_downloader
 import maker
 import parser

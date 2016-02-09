@@ -1,6 +1,6 @@
 import unittest
 
-from g2e.targetapps import enrichr
+from g2e.target_applications import enrichr
 from substrate import Gene, RankedGene
 
 

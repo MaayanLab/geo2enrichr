@@ -4,8 +4,8 @@
 from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
 
-from g2e import config, db
-from g2e import signaturefactory
+from g2e import config, database
+from g2e import signature_factory
 
 
 extract_api = Blueprint('extract_api',
@@ -13,12 +13,12 @@ extract_api = Blueprint('extract_api',
                         url_prefix=config.EXTRACT_URL)
 
 
-@extract_api.route('/<extraction_id>')
+@extract_api.route('/<extraction_id>', methods=['GET'])
 @cross_origin()
 def get_extraction(extraction_id):
     """Handles GET request based on extraction ID.
     """
-    gene_signature = db.get_gene_signature(extraction_id)
+    gene_signature = database.get_gene_signature(extraction_id)
     if gene_signature is None:
         return jsonify({
             'error': 'No gene signatures with ID %s found' % extraction_id
@@ -34,8 +34,8 @@ def post_from_geo():
     """
     args = request.form
     response = {}
-    gene_signature = signaturefactory.from_geo(args)
-    db.save_gene_signature(gene_signature)
+    gene_signature = signature_factory.from_geo(args)
+    database.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
 
@@ -47,8 +47,8 @@ def post_file():
     """
     args = request.form
     response = {}
-    gene_signature = signaturefactory.from_file(request.files['file'], args)
-    db.save_gene_signature(gene_signature)
+    gene_signature = signature_factory.from_file(request.files['file'], args)
+    database.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
 
@@ -60,8 +60,8 @@ def example_file():
     """
     args = request.form
     response = {}
-    file_obj = signaturefactory.get_example_file()
-    gene_signature = signaturefactory.from_file(file_obj, args)
-    db.save_gene_signature(gene_signature)
+    file_obj = signature_factory.get_example_file()
+    gene_signature = signature_factory.from_file(file_obj, args)
+    database.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
