@@ -113,7 +113,7 @@ def handle_any_exceptions(error):
     """
     response = jsonify({
         'error': 'Unknown error. Please contact the Ma\'ayan Lab.',
-        'original_message': error.message
+        'original_error': error.message
     })
     response.status_code = 500
     return response
@@ -127,12 +127,13 @@ app.config.update({
     'API_URL': config.API_URL,
     'EXTRACT_URL': config.EXTRACT_URL,
     'UPLOAD_URL': config.UPLOAD_URL,
-
-    'CLUSTER_URL': config.CLUSTER_URL,
-    'GENE_LIST_URL': config.GENE_LIST_URL,
-    'GEN3VA_URL': config.GEN3VA_URL,
-    'GEN3VA_REPORT_URL': config.GEN3VA_REPORT_URL,
     'PCA_URL': config.PCA_URL,
     'RESULTS_URL': config.RESULTS_URL,
-    'SOFT_FILE_URL': config.SOFT_FILE_URL
+    'SOFT_FILE_URL': config.SOFT_FILE_URL,
+    'CLUSTER_URL': config.CLUSTER_URL,
+    'GENE_LIST_URL': config.GENE_LIST_URL,
+
+    'GEN3VA_URL': config.GEN3VA_URL,
+    'GEN3VA_REPORT_URL': config.GEN3VA_REPORT_URL,
+    'GEN3VA_TAG_URL': config.GEN3VA_TAG_URL
 })

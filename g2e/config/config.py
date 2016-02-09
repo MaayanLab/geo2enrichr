@@ -40,4 +40,4 @@ else:
     GEN3VA_URL = 'http://amp.pharm.mssm.edu/gen3va'
 
 GEN3VA_REPORT_URL = GEN3VA_URL + '/report'
-GEN3VA_METADATA_URL = GEN3VA_URL + '/metadata'
+GEN3VA_TAG_URL = GEN3VA_URL + '/tag'

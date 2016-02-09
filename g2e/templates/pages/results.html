@@ -9,64 +9,7 @@
     <div id='results-page'>
 
         {% if show_admin_controls %}
-
-            <div id='admin-controls'>
-                <h3>Admin Controls</h3>
-                <div class='instruction'>
-                    <p>To delete just a metadata field, leave it blank and click <strong>Edit</strong>.</p>
-                    <p>To delete the entire signature, click <strong>Delete</strong>.</p>
-                </div>
-                <form>
-                    <div id='tags'>
-                        <div><strong>Tags</strong></div>
-                        <div>
-                            <ul>
-                                {% for tag in gene_signature.tags %}
-                                <li>{{ tag.name }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-
-                    <ul id='optional-metadata' class='list-unstyled'>
-                        {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
-                            <li>
-                                <label>{{ opt_meta.name|capitalize }}</label>
-                                <input type='text'
-                                       class='form-control input-sm'
-                                       name='{{ opt_meta.name }}'
-                                       value='{{ opt_meta.value }}'/>
-                            </li>
-                        {% endfor %}
-                        <li id='new-metadata'>
-                            <label>New metadata field</label>
-                            <input type='text'
-                                   class='form-control input-sm'
-                                   name="new_metadata_name"
-                                   placeholder="name"/>
-                            <input type='text'
-                                   class='form-control input-sm'
-                                   name="new_metadata_value"
-                                   placeholder="value"/>
-                        </li>
-                        <li>
-                            <input type='hidden' name='extraction_id' value='{{ gene_signature.extraction_id }}'>
-                            <input id='edit-gene-signature' class='btn btn-primary' type='submit' value='Update' name='submit'>
-                        </li>
-                    </ul>
-                </form>
-
-                <form id='delete-gene-signature'
-                      action='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}/delete'
-                      method='POST'>
-                    <input type='hidden' name='extraction_id' value='{{ gene_signature.extraction_id }}'>
-                    <input class='btn btn-danger'
-                           type='submit'
-                           value='Delete signature'
-                           name='submit'
-                           onclick='return confirm("Are you sure you want to delete this signature?");'>
-                </form>
-            </div>
+            {% include 'partials/admin-controls.html' %}
         {% endif %}
 
         <div class='row'>
@@ -83,7 +26,7 @@
                 <p>
                     {% for tag in gene_signature.tags %}
                         <span class='label'>
-                            <a href='{{ config.GEN3VA_REPORT_URL }}/{{ tag.name }}' target='_blank'>{{ tag.name }}</a>
+                            <a href='{{ config.GEN3VA_TAG_URL }}/{{ tag.name }}' target='_blank'>{{ tag.name }}</a>
                         </span>
                     {% endfor %}
                 </p>
@@ -214,10 +157,10 @@
                               title='Identify drugs that can potentially reverse expression using expression signatures from the LINCS L1000 small-molecule transcriptomics datasets processed with the Characteristic Direction method.'>L1000CDS2</span>
                     </td>
                     <td>
-                            <span data-toggle='tooltip'
-                                  title='Perform principle angle enrichment analysis against over 70 gene set libraries.'>
-                                PAEA
-                            </span>
+                        <span data-toggle='tooltip'
+                              title='Perform principle angle enrichment analysis against over 70 gene set libraries.'>
+                            PAEA
+                        </span>
                     </td>
                 {% endif %}
                 {% if use_crowdsourcing %}

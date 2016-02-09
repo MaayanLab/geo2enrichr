@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.signature_factory.soft_file_utils.cleaner import log2, _is_log
+from g2e.signature_factory.soft_file_factory.cleaner import log2, _is_log
 
 
 class TestLog2(unittest.TestCase):

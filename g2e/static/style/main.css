@@ -226,7 +226,7 @@ caption {
   text-decoration: none;
 }
 .label:hover {
-  background-color: #006eb3;
+  background-color: #574278;
 }
 .form-control {
   border-radius: 0;
@@ -381,6 +381,9 @@ caption {
 .btn.btn-info {
   color: white;
   background-color: #6f5499;
+}
+.btn.btn-info:hover {
+  background-color: #574278;
 }
 .btn.btn-danger {
   color: white;

@@ -23,14 +23,17 @@ def view_result(extraction_id):
     gene_signature = database.get_gene_signature(extraction_id)
     if gene_signature is None:
         return render_template('pages/404.html')
-    gene_signature = __process_extraction_for_view(gene_signature)
+    gene_signature = _process_extraction_for_view(gene_signature)
 
     use_crowdsourcing = False
     for tag in gene_signature.tags:
         if tag.name in CROWDSOURCING_TAGS:
             use_crowdsourcing = True
 
-    show_viz = True if gene_signature.soft_file.samples else False
+    if gene_signature.soft_file and gene_signature.soft_file.samples:
+        show_viz = True
+    else:
+        show_viz = False
 
     if current_user.is_authenticated and current_user.name == 'admin':
         show_admin_controls = True
@@ -39,14 +42,20 @@ def view_result(extraction_id):
         show_admin_controls = False
         tag_names = None
 
-    return render_template('pages/results.html',
-                           show_admin_controls=show_admin_controls,
-                           tag_names=json.dumps(tag_names),
-                           gene_signature=gene_signature,
-                           show_viz=show_viz,
-                           use_crowdsourcing=use_crowdsourcing,
-                           use_simple_header=True,
-                           permanent_link=request.url)
+    from_geo = True if gene_signature.resource.code == 'geo' else False
+
+    if gene_signature.resource.code == 'geo':
+        return render_template('pages/results.html',
+                               show_admin_controls=show_admin_controls,
+                               tag_names=json.dumps(tag_names),
+                               gene_signature=gene_signature,
+                               show_viz=show_viz,
+                               use_crowdsourcing=use_crowdsourcing)
+    else:
+        return render_template('pages/results-not-from-geo.html',
+                               show_admin_controls=show_admin_controls,
+                               tag_names=json.dumps(tag_names),
+                               gene_signature=gene_signature)
 
 
 @results_page.route('/<extraction_id>/delete', methods=['POST'])
@@ -101,7 +110,21 @@ def edit_result(extraction_id):
                             extraction_id=extraction_id))
 
 
-def __get_direction_as_string(direction):
+def _process_extraction_for_view(gene_signature):
+    """Cleans ORM object in preparation for HTML view.
+    """
+    for gene_list in gene_signature.gene_lists:
+        gene_list.direction_as_string = _get_direction_as_string(gene_list.direction)
+
+    if gene_signature.soft_file:
+        if gene_signature.soft_file.normalize is None or gene_signature.soft_file.normalize is False:
+            gene_signature.soft_file.normalize = False
+        else:
+            gene_signature.soft_file.normalize = True
+    return gene_signature
+
+
+def _get_direction_as_string(direction):
     """Maps integer to human-readable string for gene list direction.
     """
     if direction == 1:
@@ -110,16 +133,3 @@ def __get_direction_as_string(direction):
         return 'Down'
     else:
         return 'Combined'
-
-
-def __process_extraction_for_view(gene_signature):
-    """Cleans ORM object in preparation for HTML view.
-    """
-    for gene_list in gene_signature.gene_lists:
-        gene_list.direction_as_string = __get_direction_as_string(gene_list.direction)
-
-    if gene_signature.soft_file.normalize is None or gene_signature.soft_file.normalize is False:
-        gene_signature.soft_file.normalize = False
-    else:
-        gene_signature.soft_file.normalize = True
-    return gene_signature

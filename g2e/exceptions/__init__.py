@@ -1,4 +1,7 @@
 """Interface for exceptions module.
 """
 
-from exceptions import AppException, ParseException
+from exceptions import \
+    AppException, \
+    ParseException, \
+    HttpRequestArgumentsException

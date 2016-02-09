@@ -66,7 +66,9 @@ def from_uploaded_ranked_genes(ranked_genes):
         RankedGene(database.get_or_create(Gene, name=g[0]), g[1])
         for g in ranked_genes
     ]
-    return GeneList(gene_list)
+    direction = 0
+    target_app_links = []
+    return GeneList(gene_list, direction, target_app_links)
 
 
 def _apply_cutoff(ranked_genes, cutoff):

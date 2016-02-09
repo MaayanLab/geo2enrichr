@@ -4,10 +4,9 @@ differential expression analysis.
 
 import json
 
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, request
 
-from substrate import Gene, RankedGene
-from g2e import config, database, signature_factory
+from g2e import config, signature_factory, database
 
 
 upload_api = Blueprint('upload_api',
@@ -19,11 +18,10 @@ upload_api = Blueprint('upload_api',
 def upload_gene_signature():
     """Uploads gene signature and returns extraction ID.
     """
-    try:
-        import pdb; pdb.set_trace()
-        data = json.loads(request.data)
-        ranked_genes = data['ranked_genes']
-        gene_signature = signature_factory.from_gene_list(ranked_genes)
-        return 'jr;;p'
-    except:
-        pass
+    args = json.loads(request.data)
+    gene_signature = signature_factory.from_gene_list(args)
+    database.save_gene_signature(gene_signature)
+    return jsonify({
+        'extraction_id': gene_signature.extraction_id,
+        'link': ''
+    })

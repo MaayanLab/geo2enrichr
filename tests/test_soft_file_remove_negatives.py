@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from g2e.signature_factory.soft_file_utils.cleaner import _remove_negatives
+from g2e.signature_factory.soft_file_factory.cleaner import _remove_negatives
 
 
 class TestSoftFileRemoveNegatives(unittest.TestCase):
