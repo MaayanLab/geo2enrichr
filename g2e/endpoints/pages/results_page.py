@@ -20,6 +20,7 @@ results_page = Blueprint('results_page',
 def view_result(extraction_id):
     """Renders extracted gene signature and associated metadata.
     """
+    import pdb; pdb.set_trace()
     gene_signature = database.get_gene_signature(extraction_id)
     if gene_signature is None:
         return render_template('pages/404.html')
@@ -42,9 +43,7 @@ def view_result(extraction_id):
         show_admin_controls = False
         tag_names = None
 
-    from_geo = True if gene_signature.resource.code == 'geo' else False
-
-    if gene_signature.resource.code == 'geo':
+    if gene_signature.is_from_geo:
         return render_template('pages/results.html',
                                show_admin_controls=show_admin_controls,
                                tag_names=json.dumps(tag_names),
