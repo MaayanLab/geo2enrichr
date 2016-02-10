@@ -20,7 +20,6 @@ results_page = Blueprint('results_page',
 def view_result(extraction_id):
     """Renders extracted gene signature and associated metadata.
     """
-    import pdb; pdb.set_trace()
     gene_signature = database.get_gene_signature(extraction_id)
     if gene_signature is None:
         return render_template('pages/404.html')

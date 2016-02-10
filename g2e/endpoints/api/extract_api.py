@@ -1,6 +1,8 @@
 """API for extracting gene signatures from GEO and custom datasets.
 """
 
+import json
+
 from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
 
@@ -40,7 +42,7 @@ def post_from_geo():
     return jsonify(response)
 
 
-@extract_api.route('/upload', methods=['POST'])
+@extract_api.route('/upload_soft_file', methods=['POST'])
 @cross_origin()
 def post_file():
     """Handles POST file upload.
@@ -51,6 +53,22 @@ def post_file():
     database.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
+
+
+@extract_api.route('/upload_gene_list', methods=['POST'])
+def upload_gene_list():
+    """Uploads gene signature and returns extraction ID.
+    """
+    args = json.loads(request.data)
+    gene_signature = signature_factory.from_gene_list(args)
+    database.save_gene_signature(gene_signature)
+    link = '%s%s/%s' % (config.SERVER_URL,
+                         config.RESULTS_URL,
+                         gene_signature.extraction_id)
+    return jsonify({
+        'extraction_id': gene_signature.extraction_id,
+        'link': link
+    })
 
 
 @extract_api.route('/example', methods=['POST'])

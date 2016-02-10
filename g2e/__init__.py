@@ -65,7 +65,6 @@ app.register_blueprint(endpoints.extract_api)
 app.register_blueprint(endpoints.gene_list_api)
 app.register_blueprint(endpoints.pca_api)
 app.register_blueprint(endpoints.soft_file_api)
-app.register_blueprint(endpoints.upload_api)
 
 app.register_blueprint(endpoints.jinjafilters)
 
@@ -126,7 +125,6 @@ app.config.update({
 
     'API_URL': config.API_URL,
     'EXTRACT_URL': config.EXTRACT_URL,
-    'UPLOAD_URL': config.UPLOAD_URL,
     'PCA_URL': config.PCA_URL,
     'RESULTS_URL': config.RESULTS_URL,
     'SOFT_FILE_URL': config.SOFT_FILE_URL,
