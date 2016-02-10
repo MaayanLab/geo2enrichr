@@ -8,12 +8,6 @@ from g2e import app
 unittest.TestCase.maxDiff = None
 
 
-# http://superuser.com/questions/149329/what-is-the-curl-command-line-syntax-to-do-a-post-request
-
-# curl --data "dataset=GDS5077&platform=GPL10558&A_cols=GSM1071454,GSM1071455&B_cols=GSM1071457,GSM1071455" http://localhost:8083/g2e/api/extract/geo
-# curl --form "file=@tests/data/chdir_input.txt" --form name=Neil http://localhost:8083/g2e/api/extract/upload
-
-
 def get_gene_value(genelist, gene):
     for gv in genelist:
         if gv[0] == gene:
@@ -125,7 +119,7 @@ class TestRoundTrip(unittest.TestCase):
         print time.time() - s
 
     def test_file_upload(self):
-        self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
+        self.resp = self.app.post('/g2e/api/extract/upload_soft_file', data=dict(
             file = (file('tests/data/example_input.txt'), 'test.txt'),
             title = 'ExampleData',
             cutoff = 'none'

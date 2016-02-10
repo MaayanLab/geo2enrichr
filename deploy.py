@@ -22,10 +22,13 @@ ap.add_argument('--skiptests',
 ap.add_argument('--build',
                 help='build Docker container',
                 action='store_true')
+ap.add_argument('--nocache',
+                help='add --no-cache argument to Docker build',
+                action='store_true')
 ap.add_argument('--image',
                 help='Docker image',
                 default='maayanlab/g2e:latest')
-ap.add_argument('--deploy',
+ap.add_argument('--push',
                 help='push Docker container',
                 action='store_true')
 opts = ap.parse_args()
@@ -63,7 +66,7 @@ if has_pdb_statements:
 CHROME_JS_CONFIG = 'g2e/extension/common/js/config-chrome.js'
 
 with open(CHROME_JS_CONFIG, 'w+') as f:
-    f.write('// This file is built by deploy.sh in the root directory.\n')
+    f.write('// This file is built by deploy.py in the root directory.\n')
     if opts.prod:
         mode = 'prod'
         debug = 'false'
@@ -119,8 +122,10 @@ with open('g2e/config/config.ini', 'wb') as configfile:
 subprocess.call('docker-machine start default', shell=True)
 subprocess.call('eval "$(docker-machine env default)"', shell=True)
 
-if opts.build:
+if opts.build and not opts.nocache:
     subprocess.call('docker build -t %s .' % opts.image, shell=True)
+elif opts.build and opts.nocache:
+    subprocess.call('docker build --no-cache -t %s .' % opts.image, shell=True)
 
 # Reset DB credentials so we can keep developing locally.
 # ----------------------------------------------------------------------------
@@ -142,7 +147,7 @@ with open('g2e/config/config.ini', 'wb') as configfile:
 
 # Deploy
 # =============================================================================
-if not opts.deploy:
+if not opts.push:
     print('Not deploying')
     sys.exit(0)
 

@@ -4,11 +4,11 @@
 
 {% block body %}
 
-    <link href="static/lib/highlight/highlight.css" rel="stylesheet"/>
-    <script src="static/lib/highlight/highlight.js"></script>
+    <link href='static/lib/highlight/highlight.css' rel='stylesheet'/>
+    <script src='static/lib/highlight/highlight.js'></script>
     <script>hljs.initHighlightingOnLoad();</script>
 
-    <div id="documentation-page">
+    <div id='documentation-page'>
         <section>
             <h1>REST APIs</h1>
             <p>
@@ -26,15 +26,16 @@
             <h4>Resource URL</h4>
             <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api/extract</code></pre>
             <h3>Parameters</h3>
-            <table class="table">
+            <table class='table'>
                 <tr>
                     <td class='mono'>id</td>
                     <td>The ID of the extraction for which to return results.</td>
                 </tr>
             </table>
             <h4>Example request</h4>
-            <pre><code class="bash">http://amp.pharm.mssm.edu/g2e/api/extract/e29766a757</code></pre>
-            <pre><code class="json">{
+            <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api/extract/e29766a757</code></pre>
+            <h4>Example JSON response</h4>
+            <pre><code class='json'>{
   "extraction_id": "e29766a757",
   "gene_lists": [
     {
@@ -71,7 +72,7 @@
     "disease": null,
     "gene": null,
     "perturbation": null
-  }
+  },
   "soft_file": {
     "is_geo": true,
     "accession": "GDS5077",
@@ -87,9 +88,9 @@
                 Performs differential expression analysis on a GEO SOFT file based on the GEO accession number, platform, and selected samples.
             </p>
             <h4>Resource URL</h4>
-            <pre><code class="bash">http://amp.pharm.mssm.edu/g2e/api/extract/geo</code></pre>
+            <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api/extract/geo</code></pre>
             <h4>Parameters</h4>
-            <table class="table">
+            <table class='table'>
                 <tr>
                     <td class='mono'>dataset</td>
                     <td>A valid GEO accession number identifying the dataset.</td>
@@ -107,12 +108,12 @@
                     <td>An array of GSM numbers to be used as in the treatment or condition group.<td>
                 </tr>
             </table>
-            <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
-            <pre><code class="bash">curl -v http://amp.pharm.mssm.edu/g2e/api/extract/geo --data \
-  "dataset=GDS5077&\
+            <h4>Example request using <a href='http://curl.haxx.se/' target='_blank'>cURL</a></h4>
+            <pre><code class='bash'>curl -v http://amp.pharm.mssm.edu/g2e/api/extract/geo --data \
+  'dataset=GDS5077&\
   platform=GPL10558&\
   A_cols[]=GSM1071454&A_cols[]=GSM1071455&\
-  B_cols[]=GSM1071457&B_cols[]=GSM1071455"
+  B_cols[]=GSM1071457&B_cols[]=GSM1071455'
 
 &lt; POST /g2e/api/extract/geo HTTP/1.1
 &lt; User-Agent: curl/7.37.1
@@ -121,9 +122,9 @@
 &lt; Content-Length: 91
 &lt; Content-Type: application/x-www-form-urlencoded</code></pre>
     <h4>Example response</h4>
-<pre><code class="bash">&lt; HTTP/1.0 200 OK
+<pre><code class='bash'>&lt; HTTP/1.0 200 OK
 {
-  "extraction_id": 38
+  'extraction_id': 38
 }</code></pre>
         </section>
 
@@ -133,7 +134,7 @@
                 Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
             </p>
             <h4>Parameters</h4>
-            <table class="table">
+            <table class='table'>
                 <tr>
                     <td class='mono'>file</td>
                     <td>The file to be processed.</td>
@@ -143,9 +144,9 @@
                     <td>A description of your data.</td>
                 </tr>
             </table>
-            <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
-            <pre><code class="bash">$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload_soft_file \
---form "file=@input.txt" name=SyntheticData
+            <h4>Example request using <a href='http://curl.haxx.se/' target='_blank'>cURL</a></h4>
+            <pre><code class='bash'>$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload_soft_file \
+--form 'file=@input.txt' name=SyntheticData
 
 > POST /g2e/api/extract/upload_soft_file HTTP/1.1
 > User-Agent: curl/7.37.1
@@ -155,43 +156,113 @@
 > Expect: 100-continue
 > Content-Type: multipart/form-data; boundary=------------------------1dcefa53b8e0b8ed</code></pre>
     <h4>Example response</h4>
-    <pre><code class="bash">&lt; HTTP/1.0 200 OK
+    <pre><code class='bash'>&lt; HTTP/1.0 200 OK
 {
-  "extraction_id": 38
+  'extraction_id': 38
 }</code></pre>
         </section>
 
         <section class='last'>
             <h1>POST /g2e/api/extract/upload_gene_list</h1>
-            <p>
-                Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
-            </p>
+            <p>Uploads complete gene signature to GEO2Enrichr's database. Does not perform any cleanup or analysis.</p>
             <h4>Parameters</h4>
-            <table class="table">
+            <table class='table'>
                 <tr>
-                    <td class='mono'>file</td>
-                    <td>The file to be processed.</td>
+                    <td class='mono'>diffexp_method</td>
+                    <td>Differential expression method. Default is <span class='mono'>chdir</span>. Alternative value is <span class='mono'>ttest</span></td>
                 </tr>
                 <tr>
-                    <td class='mono'>name</td>
-                    <td>A description of your data.</td>
+                    <td class='mono'>cutoff</td>
+                    <td>Optional parameter indicating the maximum number of genes in the resultant gene list. Defaults to 500.</td>
+                </tr>
+                <tr>
+                    <td class='mono'>correction_method</td>
+                    <td>Only applicable if <span class='mono'>diffexp_method</span> is <span class='mono'>ttest</span>. Defaults to <span class='mono'>BH</span> for Benjamini Hochberg.</td>
+                </tr>
+                <tr>
+                    <td class='mono'>threshold</td>
+                    <td>Only applicable if <span class='mono'>diffexp_method</span> is <span class='mono'>ttest</span>. Defaults to 0.01.</td>
+                </tr>
+                <tr>
+                    <td class='mono'>Gene</td>
+                    <td>Optional. Name or symbol for relevant gene.</td>
+                </tr>
+                <tr>
+                    <td class='mono'>Cell</td>
+                    <td>Optional. Name of relevant cell type or tissue.</td>
+                </tr>
+                <tr>
+                    <td class='mono'>Perturbation</td>
+                    <td>Optional. Name of relevant perturbation.</td>
+                </tr>
+                <tr>
+                    <td class='mono'>Disease</td>
+                    <td>Optional. Name of relevant disease.</td>
                 </tr>
             </table>
-            <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
-            <pre><code class="bash">$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload_gene_list \
---form "file=@input.txt" name=SyntheticData
+            <h4>Example request using <a href='http://docs.python-requests.org/en/master/' target='_blank'>requests</a></h4>
+            <pre><code class='python'>import json
+import requests
 
-> POST /g2e/api/extract/upload HTTP/1.1
-> User-Agent: curl/7.37.1
-> Host: http://amp.pharm.mssm.edu/
-> Accept: */*
-> Content-Length: 187810
-> Expect: 100-continue
-> Content-Type: multipart/form-data; boundary=------------------------1dcefa53b8e0b8ed</code></pre>
-    <h4>Example response</h4>
-    <pre><code class="bash">&lt; HTTP/1.0 200 OK
-{
-  "extraction_id": 38
+payload = {
+    'ranked_genes': [
+        [
+            'CPSF3',
+            0.000631847
+        ],
+        [
+            'CLEC18B',
+            0.00876892
+        ],
+        [
+            'RTDR1',
+            0.0000692485
+        ],
+        [
+            'MYLPF',
+            0.00218427
+        ],
+        [
+            'KIF2B',
+            0.0000457653
+        ],
+        [
+            'SMPDL3A',
+            0.00876879
+        ],
+        [
+            'FAM171A2',
+            0.00442025
+        ],
+        [
+            'RASGRF2',
+            0.0145588
+        ],
+        [
+            'ROCK2',
+            0.00218436
+        ]
+    ],
+    'diffexp_method': 'chdir',
+    'tags': ['test_tag'],
+    'gene': 'STAT3',
+    'cell': None,
+    'perturbation': None,
+    'disease': None
+
+    # Only if diffexp_method := "chdir", which is the default.
+    # 'cutoff': 500,
+
+    # Only if diffexp_method := "ttest"
+    # 'correction_method': 'BH',
+    # 'threshold': 0.05
+}
+resp = requests.post('http://amp.pharm.mssm.edu/g2e/api/extract/upload_gene_list',
+                     data=json.dumps(payload))</code></pre>
+    <h4>Example JSON response</h4>
+    <pre><code class='json'>{
+  "extraction_id": "8ebf6a9688",
+  "link": "http://amp.pharm.mssm.edu/g2e/results/8ebf6a9688"
 }</code></pre>
         </section>
     </div>

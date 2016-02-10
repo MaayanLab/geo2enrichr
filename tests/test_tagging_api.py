@@ -10,7 +10,7 @@ class TestTaggingAPI(unittest.TestCase):
         self.app = app.test_client()
 
     def test_tags(self):
-        self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
+        self.resp = self.app.post('/g2e/api/extract/upload_soft_file', data=dict(
             file = (file('tests/data/example_input.txt'), 'test.txt'),
             diffexp_method = 'ttest',
             tags = ['food', 'cats', 'beer'],
@@ -27,7 +27,7 @@ class TestTaggingAPI(unittest.TestCase):
 
     def test_adding_empty_tags(self):
         print 'Testing tags'
-        self.resp = self.app.post('/g2e/api/extract/upload', data=dict(
+        self.resp = self.app.post('/g2e/api/extract/upload_soft_file', data=dict(
             file = (file('tests/data/example_input.txt'), 'test.txt'),
             diffexp_method = 'ttest',
             tags = ['', '  ', '     '],
