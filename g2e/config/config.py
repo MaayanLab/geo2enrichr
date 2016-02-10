@@ -21,21 +21,24 @@ SECRET_KEY = config.get('cookies', 'secret_key')
 BASE_URL = '/g2e'
 
 RESULTS_URL = BASE_URL + '/results'
-API_URL = BASE_URL + '/api'
 PCA_URL = BASE_URL + '/pca'
 CLUSTER_URL = BASE_URL + '/cluster'
 
 GENE_LIST_URL = BASE_URL + '/gene_list'
 SOFT_FILE_URL = BASE_URL + '/soft_file'
-SUGGEST_API = BASE_URL + '/suggest'
+
+API_URL = BASE_URL + '/api'
+EXTRACT_URL = API_URL + '/extract'
 
 SQLALCHEMY_POOL_RECYCLE = 3600
 SQLALCHEMY_DATABASE_URI = config.get('db', 'uri')
 
 if DEBUG:
     GEN3VA_URL = 'http://localhost:8084/gen3va'
+    SERVER_URL = 'http://localhost:8083'
 else:
     GEN3VA_URL = 'http://amp.pharm.mssm.edu/gen3va'
+    SERVER_URL = 'http://amp.pharm.mssm.edu'
 
 GEN3VA_REPORT_URL = GEN3VA_URL + '/report'
-GEN3VA_METADATA_URL = GEN3VA_URL + '/metadata'
+GEN3VA_TAG_URL = GEN3VA_URL + '/tag'

@@ -1,3 +1,9 @@
+/* Fonts
+ * ------------------------------------------------------------------------ */
+/* Colors
+ * ------------------------------------------------------------------------ */
+/* Grays */
+/* Main palette */
 #g2e-overlay {
   /* Generic classes*/
   background-color: rgba(255, 255, 255, 0.5);
@@ -112,7 +118,7 @@
   height: 25px;
 }
 #g2e-overlay button:hover {
-  background: #0078c2;
+  background: #006eb3;
   cursor: pointer;
 }
 #g2e-overlay ol {
@@ -248,7 +254,7 @@
   padding: 5px;
 }
 #g2e-overlay #g2e-extract button:hover {
-  background: #0078c2;
+  background: #006eb3;
   cursor: pointer;
 }
 #g2e-overlay #g2e-extract #g2e-results-btn {

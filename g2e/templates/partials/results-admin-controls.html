@@ -1,0 +1,57 @@
+<div id='admin-controls'>
+    <h3>Admin Controls</h3>
+    <div class='instruction'>
+        <p>To delete just a metadata field, leave it blank and click <strong>Edit</strong>.</p>
+        <p>To delete the entire signature, click <strong>Delete</strong>.</p>
+    </div>
+    <form>
+        <div id='tags'>
+            <div><strong>Tags</strong></div>
+            <div>
+                <ul>
+                    {% for tag in gene_signature.tags %}
+                    <li>{{ tag.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <ul id='optional-metadata' class='list-unstyled'>
+            {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                <li>
+                    <label>{{ opt_meta.name|capitalize }}</label>
+                    <input type='text'
+                           class='form-control input-sm'
+                           name='{{ opt_meta.name }}'
+                           value='{{ opt_meta.value }}'/>
+                </li>
+            {% endfor %}
+            <li id='new-metadata'>
+                <label>New metadata field</label>
+                <input type='text'
+                       class='form-control input-sm'
+                       name="new_metadata_name"
+                       placeholder="name"/>
+                <input type='text'
+                       class='form-control input-sm'
+                       name="new_metadata_value"
+                       placeholder="value"/>
+            </li>
+            <li>
+                <input type='hidden' name='extraction_id' value='{{ gene_signature.extraction_id }}'>
+                <input id='edit-gene-signature' class='btn btn-primary' type='submit' value='Update' name='submit'>
+            </li>
+        </ul>
+    </form>
+
+    <form id='delete-gene-signature'
+          action='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}/delete'
+          method='POST'>
+        <input type='hidden' name='extraction_id' value='{{ gene_signature.extraction_id }}'>
+        <input class='btn btn-danger'
+               type='submit'
+               value='Delete signature'
+               name='submit'
+               onclick='return confirm("Are you sure you want to delete this signature?");'>
+    </form>
+</div>

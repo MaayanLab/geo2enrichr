@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from g2e.core.analysis.ttest import _get_pvalues
+from g2e.differential_expression.ttest import _get_pvalues
 
 
 class TestTtest(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestTtest(unittest.TestCase):
         answers = []
         with open('tests/data/ttest_output_corrected.txt', 'r') as out:
             for line in out:
-                ans = float( line.strip() )
+                ans = float(line.strip())
                 answers.append(ans)
         self.answers = np.array(answers)
 
@@ -35,7 +35,7 @@ class TestTtest(unittest.TestCase):
 
     def test_pvalue_answers(self):
         # Neil uses a one-tail t-test, while we use a two-tail t-test.
-    	# Hence, we scale by 2.
-    	delta = (self.answers - self.values / 2) / self.answers
+        # Hence, we scale by 2.
+        delta = (self.answers - self.values / 2) / self.answers
         close_enough = np.any(np.absolute(delta) < 0.00001)
         self.assertTrue(close_enough)

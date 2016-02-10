@@ -43,7 +43,7 @@ a {
   color: @color-blue;
   text-decoration: none;
   &:hover {
-    color: @color-blue-dark;
+    color: @color-dark-blue;
     text-decoration: none;
   }
 }
@@ -54,7 +54,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: @color-black-almost;
+  color: @color-charcoal;
   font-family: @font-family-accent;
   font-weight: bold;
 }
@@ -77,7 +77,7 @@ form {
     font-size: 14px;
   }
   .description {
-    background: @color-lightgray1;
+    background: @color-lighter-gray;
     margin-top: 10px;
     padding: 5px;
     p {
@@ -95,7 +95,7 @@ table {
 
 section {
   margin-bottom: 20px;
-  border-bottom: 1px solid @color-lightgray3;
+  border-bottom: 1px solid @color-light-gray;
   &.last {
     border: none;
   }
@@ -104,7 +104,7 @@ section {
 pre,
 .code {
   border-radius: 0;
-  background: @color-lightgray2;
+  background: @color-lightest-gray;
   font-family: @font-family-mono;
   /* Example links overflow the pre tag if the text is too large. */
   font-size: 12px;
@@ -120,7 +120,7 @@ pre {
 }
 
 .fa {
-  color: @color-black-almost;
+  color: @color-charcoal;
   &:hover {
     color: @color-gray;
   }
@@ -136,9 +136,9 @@ pre {
   width: 100%;
   z-index: 9999;
   .modal {
-    background: @color-lightyellow;
+    background: @color-light-yellow;
     border: 1px solid @color-yellow;
-    color: @color-black-almost;
+    color: @color-charcoal;
     font-size: 12px;
     font-weight: bold;
     margin: 0 auto;
@@ -181,9 +181,9 @@ caption {
 .tooltip {
   opacity: 1 !important;
   .tooltip-inner {
-    background: @color-lightyellow;
+    background: @color-light-yellow;
     border: 1px solid @color-yellow;
-    color: @color-black-almost;
+    color: @color-charcoal;
     font-weight: bold;
     border-radius: 0;
     text-align: left;
@@ -250,7 +250,7 @@ caption {
     }
   }
   &:hover {
-    background-color: @color-blue-dark;
+    background-color: @color-dark-purple;
   }
 }
 
@@ -262,16 +262,16 @@ caption {
  * header, content, footer
  * ----------------------------- */
 #header {
-  border-bottom: 1px solid @color-lightgray3;
+  border-bottom: 1px solid @color-light-gray;
   #logo {
-    background: @color-lightgray1; /* Old browsers */
-    background: -moz-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @color-lightgray1), color-stop(100%, @color-lightgray2)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, @color-lightgray1 0%, @color-lightgray2 100%); /* IE10+ */
-    background: linear-gradient(to bottom, @color-lightgray1 0%, @color-lightgray2 100%); /* W3C */
-    border-bottom: 1px solid @color-lightgray3;
+    background: @color-lighter-gray; /* Old browsers */
+    background: -moz-linear-gradient(top, @color-lighter-gray 0%, @color-lightest-gray 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @color-lighter-gray), color-stop(100%, @color-lightest-gray)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, @color-lighter-gray 0%, @color-lightest-gray 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, @color-lighter-gray 0%, @color-lightest-gray 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, @color-lighter-gray 0%, @color-lightest-gray 100%); /* IE10+ */
+    background: linear-gradient(to bottom, @color-lighter-gray 0%, @color-lightest-gray 100%); /* W3C */
+    border-bottom: 1px solid @color-light-gray;
     padding: 10px 0;
     a {
       &:hover {
@@ -281,19 +281,19 @@ caption {
   }
   a {
     border: none;
-    color: @color-black-almost;
+    color: @color-charcoal;
     font-family: @font-family-accent;
     font-size: 16px;
     font-weight: bold;
     text-decoration: none;
     &:hover {
       cursor: pointer;
-      color: @color-black-almost;
+      color: @color-charcoal;
     }
   }
   ul.nav {
     li {
-      border-right: 1px solid @color-lightgray3;
+      border-right: 1px solid @color-light-gray;
       a {
         font-size: 12px;
         line-height: inherit;
@@ -328,7 +328,7 @@ caption {
     margin-left: 40px;
     span,
     form button {
-      color: @color-black-almost;
+      color: @color-charcoal;
       font-size: 14px;
     }
     /* Make logout button, which uses an HTML form to POST, look like a link. */
@@ -359,7 +359,7 @@ caption {
     font-size: 12px;
   }
   a {
-    color: @color-blue-light;
+    color: @color-light-blue;
     text-decoration: none;
     &:hover {
       text-decoration: underline;
@@ -392,11 +392,11 @@ caption {
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-  color: @color-black-almost;
+  color: @color-charcoal;
 }
 
 .hljs {
-  background-color: @color-lightgray2 !important;
+  background-color: @color-lightest-gray !important;
 }
 
 .btn {
@@ -408,12 +408,15 @@ caption {
     color: white;
     background-color: @color-blue;
     &:hover{
-      background-color: @color-blue-dark;
+      background-color: @color-dark-blue;
     }
   }
   &.btn-info {
     color: white;
     background-color: @color-purple;
+    &:hover {
+      background-color: @color-dark-purple;
+    }
   }
   &.btn-danger {
     color: white;

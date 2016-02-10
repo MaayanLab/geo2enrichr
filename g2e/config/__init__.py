@@ -7,9 +7,13 @@ from config import \
     DEBUG, \
     SERVER_ROOT, \
     SECRET_KEY, \
+    SERVER_URL, \
     \
     BASE_URL, \
+    \
     API_URL, \
+    EXTRACT_URL, \
+    \
     PCA_URL, \
     CLUSTER_URL, \
     RESULTS_URL, \
@@ -18,6 +22,7 @@ from config import \
     \
     GEN3VA_URL, \
     GEN3VA_REPORT_URL, \
+    GEN3VA_TAG_URL, \
     \
     SQLALCHEMY_DATABASE_URI, \
     SQLALCHEMY_POOL_RECYCLE
