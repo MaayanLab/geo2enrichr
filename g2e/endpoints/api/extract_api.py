@@ -56,6 +56,7 @@ def post_file():
 
 
 @extract_api.route('/upload_gene_list', methods=['POST'])
+@cross_origin()
 def upload_gene_list():
     """Uploads gene signature and returns extraction ID.
     """
