@@ -13,7 +13,6 @@ from config import \
     \
     API_URL, \
     EXTRACT_URL, \
-    UPLOAD_URL, \
     \
     PCA_URL, \
     CLUSTER_URL, \

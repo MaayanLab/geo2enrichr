@@ -34,7 +34,6 @@
             </table>
             <h4>Example request</h4>
             <pre><code class="bash">http://amp.pharm.mssm.edu/g2e/api/extract/e29766a757</code></pre>
-            <h4>Example response</h4>
             <pre><code class="json">{
   "extraction_id": "e29766a757",
   "gene_lists": [
@@ -55,14 +54,6 @@
         [
           "DPP10",
           0.0105129
-        ],
-        [
-          "MGA",
-          0.0152158
-        ],
-        [
-          "SYNJ1",
-          0.0181663
         ],
         ...
       ]
@@ -117,7 +108,6 @@
                 </tr>
             </table>
             <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
-            <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
             <pre><code class="bash">curl -v http://amp.pharm.mssm.edu/g2e/api/extract/geo --data \
   "dataset=GDS5077&\
   platform=GPL10558&\
@@ -138,7 +128,7 @@
         </section>
 
         <section>
-            <h1>POST /g2e/api/extract/custom</h1>
+            <h1>POST /g2e/api/extract/upload_soft_list</h1>
             <p>
                 Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
             </p>
@@ -154,10 +144,10 @@
                 </tr>
             </table>
             <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
-            <pre><code class="bash">$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload \
+            <pre><code class="bash">$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload_soft_file \
 --form "file=@input.txt" name=SyntheticData
 
-> POST /g2e/api/extract/upload HTTP/1.1
+> POST /g2e/api/extract/upload_soft_file HTTP/1.1
 > User-Agent: curl/7.37.1
 > Host: http://amp.pharm.mssm.edu/
 > Accept: */*
@@ -172,7 +162,7 @@
         </section>
 
         <section class='last'>
-            <h1>POST /g2e/api/extract/upload</h1>
+            <h1>POST /g2e/api/extract/upload_gene_list</h1>
             <p>
                 Performs differential expression analysis on an uploaded SOFT file. The SOFT file can eithe
             </p>
@@ -188,7 +178,7 @@
                 </tr>
             </table>
             <h4>Example request using <a href="http://curl.haxx.se/" target="_blank">cURL</a></h4>
-            <pre><code class="bash">$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload \
+            <pre><code class="bash">$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload_gene_list \
 --form "file=@input.txt" name=SyntheticData
 
 > POST /g2e/api/extract/upload HTTP/1.1

@@ -7,6 +7,8 @@ from sklearn import decomposition
 
 
 def from_soft_file(soft_file):
+    """
+    """
     df = pandas.read_csv('g2e/' + soft_file.text_file, sep='\t', skiprows=8)
 
     genes = df.ix[:, 0]

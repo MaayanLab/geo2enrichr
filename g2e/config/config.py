@@ -29,7 +29,6 @@ SOFT_FILE_URL = BASE_URL + '/soft_file'
 
 API_URL = BASE_URL + '/api'
 EXTRACT_URL = API_URL + '/extract'
-UPLOAD_URL = API_URL + '/upload'
 
 SQLALCHEMY_POOL_RECYCLE = 3600
 SQLALCHEMY_DATABASE_URI = config.get('db', 'uri')

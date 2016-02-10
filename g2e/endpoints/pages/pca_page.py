@@ -4,7 +4,7 @@
 import json
 
 from flask import Blueprint, render_template
-from g2e import config, database
+from g2e import config, database, pca
 
 pca_api = Blueprint('pca_api',
                     __name__,
@@ -17,7 +17,7 @@ def perform_soft_file_pca(extraction_id):
     """
     gene_signature = database.get_gene_signature(extraction_id)
     if gene_signature:
-        pca_data = g2e.diffexp.analysis.pca.from_soft_file(gene_signature.soft_file)
+        pca_data = pca.from_soft_file(gene_signature.soft_file)
         pca_json = json.dumps(pca_data)
         return render_template('pages/pca.html',
                                pca_data=pca_json,
