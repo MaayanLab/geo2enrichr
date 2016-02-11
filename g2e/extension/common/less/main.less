@@ -2,481 +2,506 @@
 
 #g2e-overlay {
 
-    /* Generic classes*/
-    .g2e-left {
-        float: left;
-    }
-    .g2e-right {
-        float: right;
-    }
-    .g2e-hidden {
-        display: none;
-    }
+  /* Generic classes*/
+  .g2e-left {
+    float: left;
+  }
+  .g2e-right {
+    float: right;
+  }
+  .g2e-hidden {
+    display: none;
+  }
+  .g2e-btn {
+    border-radius: 4px;
+  }
 
-    background-color: rgba(255,255,255,0.5);
+  background-color: rgba(255, 255, 255, 0.5);
+  font-family: @font-family-base;
+  height: 100%;
+  left: 0;
+  padding: 15px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  span,
+  label {
     font-family: @font-family-base;
-    height: 100%;
-    left: 0;
-    padding: 15px;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    span,
-    label {
-        font-family: @font-family-base;
-        font-size: 13px;
-    }
-    td,
-    tr {
-        font-family: @font-family-base;
-        font-size: 13px;
-        border-spacing: 0;
-        border-collapse: collapse;
-        margin: 0;
-        padding: 0;
-    }
-    a:hover,
-    a:active,
-    a:visited {
-        color: @color-blue;
-    }
-    table,
-    tbody {
-        border-spacing: 0;
-        border-collapse: collapse;
-        margin: 0;
-        padding: 0;
-        input {
-            border: none;
-        }
-    }
-    .g2e-lock,
-    .g2e-lock:hover {
-        background: @color-gray;
-    }
-    #g2e-modal {
-        background-color: rgba(255,255,255,1);
-        border: 1px solid @color-gray;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-        left: 50%;
-        margin-left: -420px;
-        padding: 20px;
-        position: fixed;
-        top: 70px;
-        width: 800px;
-    }
-    p {
-        font-family: @font-family-base;
-        font-size: 13px;
-        margin-bottom: 13px;
-    }
-    input {
-        font-family: @font-family-base;
-        font-size: 13px;
-        font-size: 13px;
-        background: none;
-        border-radius: 0;
-    }
-    .g2e-last {
-        padding-top: 20px;
-    }
-    a {
-        color: @color-blue;
-        font-family: @font-family-base;
-    }
-    h4 {
-        font-size: 14px;
-    }
-    select {
-        background: none;
-        border: none;
-        border-radius: 0;
-        font-size: 13px;
-    }
-    .g2e-warning {
-        color: 700;
-    }
-    .g2e-highlight {
-        color: @color-red;
-    }
-    .g2e-lowlight {
-        color: @color-gray;
-        font-size: 13px;
-        font-style: italic;
-        padding-bottom: 5px;
-    }
-    button {
-        color: white;
-        background: @color-blue;
-        border: none;
-        font-size: 12px;
-        font-weight: bold;
-        height: 25px;
-    }
-    button:hover {
-        background: @color-dark-blue;
-        cursor: pointer;
-    }
-    ol {
-        margin-bottom: 13px;
-    }
-    .g2e-clear {
-        clear: both;
-    }
-    table {
-        border: none;
-        border-spacing: 0;
-        border-collapse: collapse;
-        margin: 0;
-        padding: 0;
-    }
-    #g2e-app-title {
-        float: left;
-        a {
-            color: black;
-        }
-        a:hover {
-            color: black;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        img {
-            width: 22px;
-        }
-        span:first-of-type {
-            margin-left: 10px;
-        }
-        span {
-            font-size: 30px;
-            font-family: @font-family-accent;
-            font-weight: bold;
-        }
-    }
-    #g2e-nav {
-        float: right;
-        #g2e-close-btn {
-            background: white;
-            border: none;
-            color: @color-gray;
-            cursor: pointer;
-            font-size: 20px;
-            height: 25px;
-            padding: 0 2px;
-            width: 25px;
-        }
-        #g2e-close-btn:hover {
-            color: @color-gray;
-        }
-        select {
-            background: @color-blue;
-            color: white;
-            font-size: 16px;
-            margin-right: 5px;
-            padding: 4px;
-            position: relative;
-            top: -2px;
-            -webkit-appearance: none;
-            -webkit-border-radius: 0px;
-        }
-    }
-    .g2e-top {
-        margin-top: 20px;
-    }
-    #g2e-confirm {
-        .g2e-confirm-tbl {
-            margin: 10px 0 0 0;
-            padding-top: 0;
-            table-layout: fixed;
-            width: 100%;
-            input, select {
-                width: 100%;
-            }
-            tr {
-                border-bottom: 1px solid @color-light-gray;
-                height: 20px;
-            }
-            td {
-                padding: 2px 0;
-                vertical-align: middle;
-                word-wrap: break-word;
-            }
-            td.g2e-key {
-                font-weight: bold;
-                width: 210px;
-            }
-            td.g2e-value {
-                background: none;
-                padding-left: 10px;
-                width: 100%;
-                &.g2e-select {
-                    padding-left: 0 !important;
-                }
-            }
-            .g2e-last {
-                border: none;
-            }
-        }
-    }
-    #g2e-footer {
-        clear: both;
-        table .g2e-key {
-            width: 130px;
-        }
-        > table {
-            table-layout: fixed;
-            width: 100%;
-            td {
-                padding: 5px 10px 0 0;
-            }
-        }
-        #g2e-credits {
-            float: left;
-            font-style: italic;
-            font-size: 12px;
-            margin-bottom: 0;
-            padding-top: 10px;
-            a {
-                font-style: italic;
-                font-size: 12px;
-            }
-        }
-    }
-    #g2e-extract {
-        padding-top: 10px;
-        button {
-            display: inline;
-            margin-right: 5px;
-            min-width: 40px;
-            padding: 5px;
-        }
-        button:hover {
-            background: @color-dark-blue;
-            cursor: pointer;
-        }
-        #g2e-results-btn {
-            display: none;
-        }
-    }
-    .g2e-error {
-        color: @color-red;
-        font-weight: bold;
-    }
-    strong,
-    .g2e-strong {
-        font-weight: bold;
-    }
-    caption {
-        color: @color-gray;
-        font-size: 13px;
-        font-style: italic;
-        padding-bottom: 5px;
-        text-align: left;
-        text-align: left;
-    }
-    #g2e-target-app {
-        color: @color-red;
-    }
-    #g2e-tags {
-        ul,
-        li {
-            border-radius: 0;
-            border: none;
-        }
-        input {
-            width: auto;
-        }
-    }
-    #g2e-crowdsourcing-details {
-        h1 {
-            font-size: 20px;
-            margin-top: 10px;
-        }
-        div {
-            margin: 5px 0;
-        }
-        input {
-            border: 1px solid @color-light-gray;
-            width: 100%;
-        }
-        label {
-            font-weight: bold;
-        }
-        #g2e-user-key-wrapper {
-            margin-left: 20px;
-        }
-    }
-}
-#g2e-table-title {
-    color: @color-red;
-}
-#g2e-embedded-button {
+    font-size: 13px;
+  }
+  td,
+  tr {
+    font-family: @font-family-base;
+    font-size: 13px;
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+  }
+  a:hover,
+  a:active,
+  a:visited {
     color: @color-blue;
-    cursor: pointer;
-    span {
-        display: inline-block;
-        position: relative;
-        top: 8px;
+  }
+  table,
+  tbody {
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    input {
+      border: none;
     }
-    span:hover {
-        text-decoration: underline;
+  }
+  .g2e-lock,
+  .g2e-lock:hover {
+    background: @color-gray;
+  }
+  #g2e-modal {
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid @color-gray;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    left: 50%;
+    margin-left: -420px;
+    padding: 20px;
+    position: fixed;
+    top: 70px;
+    width: 800px;
+  }
+  p {
+    font-family: @font-family-base;
+    font-size: 13px;
+    margin-bottom: 13px;
+  }
+  input {
+    font-family: @font-family-base;
+    font-size: 13px;
+    font-size: 13px;
+    background: none;
+    border-radius: 0;
+  }
+  .g2e-last {
+    padding-top: 20px;
+  }
+  a {
+    color: @color-blue;
+    font-family: @font-family-base;
+  }
+  h4 {
+    font-size: 14px;
+  }
+  select {
+    background: none;
+    border: 1px solid @color-light-gray;
+    border-radius: 0;
+    font-size: 13px;
+    height: 100%;
+  }
+  .g2e-highlight {
+    color: @color-red;
+  }
+  .g2e-lowlight {
+    color: @color-gray;
+    font-size: 13px;
+    font-style: italic;
+    padding-bottom: 5px;
+  }
+  .g2e-btn {
+    color: white;
+    border: none;
+    height: 25px;
+    font-size: 12px;
+    font-weight: bold;
+    &:hover {
+      cursor: pointer;
     }
-    b {
-        position: relative;
-        top: 8px;
+  }
+  #g2e-submit-btn,
+  #g2-results-btn {
+    background-color: @color-blue;
+    &:hover {
+      background-color: @color-dark-blue;
+    }
+  }
+  #g2e-check-btn {
+    background-color: @color-purple;
+    &:hover {
+      background-color: @color-dark-purple;
+    }
+  }
+  #g2e-results-btn {
+    background-color: gray;
+    &:hover {
+      background-color: #555;
+    }
+  }
+  button
+  ol {
+    margin-bottom: 13px;
+  }
+  .g2e-clear {
+    clear: both;
+  }
+  table {
+    border: none;
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+  }
+  #g2e-app-title {
+    float: left;
+    a {
+      color: black;
+    }
+    a:hover {
+      color: black;
+      cursor: pointer;
+      text-decoration: none;
     }
     img {
-        float: right;
-        width: 32px;
+      width: 22px;
     }
-}
-.g2e-loader-container {
-    background-color:rgba(255,255,255,0.75);
-    cursor: wait;
-    height: 100%;
-    left: 0;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 9999;
-    .g2e-loader-modal {
-        background: #fffac7;
-        border: 1px solid #fff169;
-        color: @color-charcoal;
-        font-family: @font-family-base;
-        font-size: 12px;
+    span:first-of-type {
+      margin-left: 10px;
+    }
+    span {
+      font-size: 30px;
+      font-family: @font-family-accent;
+      font-weight: bold;
+    }
+  }
+  #g2e-nav {
+    float: right;
+    #g2e-close-btn {
+      background: white;
+      border: none;
+      color: @color-gray;
+      cursor: pointer;
+      font-size: 20px;
+      height: 25px;
+      padding: 0 2px;
+      width: 25px;
+      &:hover {
+        color: #555;
+      }
+    }
+    select {
+      background: @color-blue;
+      color: white;
+      font-size: 16px;
+      margin-right: 5px;
+      padding: 4px;
+      position: relative;
+      top: -2px;
+      -webkit-appearance: none;
+      -webkit-border-radius: 0px;
+    }
+  }
+  .g2e-top {
+    margin-top: 20px;
+  }
+  #g2e-confirm {
+    .g2e-confirm-tbl {
+      margin: 10px 0 0 0;
+      padding-top: 0;
+      table-layout: fixed;
+      width: 100%;
+      input, select {
+        width: 100%;
+      }
+      tr {
+        border-bottom: 1px solid @color-light-gray;
+        height: 20px;
+      }
+      td {
+        padding: 2px 0;
+        vertical-align: middle;
+        word-wrap: break-word;
+      }
+      td.g2e-key {
         font-weight: bold;
-        margin: 0 auto;
-        position: absolute;
-        left: 0;
-        text-align: center;
-        right: 0;
-        top: 200px;
-        width: 150px;
+        width: 210px;
+      }
+      td.g2e-value {
+        background: none;
+        padding-left: 10px;
+        width: 100%;
+        &.g2e-select {
+          padding-left: 0 !important;
+        }
+      }
+      .g2e-last {
+        border: none;
+      }
     }
+  }
+  #g2e-footer {
+    clear: both;
+    table .g2e-key {
+      width: 130px;
+    }
+    > table {
+      table-layout: fixed;
+      width: 100%;
+      td {
+        padding: 5px 10px 0 0;
+      }
+    }
+    #g2e-credits {
+      float: left;
+      font-style: italic;
+      font-size: 12px;
+      margin-bottom: 0;
+      padding-top: 10px;
+      a {
+        font-style: italic;
+        font-size: 12px;
+      }
+    }
+  }
+  #g2e-extract {
+    padding-top: 10px;
+    .g2e-btn {
+      margin-right: 5px;
+    }
+    #g2e-results-btn {
+      display: none;
+    }
+  }
+  .g2e-error {
+    color: @color-red;
+    font-weight: bold;
+  }
+  strong,
+  .g2e-strong {
+    font-weight: bold;
+  }
+  caption {
+    color: @color-gray;
+    font-size: 13px;
+    font-style: italic;
+    padding-bottom: 5px;
+    text-align: left;
+    text-align: left;
+  }
+  #g2e-target-app {
+    color: @color-red;
+  }
+  #g2e-tags {
+    ul,
+    li {
+      border: none;
+    }
+    input {
+      width: auto;
+    }
+  }
+  #g2e-crowdsourcing-details {
+    h1 {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+    div {
+      margin: 5px 0;
+    }
+    input {
+      border: 1px solid @color-light-gray;
+      width: 100%;
+    }
+    label {
+      font-weight: bold;
+    }
+    #g2e-user-key-wrapper {
+      margin-left: 20px;
+    }
+  }
+}
+
+#g2e-table-title {
+  color: @color-red;
+}
+
+#g2e-embedded-button {
+  color: @color-blue;
+  cursor: pointer;
+  span {
+    display: inline-block;
+    position: relative;
+    top: 8px;
+  }
+  span:hover {
+    text-decoration: underline;
+  }
+  b {
+    position: relative;
+    top: 8px;
+  }
+  img {
+    float: right;
+    width: 32px;
+  }
+}
+
+.g2e-loader-container {
+  background-color: rgba(255, 255, 255, 0.75);
+  cursor: wait;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  .g2e-loader-modal {
+    background: #fffac7;
+    border: 1px solid #fff169;
+    color: @color-charcoal;
+    font-family: @font-family-base;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 auto;
+    position: absolute;
+    left: 0;
+    text-align: center;
+    right: 0;
+    top: 200px;
+    width: 150px;
+  }
 
 }
 
 /* jQuery UI overrides
  */
 .ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content {
-    background: white;
-    color: gray;
-    font-size: 10px;
-    z-index: 1001;
-    width: 100px;
+  background: white;
+  color: gray;
+  font-size: 10px;
+  z-index: 1001;
+  width: 100px;
 }
+
 .ui-tooltip,
 .ui-widget,
 .ui-corner-all,
 .ui-widget-content {
-    font-family: @font-family-base !important;
-    font-size: @font-size-base !important;
-    border-radius: 0 !important;
+  font-family: @font-family-base !important;
+  font-size: @font-size-base !important;
 }
+
 .ui-state-focus {
-    background: @color-lighter-gray !important;
-    border: none !important;
-    color: black !important;
+  background: @color-lighter-gray !important;
+  border: none !important;
+  color: black !important;
 }
+
 .ui-menu-item {
-    font-family: @font-size-base !important;
+  font-family: @font-size-base !important;
 }
 
 /* TagIt overrides
  */
 ul#g2e-tags {
-    background-color: white;
-    border-radius: 0;
-    border: 1px solid #f5f5f5;
-    padding: 1px 5px;
-    overflow: auto;
-    margin: 0;
-    input {
-        border: none;
+  background-color: white;
+  border-radius: 0;
+  border: 1px solid #f5f5f5;
+  padding: 1px 5px;
+  overflow: auto;
+  margin: 0;
+  input {
+    border: none;
+  }
+  li {
+    display: block;
+    float: left;
+    border: none;
+    position: relative;
+    top: 1px;
+    margin: 2px 3px;
+    &.tagit-choice {
+      background-color: @color-light-purple !important;
     }
-    li {
-        display: block;
-        float: left;
-        border: none;
-        border-radius: 0;
-        position: relative;
-        top: 1px;
-        margin: 2px 3px;
-        &.tagit-choice {
-            background-color: @color-light-gray !important;
-        }
-    }
-    li.choice {
-        position: relative;
-        line-height: inherit;
-    }
-    li.tagit-choice-read-only {
-        padding: .2em .5em .2em .5em;
-    }
-    .tagit-close {
-        display: none;
-    }
-    .ui-effects-wrapper {
-        display: none;
-    }
-    .tagit-label {
-        color: black;
-        font-weight: normal;
-        text-decoration: none;
-    }
-    .ui-widget-content {
-        // The size of text while typing.
-        font-size: @font-size-base !important;
-    }
+  }
+  li.choice {
+    position: relative;
+    line-height: inherit;
+  }
+  li.tagit-choice-read-only {
+    padding: .2em .5em .2em .5em;
+  }
+  .tagit-close {
+    display: none;
+  }
+  .ui-effects-wrapper {
+    display: none;
+  }
+  .tagit-label {
+    color: black;
+    font-weight: normal;
+    text-decoration: none;
+  }
+  .ui-widget-content {
+    // The size of text while typing.
+    font-size: @font-size-base !important;
+  }
 }
+
 .ui-widget-content {
-    background: white;
+  background: white;
 }
+
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
-    background: #f5f5f5 !important;
-    font-weight: normal;
+  background: #f5f5f5 !important;
+  font-weight: normal;
 }
+
 input.tagit-hidden-field {
-    display: none;
+  display: none;
 }
+
 ul.tagit li.tagit-choice-editable {
-    padding: 2px 3px;
+  padding: 2px 3px;
 }
+
 ul.tagit li.tagit-new {
-    padding: .25em 4px .25em 0;
+  padding: .25em 4px .25em 0;
 }
+
 ul.tagit li.tagit-choice .tagit-close {
-    cursor: pointer;
-    float: right;
-    top: 50%;
+  cursor: pointer;
+  float: right;
+  top: 50%;
 }
+
 /* used for some custom themes that don't need image icons */
 ul.tagit li.tagit-choice .tagit-close .text-icon {
-    display: none;
+  display: none;
 }
+
 ul.tagit li.tagit-choice a.tagit-label {
-    cursor: pointer;
+  cursor: pointer;
 
 }
+
 ul.tagit li.tagit-choice input {
-    display: block;
-    float: left;
-    margin: 2px 5px 2px 0;
+  display: block;
+  float: left;
+  margin: 2px 5px 2px 0;
 }
+
 ul.tagit input[type="text"] {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    border: none;
-    margin: 0;
-    padding: 0;
-    width: inherit;
-    background-color: inherit;
-    outline: none;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: inherit;
+  background-color: inherit;
+  outline: none;
 }

@@ -60,7 +60,7 @@ app.register_blueprint(endpoints.menu_pages)
 app.register_blueprint(endpoints.results_page)
 app.register_blueprint(endpoints.cluster_page)
 
-app.register_blueprint(endpoints.check_api)
+app.register_blueprint(endpoints.check_duplicate_api)
 app.register_blueprint(endpoints.extract_api)
 app.register_blueprint(endpoints.gene_list_api)
 app.register_blueprint(endpoints.pca_api)
@@ -112,7 +112,7 @@ def handle_any_exceptions(error):
     """
     response = jsonify({
         'error': 'Unknown error. Please contact the Ma\'ayan Lab.',
-        'original_error': error.message
+        'python_error': error.message
     })
     response.status_code = 500
     return response

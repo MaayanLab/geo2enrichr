@@ -63,7 +63,6 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             'http://maayanlab.net/crowdsourcing/check_geo.php',
             payload,
             function(response) {
-                console.log(payload);
                 callback(response === 'exist');
             })
             .error(function() {
@@ -74,12 +73,38 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             });
     }
 
+    function checkIfDuplicate(payload, callback) {
+        loadingScreen.start();
+        $.ajax({
+            url: SERVER + 'api/check_duplicate',
+            type: 'GET',
+            data: payload,
+            success: function(data) {
+                if (data.preexisting) {
+                    var links = data.links.join('\n');
+                    alert('Match(es) found:\n\n' + links);
+                } else {
+                    alert('No match found.');
+                }
+            },
+            error: function(data) {
+                var resp = JSON.parse(data.responseText);
+                console.log(resp.original_error);
+                alert(resp.error);
+            },
+            complete: function() {
+                loadingScreen.stop();
+            }
+        });
+    }
+
     function get(url, cb) {
         $.get(url, cb);
     }
 
     return {
         checkIfProcessed: checkIfProcessed,
+        checkIfDuplicate: checkIfDuplicate,
         postSoftFile: postSoftFile,
         get: get
     };
@@ -712,6 +737,7 @@ var Templater = function(IMAGE_PATH) {
                 '<div id="g2e-extract">' +
                     '<div>' +
                         '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
+                        '<button id="g2e-check-btn" class="g2e-btn">Check for duplicate signatures</button>' +
                         '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
                         '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
                     '</div>' +
@@ -1094,6 +1120,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         $modalBox = $('#g2e-overlay');
         $modalBox.find('#g2e-error-message').hide();
         $modalBox.find('#g2e-submit-btn').click(userInputHandler.sendDataToServer);
+        $modalBox.find('#g2e-check-btn').click(userInputHandler.checkIfDuplicate);
         $modalBox.find('#g2e-close-btn').click(function() {
             resetFooter();
             $modalBox.hide();
@@ -1402,6 +1429,20 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         }
     }
 
+    /* Returns true if the accession + samples + tag have already been
+     * processed.
+     */
+    function checkIfDuplicate(callback) {
+        var data = getData(),
+            payload = {
+                dataset: data.scrapedData.dataset,
+                A_cols: data.scrapedData.A_cols,
+                B_cols: data.scrapedData.B_cols,
+                tags: data.tags
+            };
+        comm.checkIfDuplicate(payload, callback);
+    }
+
     /* Returns true if the user has selected fewer than 2 samples.
      */
     function notEnoughSamples(samples) {
@@ -1426,6 +1467,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
     return {
         checkIfProcessed: checkIfProcessed,
+        checkIfDuplicate: checkIfDuplicate,
         getData: getData,
         sendDataToServer: sendDataToServer,
         setModalBox: setModalBox

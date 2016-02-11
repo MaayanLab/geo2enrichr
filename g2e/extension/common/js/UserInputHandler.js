@@ -203,6 +203,20 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
         }
     }
 
+    /* Returns true if the accession + samples + tag have already been
+     * processed.
+     */
+    function checkIfDuplicate(callback) {
+        var data = getData(),
+            payload = {
+                dataset: data.scrapedData.dataset,
+                A_cols: data.scrapedData.A_cols,
+                B_cols: data.scrapedData.B_cols,
+                tags: data.tags
+            };
+        comm.checkIfDuplicate(payload, callback);
+    }
+
     /* Returns true if the user has selected fewer than 2 samples.
      */
     function notEnoughSamples(samples) {
@@ -227,6 +241,7 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
     return {
         checkIfProcessed: checkIfProcessed,
+        checkIfDuplicate: checkIfDuplicate,
         getData: getData,
         sendDataToServer: sendDataToServer,
         setModalBox: setModalBox

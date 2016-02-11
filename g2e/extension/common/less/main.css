@@ -25,6 +25,9 @@
 #g2e-overlay .g2e-hidden {
   display: none;
 }
+#g2e-overlay .g2e-btn {
+  border-radius: 4px;
+}
 #g2e-overlay span,
 #g2e-overlay label {
   font-family: arial, sans-serif;
@@ -93,12 +96,10 @@
 }
 #g2e-overlay select {
   background: none;
-  border: none;
+  border: 1px solid #eeeeee;
   border-radius: 0;
   font-size: 13px;
-}
-#g2e-overlay .g2e-warning {
-  color: 700;
+  height: 100%;
 }
 #g2e-overlay .g2e-highlight {
   color: #d90000;
@@ -109,19 +110,37 @@
   font-style: italic;
   padding-bottom: 5px;
 }
-#g2e-overlay button {
+#g2e-overlay .g2e-btn {
   color: white;
-  background: #009dff;
   border: none;
+  height: 25px;
   font-size: 12px;
   font-weight: bold;
-  height: 25px;
 }
-#g2e-overlay button:hover {
-  background: #006eb3;
+#g2e-overlay .g2e-btn:hover {
   cursor: pointer;
 }
-#g2e-overlay ol {
+#g2e-overlay #g2e-submit-btn,
+#g2e-overlay #g2-results-btn {
+  background-color: #009dff;
+}
+#g2e-overlay #g2e-submit-btn:hover,
+#g2e-overlay #g2-results-btn:hover {
+  background-color: #006eb3;
+}
+#g2e-overlay #g2e-check-btn {
+  background-color: #6f5499;
+}
+#g2e-overlay #g2e-check-btn:hover {
+  background-color: #574278;
+}
+#g2e-overlay #g2e-results-btn {
+  background-color: gray;
+}
+#g2e-overlay #g2e-results-btn:hover {
+  background-color: #555;
+}
+#g2e-overlay button ol {
   margin-bottom: 13px;
 }
 #g2e-overlay .g2e-clear {
@@ -170,7 +189,7 @@
   width: 25px;
 }
 #g2e-overlay #g2e-nav #g2e-close-btn:hover {
-  color: #aaaaaa;
+  color: #555;
 }
 #g2e-overlay #g2e-nav select {
   background: #009dff;
@@ -247,15 +266,8 @@
 #g2e-overlay #g2e-extract {
   padding-top: 10px;
 }
-#g2e-overlay #g2e-extract button {
-  display: inline;
+#g2e-overlay #g2e-extract .g2e-btn {
   margin-right: 5px;
-  min-width: 40px;
-  padding: 5px;
-}
-#g2e-overlay #g2e-extract button:hover {
-  background: #006eb3;
-  cursor: pointer;
 }
 #g2e-overlay #g2e-extract #g2e-results-btn {
   display: none;
@@ -280,7 +292,6 @@
 }
 #g2e-overlay #g2e-tags ul,
 #g2e-overlay #g2e-tags li {
-  border-radius: 0;
   border: none;
 }
 #g2e-overlay #g2e-tags input {
@@ -366,7 +377,6 @@
 .ui-widget-content {
   font-family: arial, sans-serif !important;
   font-size: 13px !important;
-  border-radius: 0 !important;
 }
 .ui-state-focus {
   background: #f5f5f5 !important;
@@ -393,13 +403,12 @@ ul#g2e-tags li {
   display: block;
   float: left;
   border: none;
-  border-radius: 0;
   position: relative;
   top: 1px;
   margin: 2px 3px;
 }
 ul#g2e-tags li.tagit-choice {
-  background-color: #eeeeee !important;
+  background-color: #d3cbe0 !important;
 }
 ul#g2e-tags li.choice {
   position: relative;

@@ -13,6 +13,7 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         $modalBox = $('#g2e-overlay');
         $modalBox.find('#g2e-error-message').hide();
         $modalBox.find('#g2e-submit-btn').click(userInputHandler.sendDataToServer);
+        $modalBox.find('#g2e-check-btn').click(userInputHandler.checkIfDuplicate);
         $modalBox.find('#g2e-close-btn').click(function() {
             resetFooter();
             $modalBox.hide();
