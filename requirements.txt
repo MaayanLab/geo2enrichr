@@ -21,5 +21,4 @@ scipy==0.15.1
 singledispatch==3.4.0.3
 six==1.9.0
 sklearn==0.0
-substrate==1.0
 wsgiref==0.1.2

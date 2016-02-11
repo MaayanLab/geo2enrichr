@@ -2,7 +2,7 @@
 and their relationships and saves them accordingly.
 """
 
-from substrate import GeneSignature, GeoDataset, OptionalMetadata, SoftFile
+from substrate import GeneSignature, GeoDataset, SoftFile, Tag
 
 from g2e.database.utils import session_scope
 
@@ -36,6 +36,16 @@ def delete_gene_signature(extraction_id):
             .delete()
 
 
+def get_tag_by_name(tag_name):
+    """Returns tag by name.
+    """
+    with session_scope() as session:
+        return session\
+            .query(Tag)\
+            .filter_by(name=tag_name)\
+            .first()
+
+
 def delete_object(obj):
     """Deletes object provided.
     """
@@ -54,7 +64,8 @@ def get_geo_dataset(accession):
     """Returns a GEO dataset based on accession number.
     """
     with session_scope() as session:
-        instance = session.query(GeoDataset)\
+        instance = session\
+            .query(GeoDataset)\
             .filter_by(accession=accession)\
             .first()
         return instance

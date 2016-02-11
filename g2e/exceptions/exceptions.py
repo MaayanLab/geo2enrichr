@@ -24,14 +24,22 @@ class AppException(Exception):
         return result
 
 
+class AuthException(AppException):
+    """Exception to be raised when an HTTP request is forbidden.
+    """
+
+    def __init__(self, message, python_error=None, status_code=403):
+        super(AuthException, self).__init__(message, python_error,
+                                            status_code)
+
+
 class ParseException(AppException):
     """Exception to be raised when application cannot parse a file.
     """
 
     def __init__(self, message, python_error=None, status_code=400):
-        super(ParseException, self).__init__(
-            message, python_error, status_code
-        )
+        super(ParseException, self).__init__(message, python_error,
+                                             status_code)
 
 
 class HttpRequestArgumentsException(AppException):
@@ -39,6 +47,6 @@ class HttpRequestArgumentsException(AppException):
     """
 
     def __init__(self, message, python_error=None, status_code=400):
-        super(HttpRequestArgumentsException, self).__init__(
-            message, python_error, status_code
-        )
+        super(HttpRequestArgumentsException, self).__init__(message,
+                                                            python_error,
+                                                            status_code)

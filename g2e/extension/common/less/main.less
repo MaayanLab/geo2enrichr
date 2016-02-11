@@ -1,5 +1,9 @@
 @import '../../common/less/common.less';
 
+.g2e-highlight {
+  color: @color-red;
+}
+
 #g2e-overlay {
 
   /* Generic classes*/
@@ -97,9 +101,6 @@
     border-radius: 0;
     font-size: 13px;
     height: 100%;
-  }
-  .g2e-highlight {
-    color: @color-red;
   }
   .g2e-lowlight {
     color: @color-gray;
@@ -250,7 +251,7 @@
       }
     }
     #g2e-credits {
-      float: left;
+      //float: left;
       font-style: italic;
       font-size: 12px;
       margin-bottom: 0;
@@ -270,9 +271,8 @@
       display: none;
     }
   }
-  .g2e-error {
-    color: @color-red;
-    font-weight: bold;
+  #g2e-error-message {
+    margin-top: 10px;
   }
   strong,
   .g2e-strong {
@@ -283,7 +283,6 @@
     font-size: 13px;
     font-style: italic;
     padding-bottom: 5px;
-    text-align: left;
     text-align: left;
   }
   #g2e-target-app {
@@ -315,6 +314,14 @@
     }
     #g2e-user-key-wrapper {
       margin-left: 20px;
+    }
+  }
+  #g2e-admin {
+    margin-top: 10px;
+    input {
+      border: 1px solid @color-light-gray;
+      height: 15px;
+      padding: 2px;
     }
   }
 }
@@ -368,7 +375,6 @@
     top: 200px;
     width: 150px;
   }
-
 }
 
 /* jQuery UI overrides

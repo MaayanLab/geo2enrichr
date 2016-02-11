@@ -3,7 +3,7 @@
 
 $(function() {
 
-    var ENDPOINT = 'file_upload',
+    var ENDPOINT = 'upload_soft_file',
         $fileInput = $('#file-input td'),
         $useExampleButton = $('#example-file button'),
         $descriptionInput = $('#description-input input'),

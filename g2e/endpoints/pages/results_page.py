@@ -65,9 +65,9 @@ def delete_result(extraction_id):
     return redirect(url_for('menu_pages.index_page'))
 
 
-@results_page.route('/<extraction_id>/edit', methods=['POST'])
+@results_page.route('/edit', methods=['POST'])
 @login_required
-def edit_result(extraction_id):
+def edit_result():
     """Edits gene signature, removing fields that are empty and adding new ones.
     """
     extraction_id = request.form.get('extraction_id')
@@ -96,8 +96,9 @@ def edit_result(extraction_id):
             database.delete_object(tag)
         else:
             tag_names.remove(tag.name)
+    database.update_object(gene_signature)
 
-    # Cretae any new tags. Note that any leftover tags are new ones.
+    # Create any new tags. Note that any leftover tags are new ones.
     if len(tag_names) > 0:
         for tag_name in tag_names:
             tag = Tag(tag_name)

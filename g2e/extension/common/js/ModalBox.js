@@ -18,6 +18,12 @@ function ModalBox(events, tagger, templater, userInputHandler) {
             resetFooter();
             $modalBox.hide();
         });
+
+        var adminKey = localStorage.getItem('g2e-admin-key');
+        if (adminKey) {
+            $('#g2e-admin-key').val(adminKey);
+        }
+
         tagger.init(
             $modalBox.find("#g2e-tags"),
             $modalBox.find('#g2e-required-fields-based-on-tag')

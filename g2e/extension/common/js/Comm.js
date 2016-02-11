@@ -30,14 +30,16 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             function(data) {
                 if (!!data.error) {
                     events.fire('resultsError');
+                    handleError(data);
                 } else {
                     var id = data.extraction_id,
                         url = SERVER + 'results/' + id;
                     events.fire('resultsReady', url);
                 }
             })
-            .fail(function(xhr, status, error) {
+            .fail(function(data) {
                 events.fire('resultsError');
+                handleError(data);
             })
             .always(function() {
                 loadingScreen.stop();
@@ -52,7 +54,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             function(response) {
                 callback(response === 'exist');
             })
-            .error(function() {
+            .error(function(data) {
                 notifier.warn('Unknown error.');
             })
             .always(function() {
@@ -74,19 +76,24 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
                     alert('No match found.');
                 }
             },
-            error: function(data) {
-                var resp = JSON.parse(data.responseText);
-                console.log(resp.original_error);
-                alert(resp.error);
-            },
+            error: handleError,
             complete: function() {
                 loadingScreen.stop();
             }
         });
     }
 
+    // Why did I make this function? I have no idea.
     function get(url, cb) {
         $.get(url, cb);
+    }
+
+    /* Utility function for displaying error message to user.
+     */
+    function handleError(data) {
+        var resp = JSON.parse(data.responseText);
+        console.log(resp.original_error);
+        alert(resp.error);
     }
 
     return {

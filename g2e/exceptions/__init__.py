@@ -3,5 +3,6 @@
 
 from exceptions import \
     AppException, \
+    AuthException, \
     ParseException, \
     HttpRequestArgumentsException

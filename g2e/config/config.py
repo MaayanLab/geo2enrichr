@@ -17,6 +17,7 @@ config.read('g2e/config/config.ini')
 DEBUG = config.getboolean('mode', 'debug')
 SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 SECRET_KEY = config.get('cookies', 'secret_key')
+ADMIN_KEY = config.get('admin', 'admin_key')
 
 BASE_URL = '/g2e'
 

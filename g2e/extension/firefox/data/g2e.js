@@ -43,14 +43,16 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             function(data) {
                 if (!!data.error) {
                     events.fire('resultsError');
+                    handleError(data);
                 } else {
                     var id = data.extraction_id,
                         url = SERVER + 'results/' + id;
                     events.fire('resultsReady', url);
                 }
             })
-            .fail(function(xhr, status, error) {
+            .fail(function(data) {
                 events.fire('resultsError');
+                handleError(data);
             })
             .always(function() {
                 loadingScreen.stop();
@@ -65,7 +67,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             function(response) {
                 callback(response === 'exist');
             })
-            .error(function() {
+            .error(function(data) {
                 notifier.warn('Unknown error.');
             })
             .always(function() {
@@ -87,19 +89,24 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
                     alert('No match found.');
                 }
             },
-            error: function(data) {
-                var resp = JSON.parse(data.responseText);
-                console.log(resp.original_error);
-                alert(resp.error);
-            },
+            error: handleError,
             complete: function() {
                 loadingScreen.stop();
             }
         });
     }
 
+    // Why did I make this function? I have no idea.
     function get(url, cb) {
         $.get(url, cb);
+    }
+
+    /* Utility function for displaying error message to user.
+     */
+    function handleError(data) {
+        var resp = JSON.parse(data.responseText);
+        console.log(resp.original_error);
+        alert(resp.error);
     }
 
     return {
@@ -747,6 +754,9 @@ var Templater = function(IMAGE_PATH) {
                         '&#42;See the <a href="http://amp.pharm.mssm.edu/g2e/pipeline" target="_blank">website</a> for details.<br>' +
                         'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                     '</p>' +
+                    '<p id="g2e-admin" class="g2e-text">Admin: ' +
+                        '<input id="g2e-admin-key" type="text" name="admin-password"/>' +
+                    '</p>' +
                 '</div>' +
             '</div>' +
         '</div>';
@@ -793,7 +803,10 @@ var Templater = function(IMAGE_PATH) {
                     '<input class="g2e-chkbx g2e-experimental" type="checkbox" />' +
                 '</td>'
         },
-        platformNotSupported: '<p>This platform is not supported.</p>'
+        platformNotSupported: '' +
+            '<p class="g2e-highlight">' +
+                '<strong>GEO2Enrichr: </strong>This platform is not supported.' +
+            '</p>'
     };
 
     return {
@@ -1125,6 +1138,12 @@ function ModalBox(events, tagger, templater, userInputHandler) {
             resetFooter();
             $modalBox.hide();
         });
+
+        var adminKey = localStorage.getItem('g2e-admin-key');
+        if (adminKey) {
+            $('#g2e-admin-key').val(adminKey);
+        }
+
         tagger.init(
             $modalBox.find("#g2e-tags"),
             $modalBox.find('#g2e-required-fields-based-on-tag')
@@ -1229,7 +1248,8 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
     var $modalBox,
         geneList,
-        courseraUserKey = localStorage.getItem('g2e-submission-key');
+        courseraUserKey = localStorage.getItem('g2e-submission-key'),
+        adminKey = localStorage.getItem('g2e-admin-key');
 
     events.on('geneListFetched', function(data) {
         geneList = data;
@@ -1345,7 +1365,13 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             perturbation = $modalBox.find('#g2e-perturbation .g2e-value input').val(),
             gene = $modalBox.find('#g2e-gene #g2e-geneList').val(),
             disease = $modalBox.find('#g2e-disease #g2e-diseaseList').val(),
-            threshold = $modalBox.find('#g2e-threshold option:selected').val();
+            threshold = $modalBox.find('#g2e-threshold option:selected').val(),
+            aKey = $modalBox.find('#g2e-admin-key').val() || adminKey;
+
+        if (aKey !== '') {
+            localStorage.setItem('g2e-admin-key', aKey);
+            data.adminKey = aKey;
+        }
 
         if (method) {
             data.diffexp_method = method;
@@ -1390,13 +1416,11 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 result[key] = $input.val().trim();
             }
         });
-
         key = $modalBox.find('#g2e-user-key').val() || courseraUserKey;
         if (key !== '') {
             result.user_key = key;
             localStorage.setItem('g2e-submission-key', key);
         }
-
         return result;
     }
 

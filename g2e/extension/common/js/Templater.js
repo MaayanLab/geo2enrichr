@@ -181,6 +181,9 @@ var Templater = function(IMAGE_PATH) {
                         '&#42;See the <a href="http://amp.pharm.mssm.edu/g2e/pipeline" target="_blank">website</a> for details.<br>' +
                         'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                     '</p>' +
+                    '<p id="g2e-admin" class="g2e-text">Admin: ' +
+                        '<input id="g2e-admin-key" type="text" name="admin-password"/>' +
+                    '</p>' +
                 '</div>' +
             '</div>' +
         '</div>';
@@ -227,7 +230,10 @@ var Templater = function(IMAGE_PATH) {
                     '<input class="g2e-chkbx g2e-experimental" type="checkbox" />' +
                 '</td>'
         },
-        platformNotSupported: '<p>This platform is not supported.</p>'
+        platformNotSupported: '' +
+            '<p class="g2e-highlight">' +
+                '<strong>GEO2Enrichr: </strong>This platform is not supported.' +
+            '</p>'
     };
 
     return {

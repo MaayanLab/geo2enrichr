@@ -3,7 +3,8 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
 
     var $modalBox,
         geneList,
-        courseraUserKey = localStorage.getItem('g2e-submission-key');
+        courseraUserKey = localStorage.getItem('g2e-submission-key'),
+        adminKey = localStorage.getItem('g2e-admin-key');
 
     events.on('geneListFetched', function(data) {
         geneList = data;
@@ -119,7 +120,13 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
             perturbation = $modalBox.find('#g2e-perturbation .g2e-value input').val(),
             gene = $modalBox.find('#g2e-gene #g2e-geneList').val(),
             disease = $modalBox.find('#g2e-disease #g2e-diseaseList').val(),
-            threshold = $modalBox.find('#g2e-threshold option:selected').val();
+            threshold = $modalBox.find('#g2e-threshold option:selected').val(),
+            aKey = $modalBox.find('#g2e-admin-key').val() || adminKey;
+
+        if (aKey !== '') {
+            localStorage.setItem('g2e-admin-key', aKey);
+            data.adminKey = aKey;
+        }
 
         if (method) {
             data.diffexp_method = method;
@@ -164,13 +171,11 @@ function UserInputHandler(comm, events, notifier, screenScraper, tagger) {
                 result[key] = $input.val().trim();
             }
         });
-
         key = $modalBox.find('#g2e-user-key').val() || courseraUserKey;
         if (key !== '') {
             result.user_key = key;
             localStorage.setItem('g2e-submission-key', key);
         }
-
         return result;
     }
 

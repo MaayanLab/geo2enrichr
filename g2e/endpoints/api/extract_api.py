@@ -5,9 +5,12 @@ import json
 
 from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
+from flask.ext.login import current_user
 
 from g2e import config, database
 from g2e import signature_factory
+from g2e.exceptions import AuthException
+from g2e.endpoints.request_utils import get_param_as_list
 
 
 extract_api = Blueprint('extract_api',
@@ -35,6 +38,12 @@ def post_from_geo():
     """Handles POST requests from GEO.
     """
     args = request.form
+
+    admin_key = args.get('adminKey')
+    is_authenticated = admin_key == config.ADMIN_KEY
+    if not _user_is_authenticated_for_tag(args, is_authenticated):
+        raise AuthException('One of the metadata tags used is restricted.')
+
     response = {}
     gene_signature = signature_factory.from_geo(args)
     database.save_gene_signature(gene_signature)
@@ -48,6 +57,10 @@ def post_file():
     """Handles POST file upload.
     """
     args = request.form
+
+    if not _user_is_authenticated_for_tag(args, current_user.is_authenticated):
+        raise AuthException('One of the metadata tags used is restricted.')
+
     response = {}
     gene_signature = signature_factory.from_file(request.files['file'], args)
     database.save_gene_signature(gene_signature)
@@ -78,9 +91,27 @@ def example_file():
     """Handles an example SOFT file extraction.
     """
     args = request.form
+
+    if not _user_is_authenticated_for_tag(args, current_user.is_authenticated):
+        raise AuthException('One of the metadata tags used is restricted.')
+
     response = {}
     file_obj = signature_factory.get_example_file()
     gene_signature = signature_factory.from_file(file_obj, args)
     database.save_gene_signature(gene_signature)
     response['extraction_id'] = gene_signature.extraction_id
     return jsonify(response)
+
+
+def _user_is_authenticated_for_tag(args, is_authenticated):
+    """Returns False if a tag is restricted and the user is not authenticated,
+    True otherwise.
+    """
+    tag_names = get_param_as_list(args, 'tags')
+    for tag_name in tag_names:
+        tag = database.get_tag_by_name(tag_name)
+        # The tag may not exist yet. If so, we can safely assume it is not
+        # restricted.
+        if tag and tag.is_restricted and not is_authenticated:
+            return False
+    return True

@@ -1,4 +1,4 @@
 """Interface for targetapps module.
 """
 
-from maker import get_links
+from target_applications import get_links

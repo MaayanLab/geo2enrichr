@@ -30,12 +30,11 @@ $(function() {
         function submitEdit(evt) {
             evt.preventDefault();
 
-            var extractionId = $adminControls.find('input[name="extraction_id"]').val(),
-                $forms = $adminControls.find('form'),
+            var $forms = $adminControls.find('form'),
                 formData = new FormData($forms[0]);
 
             $.ajax({
-                url: '/g2e/results/' + extractionId + '/edit',
+                url: '/g2e/results/edit',
                 type: 'POST',
                 data: formData,
                 // Tell jQuery not to process data or worry about content-type.
