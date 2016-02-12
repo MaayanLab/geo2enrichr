@@ -17,9 +17,9 @@ def get_gene_list(direction, extraction_id):
     """Returns gene list in plain text file based on gene signature ID.
     """
     gene_signature = database.get_gene_signature(extraction_id)
-    genelist = _get_gene_list_by_direction(gene_signature, int(direction))
-    genelist_str = file_manager.get_file_contents_as_string(genelist)
-    response = Response(genelist_str, mimetype='text/plain')
+    gene_list = _get_gene_list_by_direction(gene_signature, int(direction))
+    gene_list_str = file_manager.get_file_contents_as_string(gene_list)
+    response = Response(gene_list_str, mimetype='text/plain')
     return response
 
 

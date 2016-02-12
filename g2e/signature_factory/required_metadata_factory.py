@@ -14,7 +14,7 @@ def from_http_request(args):
     # now. There has to be a better way to handle user input, right?
     if diff_exp_method == 'chdir':
         cutoff = args['cutoff'] if 'cutoff' in args else 500
-        if cutoff == 'none' or cutoff == 'None':
+        if cutoff == 'null' or cutoff == 'none' or cutoff == 'None':
             cutoff = None
         else:
             cutoff = int(cutoff)
