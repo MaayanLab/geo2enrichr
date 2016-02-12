@@ -102,6 +102,7 @@ config_out = ConfigParser()
 config_out.add_section('mode')
 config_out.add_section('db')
 config_out.add_section('cookies')
+config_out.add_section('admin')
 
 # Configuration, primarily database connection string.
 # ----------------------------------------------------------------------------
@@ -112,6 +113,7 @@ else:
     config_in.read('g2e/config/dev.ini')
     config_out.set('mode', 'debug', True)
 
+config_out.set('admin', 'admin_key', config_in.get('admin', 'admin_key'))
 config_out.set('db', 'uri', config_in.get('db', 'uri'))
 config_out.set('cookies', 'secret_key',
                config_in.get('cookies', 'secret_key'))
@@ -136,10 +138,12 @@ config_out = ConfigParser()
 config_out.add_section('mode')
 config_out.add_section('db')
 config_out.add_section('cookies')
+config_out.add_section('admin')
 config_out.set('db', 'uri', config_in.get('db', 'uri'))
 config_out.set('mode', 'debug', True)
 config_out.set('cookies', 'secret_key',
                config_in.get('cookies', 'secret_key'))
+config_out.set('admin', 'admin_key', config_in.get('admin', 'admin_key'))
 
 with open('g2e/config/config.ini', 'wb') as configfile:
     config_out.write(configfile)

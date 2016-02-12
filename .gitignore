@@ -1,6 +1,7 @@
 # DB connection configs. Do *NOT* version control these.
 g2e/config/dev.ini
 g2e/config/prod.ini
+g2e/config/config.ini
 alembic.ini
 
 # IntelliJ
