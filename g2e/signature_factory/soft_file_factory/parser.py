@@ -4,7 +4,7 @@
 import csv
 
 from . import file_manager
-from g2e.exceptions import ParseException
+from g2e.exceptions import SoftFileParseException
 
 
 def parse(name, is_geo=True, platform=None, samples=None):
@@ -47,7 +47,7 @@ def _parse_file(filename):
             except ValueError as e:
                 msg = 'Error converting expression values to floats. ' \
                       'Do you have null values?'
-                raise ParseException(msg, e)
+                raise SoftFileParseException(msg, e)
     return genes, a_vals, b_vals, zip(names, samples)
 
 

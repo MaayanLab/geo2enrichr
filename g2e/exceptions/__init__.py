@@ -4,5 +4,5 @@
 from exceptions import \
     AppException, \
     AuthException, \
-    ParseException, \
+    SoftFileParseException, \
     HttpRequestArgumentsException

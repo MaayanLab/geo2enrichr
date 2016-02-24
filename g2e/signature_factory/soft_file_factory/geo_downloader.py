@@ -7,6 +7,8 @@ import zlib
 from urllib2 import urlopen, URLError
 from StringIO import StringIO
 
+from g2e.exceptions import SoftFileParseException
+
 
 def download(accession, downloaded_file_path):
     """Downloads GEO file based on accession number. Side effect is a
@@ -42,11 +44,10 @@ def _get_file_by_url(url, attempts=5):
         try:
             response = urlopen(url)
         except URLError as e:
-            # See: https://docs.python.org/3/howto/urllib2.html.
-            if hasattr(e, 'reason'):
-                print 'Failed to reach a server because' + str(e.reason)
-            elif hasattr(e, 'code'):
-                print 'The server couldn\'t fulfill the request; status code ' + str(e.code)
+            message = 'Failed to download data from GEO.'
+            raise SoftFileParseException(message,
+                                         python_error=e,
+                                         status_code=404)
         if response is not None:
             break
         else:

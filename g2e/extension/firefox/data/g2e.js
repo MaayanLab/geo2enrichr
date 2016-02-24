@@ -42,7 +42,6 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             inputData,
             function(data) {
                 if (!!data.error) {
-                    events.fire('resultsError');
                     handleError(data);
                 } else {
                     var id = data.extraction_id,
@@ -51,7 +50,6 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
                 }
             })
             .fail(function(data) {
-                events.fire('resultsError');
                 handleError(data);
             })
             .always(function() {
@@ -105,7 +103,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
      */
     function handleError(data) {
         var resp = JSON.parse(data.responseText);
-        console.log(resp.original_error);
+        events.fire('resultsError', resp.error);
         alert(resp.error);
     }
 
@@ -746,7 +744,7 @@ var Templater = function(IMAGE_PATH) {
                         '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
                         '<button id="g2e-check-btn" class="g2e-btn">Check for duplicate signatures</button>' +
                         '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
-                        '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
+                        '<p id="g2e-error-message" class="g2e-highlight"></p>' +
                     '</div>' +
                 '</div>' +
                 '<div id="g2e-footer">' +
@@ -1165,8 +1163,9 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         showResultsLink(data);
     });
 
-    events.on('resultsError', function() {
-        $modalBox.find('#g2e-error-message').show();
+    events.on('resultsError', function(message) {
+        message = message || 'Unknown error. Please try again later.';
+        $modalBox.find('#g2e-error-message').text(message).show();
     });
 
     events.on('dataPosted', function() {

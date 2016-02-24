@@ -29,7 +29,6 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
             inputData,
             function(data) {
                 if (!!data.error) {
-                    events.fire('resultsError');
                     handleError(data);
                 } else {
                     var id = data.extraction_id,
@@ -38,7 +37,6 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
                 }
             })
             .fail(function(data) {
-                events.fire('resultsError');
                 handleError(data);
             })
             .always(function() {
@@ -92,7 +90,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
      */
     function handleError(data) {
         var resp = JSON.parse(data.responseText);
-        console.log(resp.original_error);
+        events.fire('resultsError', resp.error);
         alert(resp.error);
     }
 

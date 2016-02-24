@@ -173,7 +173,7 @@ var Templater = function(IMAGE_PATH) {
                         '<button id="g2e-submit-btn" class="g2e-btn">Extract gene lists</button>' +
                         '<button id="g2e-check-btn" class="g2e-btn">Check for duplicate signatures</button>' +
                         '<button id="g2e-results-btn" class="g2e-btn">Open results tab</button>' +
-                        '<p id="g2e-error-message" class="g2e-highlight">Unknown error. Please try again later.</p>' +
+                        '<p id="g2e-error-message" class="g2e-highlight"></p>' +
                     '</div>' +
                 '</div>' +
                 '<div id="g2e-footer">' +

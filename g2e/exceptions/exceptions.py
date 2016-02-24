@@ -33,13 +33,13 @@ class AuthException(AppException):
                                             status_code)
 
 
-class ParseException(AppException):
-    """Exception to be raised when application cannot parse a file.
+class SoftFileParseException(AppException):
+    """Exception to be raised when application cannot parse a SOFT file.
     """
 
     def __init__(self, message, python_error=None, status_code=400):
-        super(ParseException, self).__init__(message, python_error,
-                                             status_code)
+        super(SoftFileParseException, self).__init__(message, python_error,
+                                                     status_code)
 
 
 class HttpRequestArgumentsException(AppException):

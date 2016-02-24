@@ -45,8 +45,9 @@ function ModalBox(events, tagger, templater, userInputHandler) {
         showResultsLink(data);
     });
 
-    events.on('resultsError', function() {
-        $modalBox.find('#g2e-error-message').show();
+    events.on('resultsError', function(message) {
+        message = message || 'Unknown error. Please try again later.';
+        $modalBox.find('#g2e-error-message').text(message).show();
     });
 
     events.on('dataPosted', function() {
