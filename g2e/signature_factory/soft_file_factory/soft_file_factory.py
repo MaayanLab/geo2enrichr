@@ -45,9 +45,9 @@ def from_geo(args):
     samples = control + experimental
 
     genes, a_vals, b_vals, selections, stats = parser.parse(accession,
-                                                                True,
-                                                                dataset.platform,
-                                                                samples)
+                                                            True,
+                                                            dataset.platform,
+                                                            samples)
 
     if 'normalize' not in args or args['normalize'] == 'True':
         normalize = True

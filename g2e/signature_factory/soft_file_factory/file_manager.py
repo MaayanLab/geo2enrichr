@@ -99,11 +99,8 @@ def get_example_file():
 def _build_selections(selections):
     """Handles the ordering of the columns based on control vs. sample.
     """
-    a_indices = selections['a_indices']
-    b_indices = selections['b_indices']
-    result_list = range(max(a_indices + b_indices)+1)
-    for i in a_indices:
-        result_list[i] = 'a'
-    for i in b_indices:
-        result_list[i] = 'b'
-    return filter(lambda x: x == 'a' or x == 'b', result_list)
+    # In soft_file_factory.parser, we find all the control columns and put
+    # them first (leftmost) and then the condition columns and put them next
+    # (rightmost).
+    return ['0' for x in selections['a_indices']] + \
+           ['1' for x in selections['b_indices']]

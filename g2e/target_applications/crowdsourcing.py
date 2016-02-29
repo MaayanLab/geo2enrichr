@@ -46,7 +46,6 @@ CROWDSOURCING_TAGS = {
 
 def get_link(genes, optional_metadata, soft_file, tags):
     print 'POSTing to Crowdsourcing if necessary'
-
     for tag in tags:
         if tag.name.upper() in CROWDSOURCING_TAGS:
             return _post(genes, optional_metadata, soft_file, tag)
