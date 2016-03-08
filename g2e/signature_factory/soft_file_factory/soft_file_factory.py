@@ -6,7 +6,7 @@ import time
 from g2e import database
 from g2e.endpoints.request_utils import get_param_as_list
 from substrate import CustomDataset, GeoDataset, SoftFile, SoftFileSample
-from . import parser, cleaner, file_manager
+from . import parser, cleaner, file_manager, eutils
 
 
 def from_geo(args):
@@ -18,16 +18,23 @@ def from_geo(args):
         file_manager.download(accession)
 
     dataset = database.get_geo_dataset(accession)
-    if dataset == None:
+    if not dataset:
         platform = args['platform']
         if platform.index('GPL') == 0:
             platform = platform[3:]
+
+        title = args.get('title')
+        summary = args.get('summary')
+        if not title or not summary:
+            title, summary = eutils.get_title_and_summary(accession)
+            print('Fetched title and summary from EUtils API: %s, %s' % (title, summary))
+
         dataset = GeoDataset(
             accession=accession,
             platform=platform,
             organism=args['organism'],
-            title=args['title'],
-            summary=args['summary']
+            title=title,
+            summary=summary
         )
     else:
         print 'Dataset %s already exists!' % accession
