@@ -25,9 +25,11 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
      */
     function postSoftFile(inputData) {
         loadingScreen.start();
+        debugger;
         $.post(SERVER + 'api/extract/geo',
             inputData,
             function(data) {
+                debugger;
                 if (!!data.error) {
                     handleError(data);
                 } else {
@@ -37,9 +39,11 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
                 }
             })
             .fail(function(data) {
+                debugger;
                 handleError(data);
             })
             .always(function() {
+                debugger;
                 loadingScreen.stop();
             });
     }

@@ -4,13 +4,16 @@
 import csv
 
 from . import file_manager
-from g2e.exceptions import SoftFileParseException
+from g2e.exceptions import PlatformNotSupportedException, \
+    SoftFileParseException
 
 
 def parse(name, is_geo=True, platform=None, samples=None):
     """Entry point for all file parsing. If the dataset is from GEO, this
     delegates to a function that makes some basic assumptions about GEO files.
     """
+    if not platform_supported(platform):
+        raise PlatformNotSupportedException('Platform not supported')
     print('Parsing SOFT file.')
     full_name = file_manager.path(name)
     if is_geo:
@@ -155,10 +158,7 @@ def _parse_geo(filename, platform, samples):
 def platform_supported(platform):
     """Returns True if the platform is supported, False otherwise.
     """
-    # TODO: Can this not just be: `return platform in PROBE2GENE`?
-    if platform not in PROBE2GENE:
-        return False
-    return True
+    return platform in PROBE2GENE
 
 
 def _probe2gene(platform, probe):

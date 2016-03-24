@@ -50,3 +50,13 @@ class SoftFileParseException(AppException):
     def __init__(self, message, python_error=None, status_code=400):
         super(SoftFileParseException, self).__init__(message, python_error,
                                                      status_code)
+
+
+class PlatformNotSupportedException(AppException):
+    """Exception to be raised when platform is not supported.
+    """
+
+    def __init__(self, message, python_error=None, status_code=403):
+        super(PlatformNotSupportedException, self).__init__(message,
+                                                            python_error,
+                                                            status_code)

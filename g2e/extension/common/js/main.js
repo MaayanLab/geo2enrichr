@@ -1,6 +1,6 @@
 
 var main = function() {
-
+    
     var events = Events(),
         page = Page();
 
