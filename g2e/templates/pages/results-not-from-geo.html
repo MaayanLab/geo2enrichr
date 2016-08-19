@@ -18,40 +18,52 @@
             {% include 'partials/results-tags.html' %}
         {% endif %}
 
-        <table class='table'>
-            <caption>Metadata</caption>
-            <tr>
-                <td>Differential expression method</td>
-                <td>
-                    {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
-                        <a href='http://maayanlab.net/CD/' target='_blank'>Characteristic Direction</a>
-                    {% else %}
-                        T-test
-                    {% endif %}
-                </td>
-            </tr>
+        {% set has_metadata =
+            gene_signature.required_metadata.diff_exp_method or
+            gene_signature.required_metadata.cutoff or
+            gene_signature.required_metadata.ttest_correction_method or
+            gene_signature.optional_metadata|length > 0
+        %}
 
-            {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
-                <tr>
-                    <td>Cutoff</td>
-                    <td>{{ gene_signature.required_metadata.cutoff }}</td>
-                </tr>
-            {% endif %}
+        {% if has_metadata %}
+            <table class='table'>
+                <caption>Metadata</caption>
 
-            {% if gene_signature.required_metadata.diff_exp_method == 'ttest' %}
-                <tr>
-                    <td>Correction method</td>
-                    <td>{{ gene_signature.required_metadata.ttest_correction_method }}</td>
-                </tr>
-            {% endif %}
+                {% if gene_signature.required_metadata.diff_exp_method %}
+                    <tr>
+                        <td>Differential expression method</td>
+                        <td>
+                            {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                                <a href='http://maayanlab.net/CD/' target='_blank'>Characteristic Direction</a>
+                            {% else %}
+                                {{ gene_signature.required_metadata.diff_exp_method }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
 
-            {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
-                <tr>
-                    <td>{{ opt_meta.name|capitalize }}</td>
-                    <td>{{ opt_meta.value }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+                {% if gene_signature.required_metadata.diff_exp_method == 'chdir' %}
+                    <tr>
+                        <td>Cutoff</td>
+                        <td>{{ gene_signature.required_metadata.cutoff }}</td>
+                    </tr>
+                {% endif %}
+
+                {% if gene_signature.required_metadata.diff_exp_method == 'ttest' %}
+                    <tr>
+                        <td>Correction method</td>
+                        <td>{{ gene_signature.required_metadata.ttest_correction_method }}</td>
+                    </tr>
+                {% endif %}
+
+                {% for opt_meta in gene_signature.optional_metadata|c_filter_optional_metadata %}
+                    <tr>
+                        <td>{{ opt_meta.name|capitalize }}</td>
+                        <td>{{ opt_meta.value }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
 
         {% if show_viz %}
             <table class='table'>
@@ -78,22 +90,54 @@
         <table class='table gene-lists'>
             <caption>External Links and Downloads</caption>
             <thead>
-            <tr>
-                <td>
-                    <span data-toggle='tooltip'
-                          title='Text file containing a gene list resulting from differential expression analysis.'>Gene lists</span>
-                </td>
-            </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <span data-toggle='tooltip'
+                              title='Text file containing a gene list resulting from differential expression analysis.'>Gene lists</span>
+                    </td>
+                </tr>
             </thead>
-            <tr>
-                {% set gene_list = gene_signature.combined_genes %}
-                <td>
-                    <a href='{{ config.GENE_LIST_URL }}/0/{{ gene_signature.extraction_id }}'
-                       target='_blank'>
-                        <i class='fa fa-download'></i>
-                    </a>
-                </td>
-            </tr>
+
+            {% set up_genes = gene_signature.up_genes %}
+            {% if up_genes %}
+                <tr>
+                    <td>Up</td>
+                    <td>
+                        <a href='{{ config.GENE_LIST_URL }}/1/{{ gene_signature.extraction_id }}'
+                           target='_blank'>
+                            <i class='fa fa-download'></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endif %}
+
+            {% set down_genes = gene_signature.down_genes %}
+            {% if down_genes %}
+                <tr>
+                    <td>Down</td>
+                    <td>
+                        <a href='{{ config.GENE_LIST_URL }}/-1/{{ gene_signature.extraction_id }}'
+                           target='_blank'>
+                            <i class='fa fa-download'></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endif %}
+
+            {% set gene_list = gene_signature.combined_genes %}
+            {% if gene_list %}
+                <tr>
+                    <td>Combined</td>
+                    <td>
+                        <a href='{{ config.GENE_LIST_URL }}/0/{{ gene_signature.extraction_id }}'
+                           target='_blank'>
+                            <i class='fa fa-download'></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endif %}
+
         </table>
     </div>
 {% endblock %}

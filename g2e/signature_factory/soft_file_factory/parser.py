@@ -12,11 +12,11 @@ def parse(name, is_geo=True, platform=None, samples=None):
     """Entry point for all file parsing. If the dataset is from GEO, this
     delegates to a function that makes some basic assumptions about GEO files.
     """
-    if not platform_supported(platform):
-        raise PlatformNotSupportedException('Platform not supported')
     print('Parsing SOFT file.')
     full_name = file_manager.path(name)
     if is_geo:
+        if not platform_supported(platform):
+            raise PlatformNotSupportedException('Platform not supported')
         return _parse_geo(full_name, platform, samples)
     return _parse_file(full_name)
 

@@ -26,8 +26,11 @@ def get_file_contents_as_string(gene_list):
 
     contents += '!end_metadata\n'
     for rg in gene_list.ranked_genes:
-        value_string = '%0.6f' % rg.value
-        gene_string = rg.gene.name + '\t' + value_string + '\n'
+        if rg.value:
+            value_string = '%0.6f' % rg.value
+            gene_string = '%s\t%s\n' % (rg.gene.name, value_string)
+        else:
+            gene_string = '%s\n' % rg.gene.name
         contents += gene_string
     return contents
 
