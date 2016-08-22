@@ -6,7 +6,7 @@ GEO2Enrichr is a browser extension and web application for extracting gene sets 
 
 #### Where can I learn more?
 
-[GEO2Enrichr: browser extension and server app to extract gene sets from GEO and analyze them for biological functions.](http://www.ncbi.nlm.nih.gov/pubmed/25971742) Gundersen GW, Jones MR, Rouillard AD, Kou Y, Monteiro CD, Fledmann AS, Hu KS, Ma'ayan A. Bioinformatics. 2015 Sep 15;31(18):3060-2. doi: 10.1093.
+[GEO2Enrichr: browser extension and server app to extract gene sets from GEO and analyze them for biological functions.](http://www.ncbi.nlm.nih.gov/pubmed/25971742) Gundersen GW, Jones MR, Rouillard AD, Kou Y, Monteiro CD, Feldmann AS, Hu KS, Ma'ayan A. Bioinformatics. 2015 Sep 15;31(18):3060-2. doi: 10.1093.
 
 ## For Ma'ayan Lab developers
 
