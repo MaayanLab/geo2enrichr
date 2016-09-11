@@ -17,6 +17,7 @@ module.exports = function(grunt) {
         COMMON + 'js/UiEmbedder.js',
         COMMON + 'js/EUtilsApi.js',
         COMMON + 'js/Events.js',
+        COMMON + 'js/Extension.js',
         COMMON + 'js/Tagger.js',
         COMMON + 'js/Templater.js',
         COMMON + 'js/LoadingScreen.js',

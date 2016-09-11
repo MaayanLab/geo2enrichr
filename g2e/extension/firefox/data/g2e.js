@@ -302,6 +302,16 @@ var Events = function() {
 };
 
 
+/* This module creates an invisible div that it useful for verifying that
+ * GEO2Enrichr is installed.
+ */
+var Extension = function () {
+    var div = document.createElement('div');
+    div.setAttribute('id', 'geo2enrichr-extension-installed-div');
+    document.getElementsByTagName('body')[0].appendChild(div);
+};
+
+
 /* Abstracts issues of adding new required fields depending on metadata. 95%
  * of this module is only required for a 2015 Coursera MOOC and could be
  * refactored once the course is over.
@@ -1506,6 +1516,10 @@ var main = function() {
     var events = Events(),
         page = Page();
 
+    // Load this no matter what. It is useful for notifying other applications
+    // that GEO2Enrichr is installed.
+    Extension();
+
     if (page.isDataset()) {
         ScreenScraper(events, page, SUPPORTED_PLATFORMS, function(screenScraper) {
 
@@ -1531,7 +1545,6 @@ var main = function() {
                 events.fire('g2eLoaded');
             } else {
                 uiEmbedder.abort();
-
             }
         });
     }

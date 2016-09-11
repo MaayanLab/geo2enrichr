@@ -4,6 +4,10 @@ var main = function() {
     var events = Events(),
         page = Page();
 
+    // Load this no matter what. It is useful for notifying other applications
+    // that GEO2Enrichr is installed.
+    Extension();
+
     if (page.isDataset()) {
         ScreenScraper(events, page, SUPPORTED_PLATFORMS, function(screenScraper) {
 
@@ -29,7 +33,6 @@ var main = function() {
                 events.fire('g2eLoaded');
             } else {
                 uiEmbedder.abort();
-
             }
         });
     }
