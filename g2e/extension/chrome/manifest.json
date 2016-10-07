@@ -1,7 +1,7 @@
 {
     "name": "GEO2Enrichr",
     "short_name": "g2e",
-    "version": "4.3",
+    "version": "4.5",
     "description": "Ma'ayan Lab",
     "icons": {
         "128": "logo-128x128.png"
@@ -13,9 +13,8 @@
     "content_scripts": [
         {
             "matches": [ 
-                "http://www.ncbi.nlm.nih.gov/sites/*",
-                "http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi*",
-                "*://localhost*",
+                "https://www.ncbi.nlm.nih.gov/sites/*",
+                "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi*",
                 "http://amp.pharm.mssm.edu/gen3va/*"
             ],
             "css": ["open-sans.css", "main.css", "jquery-ui.min.css"],
