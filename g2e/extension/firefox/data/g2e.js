@@ -38,11 +38,11 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
      */
     function postSoftFile(inputData) {
         loadingScreen.start();
-        debugger;
+        var ONE_SECOND = 1000,
+            start = time();
         $.post(SERVER + 'api/extract/geo',
             inputData,
             function(data) {
-                debugger;
                 if (!!data.error) {
                     handleError(data);
                 } else {
@@ -52,13 +52,26 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
                 }
             })
             .fail(function(data) {
-                debugger;
-                handleError(data);
+                if (time() - start < ONE_SECOND) {
+                    var msg = 'GEO2Enrichr:\n\n' +
+                        'Chrome is preventing GEO2Enrichr from ' +
+                        'connecting to our back-end server. This is a ' +
+                        'known issue with an easy solution. Please visit ' +
+                        'our site for information on quickly resolving it:' +
+                        '\n\n' +
+                        'http://amp.pharm.mssm.edu/g2e/manual#security';
+                    handleError(msg, true);
+                } else {
+                    handleError(data);
+                }
             })
             .always(function() {
-                debugger;
                 loadingScreen.stop();
             });
+    }
+
+    function time() {
+        return new Date().getTime();
     }
 
     function checkIfProcessed(payload, callback) {
@@ -105,10 +118,15 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
 
     /* Utility function for displaying error message to user.
      */
-    function handleError(data) {
-        var resp = JSON.parse(data.responseText);
-        events.fire('resultsError', resp.error);
-        alert(resp.error);
+    function handleError(data, noParse) {
+        var errorMsg;
+        if (noParse) {
+            errorMsg = data;
+        } else {
+            errorMsg = JSON.parse(data.responseText).error;
+            events.fire('resultsError', errorMsg);
+        }
+        alert(errorMsg);
     }
 
     return {

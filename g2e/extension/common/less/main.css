@@ -63,11 +63,11 @@
 }
 #g2e-overlay .g2e-lock,
 #g2e-overlay .g2e-lock:hover {
-  background: #aaaaaa;
+  background: #aaa;
 }
 #g2e-overlay #g2e-modal {
   background-color: #ffffff;
-  border: 1px solid #aaaaaa;
+  border: 1px solid #aaa;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   left: 50%;
   margin-left: -420px;
@@ -75,6 +75,19 @@
   position: fixed;
   top: 70px;
   width: 800px;
+  z-index: 999;
+}
+#g2e-overlay #g2e-error-modal {
+  background-color: #ffffff;
+  border: 1px solid #aaa;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  left: 50%;
+  margin-left: -420px;
+  padding: 20px;
+  position: fixed;
+  top: 70px;
+  width: 100px;
+  z-index: 1001;
 }
 #g2e-overlay p {
   font-family: arial, sans-serif;
@@ -99,13 +112,13 @@
 }
 #g2e-overlay select {
   background: none;
-  border: 1px solid #eeeeee;
+  border: 1px solid #eee;
   border-radius: 0;
   font-size: 13px;
   height: 100%;
 }
 #g2e-overlay .g2e-lowlight {
-  color: #aaaaaa;
+  color: #aaa;
   font-size: 13px;
   font-style: italic;
   padding-bottom: 5px;
@@ -181,7 +194,7 @@
 #g2e-overlay #g2e-nav #g2e-close-btn {
   background: white;
   border: none;
-  color: #aaaaaa;
+  color: #aaa;
   cursor: pointer;
   font-size: 20px;
   height: 25px;
@@ -216,7 +229,7 @@
   width: 100%;
 }
 #g2e-overlay #g2e-confirm .g2e-confirm-tbl tr {
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid #eee;
   height: 20px;
 }
 #g2e-overlay #g2e-confirm .g2e-confirm-tbl td {
@@ -279,7 +292,7 @@
   font-weight: bold;
 }
 #g2e-overlay caption {
-  color: #aaaaaa;
+  color: #aaa;
   font-size: 13px;
   font-style: italic;
   padding-bottom: 5px;
@@ -303,7 +316,7 @@
   margin: 5px 0;
 }
 #g2e-overlay #g2e-crowdsourcing-details input {
-  border: 1px solid #eeeeee;
+  border: 1px solid #eee;
   width: 100%;
 }
 #g2e-overlay #g2e-crowdsourcing-details label {
@@ -316,7 +329,7 @@
   margin-top: 10px;
 }
 #g2e-overlay #g2e-admin input {
-  border: 1px solid #eeeeee;
+  border: 1px solid #eee;
   height: 15px;
   padding: 2px;
 }
@@ -356,7 +369,7 @@
 .g2e-loader-container .g2e-loader-modal {
   background: #fffac7;
   border: 1px solid #fff169;
-  color: #444444;
+  color: #444;
   font-family: arial, sans-serif;
   font-size: 12px;
   font-weight: bold;
@@ -414,7 +427,7 @@ ul#g2e-tags li {
   margin: 2px 3px;
 }
 ul#g2e-tags li.tagit-choice {
-  background-color: #d3cbe0 !important;
+  background-color: #D3CBE0 !important;
 }
 ul#g2e-tags li.choice {
   position: relative;
