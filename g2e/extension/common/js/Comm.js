@@ -39,18 +39,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
                 }
             })
             .fail(function(data) {
-                if (time() - start < ONE_SECOND) {
-                    var msg = 'GEO2Enrichr:\n\n' +
-                        'Chrome is preventing GEO2Enrichr from ' +
-                        'connecting to our back-end server. This is a ' +
-                        'known issue with an easy solution. Please visit ' +
-                        'our site for information on quickly resolving it:' +
-                        '\n\n' +
-                        'http://amp.pharm.mssm.edu/g2e/manual#security';
-                    handleError(msg, true);
-                } else {
-                    handleError(data);
-                }
+                handleError(data);
             })
             .always(function() {
                 loadingScreen.stop();
@@ -105,14 +94,9 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
 
     /* Utility function for displaying error message to user.
      */
-    function handleError(data, noParse) {
-        var errorMsg;
-        if (noParse) {
-            errorMsg = data;
-        } else {
-            errorMsg = JSON.parse(data.responseText).error;
-            events.fire('resultsError', errorMsg);
-        }
+    function handleError(data) {
+        var errorMsg = JSON.parse(data.responseText).error;
+        events.fire('resultsError', errorMsg);
         alert(errorMsg);
     }
 

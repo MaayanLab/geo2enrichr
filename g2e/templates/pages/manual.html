@@ -52,38 +52,6 @@
             <p>These results pages are permanent. You can reference a previous analysis at any time via the page"s link.</p>
         </section>
 
-        <section id="security" name="security">
-            <h1>Security</h1>
-            <div>
-                <p>If you try to use GEO2Enrichr's Chrome extension and it fails immediately, you may be running into a security issue in Chrome. Here is the fix (the explanation is below):
-                </p>
-                <ul>
-                    <li>Please visit <a href='https://amp.pharm.mssm.edu/g2e/' target='_blank'>https://amp.pharm.mssm.edu/g2e/</a>. Notice the secure protocol, or <span class='mono'>https</span> at the beginning of the URL.</li>
-                    <li>Chrome will warn you that our website is untrusted.</li>
-                    <li>Click <strong>ADVANCED</strong></li>
-                    <li>Click <strong>Proceed to amp.pharm.mssm.edu (unsafe)</strong></li>
-                </ul>
-            </div>
-            <div>
-                <h5>Why did I have to do that?</h5>
-                <p>
-                    When GEO2Enrichr was first published, the Gene Expression Omnibus (GEO) was hosted as an unsecure website. In late 2016, GEO switched to a secure website, i.e. one using the HTTPS protocol. Secure sites cannot talk to unsecure sites because this would be a weak link in the encryption. We quickly modified our server to accept HTTPS requests, but we need third-party verification in order to have full encryption. This is why Chrome is warning you: our site claims to be secure, but there is no third-party verification that we are who we say we are. A secure transmission is meaningless if you can't trust the source.
-                </p>
-            </div>
-            <div>
-                <h5>Should I be worried?</h5>
-                <p>
-                    You have no reason to be worried since you are not entering passwords, credit card information, or other sensitive information on our website. We only use the HTTPS protocol since GEO does.
-                </p>
-            </div>
-            <div>
-                <h5>That was annoying!</h5>
-                <p>
-                    We apologize for the inconvenience and are working on a permanent solution.
-                </p>
-            </div>
-        </section>
-
         <section id="tags" name="tags">
             <h1>Tags</h1>
             <p>A <em>tag</em> is a plain text term that you can use to associate multiple signatures from different studies. These tags are non-hierarchical keywords assigned to a gene signature. In social media, the equivalent idea is a "hashtag", which is a tag preceded by a "#" or hash symbol. These tags enable the creation of collections of gene signatures around common themes. A gene signature can have multiple tags.</p>
