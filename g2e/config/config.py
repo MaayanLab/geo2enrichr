@@ -14,6 +14,15 @@ config = ConfigParser()
 #    mysql://<USER>:<PASSWORD>@<IP ADDRESS>:<PORT | 3306>/<DB>
 config.read('g2e/config/config.ini')
 
+# in the case of the CONFIG environment variable, we load it as json into the config
+if os.environ.get('CONFIG'):
+  import json
+  for section, conf in json.loads(os.environ['CONFIG']).items():
+    for key, val in conf.items():
+      if key not in config.sections():
+        config.add_section(section)
+      config.set(section, key, val)
+
 DEBUG = config.getboolean('mode', 'debug')
 SERVER_ROOT = os.path.dirname(os.getcwd()) + '/g2e/g2e'
 SECRET_KEY = config.get('cookies', 'secret_key')
