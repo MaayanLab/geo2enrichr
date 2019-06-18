@@ -83,7 +83,7 @@ def handle_symbols(filename):
             log.write('\n')
         os.remove('symbols/' + filename)
     else:
-    	print 'Converted ' + accession
+    	print('Converted ' + accession)
 
 
 if __name__ == '__main__':
