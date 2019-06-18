@@ -11,7 +11,7 @@ L1000CDS2_URL = 'http://amp.pharm.mssm.edu/L1000CDS2/'
 def get_link(genes, metadata):
     """Returns a shareable link to L1000CDS2 data.
     """
-    print 'Calculating cosine distance'
+    print('Calculating cosine distance')
 
     url = L1000CDS2_URL + 'query'
     headers = {'content-type': 'application/json'}
