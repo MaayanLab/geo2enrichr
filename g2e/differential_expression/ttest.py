@@ -12,7 +12,7 @@ r_stats = importr('stats')
 def ttest(A, B, genes, ttest_correction_method, ttest_cutoff):
     """Wraps original T-test method, handling sorting by lowest p-value.
     """
-    print 'Performing the t-test.'
+    print('Performing the t-test.')
     genes, pvalues = _get_pvalues(A, B, genes)
     if ttest_correction_method:
         pvalues = _correct_pvalues(pvalues, ttest_correction_method)
