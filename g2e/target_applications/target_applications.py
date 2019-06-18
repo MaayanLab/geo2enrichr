@@ -46,7 +46,7 @@ def get_links(ranked_genes, direction, required_metadata, optional_metadata=None
             if crowdsourcing_link.link:
                 links.append(crowdsourcing_link)
     except:
-        print 'Error with target applications'
+        print('Error with target applications')
 
     return links
 
