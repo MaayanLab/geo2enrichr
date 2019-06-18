@@ -43,7 +43,7 @@ def clean(filename, idx=None):
 					continue
 
 				cf.write(accession + '\t' + probe_id + '\t' + gene_sy + '\n')
-		print 'Cleaned ' + accession
+		print('Cleaned ' + accession)
 
 	except Exception, e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
