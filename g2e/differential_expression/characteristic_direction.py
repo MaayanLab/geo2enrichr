@@ -12,7 +12,7 @@ def chdir(A, B, genes):
     """Wraps original Characteristic Direction method, handling sorting by
     highest coefficients.
     """
-    print 'Calculating the characteristic direction.'
+    print('Calculating the characteristic direction.')
     A = np.array(A)
     B = np.array(B)
     genes = np.array(genes)
