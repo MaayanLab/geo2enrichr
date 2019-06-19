@@ -71,7 +71,7 @@ def __from_soft_file(gene_signature):
     resp = requests.post(url, data=json.dumps(payload), headers=headers)
 
     if resp.ok:
-        print json.loads(resp.text)['link']
+        print(json.loads(resp.text)['link'])
         return json.loads(resp.text)['link']
     return None
 

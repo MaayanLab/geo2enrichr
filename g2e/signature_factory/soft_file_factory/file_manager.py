@@ -19,7 +19,7 @@ EXT = '.txt'
 def write(name, platform, normalize, genes, a_vals, b_vals, samples, selections, stats):
     """Writes the contents of a SoftFile to disk and returns a relative path.
     """
-    print 'Writing clean SOFT file.'
+    print('Writing clean SOFT file.')
 
     ab_vals = cleaner.concat(a_vals, b_vals)
     gene_values_dict = { k:v for (k,v) in zip(genes, ab_vals) }

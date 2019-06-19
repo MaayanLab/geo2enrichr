@@ -7,10 +7,10 @@ from flask import Blueprint, jsonify, request
 from flask.ext.cors import cross_origin
 from flask.ext.login import current_user
 
-from g2e import config, database
-from g2e import signature_factory
-from g2e.exceptions import AuthException
-from g2e.endpoints.request_utils import get_param_as_list
+from ... import config, database
+from ... import signature_factory
+from ...exceptions import AuthException
+from ..request_utils import get_param_as_list
 
 
 extract_api = Blueprint('extract_api',

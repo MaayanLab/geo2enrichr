@@ -1,7 +1,7 @@
 """Interface for db module.
 """
 
-from database import \
+from .database import \
     save_gene_signature, \
     get_gene_signature, \
     get_tag_by_name, \
@@ -12,6 +12,6 @@ from database import \
     delete_object, \
     update_object
 
-from utils import \
+from .utils import \
     session_scope, \
     get_or_create

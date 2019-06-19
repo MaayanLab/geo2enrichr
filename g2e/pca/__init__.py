@@ -1,4 +1,4 @@
 """Interface for pca module.
 """
 
-from pca import from_soft_file
+from .pca import from_soft_file

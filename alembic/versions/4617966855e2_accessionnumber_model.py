@@ -64,7 +64,7 @@ def _create_accession_numbers():
     with open('log.txt', 'w+') as error_log:
         for idx, sig in enumerate(session.query(GeneSignature)):
             msg = '%s - %s - %s' % (idx, sig.soft_file.name, sig.extraction_id)
-            print msg
+            print(msg)
             try:
                 if sig.soft_file.is_geo == 1:
                     dataset_id = _load_geo_record(session, sig.soft_file)

@@ -1,5 +1,7 @@
-import cleaner
-import file_manager
-import geo_downloader
-import soft_file_factory
-import parser
+from . import (
+  cleaner,
+  file_manager,
+  geo_downloader,
+  soft_file_factory,
+  parser
+)

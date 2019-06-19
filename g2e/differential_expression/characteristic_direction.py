@@ -118,7 +118,7 @@ def _chdir(A, B, genes, r=1):
 # 
 # ! CHANGED!
 # Return values as Python list for consistent user interface.
-    print 'Done chdir'
+    print('Done chdir')
     return (genes, b.tolist())
 
 
@@ -153,7 +153,7 @@ def nipals(X,a,it=100,tol=1e-4):
                 ende = True
             if it <= nr:
                 ende = True
-                print 'Iteration stops without convergence'
+                print('Iteration stops without convergence')
 
         Xh = Xh - np.dot(th,ph.T)
         T[:,h] = th[:,0]

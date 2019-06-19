@@ -2,7 +2,7 @@
 """
 
 from flask import request
-from g2e import database, target_applications, differential_expression
+from ... import database, target_applications, differential_expression
 from substrate import Gene, GeneList, RankedGene
 
 
@@ -38,7 +38,7 @@ def from_soft_file(soft_file, required_metadata, optional_metadata, tags):
     #    Characteristic Direction. We don't apply it earlier because PAEA
     #    requires the full signature.
     if required_metadata.diff_exp_method == 'chdir':
-        print 'Applying cutoff to the Characteristic Direction'
+        print('Applying cutoff to the Characteristic Direction')
         ranked_genes = _apply_cutoff(ranked_genes, required_metadata.cutoff)
 
     # 4. Build gene lists that we will store.

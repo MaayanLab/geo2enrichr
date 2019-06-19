@@ -9,8 +9,8 @@ from flask.ext.cors import CORS
 from flask.ext.login import LoginManager, user_logged_out
 
 from substrate import User, db as substrate_db
-from g2e import config
-from g2e.exceptions import AppException
+from . import config
+from .exceptions import AppException
 
 
 app = Flask(__name__, static_url_path='/g2e/static', static_folder='static')
@@ -46,13 +46,13 @@ if not config.DEBUG:
     # Configure Apache logging.
     logging.basicConfig(stream=sys.stderr)
 else:
-    print 'Starting in DEBUG mode'
+    print('Starting in DEBUG mode')
 
 
 # Setup endpoints (Flask Blueprints)
 # ----------------------------------------------------------------------------
 # Import these after connecting to the DB.
-from g2e import endpoints
+from . import endpoints
 
 app.register_blueprint(endpoints.account_page)
 app.register_blueprint(endpoints.auth_pages)
@@ -110,6 +110,7 @@ def handle_app_exceptions(error):
 def handle_any_exceptions(error):
     """Generic error handling.
     """
+    print(error)
     response = jsonify({
         'error': 'Unknown error. Please contact the Ma\'ayan Lab.',
         'python_error': error.message

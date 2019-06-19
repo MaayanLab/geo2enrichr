@@ -64,7 +64,7 @@ class TestRoundTrip(unittest.TestCase):
         self.assertTrue(get_gene_value(genelist, 'EOMES') == 0.0866544)
         self.assertTrue(get_gene_value(genelist, 'SRPK1') == -0.0222528)
         self.assertTrue(get_gene_value(genelist, 'MYH6') == -0.0327115)
-        print time.time() - s
+        print(time.time() - s)
 
     # This should be multiple unit tests but it is annoyingly slow to re-run.
     def test_extraction_endpoint_ttest(self):
@@ -116,7 +116,7 @@ class TestRoundTrip(unittest.TestCase):
         self.assertTrue(get_gene_value(genelist, 'PTPRN2') == 0.00486001)
         self.assertTrue(get_gene_value(genelist, 'GNG11') == -0.04072)
         self.assertTrue(get_gene_value(genelist, 'PDZRN3') == -0.0375523)
-        print time.time() - s
+        print(time.time() - s)
 
     def test_file_upload(self):
         self.resp = self.app.post('/g2e/api/extract/upload_soft_file', data=dict(

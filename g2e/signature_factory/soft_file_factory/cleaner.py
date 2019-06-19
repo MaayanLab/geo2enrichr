@@ -28,18 +28,18 @@ def normalize(genes, values):
     """Normalizes the data, taking the log2 of and quantile normalizing the
     data if necessary.
     """
-    print 'Normalizing if necessary'
+    print('Normalizing if necessary')
 
     # Raise exceptions if the A and B are not valid data sets.
     _validate(genes, values)
 
     if not _is_log(values):
         genes, values = _remove_negatives(genes, values)
-        print 'Taking the log2 of data.'
+        print('Taking the log2 of data.')
         values = log2(values)
 
     if not _is_norm(values):
-        print 'Quantile normalizing the data.'
+        print('Quantile normalizing the data.')
         values = quantile_normalization(values)
 
     return genes, values

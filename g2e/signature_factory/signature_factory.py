@@ -2,9 +2,9 @@
 """
 
 from substrate import GeneSignature, Resource
-from g2e.signature_factory import gene_list_factory, soft_file_factory
-from g2e import database
-from g2e.exceptions import HttpRequestArgumentsException
+from ..signature_factory import gene_list_factory, soft_file_factory
+from .. import database
+from ..exceptions import HttpRequestArgumentsException
 from . import optional_metadata_factory, required_metadata_factory, tag_factory
 
 

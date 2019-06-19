@@ -32,10 +32,10 @@ def get_link(ranked_genes, description):
     resp = sess.get(ENRICHR_URL + 'share')
     if resp.status_code == 200:
         link_id = json.loads(resp.text)['link_id']
-        print 'Link to enrichr: ' + link_id
+        print('Link to enrichr: ' + link_id)
         return ENRICHR_URL + 'enrich?dataset=' + link_id
     else:
-        print 'Error with Enrichr'
+        print('Error with Enrichr')
         return None
 
 

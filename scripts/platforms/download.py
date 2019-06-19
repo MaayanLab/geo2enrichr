@@ -22,7 +22,7 @@ def download(accession):
                 break
             string = decompressor.decompress(bin_chunk)
             f.write(string)
-        print 'Downloaded ' + accession
+        print('Downloaded ' + accession)
 
 
 def _get_file_by_url(url, accession, attempts=5):

@@ -26,7 +26,7 @@ class TestTaggingAPI(unittest.TestCase):
         self.assertTrue('beer' in tags)
 
     def test_adding_empty_tags(self):
-        print 'Testing tags'
+        print('Testing tags')
         self.resp = self.app.post('/g2e/api/extract/upload_soft_file', data=dict(
             file = (file('tests/data/example_input.txt'), 'test.txt'),
             diffexp_method = 'ttest',

@@ -1,7 +1,7 @@
 """Global configurations.
 """
 
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 import os
 
 

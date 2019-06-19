@@ -29,7 +29,7 @@ def get_link(genes, description):
 
     if resp.status_code == 200:
         link = PAEA_GET_URL + str(json.loads(resp.text)['userListId'])
-        print 'Link to PAEA: ' + link
+        print('Link to PAEA: ' + link)
         return link
     else:
         print('Error with PAEA')

@@ -2,7 +2,7 @@
 mixed into Flask's config object.
 """
 
-from config import \
+from .config import \
     \
     DEBUG, \
     SERVER_ROOT, \

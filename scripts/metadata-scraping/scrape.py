@@ -25,10 +25,10 @@ def main():
                     summary = data['result'][id]['summary']
 
                     out_line = '\t'.join([extraction_id, title, summary]).encode('utf-8')
-                    print out_line
+                    print(out_line)
                     o.write(out_line)
                 except KeyError:
-                    print '--------------- key error'
+                    print('--------------- key error')
                     o.write('error with %s' % extraction_id)
 
 def get_url(accession):

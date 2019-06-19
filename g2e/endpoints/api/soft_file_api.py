@@ -19,7 +19,7 @@ def get_soft_file(extraction_id):
     soft_file = gene_signature.soft_file.actual_text_file
     soft_file_str = ''
     for line in soft_file:
-        print line
+        print(line)
         soft_file_str += line
     response = Response(soft_file_str, mimetype='text/plain')
     return response

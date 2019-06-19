@@ -15,8 +15,8 @@ def session_scope():
         yield substrate_db.session
         substrate_db.session.commit()
     except Exception as e:
-        print 'Rolling back database'
-        print e
+        print('Rolling back database')
+        print(e)
         substrate_db.session.rollback()
 
 

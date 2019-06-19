@@ -1,7 +1,7 @@
 """Interface for exceptions module.
 """
 
-from exceptions import \
+from .exceptions import \
     AppException, \
     AuthException, \
     HttpRequestArgumentsException, \

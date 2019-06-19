@@ -4,8 +4,8 @@
 
 from gzip import GzipFile
 import zlib
-from urllib2 import urlopen, URLError
-from StringIO import StringIO
+from urllib.request import urlopen, URLError
+from io import StringIO
 
 from g2e.exceptions import SoftFileParseException
 
@@ -39,7 +39,7 @@ def download(accession, downloaded_file_path):
 def _get_file_by_url(url, attempts=5):
     """Attempts to get the file from URL. Tries 5 times before giving up.
     """
-    print 'Downloading GEO SOFT file from: ' + url
+    print('Downloading GEO SOFT file from: ' + url)
     while attempts > 0:
         try:
             response = urlopen(url)
