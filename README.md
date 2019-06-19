@@ -17,3 +17,25 @@ Run `bash test.sh`
 #### How do I deploy GEO2Enrichr?
 
 See `DEPLOY.md`.
+
+#### How do I configure GEO2Enrichr?
+Create a config file at `g2e/config/config.ini`
+```ini
+[mode]
+debug=true
+
+[cookies]
+secret_key=secret_key
+
+[admin]
+admin_key=admin_key
+
+[db]
+uri=mysql://user:pass@host:port/db?charset=utf8
+```
+
+#### How do I run GEO2Enrichr?
+```bash
+python run.py
+# Go to http://localhost:8083/g2e/
+```
