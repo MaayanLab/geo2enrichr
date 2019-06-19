@@ -10,6 +10,17 @@ GEO2Enrichr is a browser extension and web application for extracting gene sets 
 
 ## For Ma'ayan Lab developers
 
+#### How do I setup my development environment?
+```bash
+# first time: setup venv
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# before you start coding (when in a new terminal)
+source venv/bin/activate
+```
+
 #### How do I test GEO2Enrichr?
 
 Run `bash test.sh`
