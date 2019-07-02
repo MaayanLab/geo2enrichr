@@ -110,10 +110,11 @@ def handle_app_exceptions(error):
 def handle_any_exceptions(error):
     """Generic error handling.
     """
-    print(error)
+    import traceback
+    print(traceback.format_exc())
     response = jsonify({
         'error': 'Unknown error. Please contact the Ma\'ayan Lab.',
-        'python_error': error.message
+        'python_error': str(error),
     })
     response.status_code = 500
     return response
