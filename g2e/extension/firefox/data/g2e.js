@@ -23,7 +23,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
     (function fetchGeneList() {
         try {
             $.ajax({
-                url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
+                url: 'https://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(data) {
@@ -66,7 +66,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
     function checkIfProcessed(payload, callback) {
         loadingScreen.start();
         $.post(
-            'http://maayanlab.net/crowdsourcing/check_geo.php',
+            'https://maayanlab.net/crowdsourcing/check_geo.php',
             payload,
             function(response) {
                 callback(response === 'exist');
@@ -238,7 +238,7 @@ function UiEmbedder(events, page, screenScraper, templater) {
 function EUtilsApi(comm, events, page, screenScraper) {
 
     var accession = getAccession(),
-        BASE_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/{0}.fcgi?db=gds&retmax=1&retmode=json';
+        BASE_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/{0}.fcgi?db=gds&retmax=1&retmode=json';
 
     function init() {
         var searchUrl;
@@ -597,7 +597,7 @@ var Templater = function(IMAGE_PATH) {
         '<div id="g2e-overlay">' +
             '<div id="g2e-modal">' +
                 '<div id="g2e-app-title">' +
-                    '<a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">' +
+                    '<a href="https://amp.pharm.mssm.edu/g2e/" target="_blank">' +
                         '<img src="' + IMAGE_PATH + '">' +
                         '<span>GEO2</span>' +
                         '<span id="g2e-target-app">Enrichr</span>' +
@@ -765,8 +765,8 @@ var Templater = function(IMAGE_PATH) {
                 '</div>' +
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 
-                        '&#42;See the <a href="http://amp.pharm.mssm.edu/g2e/pipeline" target="_blank">website</a> for details.<br>' +
-                        'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
+                        '&#42;See the <a href="https://amp.pharm.mssm.edu/g2e/pipeline" target="_blank">website</a> for details.<br>' +
+                        'GEO2Enrichr is being developed by the <a href="https://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                     '</p>' +
                     '<p id="g2e-admin" class="g2e-text">Admin: ' +
                         '<input id="g2e-admin-key" type="text" name="admin-password"/>' +

@@ -6,7 +6,7 @@ import json
 import requests
 
 
-BASE_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/{0}.fcgi?db=gds&retmax=1&retmode=json'
+BASE_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/{0}.fcgi?db=gds&retmax=1&retmode=json'
 
 
 def get_title_and_summary(accession):

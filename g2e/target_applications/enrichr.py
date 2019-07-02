@@ -8,7 +8,7 @@ import time
 import requests
 
 
-ENRICHR_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
+ENRICHR_URL = 'https://amp.pharm.mssm.edu/Enrichr/'
 
 
 def get_link(ranked_genes, description):

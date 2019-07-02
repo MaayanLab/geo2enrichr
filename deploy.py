@@ -70,7 +70,7 @@ with open(CHROME_JS_CONFIG, 'w+') as f:
     if opts.prod:
         mode = 'prod'
         debug = 'false'
-        server = 'http://amp.pharm.mssm.edu/g2e/'
+        server = 'https://amp.pharm.mssm.edu/g2e/'
         id_ = 'pcbdeobileclecleblcnadplfcicfjlp'
     else:
         mode = 'dev'

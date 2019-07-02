@@ -13,7 +13,7 @@
             <h1>REST APIs</h1>
             <p>
                 These REST APIs provide programmatic access to read and write data to GEO2Enrichr. You may analyze a GEO or custom SOFT file or fetch results from a previous analysis. Requests are made to the base URL:</p>
-            <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api</code></pre>
+            <pre><code class='bash'>https://amp.pharm.mssm.edu/g2e/api</code></pre>
             <p>
                 Responses are in JSON.
             </p>
@@ -24,7 +24,7 @@
                 Returns a JSON blob of data associated with a single user extraction, based on the <span class='mono'>id</span> parameter. The returned data has stable links to the SOFT file; up, down, and combined gene lists; and metadata from both the experiment and analysis.
             </p>
             <h4>Resource URL</h4>
-            <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api/extract</code></pre>
+            <pre><code class='bash'>https://amp.pharm.mssm.edu/g2e/api/extract</code></pre>
             <h3>Parameters</h3>
             <table class='table'>
                 <tr>
@@ -33,7 +33,7 @@
                 </tr>
             </table>
             <h4>Example request</h4>
-            <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api/extract/e29766a757</code></pre>
+            <pre><code class='bash'>https://amp.pharm.mssm.edu/g2e/api/extract/e29766a757</code></pre>
             <h4>Example JSON response</h4>
             <pre><code class='json'>{
   "extraction_id": "e29766a757",
@@ -41,7 +41,7 @@
     {
       "direction": 0,
       "target_apps": {
-        "enrichr": "http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=a61"
+        "enrichr": "https://amp.pharm.mssm.edu/Enrichr/enrich?dataset=a61"
       },
       "ranked_genes": [
         [
@@ -88,7 +88,7 @@
                 Performs differential expression analysis on a GEO SOFT file based on the GEO accession number, platform, and selected samples.
             </p>
             <h4>Resource URL</h4>
-            <pre><code class='bash'>http://amp.pharm.mssm.edu/g2e/api/extract/geo</code></pre>
+            <pre><code class='bash'>https://amp.pharm.mssm.edu/g2e/api/extract/geo</code></pre>
             <h4>Parameters</h4>
             <table class='table'>
                 <tr>
@@ -108,8 +108,8 @@
                     <td>An array of GSM numbers to be used as in the treatment or condition group.<td>
                 </tr>
             </table>
-            <h4>Example request using <a href='http://curl.haxx.se/' target='_blank'>cURL</a></h4>
-            <pre><code class='bash'>curl -v http://amp.pharm.mssm.edu/g2e/api/extract/geo --data \
+            <h4>Example request using <a href='https://curl.haxx.se/' target='_blank'>cURL</a></h4>
+            <pre><code class='bash'>curl -v https://amp.pharm.mssm.edu/g2e/api/extract/geo --data \
   'dataset=GDS5077&\
   platform=GPL10558&\
   A_cols[]=GSM1071454&A_cols[]=GSM1071455&\
@@ -117,7 +117,7 @@
 
 &lt; POST /g2e/api/extract/geo HTTP/1.1
 &lt; User-Agent: curl/7.37.1
-&lt; Host: http://amp.pharm.mssm.edu/
+&lt; Host: https://amp.pharm.mssm.edu/
 &lt; Accept: */*
 &lt; Content-Length: 91
 &lt; Content-Type: application/x-www-form-urlencoded</code></pre>
@@ -144,13 +144,13 @@
                     <td>A description of your data.</td>
                 </tr>
             </table>
-            <h4>Example request using <a href='http://curl.haxx.se/' target='_blank'>cURL</a></h4>
-            <pre><code class='bash'>$ curl -v http://amp.pharm.mssm.edu/g2e/api/extract/upload_soft_file \
+            <h4>Example request using <a href='https://curl.haxx.se/' target='_blank'>cURL</a></h4>
+            <pre><code class='bash'>$ curl -v https://amp.pharm.mssm.edu/g2e/api/extract/upload_soft_file \
 --form 'file=@input.txt' name=SyntheticData
 
 > POST /g2e/api/extract/upload_soft_file HTTP/1.1
 > User-Agent: curl/7.37.1
-> Host: http://amp.pharm.mssm.edu/
+> Host: https://amp.pharm.mssm.edu/
 > Accept: */*
 > Content-Length: 187810
 > Expect: 100-continue
@@ -204,7 +204,7 @@
                     <td>Optional. Name of relevant disease.</td>
                 </tr>
             </table>
-            <h4>Example request using <a href='http://docs.python-requests.org/en/master/' target='_blank'>requests</a></h4>
+            <h4>Example request using <a href='https://docs.python-requests.org/en/master/' target='_blank'>requests</a></h4>
             <pre><code class='python'>import json
 import requests
 
@@ -261,12 +261,12 @@ payload = {
     # 'correction_method': 'BH',
     # 'threshold': 0.05
 }
-resp = requests.post('http://amp.pharm.mssm.edu/g2e/api/extract/upload_gene_list',
+resp = requests.post('https://amp.pharm.mssm.edu/g2e/api/extract/upload_gene_list',
                      data=json.dumps(payload))</code></pre>
     <h4>Example JSON response</h4>
     <pre><code class='json'>{
   "extraction_id": "8ebf6a9688",
-  "link": "http://amp.pharm.mssm.edu/g2e/results/8ebf6a9688"
+  "link": "https://amp.pharm.mssm.edu/g2e/results/8ebf6a9688"
 }</code></pre>
         </section>
     </div>

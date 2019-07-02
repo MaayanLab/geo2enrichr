@@ -33,7 +33,7 @@ def main():
 
 def get_url(accession):
     is_gds = 'GDS' in accession
-    BASE_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?&retmax=1&retmode=json'
+    BASE_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?&retmax=1&retmode=json'
     db = 'gds' if is_gds else 'geoprofiles'
     return '&'.join([BASE_URL, 'db=' + db, 'id=' + accession[3:]])
 

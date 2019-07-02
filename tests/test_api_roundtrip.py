@@ -54,10 +54,10 @@ class TestRoundTrip(unittest.TestCase):
 
         for gl in resp_dict['gene_lists']:
             self.assertTrue('direction' in gl)
-            self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
+            self.assertTrue('https://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
             if gl['direction'] == 0:
-                self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
-                self.assertTrue('http://amp.pharm.mssm.edu/PAEA' in gl['target_apps']['paea'])
+                self.assertTrue('https://amp.pharm.mssm.edu/L1000CDS2' in gl['target_apps']['l1000cds2'])
+                self.assertTrue('https://amp.pharm.mssm.edu/PAEA' in gl['target_apps']['paea'])
 
         genelist = resp_dict['gene_lists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.0939582)
@@ -109,7 +109,7 @@ class TestRoundTrip(unittest.TestCase):
 
         for gl in resp_dict['gene_lists']:
             self.assertTrue('direction' in gl)
-            self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
+            self.assertTrue('https://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])
 
         genelist = resp_dict['gene_lists'][2]['ranked_genes']
         self.assertTrue(get_gene_value(genelist, 'HBE1') == -0.00469161)

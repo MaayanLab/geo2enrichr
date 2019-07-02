@@ -34,5 +34,5 @@ def c_filter_optional_metadata(context, value):
 @jinjafilters.app_template_filter('c_geo_url')
 def c_geo_url(context, value):
     if 'GDS' in value:
-        return 'http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=' + value
-    return 'http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=' + value
+        return 'https://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=' + value
+    return 'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=' + value

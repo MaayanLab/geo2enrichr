@@ -5,7 +5,7 @@ See http://amp.pharm.mssm.edu/L1000CDS2/
 import json
 import requests
 
-L1000CDS2_URL = 'http://amp.pharm.mssm.edu/L1000CDS2/'
+L1000CDS2_URL = 'https://amp.pharm.mssm.edu/L1000CDS2/'
 
 
 def get_link(genes, metadata):

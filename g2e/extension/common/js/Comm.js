@@ -10,7 +10,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
     (function fetchGeneList() {
         try {
             $.ajax({
-                url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
+                url: 'https://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(data) {
@@ -53,7 +53,7 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
     function checkIfProcessed(payload, callback) {
         loadingScreen.start();
         $.post(
-            'http://maayanlab.net/crowdsourcing/check_geo.php',
+            'https://maayanlab.net/crowdsourcing/check_geo.php',
             payload,
             function(response) {
                 callback(response === 'exist');
