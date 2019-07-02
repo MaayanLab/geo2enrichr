@@ -87,7 +87,7 @@ def _get_raw_data(soft_file):
     """Returns the raw data a two-dimensional array.
     """
     results = []
-    f = file('g2e/' + soft_file.text_file)
+    f = open('g2e/' + soft_file.text_file)
     for i, line in enumerate(f):
         if i < 8:
             continue

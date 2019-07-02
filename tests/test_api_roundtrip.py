@@ -120,7 +120,7 @@ class TestRoundTrip(unittest.TestCase):
 
     def test_file_upload(self):
         self.resp = self.app.post('/g2e/api/extract/upload_soft_file', data=dict(
-            file = (file('tests/data/example_input.txt'), 'test.txt'),
+            file = (open('tests/data/example_input.txt', 'rb'), 'test.txt'),
             title = 'ExampleData',
             cutoff = 'none'
         ))

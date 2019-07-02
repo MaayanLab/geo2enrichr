@@ -21,7 +21,7 @@ def download(accession):
             if not bin_chunk:
                 break
             string = decompressor.decompress(bin_chunk)
-            f.write(string)
+            f.write(string.decode())
         print('Downloaded ' + accession)
 
 

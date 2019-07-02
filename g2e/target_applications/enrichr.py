@@ -50,4 +50,4 @@ def convert_ranked_genes_to_tuples(ranked_genes):
 def get_genes_as_string(genes):
     """Returns string from list of gene tuples.
     """
-    return '\n'.join([t[0] + ',' + t[1] for t in genes]).encode('ascii')
+    return '\n'.join([t[0] + ',' + t[1] for t in genes])

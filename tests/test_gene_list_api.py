@@ -1,7 +1,7 @@
 import unittest
 import json
 import csv
-import StringIO
+from io import StringIO
 
 from g2e import app
 
@@ -37,7 +37,7 @@ class TestGeneListAPI(unittest.TestCase):
         response = self.app.get(url)
         self.assertEqual(response.mimetype, 'text/plain')
 
-        f = StringIO.StringIO(response.data)
+        f = StringIO(response.data)
         reader = csv.reader(f, delimiter='\t')
         lines = [x for x in reader]
 

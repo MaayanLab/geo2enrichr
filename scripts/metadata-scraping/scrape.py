@@ -24,7 +24,7 @@ def main():
                     title = data['result'][id]['title']
                     summary = data['result'][id]['summary']
 
-                    out_line = '\t'.join([extraction_id, title, summary]).encode('utf-8')
+                    out_line = '\t'.join([extraction_id, title, summary])
                     print(out_line)
                     o.write(out_line)
                 except KeyError:

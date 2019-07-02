@@ -23,5 +23,5 @@ def get_param_as_list(args, param):
             result = [val]
     else:
         result = []
-    result = [x.encode('ascii') for x in result]
+    result = [x for x in result]
     return result
