@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # This is only for development.
 #
 # In production, Flask is run by mod_wsgi, which imports the via wsgi.py.
