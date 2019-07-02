@@ -4,8 +4,8 @@
 import json
 
 from flask import Blueprint, jsonify, request
-from flask.ext.cors import cross_origin
-from flask.ext.login import current_user
+from flask_cors import cross_origin
+from flask_login import current_user
 
 from ... import config, database
 from ... import signature_factory

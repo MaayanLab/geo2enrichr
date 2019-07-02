@@ -5,8 +5,8 @@ import logging
 import sys
 
 from flask import Flask, jsonify, session as flask_session
-from flask.ext.cors import CORS
-from flask.ext.login import LoginManager, user_logged_out
+from flask_cors import CORS
+from flask_login import LoginManager, user_logged_out
 
 from substrate import User, db as substrate_db
 from . import config

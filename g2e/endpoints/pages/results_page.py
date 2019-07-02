@@ -4,7 +4,7 @@
 import json
 
 from flask import Blueprint, request, render_template, redirect, url_for
-from flask.ext.login import current_user, login_required
+from flask_login import current_user, login_required
 from g2e import config, database
 from g2e.endpoints import request_utils
 from g2e.target_applications.crowdsourcing import CROWDSOURCING_TAGS
