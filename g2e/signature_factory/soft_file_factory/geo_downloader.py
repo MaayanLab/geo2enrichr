@@ -66,36 +66,10 @@ def _unzip(compressed_string):
 
 
 def _construct_GDS_url(accession):
-    """Example URL:
-        ftp://ftp.ncbi.nlm.nih.gov/geo/datasets/GDS4nnn/GDS4999/soft/GDS4999.soft.gz
-    """
-    number_digits = len(accession) - 3  # 'GDS' is of length 3.
-    if number_digits > 3:
-        folder = accession[:4] + "nnn"
-    else:
-        folder = accession[:3] + "n" * number_digits
-    url = '/'.join(["ftp://ftp.ncbi.nlm.nih.gov/geo/datasets", 
-        folder,
-        accession,
-        "soft",
-        accession + ".soft.gz"])
+    url = $$('a[href^="ftp://"]')[0].href
     return url
 
 
 def _construct_GSE_url(accession):
-    """Example URL:
-        ftp://ftp.ncbi.nlm.nih.gov/geo/platforms/GSE4nnn/GSE4999/matrix/GSE4999.txt.gz
-    """
-    number_digits = len(accession) - 3  # 'GSE' is of length 3.
-    if number_digits < 4:
-        folder = accession[:3] + 'nnn'  # e.g. GSEnnn.
-    elif 3 < number_digits < 5:
-        folder = accession[:4] + 'nnn'  # e.g. GSE1nnn.
-    else:
-        folder = accession[:5] + 'nnn'  # e.g. GSE39nnn.
-    url = '/'.join(['ftp://ftp.ncbi.nlm.nih.gov/geo/series', 
-        folder,
-        accession,
-        'matrix',
-        accession + '_series_matrix.txt.gz'])
+    url = $('a[href^="ftp://"]')[0].href
     return url
