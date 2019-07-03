@@ -10,6 +10,10 @@
         "downloads",
         "https://amp.pharm.mssm.edu/Enrichr/"
     ],
+    "background": {
+        "scripts": ["g2e.background.js"],
+        "persistent": false
+    },
     "content_scripts": [
         {
             "matches": [ 

@@ -5,6 +5,20 @@ var G2E = (function() {
 var DEBUG = false;
 var SERVER = "https://amp.pharm.mssm.edu/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
+function post_through_background(params) {
+  var query = params.query;
+  var body = params.body;
+  return new Promise(function (resolve, reject) {
+    chrome.runtime.sendMessage(
+      { query: query, body: body },
+      function (response) {
+        if (response && response.error) reject(JSON.stringify(response || '{"message": "An unknown error occured"}'));
+        else resolve(JSON.parse(response));
+      }
+    );
+  });
+}
+
 // This file is built when new platforms are added.
 //// We use an array rather than hitting an API endpoint because this is much
 // faster. If the server is too slow, we will not notify the user that the
@@ -21,17 +35,11 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
     /* An IIFE that fetches a list of genes from Enrichr for autocomplete.
      */
     (function fetchGeneList() {
-        try {
-            $.ajax({
-                url: 'https://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
-                type: 'GET',
-                dataType: 'JSON',
-                success: function(data) {
-                    events.fire('geneListFetched', data);
-                }
-            });
-        } catch (err) {
-        }
+        post_through_background({
+            query: 'Enrichr/json/genemap.json',
+        })
+            .then(function (data) { console.log(data); events.fire('geneListFetched', data); })
+            .catch(function (error) { console.error(error); });
     })();
 
     /* POSTs user data to G2E servers.
@@ -40,23 +48,17 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
         loadingScreen.start();
         var ONE_SECOND = 1000,
             start = time();
-        $.post(SERVER + 'api/extract/geo',
-            inputData,
-            function(data) {
-                if (!!data.error) {
-                    handleError(data);
-                } else {
-                    var id = data.extraction_id,
-                        url = SERVER + 'results/' + id;
-                    events.fire('resultsReady', url);
-                }
+        post_through_background({
+            query: 'api/extract/geo',
+            body: inputData,
+        })
+            .then(function (data) {
+                var id = data.extraction_id,
+                    url = SERVER + 'results/' + id;
+                events.fire('resultsReady', url);
             })
-            .fail(function(data) {
-                handleError(data);
-            })
-            .always(function() {
-                loadingScreen.stop();
-            });
+            .catch(handleError)
+            .finally(function () { loadingScreen.stop(); });
     }
 
     function time() {
@@ -65,39 +67,31 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
 
     function checkIfProcessed(payload, callback) {
         loadingScreen.start();
-        $.post(
-            'https://maayanlab.net/crowdsourcing/check_geo.php',
-            payload,
-            function(response) {
-                callback(response === 'exist');
-            })
-            .error(function(data) {
-                notifier.warn('Unknown error.');
-            })
-            .always(function() {
-                loadingScreen.stop();
-            });
+        post_through_background({
+            query: 'crowdsourcing/check_geo',
+            body: payload,
+        })
+            .then(function (response) { callback(response === 'exist'); })
+            .catch(function (err) { notifier.warn('Unknown error.'); })
+            .finally(function () { loadingScreen.stop(); });
     }
 
     function checkIfDuplicate(payload, callback) {
         loadingScreen.start();
-        $.ajax({
-            url: SERVER + 'api/check_duplicate',
-            type: 'GET',
-            data: payload,
-            success: function(data) {
+        post_through_background({
+            query: 'api/check_duplicate',
+            body: payload,
+        })
+            .then(function (data) {
                 if (data.preexisting) {
                     var links = data.links.join('\n');
                     alert('Match(es) found:\n\n' + links);
                 } else {
                     alert('No match found.');
                 }
-            },
-            error: handleError,
-            complete: function() {
-                loadingScreen.stop();
-            }
-        });
+            })
+            .catch(handleError)
+            .finally(function () { loadingScreen.stop(); });
     }
 
     // Why did I make this function? I have no idea.
