@@ -1,5 +1,3 @@
-var SERVER = "https://amp.pharm.mssm.edu/g2e/";
-
 /**
  * A url encode serializer, it works at most depth 2 because I can't be bothered to get a real library for this.
  */
@@ -25,7 +23,7 @@ var serialize = function(obj) {
 }
 
 // Watch for content_script requests, make them and return them to get around CORB
-chrome.runtime.onMessage.addListener(
+BROWSER.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.query === 'api/extract/geo') {
       fetch(SERVER + 'api/extract/geo', {

@@ -36,10 +36,10 @@ module.exports = function(grunt) {
     ];
 
     var chrome_content_files  = [COMMON + 'js/open.js', COMMON + 'js/config-chrome.js'].concat(content_src_files).concat([COMMON + 'js/close-chrome.js']);
-    var chrome_background_files  = [COMMON + 'js/background.js'];
+    var chrome_background_files  = [COMMON + 'js/config-chrome.js', COMMON + 'js/background.js'];
 
     var firefox_content_files = [COMMON + 'js/open.js', COMMON + 'js/config-firefox.js'].concat(content_src_files).concat([COMMON + 'js/close-firefox.js']);
-    var firefox_background_files  = [COMMON + 'js/background.js'];
+    var firefox_background_files  = [COMMON + 'js/config-firefox.js', COMMON + 'js/background.js'];
 
     var less_files = [COMMON + 'less/*', SITE + 'style/less/*'];
 

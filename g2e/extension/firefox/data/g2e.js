@@ -5,11 +5,13 @@ var G2E = (function() {
 var DEBUG = false;
 var SERVER = "https://amp.pharm.mssm.edu/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
+var BROWSER = browser;
+// Use this to forward requests through the background script
 function post_through_background(params) {
   var query = params.query;
   var body = params.body;
   return new Promise(function (resolve, reject) {
-    chrome.runtime.sendMessage(
+    BROWSER.runtime.sendMessage(
       { query: query, body: body },
       function (response) {
         if (response && response.error) reject(JSON.stringify(response || '{"message": "An unknown error occured"}'));
@@ -1077,15 +1079,7 @@ var GseScraper = function($metadataTableParent) {
         // The accession number is not necessarily in the URL for GDS.
         // Should we check anyway?
         getDataset: function() {
-            var params = window.location.search.substring(1).split('&'),
-                i = 0,
-                len = params.length;
-            for (; i < len; i++)  {
-                var keyVal = params[i].split('=');
-                if (keyVal[0] == 'acc') {
-                    return keyVal[1];
-                }
-            }
+            return $('.acc')[0].id;
         },
 
         _getOrganism: function() {

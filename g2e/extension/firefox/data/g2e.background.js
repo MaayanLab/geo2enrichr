@@ -1,5 +1,11 @@
+// This file is built by deploy.sh in the root directory.
+var DEBUG = false;
 var SERVER = "https://amp.pharm.mssm.edu/g2e/";
-
+var IMAGE_PATH = self.options.logoUrl;
+var BROWSER = browser;
+/**
+ * A url encode serializer, it works at most depth 2 because I can't be bothered to get a real library for this.
+ */
 var serialize = function(obj) {
   var str = [];
   for (var p in obj)
@@ -21,7 +27,8 @@ var serialize = function(obj) {
   return str.join("&");
 }
 
-chrome.runtime.onMessage.addListener(
+// Watch for content_script requests, make them and return them to get around CORB
+BROWSER.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if (request.query === 'api/extract/geo') {
       fetch(SERVER + 'api/extract/geo', {
