@@ -1,45 +1,34 @@
 FROM debian:stable
 
-RUN apt-get update \
- && apt-get install -y \
-    python \
-    python-dev \
-    python-pip \
-    python-setuptools \
-    apache2 \
-    apache2-prefork-dev \
-    gfortran \
-    libopenblas-dev \
-    liblapack-dev \
-    r-base \
-    r-base-dev \
-    python-rpy2 \
-    python-mysqldb \
-    git-core
+RUN apt-get update && \
+    apt-get -y install \
+        gfortran \
+        git-core \
+        libffi-dev \
+        liblapack-dev \
+        libopenblas-dev \
+        libssl-dev \
+        nginx \
+        python3 \
+        python3-dev \
+        python3-mysqldb \
+        python3-pip \
+        python3-rpy2 \
+        python3-setuptools \
+        r-base \
+        r-base-dev \
+        uwsgi-core \
+        vim
 
-RUN pip install \
-    mod_wsgi \
-    Flask==0.10.1 \
-    SQLAlchemy==0.9.9 \
-    flask-cors==2.0.1 \
-    flask-sqlalchemy==2.0 \
-    Flask-Login==0.3.2 \
-    blinker==1.4 \
-    nose==1.3.4 \
-    numpy==1.9.2 \
-    requests==2.6.0 \
-    scipy==0.15.1 \
-    pandas==0.16.2 \
-    singledispatch==3.4.0.3 \
-    six==1.9.0 \
-    sklearn==0.0 \
-    wsgiref==0.1.2 \
-    git+git://github.com/MaayanLab/substrate.git@master
+RUN pip3 install -Iv uwsgi Flask
 
-RUN apt-get clean
+ADD requirements.txt /requirements.txt
+RUN pip3 install -Ivr /requirements.txt
 
 EXPOSE 80
+EXPOSE 8080
 
-ADD . /g2e
+ADD . /app
+RUN chmod -R 777 /app
 
-CMD /g2e/boot.sh
+CMD /app/boot.sh

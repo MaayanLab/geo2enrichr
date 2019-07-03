@@ -8,7 +8,7 @@ import time
 import requests
 
 
-ENRICHR_URL = 'http://amp.pharm.mssm.edu/Enrichr/'
+ENRICHR_URL = 'https://amp.pharm.mssm.edu/Enrichr/'
 
 
 def get_link(ranked_genes, description):
@@ -50,4 +50,4 @@ def convert_ranked_genes_to_tuples(ranked_genes):
 def get_genes_as_string(genes):
     """Returns string from list of gene tuples.
     """
-    return '\n'.join([t[0] + ',' + t[1] for t in genes]).encode('ascii')
+    return '\n'.join([t[0] + ',' + t[1] for t in genes])

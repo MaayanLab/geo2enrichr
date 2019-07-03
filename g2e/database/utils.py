@@ -21,11 +21,15 @@ def session_scope():
 
 
 def get_or_create(model, **kwargs):
-    instance = substrate_db.session.query(model).filter_by(**kwargs).first()
+    _kwargs = {
+        k: v.decode() if isinstance(v, bytes) else v
+        for k, v in kwargs.items()
+    }
+    instance = substrate_db.session.query(model).filter_by(**_kwargs).first()
     if instance:
         return instance
     else:
-        instance = model(**kwargs)
+        instance = model(**_kwargs)
         substrate_db.session.add(instance)
         substrate_db.session.commit()
         return instance

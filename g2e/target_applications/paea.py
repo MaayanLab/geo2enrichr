@@ -7,8 +7,8 @@ import json
 import requests
 
 
-PAEA_POST_URL = 'http://amp.pharm.mssm.edu/Enrichr/addList'
-PAEA_GET_URL  = 'http://amp.pharm.mssm.edu/PAEA?id='
+PAEA_POST_URL = 'https://amp.pharm.mssm.edu/Enrichr/addList'
+PAEA_GET_URL  = 'https://amp.pharm.mssm.edu/PAEA?id='
 
 
 def get_link(genes, description):

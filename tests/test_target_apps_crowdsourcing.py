@@ -53,5 +53,5 @@ class TestTargetAppsCrowdsourcing(unittest.TestCase):
 
         self.assertTrue(
             link,
-            'http://maayanlab.net/crowdsourcing/microtask_leaderboard.php#task5'
+            'https://maayanlab.net/crowdsourcing/microtask_leaderboard.php#task5'
         )

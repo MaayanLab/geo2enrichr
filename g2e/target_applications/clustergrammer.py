@@ -67,7 +67,7 @@ def __from_soft_file(gene_signature):
         'columns': columns
     }
     headers = {'content-type': 'application/json'}
-    url = 'http://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
+    url = 'https://amp.pharm.mssm.edu/clustergrammer/vector_upload/'
     resp = requests.post(url, data=json.dumps(payload), headers=headers)
 
     if resp.ok:
@@ -87,7 +87,7 @@ def _get_raw_data(soft_file):
     """Returns the raw data a two-dimensional array.
     """
     results = []
-    f = file('g2e/' + soft_file.text_file)
+    f = open('g2e/' + soft_file.text_file)
     for i, line in enumerate(f):
         if i < 8:
             continue

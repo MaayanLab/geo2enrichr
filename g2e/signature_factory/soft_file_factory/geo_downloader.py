@@ -33,7 +33,7 @@ def download(accession, downloaded_file_path):
             if not bin_chunk:
                 break
             string = decompressor.decompress(bin_chunk)
-            f.write(string)
+            f.write(string.decode())
 
 
 def _get_file_by_url(url, attempts=5):
@@ -70,7 +70,9 @@ def _construct_GDS_url(accession):
         ftp://ftp.ncbi.nlm.nih.gov/geo/datasets/GDS4nnn/GDS4999/soft/GDS4999.soft.gz
     """
     number_digits = len(accession) - 3  # 'GDS' is of length 3.
-    if number_digits > 3:
+    if number_digits > 4:
+        folder = accession[:5] + "nnn"
+    elif number_digits > 3:
         folder = accession[:4] + "nnn"
     else:
         folder = accession[:3] + "n" * number_digits
@@ -91,8 +93,10 @@ def _construct_GSE_url(accession):
         folder = accession[:3] + 'nnn'  # e.g. GSEnnn.
     elif 3 < number_digits < 5:
         folder = accession[:4] + 'nnn'  # e.g. GSE1nnn.
-    else:
+    elif number_digits < 6:
         folder = accession[:5] + 'nnn'  # e.g. GSE39nnn.
+    else:
+        folder = accession[:6] + 'nnn'  # e.g. GSE39nnn.
     url = '/'.join(['ftp://ftp.ncbi.nlm.nih.gov/geo/series', 
         folder,
         accession,

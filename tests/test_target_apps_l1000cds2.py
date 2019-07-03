@@ -19,4 +19,4 @@ class TestTargetAppsL1000CDS2(unittest.TestCase):
         ]
 
         link = l1000cds2.get_link(ranked_genes, md)
-        self.assertTrue('http://amp.pharm.mssm.edu/L1000CDS2/' in link)
+        self.assertTrue('https://amp.pharm.mssm.edu/L1000CDS2/' in link)

@@ -8,14 +8,18 @@
     },
     "permissions": [
         "downloads",
-        "http://amp.pharm.mssm.edu/Enrichr/"
+        "https://amp.pharm.mssm.edu/Enrichr/"
     ],
+    "background": {
+        "scripts": ["g2e.background.js"],
+        "persistent": false
+    },
     "content_scripts": [
         {
             "matches": [ 
                 "https://www.ncbi.nlm.nih.gov/sites/*",
                 "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi*",
-                "http://amp.pharm.mssm.edu/gen3va/*"
+                "https://amp.pharm.mssm.edu/gen3va/*"
             ],
             "css": ["open-sans.css", "main.css", "jquery-ui.min.css"],
             "js": ["jquery-1.11.2.min.js", "jquery-ui.min.js", "tag-it.min.js", "g2e.js"]

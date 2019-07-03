@@ -10,7 +10,8 @@ module.exports = function(grunt) {
 
     var SITE = WEB + 'site/';
 
-    var src_files = [
+    var content_src_files = [
+        COMMON + 'js/content_script.js',
         COMMON + 'js/platforms.js',
         COMMON + 'js/Comm.js',
         COMMON + 'js/Page.js',
@@ -30,15 +31,21 @@ module.exports = function(grunt) {
         COMMON + 'js/main.js'
     ];
 
-    var chrome_js_files  = [COMMON + 'js/open.js', COMMON + 'js/config-chrome.js'].concat(src_files).concat([COMMON + 'js/close-chrome.js']);
+    var background_src_files = [
+        COMMON + 'js/background.js',
+    ];
 
-    var firefox_js_files = [COMMON + 'js/open.js', COMMON + 'js/config-firefox.js'].concat(src_files).concat([COMMON + 'js/close-firefox.js']);
+    var chrome_content_files  = [COMMON + 'js/open.js', COMMON + 'js/config-chrome.js'].concat(content_src_files).concat([COMMON + 'js/close-chrome.js']);
+    var chrome_background_files  = [COMMON + 'js/background.js'];
+
+    var firefox_content_files = [COMMON + 'js/open.js', COMMON + 'js/config-firefox.js'].concat(content_src_files).concat([COMMON + 'js/close-firefox.js']);
+    var firefox_background_files  = [COMMON + 'js/background.js'];
 
     var less_files = [COMMON + 'less/*', SITE + 'style/less/*'];
 
     grunt.initConfig({
         jshint: {
-            files: src_files,
+            files: content_src_files,
             options: {
                 globals: {
                     jQuery: true
@@ -47,13 +54,21 @@ module.exports = function(grunt) {
             }
         },
         concat: {
-            chrome: {
-                src: chrome_js_files,
+            chrome_content_script: {
+                src: chrome_content_files,
                 dest: CHROME + 'g2e.js'
             },
-            firefox: {
-                src: firefox_js_files,
+            chrome_background_script: {
+                src: chrome_background_files,
+                dest: CHROME + 'g2e.background.js'
+            },
+            firefox_content_script: {
+                src: firefox_content_files,
                 dest: FIREFOX + 'g2e.js'
+            },
+            firefox_background_script: {
+                src: firefox_background_files,
+                dest: FIREFOX + 'g2e.background.js'
             }
         },
         less: {
@@ -70,7 +85,7 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            files: chrome_js_files.concat(firefox_js_files).concat(less_files),
+            files: chrome_content_files.concat(firefox_content_files).concat(less_files),
             tasks: ['build']
         }
     });

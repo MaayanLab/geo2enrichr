@@ -51,7 +51,7 @@ def write(name, platform, normalize, genes, a_vals, b_vals, samples, selections,
 def save(name, file_obj):
     """Saves a SOFT file in the correct directory.
     """
-    if isinstance(file_obj, file):
+    if hasattr(file_obj, 'read'):
         full_path = BASE_DIR + EXAMPLE_FILE
         return full_path[4:]
 

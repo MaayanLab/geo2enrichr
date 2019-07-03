@@ -3,8 +3,22 @@ var G2E = (function() {
 
 // This file is built by deploy.sh in the root directory.
 var DEBUG = false;
-var SERVER = "http://amp.pharm.mssm.edu/g2e/";
+var SERVER = "https://amp.pharm.mssm.edu/g2e/";
 var IMAGE_PATH = self.options.logoUrl;
+function post_through_background(params) {
+  var query = params.query;
+  var body = params.body;
+  return new Promise(function (resolve, reject) {
+    chrome.runtime.sendMessage(
+      { query: query, body: body },
+      function (response) {
+        if (response && response.error) reject(JSON.stringify(response || '{"message": "An unknown error occured"}'));
+        else resolve(JSON.parse(response));
+      }
+    );
+  });
+}
+
 // This file is built when new platforms are added.
 //// We use an array rather than hitting an API endpoint because this is much
 // faster. If the server is too slow, we will not notify the user that the
@@ -21,17 +35,11 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
     /* An IIFE that fetches a list of genes from Enrichr for autocomplete.
      */
     (function fetchGeneList() {
-        try {
-            $.ajax({
-                url: 'http://amp.pharm.mssm.edu/Enrichr/json/genemap.json',
-                type: 'GET',
-                dataType: 'JSON',
-                success: function(data) {
-                    events.fire('geneListFetched', data);
-                }
-            });
-        } catch (err) {
-        }
+        post_through_background({
+            query: 'Enrichr/json/genemap.json',
+        })
+            .then(function (data) { console.log(data); events.fire('geneListFetched', data); })
+            .catch(function (error) { console.error(error); });
     })();
 
     /* POSTs user data to G2E servers.
@@ -40,23 +48,17 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
         loadingScreen.start();
         var ONE_SECOND = 1000,
             start = time();
-        $.post(SERVER + 'api/extract/geo',
-            inputData,
-            function(data) {
-                if (!!data.error) {
-                    handleError(data);
-                } else {
-                    var id = data.extraction_id,
-                        url = SERVER + 'results/' + id;
-                    events.fire('resultsReady', url);
-                }
+        post_through_background({
+            query: 'api/extract/geo',
+            body: inputData,
+        })
+            .then(function (data) {
+                var id = data.extraction_id,
+                    url = SERVER + 'results/' + id;
+                events.fire('resultsReady', url);
             })
-            .fail(function(data) {
-                handleError(data);
-            })
-            .always(function() {
-                loadingScreen.stop();
-            });
+            .catch(handleError)
+            .finally(function () { loadingScreen.stop(); });
     }
 
     function time() {
@@ -65,39 +67,31 @@ var Comm = function(events, LoadingScreen, notifier, SERVER) {
 
     function checkIfProcessed(payload, callback) {
         loadingScreen.start();
-        $.post(
-            'http://maayanlab.net/crowdsourcing/check_geo.php',
-            payload,
-            function(response) {
-                callback(response === 'exist');
-            })
-            .error(function(data) {
-                notifier.warn('Unknown error.');
-            })
-            .always(function() {
-                loadingScreen.stop();
-            });
+        post_through_background({
+            query: 'crowdsourcing/check_geo',
+            body: payload,
+        })
+            .then(function (response) { callback(response === 'exist'); })
+            .catch(function (err) { notifier.warn('Unknown error.'); })
+            .finally(function () { loadingScreen.stop(); });
     }
 
     function checkIfDuplicate(payload, callback) {
         loadingScreen.start();
-        $.ajax({
-            url: SERVER + 'api/check_duplicate',
-            type: 'GET',
-            data: payload,
-            success: function(data) {
+        post_through_background({
+            query: 'api/check_duplicate',
+            body: payload,
+        })
+            .then(function (data) {
                 if (data.preexisting) {
                     var links = data.links.join('\n');
                     alert('Match(es) found:\n\n' + links);
                 } else {
                     alert('No match found.');
                 }
-            },
-            error: handleError,
-            complete: function() {
-                loadingScreen.stop();
-            }
-        });
+            })
+            .catch(handleError)
+            .finally(function () { loadingScreen.stop(); });
     }
 
     // Why did I make this function? I have no idea.
@@ -238,7 +232,7 @@ function UiEmbedder(events, page, screenScraper, templater) {
 function EUtilsApi(comm, events, page, screenScraper) {
 
     var accession = getAccession(),
-        BASE_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/{0}.fcgi?db=gds&retmax=1&retmode=json';
+        BASE_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/{0}.fcgi?db=gds&retmax=1&retmode=json';
 
     function init() {
         var searchUrl;
@@ -597,7 +591,7 @@ var Templater = function(IMAGE_PATH) {
         '<div id="g2e-overlay">' +
             '<div id="g2e-modal">' +
                 '<div id="g2e-app-title">' +
-                    '<a href="http://amp.pharm.mssm.edu/g2e/" target="_blank">' +
+                    '<a href="https://amp.pharm.mssm.edu/g2e/" target="_blank">' +
                         '<img src="' + IMAGE_PATH + '">' +
                         '<span>GEO2</span>' +
                         '<span id="g2e-target-app">Enrichr</span>' +
@@ -765,8 +759,8 @@ var Templater = function(IMAGE_PATH) {
                 '</div>' +
                 '<div id="g2e-footer">' +
                     '<p id="g2e-credits">' + 
-                        '&#42;See the <a href="http://amp.pharm.mssm.edu/g2e/pipeline" target="_blank">website</a> for details.<br>' +
-                        'GEO2Enrichr is being developed by the <a href="http://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
+                        '&#42;See the <a href="https://amp.pharm.mssm.edu/g2e/pipeline" target="_blank">website</a> for details.<br>' +
+                        'GEO2Enrichr is being developed by the <a href="https://icahn.mssm.edu/research/labs/maayan-laboratory" target="_blank">Ma\'ayan Lab</a>.' +
                     '</p>' +
                     '<p id="g2e-admin" class="g2e-text">Admin: ' +
                         '<input id="g2e-admin-key" type="text" name="admin-password"/>' +

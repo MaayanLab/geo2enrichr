@@ -28,15 +28,7 @@ var GseScraper = function($metadataTableParent) {
         // The accession number is not necessarily in the URL for GDS.
         // Should we check anyway?
         getDataset: function() {
-            var params = window.location.search.substring(1).split('&'),
-                i = 0,
-                len = params.length;
-            for (; i < len; i++)  {
-                var keyVal = params[i].split('=');
-                if (keyVal[0] == 'acc') {
-                    return keyVal[1];
-                }
-            }
+            return $('.acc')[0].id;
         },
 
         _getOrganism: function() {

@@ -17,7 +17,7 @@ class TestTargetAppsEnrichr(unittest.TestCase):
 
     def test_get_link(self):
         link = enrichr.get_link(self.ranked_genes, '')
-        self.assertTrue('http://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in link)
+        self.assertTrue('https://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in link)
 
     def test_convert_ranked_genes_to_tuples(self):
         genes = enrichr.convert_ranked_genes_to_tuples(self.ranked_genes)

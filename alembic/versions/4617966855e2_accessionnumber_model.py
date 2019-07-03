@@ -109,7 +109,7 @@ def _load_data_from_gds(soft_file):
 # GEO API handlers
 # --------------
 
-BASE_GEO_URL = 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/%s.fcgi?&retmax=1&retmode=json&db=gds'
+BASE_GEO_URL = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/%s.fcgi?&retmax=1&retmode=json&db=gds'
 
 
 def _get_gds_url(acc_id):

@@ -28,4 +28,4 @@ class TestClusterEndpoint(unittest.TestCase):
     def test_endpoint(self):
         url = '/g2e/cluster/' + self.extraction_id
         response = self.app.get(url)
-        self.assertTrue('http://amp.pharm.mssm.edu/clustergrammer/viz/' in response.data)
+        self.assertTrue('https://amp.pharm.mssm.edu/clustergrammer/viz/' in response.data)

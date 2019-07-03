@@ -14,7 +14,7 @@
 
         <section id="upload" name="upload">
             <h1>Upload a dataset for analysis</h1>
-            <p>GEO data is saved as <a href="http://www.ncbi.nlm.nih.gov/geo/info/soft.html" target="_blank">Simple Omnibus Format in Text (SOFT)</a> files. These are just tab-separated, plain text files of raw expression data. This website can be used to upload custom "SOFT-like" files. The file should be a tab-separated <span class="mono">.txt</span> file. The first row contains the column names; the second row contains 0s and 1s, indicating whether the column is control or condition, respectively. Every subsequent row contains a gene symbol and some expression data in columns. Here is an example:</p>
+            <p>GEO data is saved as <a href="https://www.ncbi.nlm.nih.gov/geo/info/soft.html" target="_blank">Simple Omnibus Format in Text (SOFT)</a> files. These are just tab-separated, plain text files of raw expression data. This website can be used to upload custom "SOFT-like" files. The file should be a tab-separated <span class="mono">.txt</span> file. The first row contains the column names; the second row contains 0s and 1s, indicating whether the column is control or condition, respectively. Every subsequent row contains a gene symbol and some expression data in columns. Here is an example:</p>
         <pre>
             a	b	c	d
             0	0	1	1
@@ -35,7 +35,7 @@
         <section id="extensions" name="extensions">
             <h1>Use a browser extension</h1>
             <p>GEO2Enrichr's two browser extensions function the same in both Chrome and Firefox; this tutorial is for both.</p>
-            <p>Each extension works by embedding additional functionality into relevant GEO pages that you visit. For example, after installing an extension, visiting the page <a href="http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS5077" target="_blank">GDS5077</a> and clicking "Compare 2 sets of samples", you should see a new hypertext that says <strong>"Extract knowledge with GEO2Enrichr"</strong> (Fig. 1).</p>
+            <p>Each extension works by embedding additional functionality into relevant GEO pages that you visit. For example, after installing an extension, visiting the page <a href="https://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=GDS5077" target="_blank">GDS5077</a> and clicking "Compare 2 sets of samples", you should see a new hypertext that says <strong>"Extract knowledge with GEO2Enrichr"</strong> (Fig. 1).</p>
             <img src="static/image/screenshot-embedded.png" class="center"/>
             <p class="caption">Fig. 1 Screenshot that shows how GEO2Enrichr adds an additional step to the GEO datasets pipeline.</p>
             <p>If you immediately click that hypertext, you will receive a warning: "Please select 2 or more control samples." This warning occurs because GEO2Enrichr needs you to specify the datasets that you would like to download, process, and analyze. Click <strong>"Select which Samples to put in Group A and Group B"</strong> and select two groups of samples: control samples on the left and treatment/condition samples on the right. In this example, GSM1071454 and GSM1071455 are the control samples and GSM1071457 and GSM1071457 are the treatment or condition samples (Fig. 2). It is important that the control samples are selected on the left and treatment samples are selected on the right because this information is used to determine the up-regulated and down-regulated genes direction.</p>
@@ -59,7 +59,7 @@
             </p>
             <img src="static/image/screenshot-tags.png" class="center"/>
             <p class="caption">Fig. 5 Screenshot that shows how three tags applied to a GEO dataset before processing.</p>
-            <p>Any tags associated with an extracted gene signature will appear on the signature's results page. Clicking on the tag will direct you to <a href="http://amp.pharm.mssm.edu/gen3va/" target="_blank">GEN3VA</a>, another Ma'ayan Lab web tool that performs aggregated analysis of gene signatures collected via tags around common biological themes.</p>
+            <p>Any tags associated with an extracted gene signature will appear on the signature's results page. Clicking on the tag will direct you to <a href="https://amp.pharm.mssm.edu/gen3va/" target="_blank">GEN3VA</a>, another Ma'ayan Lab web tool that performs aggregated analysis of gene signatures collected via tags around common biological themes.</p>
         </section>
 
         <section id="firefox_update" name="firefox_update" class="last">
