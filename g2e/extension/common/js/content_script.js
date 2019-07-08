@@ -7,7 +7,13 @@ function post_through_background(params) {
       { query: query, body: body },
       function (response) {
         if (response && response.error) reject(JSON.stringify(response || '{"message": "An unknown error occured"}'));
-        else resolve(JSON.parse(response));
+        else {
+          try {
+            resolve(JSON.parse(response));
+          } catch (e) {
+            reject(JSON.stringify({ message: e }));
+          }
+        }
       }
     );
   });
