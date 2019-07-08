@@ -1,5 +1,7 @@
-alembic/
-scripts/
-tests/
 .git
 .gitignore
+alembic/
+scripts/
+scripts/node_modules/
+tests/
+venv/
