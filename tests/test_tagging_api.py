@@ -16,9 +16,9 @@ class TestTaggingAPI(unittest.TestCase):
             tags = ['food', 'cats', 'beer'],
             skip_target_apps = True
         ))
-        extraction_id = json.loads(self.resp.data.decode())['extraction_id']
+        extraction_id = json.loads(self.resp.data.decode('utf-8'))['extraction_id']
         temp_response = self.app.get('/g2e/api/extract/' + str(extraction_id))
-        response = json.loads(temp_response.data.decode())
+        response = json.loads(temp_response.data.decode('utf-8'))
         tags = response['tags']
         self.assertTrue(len(tags) == 3)
         self.assertTrue('food' in tags)
@@ -33,8 +33,8 @@ class TestTaggingAPI(unittest.TestCase):
             tags = ['', '  ', '     '],
             skip_target_apps = True
         ))
-        extraction_id = json.loads(self.resp.data.decode())['extraction_id']
+        extraction_id = json.loads(self.resp.data.decode('utf-8'))['extraction_id']
         temp_response = self.app.get('/g2e/api/extract/' + str(extraction_id))
-        response = json.loads(temp_response.data.decode())
+        response = json.loads(temp_response.data.decode('utf-8'))
         tags = response['tags']
         self.assertTrue(len(tags) == 0)

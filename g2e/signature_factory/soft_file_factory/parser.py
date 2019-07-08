@@ -27,7 +27,7 @@ def _parse_file(filename):
     genes = []
     a_vals = []
     b_vals = []
-    with open(filename, 'rU') as csvfile:
+    with open(filename, 'rU', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile, delimiter='\t')
         # First line should be column names.
         names = next(csvfile)
@@ -92,7 +92,7 @@ def _parse_geo(filename, platform, samples):
     probe_count = 0.0
 
     try:
-        with open(filename, 'r') as soft_in:
+        with open(filename, 'r', encoding='utf-8') as soft_in:
             # Skip comments.
             discard = next(soft_in)
             while discard.rstrip() != BOF:
@@ -183,7 +183,7 @@ def build_probe_dict(platform_probesetid_genesym_file):
     """
     # Platform data collected and script written by Andrew Rouillard.
     platform_dict = {}
-    with open(platform_probesetid_genesym_file) as f:
+    with open(platform_probesetid_genesym_file, encoding='utf-8') as f:
         for line in f:
             entries = line.rstrip().split('\t')
             platform = entries[0]

@@ -4,7 +4,7 @@ import requests
 
 
 def main():
-    with open('sigs2accessions.csv') as f, open('out.txt', 'w+') as o:
+    with open('sigs2accessions.csv') as f, open('out.txt', 'w+', encoding='utf-8') as o:
         reader = csv.reader(f)
         for line in reader:
             extraction_id = line[0]

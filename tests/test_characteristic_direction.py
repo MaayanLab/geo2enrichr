@@ -9,7 +9,7 @@ class TestCharacteristicDirection(unittest.TestCase):
     def setUp(self):
         # Get ordered list of values.
         answers = []
-        with open('tests/data/chdir_output.txt', 'r') as out:
+        with open('tests/data/chdir_output.txt', 'r', encoding='utf-8') as out:
             for line in out:
                 answers.append(float(line))
         self.answers = np.array(answers)
@@ -17,7 +17,7 @@ class TestCharacteristicDirection(unittest.TestCase):
         genes = []
         A = []
         B = []
-        with open('tests/data/example_input.txt', 'r') as inp:
+        with open('tests/data/example_input.txt', 'r', encoding='utf-8') as inp:
             discard = next(inp)
             header = next(inp)
             for line in inp:

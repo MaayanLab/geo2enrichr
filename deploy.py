@@ -65,7 +65,7 @@ if has_pdb_statements:
 # ----------------------------------------------------------------------------
 CHROME_JS_CONFIG = 'g2e/extension/common/js/config-chrome.js'
 
-with open(CHROME_JS_CONFIG, 'w+') as f:
+with open(CHROME_JS_CONFIG, 'w+', encoding='utf-8') as f:
     f.write('// This file is built by deploy.py in the root directory.\n')
     if opts.prod:
         mode = 'prod'
@@ -118,7 +118,7 @@ config_out.set('db', 'uri', config_in.get('db', 'uri'))
 config_out.set('cookies', 'secret_key',
                config_in.get('cookies', 'secret_key'))
 
-with open('g2e/config/config.ini', 'wb') as configfile:
+with open('g2e/config/config.ini', 'wb', encoding='utf-8') as configfile:
     config_out.write(configfile)
 
 subprocess.call('docker-machine start default', shell=True)
@@ -145,7 +145,7 @@ config_out.set('cookies', 'secret_key',
                config_in.get('cookies', 'secret_key'))
 config_out.set('admin', 'admin_key', config_in.get('admin', 'admin_key'))
 
-with open('g2e/config/config.ini', 'wb') as configfile:
+with open('g2e/config/config.ini', 'wb', encoding='utf-8') as configfile:
     config_out.write(configfile)
 
 

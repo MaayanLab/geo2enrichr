@@ -7,7 +7,7 @@ from g2e.pca import pca
 class TestPca(unittest.TestCase):
 
     def setUp(self):
-        f = open('tests/data/example_input.txt')
+        f = open('tests/data/example_input.txt', encoding='utf-8')
         self.soft_file = soft_file_factory.soft_file_factory.from_file(f, {
             'title': 'example_input'
         })

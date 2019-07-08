@@ -4,7 +4,7 @@ def build_probe_dict(platform_probesetid_genesym_file):
     """
     # Platform data collected and script written by Andrew Rouillard.
     platform_dict = {}
-    with open(platform_probesetid_genesym_file) as f:
+    with open(platform_probesetid_genesym_file, encoding='utf-8') as f:
         for line in f:
             entries = line.rstrip().split('\t')
             platform = entries[0]

@@ -9,7 +9,7 @@ BOF = '!platform_table_begin'
 def clean(filename, idx=None):
 	accession = filename.split('.')[0]
 	try:
-		with open('downloaded/' + filename) as f, open('cleaned/' + filename, 'w+') as cf, open(LOG, 'a') as log:
+		with open('downloaded/' + filename, encoding='utf-8') as f, open('cleaned/' + filename, 'w+', encoding='utf-8') as cf, open(LOG, 'a', encoding='utf-8') as log:
 			discard = next(f)
 			while discard.rstrip() != BOF:
 				discard = next(f)
@@ -47,14 +47,14 @@ def clean(filename, idx=None):
 
 	except Exception, e:
 		exc_type, exc_obj, exc_tb = sys.exc_info()
-		log = open(LOG, 'a')
+		log = open(LOG, 'a', encoding='utf-8')
 		log.write('Error ' + accession + ': ' + str(exc_type) + '\n')
 		log.close()
 
 		
 
 if __name__ == '__main__':
-	f = open(LOG, 'w+')
+	f = open(LOG, 'w+', encoding='utf-8')
 	f.close()
 	for filename in os.listdir(os.getcwd() + '/downloaded'):
 		clean(filename)

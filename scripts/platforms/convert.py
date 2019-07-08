@@ -6,27 +6,27 @@ LOG = 'log_symbols.txt'
 
 
 human_canonical_symbols = set()
-with open('gene_synonyms/genesym_geneid_human_20140825.txt', 'r') as tsv:
+with open('gene_synonyms/genesym_geneid_human_20140825.txt', 'r', encoding='utf-8') as tsv:
     for line in csv.reader(tsv, delimiter='\t'):
         human_canonical_symbols.add(line[0])
 
 human_synonyms = {}
-with open('gene_synonyms/genesym_geneid_synonym_human_20140825.txt', 'r') as tsv:
+with open('gene_synonyms/genesym_geneid_synonym_human_20140825.txt', 'r', encoding='utf-8') as tsv:
     for line in csv.reader(tsv, delimiter='\t'):
         human_synonyms[line[2]] = line[0]
 
 mouse_canonical_symbols = set()
-with open('gene_synonyms/genesym_geneid_mouse_20140825.txt', 'r') as tsv:
+with open('gene_synonyms/genesym_geneid_mouse_20140825.txt', 'r', encoding='utf-8') as tsv:
     for line in csv.reader(tsv, delimiter='\t'):
         mouse_canonical_symbols.add(line[0])
 
 mouse_synonyms = {}
-with open('gene_synonyms/genesym_geneid_synonym_mouse_20140825.txt', 'r') as tsv:
+with open('gene_synonyms/genesym_geneid_synonym_mouse_20140825.txt', 'r', encoding='utf-8') as tsv:
     for line in csv.reader(tsv, delimiter='\t'):
         mouse_synonyms[line[2]] = line[0]
 
 mouse_2_humans = {}
-with open('gene_synonyms/humangenesym_humangeneid_mousegenesym_mousegeneid_20140825.txt', 'r') as tsv:
+with open('gene_synonyms/humangenesym_humangeneid_mousegenesym_mousegeneid_20140825.txt', 'r', encoding='utf-8') as tsv:
     for line in csv.reader(tsv, delimiter='\t'):
         mouse_2_humans[line[0]] = line[2]
 
@@ -36,7 +36,7 @@ def handle_symbols(filename):
     num_lines = 0
     num_converted = 0
 
-    with open('cleaned/' + filename, 'r') as tsv, open('symbols/' + filename, 'w+') as out:
+    with open('cleaned/' + filename, 'r') as tsv, open('symbols/' + filename, 'w+', encoding='utf-8') as out:
 
         write = lambda x, y: out.write(accession + '\t' + x + '\t' + y + '\n')
 
@@ -76,7 +76,7 @@ def handle_symbols(filename):
                     continue
     
     if num_converted < 5000:
-        with open(LOG, 'a') as log:
+        with open(LOG, 'a', encoding='utf-8') as log:
             log.write(accession + '\n')
             log.write('lines: ' + str(num_lines) + '\n')
             log.write('converted: ' + str(num_converted) + '\n')
@@ -87,7 +87,7 @@ def handle_symbols(filename):
 
 
 if __name__ == '__main__':
-    f = open(LOG, 'w+')
+    f = open(LOG, 'w+', encoding='utf-8')
     f.close()
     for filename in os.listdir(os.getcwd() + '/downloaded'):
         handle_symbols(filename)

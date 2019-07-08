@@ -61,7 +61,7 @@ def _create_accession_numbers():
     """
     conn = op.get_bind()
     session = Session(bind=conn)
-    with open('log.txt', 'w+') as error_log:
+    with open('log.txt', 'w+', encoding='utf-8') as error_log:
         for idx, sig in enumerate(session.query(GeneSignature)):
             msg = '%s - %s - %s' % (idx, sig.soft_file.name, sig.extraction_id)
             print(msg)

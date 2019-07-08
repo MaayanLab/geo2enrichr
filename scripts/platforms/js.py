@@ -4,7 +4,7 @@ from builder import PROBE2GENE
 
 
 def js():
-	js = open('../../g2e/web/extension/common/js/platforms.js', 'w+')
+	js = open('../../g2e/web/extension/common/js/platforms.js', 'w+', encoding='utf-8')
 	platforms = [x for x in PROBE2GENE]
 	
 	js.write('// This file is built when new platforms are added.\n')

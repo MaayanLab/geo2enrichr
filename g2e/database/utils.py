@@ -22,7 +22,7 @@ def session_scope():
 
 def get_or_create(model, **kwargs):
     _kwargs = {
-        k: v.decode() if isinstance(v, bytes) else v
+        k: v.decode('utf-8') if isinstance(v, bytes) else v
         for k, v in kwargs.items()
     }
     instance = substrate_db.session.query(model).filter_by(**_kwargs).first()

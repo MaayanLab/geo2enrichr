@@ -17,10 +17,10 @@ class TestTargetApps(unittest.TestCase):
             A_cols = ['GSM1071454', 'GSM1071455'],
             B_cols = ['GSM1071457', 'GSM1071456']
         ))
-        post_response = json.loads(post_response.data.decode())
+        post_response = json.loads(post_response.data.decode('utf-8'))
         extraction_id = post_response['extraction_id']
         response = self.app.get('/g2e/api/extract/' + str(extraction_id))
-        response = json.loads(response.data.decode())
+        response = json.loads(response.data.decode('utf-8'))
 
         for gl in response['gene_lists']:
             self.assertTrue('https://amp.pharm.mssm.edu/Enrichr/enrich?dataset' in gl['target_apps']['enrichr'])

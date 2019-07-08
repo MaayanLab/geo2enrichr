@@ -34,12 +34,12 @@ class TestRoundTrip(unittest.TestCase):
             A_cols = ['GSM1071454', 'GSM1071455'],
             B_cols = ['GSM1071457', 'GSM1071456']
         ))
-        self.resp_dict = json.loads(self.resp.data.decode())
+        self.resp_dict = json.loads(self.resp.data.decode('utf-8'))
         self.assertEquals(self.resp.status_code, 200)
         self.assertTrue('extraction_id' in self.resp_dict)
         extraction_id = self.resp_dict['extraction_id']
         resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
-        resp_dict = json.loads(resp.data.decode())
+        resp_dict = json.loads(resp.data.decode('utf-8'))
 
         # Test response from round-trip.
         self.assertTrue(resp_dict['required_metadata']['diff_exp_method'] == 'chdir')
@@ -88,13 +88,13 @@ class TestRoundTrip(unittest.TestCase):
             A_cols = ['GSM1071454', 'GSM1071455'],
             B_cols = ['GSM1071457', 'GSM1071456']
         ))
-        self.resp_dict = json.loads(self.resp.data.decode())
+        self.resp_dict = json.loads(self.resp.data.'utf-8'))
         self.assertEquals(self.resp.status_code, 200)
         self.assertTrue('extraction_id' in self.resp_dict)
         extraction_id = self.resp_dict['extraction_id']
 
         resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
-        resp_dict = json.loads(resp.data.decode())
+        resp_dict = json.loads(resp.data.decode('utf-8'))
 
         self.assertTrue(resp_dict['required_metadata']['diff_exp_method'] == 'ttest')
         self.assertTrue(resp_dict['required_metadata']['ttest_correction_method'] == 'BH')
@@ -125,12 +125,12 @@ class TestRoundTrip(unittest.TestCase):
             cutoff = 'none'
         ))
 
-        self.resp_dict = json.loads(self.resp.data.decode())
+        self.resp_dict = json.loads(self.resp.data.decode('utf-8'))
         self.assertEquals(self.resp.status_code, 200)
         self.assertTrue('extraction_id' in self.resp_dict)
         extraction_id = self.resp_dict['extraction_id']
         resp = self.app.get('/g2e/api/extract/' + str(extraction_id))
-        resp_dict = json.loads(resp.data.decode())
+        resp_dict = json.loads(resp.data.decode('utf-8'))
 
         self.assertTrue(resp_dict['soft_file']['title'], 'ExampleData')
         genelist = resp_dict['gene_lists'][2]['ranked_genes']

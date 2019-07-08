@@ -27,13 +27,13 @@ def download(accession, downloaded_file_path):
         url = _construct_GSE_url(accession)
     response = _get_file_by_url(url)
     
-    with open(downloaded_file_path, 'w+') as f:
+    with open(downloaded_file_path, 'w+', encoding='utf-8') as f:
         while True:
             bin_chunk = response.read(CHUNK_SIZE)
             if not bin_chunk:
                 break
             string = decompressor.decompress(bin_chunk)
-            f.write(string.decode())
+            f.write(string.decode('utf-8'))
 
 
 def _get_file_by_url(url, attempts=5):
