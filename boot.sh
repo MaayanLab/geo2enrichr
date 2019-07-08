@@ -53,6 +53,12 @@ http {
         location / {
             include            /etc/nginx/uwsgi_params;
             uwsgi_pass         127.0.0.1:8080;
+            uwsgi_connect_timeout 600s;
+            uwsgi_read_timeout    600s;
+            proxy_connect_timeout 600;
+            proxy_send_timeout    600;
+            proxy_read_timeout    600;
+            send_timeout          600;
             proxy_redirect     off;
             proxy_set_header   Host \$host;
             proxy_set_header   X-Real-IP \$remote_addr;
