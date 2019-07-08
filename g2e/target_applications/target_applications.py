@@ -1,6 +1,7 @@
 """Delegates to target applications.
 """
 
+import traceback
 from g2e.database.utils import get_or_create
 from g2e.target_applications import crowdsourcing
 from g2e.target_applications import enrichr
@@ -45,7 +46,8 @@ def get_links(ranked_genes, direction, required_metadata, optional_metadata=None
             crowdsourcing_link = _get_crowdsourcing_link(ranked_genes, optional_metadata, soft_file, tags)
             if crowdsourcing_link.link:
                 links.append(crowdsourcing_link)
-    except:
+    except Exception as e:
+        traceback.print_exc()
         print('Error with target applications')
 
     return links
