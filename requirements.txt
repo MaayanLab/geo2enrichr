@@ -1,5 +1,5 @@
 blinker==1.4
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 Flask-Login==0.4.1
 Flask-SQLAlchemy==2.4.0
 Flask==1.0.3
