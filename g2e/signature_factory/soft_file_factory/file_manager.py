@@ -4,6 +4,7 @@
 
 import os.path
 import time
+from werkzeug import FileStorage
 
 from . import geo_downloader
 from . import cleaner
@@ -51,7 +52,7 @@ def write(name, platform, normalize, genes, a_vals, b_vals, samples, selections,
 def save(name, file_obj):
     """Saves a SOFT file in the correct directory.
     """
-    if hasattr(file_obj, 'read'):
+    if not isinstance(file_obj, FileStorage):
         full_path = BASE_DIR + EXAMPLE_FILE
         return full_path[4:]
 
