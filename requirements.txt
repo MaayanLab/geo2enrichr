@@ -2,7 +2,7 @@ blinker==1.4
 Flask-Cors==3.0.8
 Flask-Login==0.4.1
 Flask-SQLAlchemy==2.4.0
-Flask==1.0.3
+Flask==2.3.2
 git+git://github.com/MaayanLab/substrate.git@master
 itsdangerous==1.1.0
 Jinja2==2.10.1
